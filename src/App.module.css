@@ -1,0 +1,35 @@
+.header {
+  height: 40px;
+  background-color: red;
+}
+
+.body {
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+}
+
+.prjTree {
+  height: 100vh;
+}
+
+.editor {
+  background-color: yellow;
+  resize: horizontal;
+}
+
+.preview {
+  background-color: black;
+}
+
+.treeItem {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+}
+
+.folderArrow {
+  font-size: 12px;
+  width: 12px;
+  height: 12px;
+}
