@@ -1,9 +1,8 @@
 .header {
   height: 40px;
-  background-color: red;
 }
 
-.body {
+.editorBody {
   display: flex;
   flex-direction: row;
   width: 100vw;
@@ -11,15 +10,16 @@
 
 .prjTree {
   height: 100vh;
+  flex: 0 0 10%;
 }
 
 .editor {
-  background-color: yellow;
   resize: horizontal;
+  flex: 0 0 60%;
 }
 
 .preview {
-  background-color: black;
+  flex-grow: 1;
 }
 
 .treeItem {

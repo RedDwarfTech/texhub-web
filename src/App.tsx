@@ -2,6 +2,8 @@ import React, { useRef } from 'react';
 import styles from './App.module.css';
 import { ReactComponent as HiddenContent } from "@/assets/expert/hidden-content.svg";
 import { FileOutlined, FolderOutlined, RightOutlined } from '@ant-design/icons';
+import CvCodeEditor from '@/component/common/editor/CvCodeEditor';
+import TexHeader from '@/component/header/TexHeader';
 
 const App: React.FC = () => {
 
@@ -86,8 +88,10 @@ const App: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>header</div>
-      <div className={styles.body}>
+      <div className={styles.header}>
+        <TexHeader></TexHeader>
+      </div>
+      <div className={styles.editorBody}>
         <div id="prjTree" ref={divRef} className={styles.prjTree}>
           <div className={styles.treeItem}>
             <div className={styles.folderArrow}><RightOutlined /></div>
@@ -103,7 +107,9 @@ const App: React.FC = () => {
         <div>
           <HiddenContent id="hiddenContentLeft" className={styles.hiddenContent} />
         </div>
-        <div id="editor" className={styles.editor}>editor</div>
+        <div id="editor" className={styles.editor}>
+          <CvCodeEditor></CvCodeEditor>
+        </div>
         <div>
           <HiddenContent id="hiddenContentRight" className={styles.hiddenContent} />
         </div>
