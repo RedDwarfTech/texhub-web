@@ -14,7 +14,7 @@ const extensions = [
   EditorView.lineWrapping,
   EditorView.theme({
     '.cm-content': {
-      maxWidth: '50em',
+      
     },
     '.cm-scroller': {
       maxHeight: '100vh',
