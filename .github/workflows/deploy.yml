@@ -1,0 +1,46 @@
+name: tex-web-pro
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Build React App
+        run: |
+          git config --global url."https://github".insteadOf ssh://git@github
+          npm install -g pnpm 
+          pnpm install
+          pnpm run build
+        env:
+          CI: false
+
+      - name: Build image push to aliyun
+        uses: docker/build-push-action@v1
+        with:
+          registry: ${{ secrets.ALI_DOCKER_HUB_REGISTRY }}
+          username: ${{ secrets.ALIYUN_DOCKER_REPO_USER_NAME }}
+          password: ${{ secrets.ALIYUN_DOCKER_REPO_USER_PASSWORD }}
+          tags: ${{ github.sha }}
+          repository: reddwarf-pro/texhub-web
+          path: '.'
+    
+       # https://github.com/steebchen/kubectl
+      - name: deploy to cluster
+        uses: steebchen/kubectl@v2.0.0
+        with: # defaults to latest kubectl binary version
+          config: ${{ secrets.KUBE_CONFIG_DATA }}
+          command: set image --record deployment/texhub-web texhub-web=registry.cn-hongkong.aliyuncs.com/reddwarf-pro/texhub-web:${{ github.sha }} -n reddwarf-pro
+
+      - name: verify deployment
+        uses: steebchen/kubectl@v2.0.0
+        with:
+          config: ${{ secrets.KUBE_CONFIG_DATA }}
+          version: v1.21.0 # specify kubectl binary version explicitly
+          command: rollout status deployment/texhub-web -n reddwarf-pro

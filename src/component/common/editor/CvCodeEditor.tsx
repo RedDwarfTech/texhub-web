@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { EditorView } from "@codemirror/view";
 import { basicSetup } from "codemirror";
 import styles from "./CvCodeEditor.module.css";
@@ -10,11 +10,11 @@ import {
 import { stex } from '@codemirror/legacy-modes/mode/stex';
 import * as Y from 'yjs';
 import { yCollab } from 'y-codemirror.next';
-import { WebrtcProvider } from 'y-webrtc';
 import { EditorState } from "@codemirror/state";
 import { javascript } from '@codemirror/lang-javascript';
 import * as random from 'lib0/random';
 import { WebsocketProvider } from 'y-websocket';
+import React from "react";
 
 export const usercolors = [
   { color: '#30bced', light: '#30bced33' },
@@ -29,17 +29,17 @@ export const usercolors = [
 
 export const userColor = usercolors[random.uint32() % usercolors.length]
 
-const ydoc = new Y.Doc()
-const wsProvider = new WebsocketProvider('wss://ws.poemhub.top', 'my-roomname', ydoc)
-const ytext = ydoc.getText('codemirror')
+const ydoc = new Y.Doc();
+const wsProvider = new WebsocketProvider('wss://ws.poemhub.top', 'my-roomname', ydoc);
+const ytext = ydoc.getText('codemirror');
 
-const undoManager = new Y.UndoManager(ytext)
+const undoManager = new Y.UndoManager(ytext);
 
 wsProvider.awareness.setLocalStateField('user', {
   name: 'Anonymous ' + Math.floor(Math.random() * 100),
   color: userColor.color,
   colorLight: userColor.light
-})
+});
 
 const state = EditorState.create({
   doc: ytext.toString(),
@@ -48,7 +48,7 @@ const state = EditorState.create({
     javascript(),
     yCollab(ytext, wsProvider.awareness, { undoManager })
   ]
-})
+});
 
 const extensions = [
   EditorView.contentAttributes.of({ spellcheck: 'true' }),
@@ -64,11 +64,12 @@ const extensions = [
   }),
   StreamLanguage.define(stex),
   syntaxHighlighting(defaultHighlightStyle),
-]
+];
+
 const CvCodeEditor: React.FC = () => {
   const edContainer = useRef<any>();
 
-  useEffect(() => {
+  React.useEffect(() => {
     const view = new EditorView({
       state,
       parent: edContainer.current,
@@ -78,6 +79,7 @@ const CvCodeEditor: React.FC = () => {
       view.destroy();
     };
   }, []);
+
   return <div ref={edContainer} className={styles.container}></div>;
 }
 
