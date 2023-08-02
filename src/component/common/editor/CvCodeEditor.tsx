@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { EditorView } from "@codemirror/view";
 import { basicSetup } from "codemirror";
 import styles from "./CvCodeEditor.module.css";
