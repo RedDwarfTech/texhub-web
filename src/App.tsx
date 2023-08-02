@@ -20,9 +20,11 @@ const App: React.FC = () => {
       let resizing = false;
       const menu: any = document.getElementById(resizeArea);
       const resizeBar: any = document.getElementById(resizeBarName);
-      resizeBar.addEventListener("mousedown", () => {
-        resizing = true
-      });
+      if(resizeBar != null) {
+        resizeBar.addEventListener("mousedown", () => {
+          resizing = true
+        });
+      }
       window.addEventListener("mousemove", handleResizeMenu);
       window.addEventListener("mouseup", () => {
         resizing = false
@@ -52,9 +54,11 @@ const App: React.FC = () => {
       let resizing = false;
       const menu: HTMLElement | null = document.getElementById(resizeArea);
       const resizeBar: any = document.getElementById(resizeBarName);
-      resizeBar.addEventListener("mousedown", () => {
-        resizing = true
-      });
+      if(resizeBar !== null){
+        resizeBar.addEventListener("mousedown", () => {
+          resizing = true
+        });
+      }
       window.addEventListener("mousemove", handleResizeMenu);
       window.addEventListener("mouseup", () => {
         resizing = false
