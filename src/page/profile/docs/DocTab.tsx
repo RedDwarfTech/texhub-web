@@ -51,6 +51,11 @@ const DocTab: React.FC = () => {
         return tagList;
     };
 
+    const handleDocCreate = () => {
+
+
+    }
+
     return (
         <div>
             <TexHeader></TexHeader>
@@ -64,8 +69,28 @@ const DocTab: React.FC = () => {
             </ul>
             <div className={styles.docContainer}>
                 <div className={styles.docList}>
+                    <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPrj">
+                        新建
+                    </button>
                     <div className="list-group">
                         {renderDoc()}
+                    </div>
+                </div>
+            </div>
+            <div className="modal" id="newPrj" tabIndex={-1}>
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">新建项目</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <input className="form-control" placeholder="项目名称"></input>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                            <button type="button" className="btn btn-primary">确定</button>
+                        </div>
                     </div>
                 </div>
             </div>
