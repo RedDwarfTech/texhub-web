@@ -1,14 +1,14 @@
 export type docAction = saveDocAction | getDocListAction;
 
 export enum DocActionType {
-    SAVE_EDU,
+    CREATE_DOC,
     GET_DOC_LIST,
     DEL_EDU_ITEM,
     CLEAR_CURRENT_EDU
 }
 
 export interface saveDocAction {
-    type: DocActionType.SAVE_EDU;
+    type: DocActionType.CREATE_DOC;
     data: any;
 }
 

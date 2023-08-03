@@ -1,7 +1,7 @@
 import TexHeader from "@/component/header/TexHeader";
 import styles from "./DocTab.module.css";
 import React, { useState } from "react";
-import { getDocList } from "@/service/doc/DocService";
+import { createDoc, getDocList } from "@/service/doc/DocService";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { TexDocModel } from "@/model/doc/TexDocModel";
@@ -9,6 +9,7 @@ import { TexDocModel } from "@/model/doc/TexDocModel";
 const DocTab: React.FC = () => {
 
     const [userDocList, setUserDocList] = useState<TexDocModel[]>([]);
+    const [docName, setDocName] = useState<string>();
     const { docList } = useSelector((state: AppState) => state.doc);
 
     React.useEffect(() => {
@@ -52,9 +53,18 @@ const DocTab: React.FC = () => {
     };
 
     const handleDocCreate = () => {
-
-
+        let doc: TexDocModel = {
+            doc_name: docName == null ? "" : docName,
+            template_id: 0,
+            created_time: "",
+            updated_time: ""
+        };
+        createDoc(doc);
     }
+
+    const handleInputChange = (event: any) => {
+        setDocName(event.target.value);
+    };
 
     return (
         <div>
@@ -85,11 +95,11 @@ const DocTab: React.FC = () => {
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            <input className="form-control" placeholder="项目名称"></input>
+                            <input id="docName" onChange={handleInputChange} className="form-control" placeholder="项目名称"></input>
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                            <button type="button" className="btn btn-primary">确定</button>
+                            <button type="button" className="btn btn-primary" onClick={() => { handleDocCreate() }}>确定</button>
                         </div>
                     </div>
                 </div>
