@@ -1,16 +1,18 @@
 import TexHeader from "@/component/header/TexHeader";
 import styles from "./DocTab.module.css";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { createDoc, getDocList } from "@/service/doc/DocService";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { TexDocModel } from "@/model/doc/TexDocModel";
+import { ResponseHandler } from "rdjs-wheel";
 
 const DocTab: React.FC = () => {
 
     const [userDocList, setUserDocList] = useState<TexDocModel[]>([]);
     const [docName, setDocName] = useState<string>();
     const { docList } = useSelector((state: AppState) => state.doc);
+    const createDocCancelRef = useRef<HTMLButtonElement>(null);
 
     React.useEffect(() => {
         getDocList("all");
@@ -59,7 +61,14 @@ const DocTab: React.FC = () => {
             created_time: "",
             updated_time: ""
         };
-        createDoc(doc);
+        createDoc(doc).then((res) => {
+            if (ResponseHandler.responseSuccess(res)) {
+                getDocList("all");
+                if(createDocCancelRef&&createDocCancelRef.current){
+                    createDocCancelRef.current.click();
+                }
+            }
+        });
     }
 
     const handleInputChange = (event: any) => {
@@ -98,7 +107,7 @@ const DocTab: React.FC = () => {
                             <input id="docName" onChange={handleInputChange} className="form-control" placeholder="项目名称"></input>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                            <button type="button" ref={createDocCancelRef} className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                             <button type="button" className="btn btn-primary" onClick={() => { handleDocCreate() }}>确定</button>
                         </div>
                     </div>
