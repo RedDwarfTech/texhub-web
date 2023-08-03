@@ -16,7 +16,7 @@ const TexHeader: React.FC = () => {
                                 <a className="nav-link active" aria-current="page" href="/">主页</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="#">模版中心</a>
+                                <a className="nav-link" href="/tpl">模版中心</a>
                             </li>
                             <li className="nav-item">
                                 <a className="nav-link" href="/doc/tab">个人中心</a>
