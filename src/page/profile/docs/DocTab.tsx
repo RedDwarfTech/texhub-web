@@ -21,7 +21,34 @@ const DocTab: React.FC = () => {
     }, [docList]);
 
     const renderDoc = () => {
-
+        if (!userDocList || userDocList.length === 0) {
+            return (<div></div>);
+        }
+        const tagList: JSX.Element[] = [];
+        userDocList.forEach((docItem: TexDocModel) => {
+            tagList.push(
+                <label className="list-group-item">
+                    <div className={styles.docHeader}>
+                        <input className="form-check-input me-1" type="checkbox" value="" />
+                        <span>{docItem.doc_name}</span>
+                        <div className={styles.option}>
+                            <div className="dropdown">
+                                <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    操作
+                                </button>
+                                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    <li><a className="dropdown-item" href="#">删除</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div>更新时间：{docItem.updated_time}</div>
+                    </div>
+                </label>
+            );
+        });
+        return tagList;
     };
 
     return (
@@ -35,6 +62,13 @@ const DocTab: React.FC = () => {
                     <a className="nav-link" href="#">分享</a>
                 </li>
             </ul>
+            <div className={styles.docContainer}>
+                <div className={styles.docList}>
+                    <div className="list-group">
+                        {renderDoc()}
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

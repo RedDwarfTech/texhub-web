@@ -1,2 +1,19 @@
+.docContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
 
+.docList {
+    width: 60%;
+}
 
+.docHeader {
+    display: flex;
+    justify-content: space-between;
+}
+
+.docHeader > :last-child {
+    margin-left: auto;
+  }
