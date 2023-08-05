@@ -17,6 +17,10 @@ const Template: React.FC = () => {
         getTplList("all");
     },[]);
 
+    React.useEffect(() => {
+        setUserTplList(tplList);
+    },[tplList])
+
     const renderTplList = () => {
         if (!userTplList || userTplList.length === 0) {
             return (<div></div>);
@@ -24,25 +28,13 @@ const Template: React.FC = () => {
         const tagList: JSX.Element[] = [];
         userTplList.forEach((docItem: TemplateModel) => {
             tagList.push(
-                <label className="list-group-item">
-                    <div className={styles.docHeader}>
-                        <input className="form-check-input me-1" type="checkbox" value="" />
-                        <span>{docItem.name}</span>
-                        <div className={styles.option}>
-                            <div className="dropdown">
-                                <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                    操作
-                                </button>
-                                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a className="dropdown-item" href="#">删除</a></li>
-                                </ul>
-                            </div>
-                        </div>
+                <div className={`${styles.tplCard} card`}>
+                    <img src={docItem.preview_url} className="card-img-top" alt="..."></img>
+                    <div className="card-body">
+                        <h5 className="card-title">{docItem.name}</h5>
+                        <a href="#" className="btn btn-primary">Go somewhere</a>
                     </div>
-                    <div>
-                        <div>更新时间：{docItem.updated_time}</div>
-                    </div>
-                </label>
+                </div>
             );
         });
         return tagList;

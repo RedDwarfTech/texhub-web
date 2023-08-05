@@ -4,4 +4,5 @@ export interface TemplateModel {
     template_id: number;
     created_time: string;
     updated_time: string;
+    preview_url: string;
 }
