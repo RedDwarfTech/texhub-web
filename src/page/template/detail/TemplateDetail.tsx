@@ -16,6 +16,7 @@ const TemplateDetail: React.FC = () => {
     const { id } = state;
 
     React.useEffect(() => {
+        // debugger
         getTplDetail(id);
     }, []);
 

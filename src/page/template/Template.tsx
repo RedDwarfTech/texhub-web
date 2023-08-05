@@ -10,9 +10,7 @@ import { useNavigate } from "react-router-dom";
 const Template: React.FC = () => {
 
     const [userTplList, setUserTplList] = useState<TemplateModel[]>([]);
-    const [docName, setDocName] = useState<string>();
     const { tplList } = useSelector((state: AppState) => state.tpl);
-    const createDocCancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate(); 
     
     React.useEffect(() => {
@@ -31,7 +29,7 @@ const Template: React.FC = () => {
         userTplList.forEach((docItem: TemplateModel) => {
             tagList.push(
                 <div className={`${styles.tplCard} card`}>
-                    <img src={docItem.preview_url} className="card-img-top" onClick={()=>{navigate("/tpl/detail",{ state: { id: docItem.id } })}} alt="..."></img>
+                    <img src={docItem.preview_url} className="card-img-top" onClick={()=>{navigate("/tpl/detail",{ state: { id: docItem.template_id } })}} alt="..."></img>
                     <div className="card-body">
                         <h6 className="card-title">{docItem.name}</h6>
                     </div>
