@@ -1,8 +1,17 @@
+.tplBody{
+    width: 100%;
+    background-color: rgb(248, 248, 248);
+}
+
 .container {
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
-    gap: 20px;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 50px;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    width: 90%;
 }
 
 .tplCard {

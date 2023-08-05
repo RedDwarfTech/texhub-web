@@ -31,8 +31,7 @@ const Template: React.FC = () => {
                 <div className={`${styles.tplCard} card`}>
                     <img src={docItem.preview_url} className="card-img-top" alt="..."></img>
                     <div className="card-body">
-                        <h5 className="card-title">{docItem.name}</h5>
-                        <a href="#" className="btn btn-primary">Go somewhere</a>
+                        <h6 className="card-title">{docItem.name}</h6>
                     </div>
                 </div>
             );
@@ -43,8 +42,10 @@ const Template: React.FC = () => {
     return (
     <div>
         <TexHeader></TexHeader>
-        <div className={styles.container}>
-            {renderTplList()}
+        <div className={styles.tplBody}>
+            <div className={styles.container}>
+                {renderTplList()}
+            </div>
         </div>
     </div>
     );
