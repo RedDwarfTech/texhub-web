@@ -33,7 +33,7 @@ const DocTab: React.FC = () => {
                 <label className="list-group-item">
                     <div className={styles.docHeader}>
                         <input className="form-check-input me-1" type="checkbox" value="" />
-                        <span>{docItem.doc_name}</span>
+                        <span><a href="/editor">{docItem.doc_name}</a></span>
                         <div className={styles.option}>
                             <div className="dropdown">
                                 <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">

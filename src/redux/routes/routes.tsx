@@ -5,6 +5,7 @@ import DocTab from "@/page/profile/docs/DocTab";
 import Home from "@/page/home/Home";
 import Template from "@/page/template/Template";
 import TemplateDetail from "@/page/template/detail/TemplateDetail";
+import App from "@/page/main/App";
 
 const routes = createBrowserRouter([
     {
@@ -26,6 +27,10 @@ const routes = createBrowserRouter([
     {
         path: "/tpl/detail",
         element: <TemplateDetail />
+    },
+    {
+        path: "/editor",
+        element: <App />
     }
 ]);
 

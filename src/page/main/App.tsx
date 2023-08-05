@@ -92,9 +92,7 @@ const App: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <TexHeader></TexHeader>
-      </div>
+      <TexHeader></TexHeader>
       <div className={styles.editorBody}>
         <div id="prjTree" ref={divRef} className={styles.prjTree}>
           <div className={styles.treeItem}>
