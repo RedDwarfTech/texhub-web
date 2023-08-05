@@ -6,6 +6,7 @@ export interface AppState {
         docList: TexDocModel[]
     },
     tpl: {
-        tplList: TemplateModel[]
+        tplList: TemplateModel[],
+        tplDetail: TemplateModel
     }
 }

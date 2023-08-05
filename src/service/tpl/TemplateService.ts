@@ -14,6 +14,15 @@ export function getTplList(tag: string) {
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
+export function getTplDetail(id: number) {
+    const config: AxiosRequestConfig = {
+        method: 'get',
+        url: '/tex/tpl/detail?id=' + id,
+    };
+    const actionTypeString: string = TemplateActionType[TemplateActionType.GET_TPL_DETAIL];
+    return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
 export function createDoc(doc: TexDocModel) {
     const config: AxiosRequestConfig = {
         method: 'post',

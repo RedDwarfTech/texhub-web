@@ -4,6 +4,7 @@ import "rd-component/dist/style.css";
 import DocTab from "@/page/profile/docs/DocTab";
 import Home from "@/page/home/Home";
 import Template from "@/page/template/Template";
+import TemplateDetail from "@/page/template/detail/TemplateDetail";
 
 const routes = createBrowserRouter([
     {
@@ -21,6 +22,10 @@ const routes = createBrowserRouter([
     {
         path: "/tpl",
         element: <Template />
+    },
+    {
+        path: "/tpl/detail",
+        element: <TemplateDetail />
     }
 ]);
 

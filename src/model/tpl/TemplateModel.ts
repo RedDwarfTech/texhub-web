@@ -5,4 +5,5 @@ export interface TemplateModel {
     created_time: string;
     updated_time: string;
     preview_url: string;
+    intro: string;
 }

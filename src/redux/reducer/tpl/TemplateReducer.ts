@@ -1,15 +1,17 @@
+import { TemplateModel } from "@/model/tpl/TemplateModel";
 import { AppState } from "@/redux/types/AppState";
 
 const initState: AppState["tpl"] = {
-    tplList: []
+    tplList: [],
+    tplDetail: {} as TemplateModel
 };
 
 const TemplateReducer = (state = initState, action: any) => {
     switch (action.type) {
-        case "SAVE_EDU":
+        case "GET_TPL_DETAIL":
             return {
                 ...state,
-                savedEdu: action.data
+                tplDetail: action.data
             };
         case "GET_TPL_LIST":
             return {
