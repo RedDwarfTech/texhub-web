@@ -1,7 +1,16 @@
 .headerLayout {
     display: flex;
     flex-direction: row;
-    align-items: right;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(248,249,250);
+}
+
+.headerOperation {
+    display: flex;
+    flex-direction: row;
     justify-content: right;
+    align-items:  right;
     gap: 10px;
+    margin-right: 30px;
 }
