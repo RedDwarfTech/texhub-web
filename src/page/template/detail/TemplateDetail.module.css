@@ -1,10 +1,18 @@
-.container{
+.container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 80%;
+    margin: 0 auto;
+    gap: 15px;
+    margin-top: 50px;
 }
 
 .tplDemo {
     width: 55%;
+}
+
+.intro {
+    font-size: 17px;
 }

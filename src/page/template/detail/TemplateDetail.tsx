@@ -16,7 +16,6 @@ const TemplateDetail: React.FC = () => {
     const { id } = state;
 
     React.useEffect(() => {
-        // debugger
         getTplDetail(id);
     }, []);
 
@@ -32,8 +31,8 @@ const TemplateDetail: React.FC = () => {
         <div>
             <TexHeader></TexHeader>
             <div className={styles.container}>
-                <div>模版详情</div>
-                <div>简介：<p>{tpl.intro}</p></div>
+                <h6>模版详情</h6>
+                <div className={styles.intro}>模版简介：<span>{tpl.intro}</span></div>
                 <img src={tpl.preview_url} className={styles.tplDemo}></img>
             </div>
         </div>
