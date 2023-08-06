@@ -1,4 +1,4 @@
-import { DocActionType } from "@/redux/action/project/ProjectAction";
+import { ProjectActionType } from "@/redux/action/project/ProjectAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
 import { XHRClient } from "rd-component";
@@ -8,6 +8,6 @@ export function getFileList(parent: string) {
         method: 'get',
         url: '/tex/file/list?parent=' + parent,
     };
-    const actionTypeString: string = DocActionType[DocActionType.GET_DOC_LIST];
+    const actionTypeString: string = ProjectActionType[ProjectActionType.GET_PROJ_LIST];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
