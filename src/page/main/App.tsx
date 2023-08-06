@@ -1,21 +1,30 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import styles from './App.module.css';
 import { ReactComponent as HiddenContent } from "@/assets/expert/hidden-content.svg";
 import { FileOutlined, FolderOutlined, RightOutlined } from '@ant-design/icons';
 import CvCodeEditor from '@/component/common/editor/CvCodeEditor';
 import TexHeader from '@/component/header/TexHeader';
 import { useLocation } from 'react-router-dom';
+import { AppState } from '@/redux/types/AppState';
+import { useSelector } from 'react-redux';
+import { TexFileModel } from '@/model/file/TexFileModel';
 
 const App: React.FC = () => {
 
   const divRef = useRef<HTMLDivElement>(null);
   const { state } = useLocation();
   const { projectId } = state;
+  const { fileList } = useSelector((state: AppState) => state.file);
+  const [texFileList, setTexFileList] = useState<TexFileModel[]>([]);
 
   React.useEffect(() => {
     resizeLeft("hiddenContentLeft", "prjTree");
     resizeRight("hiddenContentRight", "editor");
   }, []);
+
+  React.useEffect(() => {
+    setTexFileList(fileList);
+  }, [fileList]);
 
   const resizeLeft = (resizeBarName: string, resizeArea: string) => {
     setTimeout(() => {
@@ -23,7 +32,7 @@ const App: React.FC = () => {
       let resizing = false;
       const menu: any = document.getElementById(resizeArea);
       const resizeBar: any = document.getElementById(resizeBarName);
-      if(resizeBar != null) {
+      if (resizeBar != null) {
         resizeBar.addEventListener("mousedown", () => {
           resizing = true
         });
@@ -57,7 +66,7 @@ const App: React.FC = () => {
       let resizing = false;
       const menu: HTMLElement | null = document.getElementById(resizeArea);
       const resizeBar: any = document.getElementById(resizeBarName);
-      if(resizeBar !== null){
+      if (resizeBar !== null) {
         resizeBar.addEventListener("mousedown", () => {
           resizing = true
         });
@@ -113,7 +122,7 @@ const App: React.FC = () => {
           <HiddenContent id="hiddenContentLeft" className={styles.hiddenContent} />
         </div>
         <div id="editor" className={styles.editor}>
-          <CvCodeEditor projectId={projectId}></CvCodeEditor>
+          <CvCodeEditor projectId={projectId} docId={''}></CvCodeEditor>
         </div>
         <div>
           <HiddenContent id="hiddenContentRight" className={styles.hiddenContent} />

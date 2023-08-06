@@ -46,20 +46,25 @@ const extensions = [
 
 export type EditorProps = {
   projectId: string;
+  docId: string;
 };
 
 const CvCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<any>();
 
   React.useEffect(() => {
-    const view = initEditor(props.projectId);
+    const view = initEditor(props.projectId, props.docId);
     return () => {
       view.destroy();
     };
   }, []);
 
-  const initEditor = (projectId: string): EditorView => {
-    const ydoc = new Y.Doc();
+  const initEditor = (projectId: string, docId: string): EditorView => {
+    let docOpt = {
+      guid: docId,
+      collectionid: projectId
+    };
+    const ydoc = new Y.Doc(docOpt);
     const ytext = ydoc.getText('codemirror');
     const undoManager = new Y.UndoManager(ytext);
     const wsProvider = new WebsocketProvider('wss://ws.poemhub.top', projectId, ydoc);
@@ -68,6 +73,7 @@ const CvCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       color: userColor.color,
       colorLight: userColor.light
     });
+
     const state = EditorState.create({
       doc: ytext.toString(),
       extensions: [

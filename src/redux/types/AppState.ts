@@ -1,4 +1,5 @@
 import { TexProjectModel } from "@/model/doc/TexProjectModel";
+import { TexFileModel } from "@/model/file/TexFileModel";
 import { TemplateModel } from "@/model/tpl/TemplateModel";
 
 export interface AppState {
@@ -8,5 +9,8 @@ export interface AppState {
     tpl: {
         tplList: TemplateModel[],
         tplDetail: TemplateModel
+    },
+    file: {
+        fileList: TexFileModel[]
     }
 }
