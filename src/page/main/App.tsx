@@ -4,10 +4,13 @@ import { ReactComponent as HiddenContent } from "@/assets/expert/hidden-content.
 import { FileOutlined, FolderOutlined, RightOutlined } from '@ant-design/icons';
 import CvCodeEditor from '@/component/common/editor/CvCodeEditor';
 import TexHeader from '@/component/header/TexHeader';
+import { useLocation } from 'react-router-dom';
 
 const App: React.FC = () => {
 
   const divRef = useRef<HTMLDivElement>(null);
+  const { state } = useLocation();
+  const { projectId } = state;
 
   React.useEffect(() => {
     resizeLeft("hiddenContentLeft", "prjTree");
@@ -110,7 +113,7 @@ const App: React.FC = () => {
           <HiddenContent id="hiddenContentLeft" className={styles.hiddenContent} />
         </div>
         <div id="editor" className={styles.editor}>
-          <CvCodeEditor></CvCodeEditor>
+          <CvCodeEditor projectId={projectId}></CvCodeEditor>
         </div>
         <div>
           <HiddenContent id="hiddenContentRight" className={styles.hiddenContent} />

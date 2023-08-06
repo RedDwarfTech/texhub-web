@@ -7,7 +7,6 @@ import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import TexHeader from "@/component/header/TexHeader";
 
-
 const TemplateDetail: React.FC = () => {
 
     const [tpl, setTpl] = useState<TemplateModel>();
@@ -25,7 +24,7 @@ const TemplateDetail: React.FC = () => {
 
     if (!tpl) {
         return (<div></div>);
-    }
+    };
 
     return (
         <div>

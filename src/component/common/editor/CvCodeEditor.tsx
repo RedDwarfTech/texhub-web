@@ -6,7 +6,7 @@ import {
   syntaxHighlighting,
   defaultHighlightStyle,
   StreamLanguage,
-} from '@codemirror/language'
+} from '@codemirror/language';
 import { stex } from '@codemirror/legacy-modes/mode/stex';
 import * as Y from 'yjs';
 import { yCollab } from 'y-codemirror.next';
@@ -25,30 +25,8 @@ export const usercolors = [
   { color: '#9ac2c9', light: '#9ac2c933' },
   { color: '#8acb88', light: '#8acb8833' },
   { color: '#1be7ff', light: '#1be7ff33' }
-]
-
-export const userColor = usercolors[random.uint32() % usercolors.length]
-
-const ydoc = new Y.Doc();
-const wsProvider = new WebsocketProvider('wss://ws.poemhub.top', 'my-roomname', ydoc);
-const ytext = ydoc.getText('codemirror');
-
-const undoManager = new Y.UndoManager(ytext);
-
-wsProvider.awareness.setLocalStateField('user', {
-  name: 'Anonymous ' + Math.floor(Math.random() * 100),
-  color: userColor.color,
-  colorLight: userColor.light
-});
-
-const state = EditorState.create({
-  doc: ytext.toString(),
-  extensions: [
-    basicSetup,
-    javascript(),
-    yCollab(ytext, wsProvider.awareness, { undoManager })
-  ]
-});
+];
+export const userColor = usercolors[random.uint32() % usercolors.length];
 
 const extensions = [
   EditorView.contentAttributes.of({ spellcheck: 'true' }),
@@ -66,19 +44,45 @@ const extensions = [
   syntaxHighlighting(defaultHighlightStyle),
 ];
 
-const CvCodeEditor: React.FC = () => {
+export type EditorProps = {
+  projectId: string;
+};
+
+const CvCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<any>();
 
   React.useEffect(() => {
+    const view = initEditor(props.projectId);
+    return () => {
+      view.destroy();
+    };
+  }, []);
+
+  const initEditor = (projectId: string): EditorView => {
+    const ydoc = new Y.Doc();
+    const ytext = ydoc.getText('codemirror');
+    const undoManager = new Y.UndoManager(ytext);
+    const wsProvider = new WebsocketProvider('wss://ws.poemhub.top', projectId, ydoc);
+    wsProvider.awareness.setLocalStateField('user', {
+      name: 'Anonymous ' + Math.floor(Math.random() * 100),
+      color: userColor.color,
+      colorLight: userColor.light
+    });
+    const state = EditorState.create({
+      doc: ytext.toString(),
+      extensions: [
+        basicSetup,
+        javascript(),
+        yCollab(ytext, wsProvider.awareness, { undoManager })
+      ]
+    });
     const view = new EditorView({
       state,
       parent: edContainer.current,
       extensions: [basicSetup, extensions]
     });
-    return () => {
-      view.destroy();
-    };
-  }, []);
+    return view;
+  }
 
   return <div ref={edContainer} className={styles.container}></div>;
 }

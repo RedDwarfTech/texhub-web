@@ -1,19 +1,19 @@
-import { TexDocModel } from "@/model/doc/TexDocModel";
+import { TexProjectModel } from "@/model/doc/TexProjectModel";
 import { DocActionType } from "@/redux/action/doc/DocAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
 import { XHRClient } from "rd-component";
 
-export function getDocList(tag: string) {
+export function getProjectList(tag: string) {
     const config: AxiosRequestConfig = {
         method: 'get',
-        url: '/tex/doc/list?tag=' + tag,
+        url: '/tex/project/list?tag=' + tag,
     };
     const actionTypeString: string = DocActionType[DocActionType.GET_DOC_LIST];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function createDoc(doc: TexDocModel) {
+export function createDoc(doc: TexProjectModel) {
     const config: AxiosRequestConfig = {
         method: 'post',
         url: '/tex/doc/add',

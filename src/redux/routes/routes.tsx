@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { PaySuccess } from "rd-component";
 import "rd-component/dist/style.css";
-import DocTab from "@/page/profile/docs/DocTab";
+import DocTab from "@/page/profile/project/ProjectTab";
 import Home from "@/page/home/Home";
 import Template from "@/page/template/Template";
 import TemplateDetail from "@/page/template/detail/TemplateDetail";

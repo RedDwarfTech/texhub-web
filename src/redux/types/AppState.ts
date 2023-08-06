@@ -1,9 +1,9 @@
-import { TexDocModel } from "@/model/doc/TexDocModel";
+import { TexProjectModel } from "@/model/doc/TexProjectModel";
 import { TemplateModel } from "@/model/tpl/TemplateModel";
 
 export interface AppState {
     doc: {
-        docList: TexDocModel[]
+        docList: TexProjectModel[]
     },
     tpl: {
         tplList: TemplateModel[],

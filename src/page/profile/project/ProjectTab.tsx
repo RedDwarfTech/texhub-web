@@ -1,21 +1,23 @@
 import TexHeader from "@/component/header/TexHeader";
-import styles from "./DocTab.module.css";
+import styles from "./ProjectTab.module.css";
 import React, { useRef, useState } from "react";
-import { createDoc, getDocList } from "@/service/doc/DocService";
+import { createDoc, getProjectList as getProjectList } from "@/service/doc/ProjectService";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
-import { TexDocModel } from "@/model/doc/TexDocModel";
+import { TexProjectModel } from "@/model/doc/TexProjectModel";
 import { ResponseHandler } from "rdjs-wheel";
+import { useNavigate } from "react-router-dom";
 
 const DocTab: React.FC = () => {
 
-    const [userDocList, setUserDocList] = useState<TexDocModel[]>([]);
+    const [userDocList, setUserDocList] = useState<TexProjectModel[]>([]);
     const [docName, setDocName] = useState<string>();
     const { docList } = useSelector((state: AppState) => state.doc);
     const createDocCancelRef = useRef<HTMLButtonElement>(null);
+    const navigate = useNavigate();
 
     React.useEffect(() => {
-        getDocList("all");
+        getProjectList("all");
     }, []);
 
     React.useEffect(() => {
@@ -26,14 +28,14 @@ const DocTab: React.FC = () => {
     const renderDoc = () => {
         if (!userDocList || userDocList.length === 0) {
             return (<div></div>);
-        }
+        };
         const tagList: JSX.Element[] = [];
-        userDocList.forEach((docItem: TexDocModel) => {
+        userDocList.forEach((docItem: TexProjectModel) => {
             tagList.push(
                 <label className="list-group-item">
                     <div className={styles.docHeader}>
                         <input className="form-check-input me-1" type="checkbox" value="" />
-                        <span><a href="/editor">{docItem.doc_name}</a></span>
+                        <span><a onClick={()=>{navigate("/editor",{ state: { projectId: docItem.project_id } })}}>{docItem.doc_name}</a></span>
                         <div className={styles.option}>
                             <div className="dropdown">
                                 <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -55,21 +57,22 @@ const DocTab: React.FC = () => {
     };
 
     const handleDocCreate = () => {
-        let doc: TexDocModel = {
+        let doc: TexProjectModel = {
             doc_name: docName == null ? "" : docName,
             template_id: 0,
             created_time: "",
-            updated_time: ""
+            updated_time: "",
+            project_id:""
         };
         createDoc(doc).then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
-                getDocList("all");
+                getProjectList("all");
                 if(createDocCancelRef&&createDocCancelRef.current){
                     createDocCancelRef.current.click();
                 }
             }
         });
-    }
+    };
 
     const handleInputChange = (event: any) => {
         setDocName(event.target.value);

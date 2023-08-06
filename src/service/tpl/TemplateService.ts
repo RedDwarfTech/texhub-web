@@ -1,4 +1,4 @@
-import { TexDocModel } from "@/model/doc/TexDocModel";
+import { TexProjectModel } from "@/model/doc/TexProjectModel";
 import { DocActionType } from "@/redux/action/doc/DocAction";
 import { TemplateActionType } from "@/redux/action/tpl/TemplateAction";
 import store from "@/redux/store/store";
@@ -23,7 +23,7 @@ export function getTplDetail(id: number) {
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function createDoc(doc: TexDocModel) {
+export function createDoc(doc: TexProjectModel) {
     const config: AxiosRequestConfig = {
         method: 'post',
         url: '/tex/doc/add',
