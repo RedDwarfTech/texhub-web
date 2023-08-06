@@ -1,19 +1,22 @@
 import TexHeader from "@/component/header/TexHeader";
 import styles from "./ProjectTab.module.css";
 import React, { useRef, useState } from "react";
-import { createDoc, getProjectList as getProjectList } from "@/service/doc/ProjectService";
+import { createDoc, deleteProject, getProjectList as getProjectList } from "@/service/doc/ProjectService";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { TexProjectModel } from "@/model/doc/TexProjectModel";
 import { ResponseHandler } from "rdjs-wheel";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from 'react-toastify';
 
 const DocTab: React.FC = () => {
 
     const [userDocList, setUserDocList] = useState<TexProjectModel[]>([]);
+    const [delProject, setDelProject] = useState<TexProjectModel>();
     const [docName, setDocName] = useState<string>();
     const { docList } = useSelector((state: AppState) => state.doc);
     const createDocCancelRef = useRef<HTMLButtonElement>(null);
+    const delProjCancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
 
     React.useEffect(() => {
@@ -24,6 +27,17 @@ const DocTab: React.FC = () => {
         setUserDocList(docList);
         console.log("doclist:", docList);
     }, [docList]);
+
+
+    const handleProjDel =() => {
+        if(!delProject){
+            toast.info("请选择删除项目");
+        }
+        let proj = {
+            projectId: delProject?.project_id
+        };
+        deleteProject(proj);
+    }
 
     const renderDoc = () => {
         if (!userDocList || userDocList.length === 0) {
@@ -42,7 +56,7 @@ const DocTab: React.FC = () => {
                                     操作
                                 </button>
                                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a className="dropdown-item" href="#">删除</a></li>
+                                    <li><a className="dropdown-item" data-bs-toggle="modal" onClick={()=>{setDelProject(docItem)}} data-bs-target="#delPrj">删除</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -116,6 +130,24 @@ const DocTab: React.FC = () => {
                     </div>
                 </div>
             </div>
+            <div className="modal" id="delPrj" tabIndex={-1}>
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">删除项目</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            删除后数据无法恢复，确定删除项目？
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" ref={delProjCancelRef} className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                            <button type="button" className="btn btn-primary" onClick={() => { handleProjDel() }}>确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ToastContainer />
         </div>
     );
 }

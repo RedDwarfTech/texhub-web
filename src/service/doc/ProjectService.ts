@@ -22,3 +22,13 @@ export function createDoc(doc: TexProjectModel) {
     const actionTypeString: string = DocActionType[DocActionType.CREATE_DOC];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
+
+export function deleteProject(proj: any) {
+    const config: AxiosRequestConfig = {
+        method: 'delete',
+        url: '/tex/project/del',
+        data: JSON.stringify(proj)
+    };
+    const actionTypeString: string = DocActionType[DocActionType.CREATE_DOC];
+    return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
