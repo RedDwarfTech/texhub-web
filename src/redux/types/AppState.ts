@@ -3,8 +3,8 @@ import { TexFileModel } from "@/model/file/TexFileModel";
 import { TemplateModel } from "@/model/tpl/TemplateModel";
 
 export interface AppState {
-    doc: {
-        docList: TexProjectModel[]
+    proj: {
+        projList: TexProjectModel[]
     },
     tpl: {
         tplList: TemplateModel[],

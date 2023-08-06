@@ -14,7 +14,7 @@ const DocTab: React.FC = () => {
     const [userDocList, setUserDocList] = useState<TexProjectModel[]>([]);
     const [delProject, setDelProject] = useState<TexProjectModel>();
     const [docName, setDocName] = useState<string>();
-    const { docList } = useSelector((state: AppState) => state.doc);
+    const { projList } = useSelector((state: AppState) => state.proj);
     const createDocCancelRef = useRef<HTMLButtonElement>(null);
     const delProjCancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
@@ -24,17 +24,16 @@ const DocTab: React.FC = () => {
     }, []);
 
     React.useEffect(() => {
-        setUserDocList(docList);
-        console.log("doclist:", docList);
-    }, [docList]);
+        setUserDocList(projList);
+        console.log("doclist:", projList);
+    }, [projList]);
 
-
-    const handleProjDel =() => {
-        if(!delProject){
+    const handleProjDel = () => {
+        if (!delProject) {
             toast.info("请选择删除项目");
         }
         let proj = {
-            projectId: delProject?.project_id
+            project_id: delProject?.project_id
         };
         deleteProject(proj);
     }
@@ -49,14 +48,14 @@ const DocTab: React.FC = () => {
                 <label className="list-group-item">
                     <div className={styles.docHeader}>
                         <input className="form-check-input me-1" type="checkbox" value="" />
-                        <span><a onClick={()=>{navigate("/editor",{ state: { projectId: docItem.project_id } })}}>{docItem.doc_name}</a></span>
+                        <span><a onClick={() => { navigate("/editor", { state: { projectId: docItem.project_id } }) }}>{docItem.doc_name}</a></span>
                         <div className={styles.option}>
                             <div className="dropdown">
                                 <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                     操作
                                 </button>
                                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a className="dropdown-item" data-bs-toggle="modal" onClick={()=>{setDelProject(docItem)}} data-bs-target="#delPrj">删除</a></li>
+                                    <li><a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setDelProject(docItem) }} data-bs-target="#delPrj">删除</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -76,12 +75,12 @@ const DocTab: React.FC = () => {
             template_id: 0,
             created_time: "",
             updated_time: "",
-            project_id:""
+            project_id: ""
         };
         createDoc(doc).then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
                 getProjectList("all");
-                if(createDocCancelRef&&createDocCancelRef.current){
+                if (createDocCancelRef && createDocCancelRef.current) {
                     createDocCancelRef.current.click();
                 }
             }

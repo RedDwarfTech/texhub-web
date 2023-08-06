@@ -1,4 +1,4 @@
-import { DocActionType } from "@/redux/action/doc/DocAction";
+import { DocActionType } from "@/redux/action/project/ProjectAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
 import { XHRClient } from "rd-component";

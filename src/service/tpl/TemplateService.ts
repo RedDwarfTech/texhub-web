@@ -1,5 +1,5 @@
 import { TexProjectModel } from "@/model/doc/TexProjectModel";
-import { DocActionType } from "@/redux/action/doc/DocAction";
+import { ProjectActionType } from "@/redux/action/project/ProjectAction";
 import { TemplateActionType } from "@/redux/action/tpl/TemplateAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
@@ -29,6 +29,6 @@ export function createDoc(doc: TexProjectModel) {
         url: '/tex/doc/add',
         data: JSON.stringify(doc)
     };
-    const actionTypeString: string = DocActionType[DocActionType.CREATE_DOC];
+    const actionTypeString: string = ProjectActionType[ProjectActionType.CREATE_DOC];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
