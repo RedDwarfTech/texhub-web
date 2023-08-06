@@ -35,7 +35,13 @@ const DocTab: React.FC = () => {
         let proj = {
             project_id: delProject?.project_id
         };
-        deleteProject(proj);
+        deleteProject(proj).then((resp) => {
+            if(ResponseHandler.responseSuccess(resp)){
+                getProjectList("all");
+            }else{
+                toast.error("删除项目失败，{}",resp.msg);
+            }
+        });
     }
 
     const renderDoc = () => {
