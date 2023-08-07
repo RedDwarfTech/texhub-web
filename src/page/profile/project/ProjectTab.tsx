@@ -1,7 +1,7 @@
 import TexHeader from "@/component/header/TexHeader";
 import styles from "./ProjectTab.module.css";
 import React, { useRef, useState } from "react";
-import { createDoc, deleteProject, getProjectList as getProjectList } from "@/service/doc/ProjectService";
+import { createDoc, deleteProject, getProjectList as getProjectList } from "@/service/project/ProjectService";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { TexProjectModel } from "@/model/doc/TexProjectModel";
@@ -38,6 +38,9 @@ const DocTab: React.FC = () => {
         deleteProject(proj).then((resp) => {
             if(ResponseHandler.responseSuccess(resp)){
                 getProjectList("all");
+                if (delProjCancelRef && delProjCancelRef.current) {
+                    delProjCancelRef.current.click();
+                }
             }else{
                 toast.error("删除项目失败，{}",resp.msg);
             }

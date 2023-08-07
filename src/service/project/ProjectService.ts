@@ -16,7 +16,7 @@ export function getProjectList(tag: string) {
 export function createDoc(doc: TexProjectModel) {
     const config: AxiosRequestConfig = {
         method: 'post',
-        url: '/tex/doc/add',
+        url: '/tex/project/add',
         data: JSON.stringify(doc)
     };
     const actionTypeString: string = ProjectActionType[ProjectActionType.CREATE_DOC];
