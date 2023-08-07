@@ -1,13 +1,17 @@
 import React, { useRef, useState } from 'react';
 import styles from './App.module.css';
 import { ReactComponent as HiddenContent } from "@/assets/expert/hidden-content.svg";
-import { FileOutlined, FolderOutlined, RightOutlined } from '@ant-design/icons';
 import CvCodeEditor from '@/component/common/editor/CvCodeEditor';
 import TexHeader from '@/component/header/TexHeader';
 import { useLocation } from 'react-router-dom';
 import { AppState } from '@/redux/types/AppState';
 import { useSelector } from 'react-redux';
 import { TexFileModel } from '@/model/file/TexFileModel';
+import { getFileList } from '@/service/file/FileService';
+import { Tree } from 'antd';
+import type { DataNode, DirectoryTreeProps } from 'antd/es/tree';
+
+const { DirectoryTree } = Tree;
 
 const App: React.FC = () => {
 
@@ -20,6 +24,7 @@ const App: React.FC = () => {
   React.useEffect(() => {
     resizeLeft("hiddenContentLeft", "prjTree");
     resizeRight("hiddenContentRight", "editor");
+    getFileList(projectId);
   }, []);
 
   React.useEffect(() => {
@@ -102,20 +107,46 @@ const App: React.FC = () => {
 
   }
 
+  const treeData: DataNode[] = [
+    {
+      title: 'parent 0',
+      key: '0-0',
+      children: [
+        { title: 'leaf 0-0', key: '0-0-0', isLeaf: true },
+        { title: 'leaf 0-1', key: '0-0-1', isLeaf: true },
+      ],
+    },
+    {
+      title: 'parent 1',
+      key: '0-1',
+      children: [
+        { title: 'leaf 1-0', key: '0-1-0', isLeaf: true },
+        { title: 'leaf 1-1', key: '0-1-1', isLeaf: true },
+      ],
+    },
+  ];
+
+  const onSelect: DirectoryTreeProps['onSelect'] = (keys, info) => {
+    console.log('Trigger Select', keys, info);
+  };
+
+  const onExpand: DirectoryTreeProps['onExpand'] = (keys, info) => {
+    console.log('Trigger Expand', keys, info);
+  };
+
   return (
     <div className={styles.container}>
       <TexHeader></TexHeader>
       <div className={styles.editorBody}>
         <div id="prjTree" ref={divRef} className={styles.prjTree}>
-          <div className={styles.treeItem}>
-            <div className={styles.folderArrow}><RightOutlined /></div>
-            <div><FolderOutlined /></div>
-            <div>image</div>
-          </div>
-          <div className={styles.treeItem}>
-            <div className={styles.folderArrow}></div>
-            <div><FileOutlined /></div>
-            <div>modern.tex</div>
+          <div>
+            <DirectoryTree
+              multiple
+              defaultExpandAll
+              onSelect={onSelect}
+              onExpand={onExpand}
+              treeData={treeData}
+            />
           </div>
         </div>
         <div>

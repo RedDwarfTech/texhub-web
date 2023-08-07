@@ -11,6 +11,7 @@ export interface AppState {
         tplDetail: TemplateModel
     },
     file: {
-        fileList: TexFileModel[]
+        fileList: TexFileModel[],
+        fileTree: TexFileModel[],
     }
 }

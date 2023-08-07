@@ -1,4 +1,4 @@
-import { ProjectActionType } from "@/redux/action/project/ProjectAction";
+import { FileActionType } from "@/redux/action/file/FileAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
 import { XHRClient } from "rd-component";
@@ -6,8 +6,8 @@ import { XHRClient } from "rd-component";
 export function getFileList(parent: string) {
     const config: AxiosRequestConfig = {
         method: 'get',
-        url: '/tex/file/list?parent=' + parent,
+        url: '/tex/file/tree?parent=' + parent,
     };
-    const actionTypeString: string = ProjectActionType[ProjectActionType.GET_PROJ_LIST];
+    const actionTypeString: string = FileActionType[FileActionType.GET_FILE_TREE];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }

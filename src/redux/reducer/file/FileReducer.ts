@@ -1,7 +1,8 @@
 import { AppState } from "@/redux/types/AppState";
 
 const initState: AppState["file"] = {
-    fileList: []
+    fileList: [],
+    fileTree: []
 };
 
 const FileReducer = (state = initState, action: any) => {
@@ -10,6 +11,11 @@ const FileReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 fileList: action.data
+            };
+        case "GET_FILE_TREE":
+            return {
+                ...state,
+                fileTree: action.data
             };
         default:
             break;
