@@ -6,6 +6,7 @@ import { XHRClient } from "rd-component";
 export function getFileList(parent: string) {
     const config: AxiosRequestConfig = {
         method: 'get',
+        headers: {'Content-Type': 'application/json'},
         url: '/tex/file/tree?parent=' + parent,
     };
     const actionTypeString: string = FileActionType[FileActionType.GET_FILE_TREE];
