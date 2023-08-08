@@ -11,6 +11,7 @@ import { addFile, getFileList } from '@/service/file/FileService';
 import { Modal, Tree } from 'antd';
 import type { DataNode, DirectoryTreeProps } from 'antd/es/tree';
 import { FileAddOutlined, FolderAddOutlined } from "@ant-design/icons";
+import { ResponseHandler } from 'rdjs-wheel';
 
 const { DirectoryTree } = Tree;
 const App: React.FC = () => {
@@ -46,7 +47,11 @@ const App: React.FC = () => {
       parent: projectId,
       file_type: 1
     };
-    addFile(params);
+    addFile(params).then((resp)=>{
+      if(ResponseHandler.responseSuccess(resp)) {
+        getFileList(projectId);
+      }
+    });
   };
 
   const handleCancel = () => {
