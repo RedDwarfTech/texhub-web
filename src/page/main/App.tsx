@@ -1,15 +1,16 @@
 import React, { useRef, useState } from 'react';
 import styles from './App.module.css';
 import { ReactComponent as HiddenContent } from "@/assets/expert/hidden-content.svg";
-import CvCodeEditor from '@/component/common/editor/CvCodeEditor';
+const CvCodeEditor = React.lazy(() => import('@/component/common/editor/CvCodeEditor'));
 import TexHeader from '@/component/header/TexHeader';
 import { useLocation } from 'react-router-dom';
 import { AppState } from '@/redux/types/AppState';
 import { useSelector } from 'react-redux';
 import { TexFileModel } from '@/model/file/TexFileModel';
 import { getFileList } from '@/service/file/FileService';
-import { Tree } from 'antd';
+import { Modal, Tree } from 'antd';
 import type { DataNode, DirectoryTreeProps } from 'antd/es/tree';
+import { FileAddOutlined, FolderAddOutlined } from "@ant-design/icons";
 
 const { DirectoryTree } = Tree;
 const App: React.FC = () => {
@@ -19,6 +20,7 @@ const App: React.FC = () => {
   const { projectId } = state;
   const { fileTree } = useSelector((state: AppState) => state.file);
   const [texFileTree, setTexFileTree] = useState<any[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   React.useEffect(() => {
     resizeLeft("hiddenContentLeft", "prjTree");
@@ -31,6 +33,18 @@ const App: React.FC = () => {
       setTexFileTree(fileTree);
     }
   }, [fileTree]);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   const resizeLeft = (resizeBarName: string, resizeArea: string) => {
     setTimeout(() => {
@@ -112,11 +126,19 @@ const App: React.FC = () => {
     console.log('Trigger Expand', keys, info);
   };
 
+  const handleFileAdd = () => {
+    setIsModalOpen(true);
+  }
+
   return (
     <div className={styles.container}>
       <TexHeader></TexHeader>
       <div className={styles.editorBody}>
         <div id="prjTree" ref={divRef} className={styles.prjTree}>
+          <div className={styles.treeMenus}>
+            <button onClick={() => { handleFileAdd() }}><FileAddOutlined /></button>
+            <button><FolderAddOutlined /></button>
+          </div>
           <div>
             <DirectoryTree
               multiple
@@ -134,13 +156,20 @@ const App: React.FC = () => {
           <HiddenContent id="hiddenContentLeft" className={styles.hiddenContent} />
         </div>
         <div id="editor" className={styles.editor}>
-          <CvCodeEditor projectId={projectId} docId={''}></CvCodeEditor>
+          <React.Suspense fallback={<div>Loading...</div>}>
+            <CvCodeEditor projectId={projectId} docId={''}></CvCodeEditor>
+          </React.Suspense>
         </div>
         <div>
           <HiddenContent id="hiddenContentRight" className={styles.hiddenContent} />
         </div>
         <div id="preview" className={styles.preview}>preview</div>
       </div>
+      <Modal title="创建" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <input placeholder="名称"></input>
+      </Modal>
     </div>
   );
 }

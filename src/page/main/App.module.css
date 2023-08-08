@@ -11,6 +11,13 @@
 .prjTree {
   height: 100vh;
   flex: 0 0 10%;
+  display: flex;
+  flex-direction: column;
+}
+
+.treeMenus {
+  display: flex;
+  flex-direction: row;
 }
 
 .editor {
