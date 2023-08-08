@@ -20,6 +20,15 @@
   flex-direction: row;
 }
 
+.fileItem {
+  display: flex;
+  flex-direction: row;
+}
+
+.fileItem > :last-child {
+  margin-left: auto;
+}
+
 .editor {
   resize: horizontal;
   flex: 0 0 60%;

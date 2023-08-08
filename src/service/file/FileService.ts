@@ -21,3 +21,13 @@ export function addFile(params: any) {
     const actionTypeString: string = FileActionType[FileActionType.ADD_FILE];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
+
+export function delTreeItem(params: any) {
+    const config: AxiosRequestConfig = {
+        method: 'delete',
+        url: '/tex/file/del',
+        data: JSON.stringify(params)
+    };
+    const actionTypeString: string = FileActionType[FileActionType.ADD_FILE];
+    return XHRClient.requestWithActionType(config, actionTypeString, store);
+}

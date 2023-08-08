@@ -7,21 +7,23 @@ import { useLocation } from 'react-router-dom';
 import { AppState } from '@/redux/types/AppState';
 import { useSelector } from 'react-redux';
 import { TexFileModel } from '@/model/file/TexFileModel';
-import { addFile, getFileList } from '@/service/file/FileService';
-import { Modal, Tree } from 'antd';
-import type { DataNode, DirectoryTreeProps } from 'antd/es/tree';
-import { FileAddOutlined, FolderAddOutlined } from "@ant-design/icons";
+import { addFile, delTreeItem, getFileList } from '@/service/file/FileService';
+import { Button, Dropdown, MenuProps, Modal } from 'antd';
+import type { DirectoryTreeProps } from 'antd/es/tree';
+import { ExclamationCircleOutlined, FileAddOutlined, FolderAddOutlined, MoreOutlined } from "@ant-design/icons";
 import { ResponseHandler } from 'rdjs-wheel';
 
-const { DirectoryTree } = Tree;
 const App: React.FC = () => {
 
   const divRef = useRef<HTMLDivElement>(null);
   const { state } = useLocation();
   const { projectId } = state;
   const { fileTree } = useSelector((state: AppState) => state.file);
-  const [texFileTree, setTexFileTree] = useState<any[]>([]);
+  const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<string>("");
+
+  const { confirm } = Modal;
 
   React.useEffect(() => {
     resizeLeft("hiddenContentLeft", "prjTree");
@@ -35,10 +37,6 @@ const App: React.FC = () => {
     }
   }, [fileTree]);
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
   const handleOk = () => {
     setIsModalOpen(false);
     let params = {
@@ -47,8 +45,8 @@ const App: React.FC = () => {
       parent: projectId,
       file_type: 1
     };
-    addFile(params).then((resp)=>{
-      if(ResponseHandler.responseSuccess(resp)) {
+    addFile(params).then((resp) => {
+      if (ResponseHandler.responseSuccess(resp)) {
         getFileList(projectId);
       }
     });
@@ -130,16 +128,68 @@ const App: React.FC = () => {
     }, 1500);
   }
 
-  const onSelect: DirectoryTreeProps['onSelect'] = (keys, info) => {
-    console.log('Trigger Select', keys, info);
-  };
-
-  const onExpand: DirectoryTreeProps['onExpand'] = (keys, info) => {
-    console.log('Trigger Expand', keys, info);
-  };
-
   const handleFileAdd = () => {
     setIsModalOpen(true);
+  }
+
+  const handleFileDelete = () => {
+    confirm({
+      icon: <ExclamationCircleOutlined />,
+      content: <div>删除后数据无法恢复，确定要删除？</div>,
+      onOk() {
+        let params = {
+          file_id: selectedFile
+        };
+        delTreeItem(params).then((resp) => {
+          if (ResponseHandler.responseSuccess(resp)) {
+            getFileList(projectId);
+          }
+        });
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  }
+
+  const items: MenuProps['items'] = [
+    {
+      key: '1',
+      label: (
+        <a target="_blank" rel="noopener noreferrer" onClick={handleFileDelete}>
+          删除
+        </a>
+      ),
+    },
+  ];
+
+  const handleDropdownClick = (fileId: string) => {
+    setSelectedFile(fileId);
+  };
+
+  const renderDirectoryTree = () => {
+    if (!texFileTree) {
+      return (<div></div>);
+    }
+    const tagList: JSX.Element[] = [];
+    texFileTree.forEach((item: TexFileModel) => {
+      tagList.push(
+        <div className={styles.fileItem}>
+          <div>{item.name}</div>
+          <div className={styles.actions}>
+            <Dropdown menu={{ items }}
+              onOpenChange={(visible) =>
+                visible && handleDropdownClick(item.file_id)
+              }
+              placement="bottomLeft"
+              arrow={{ pointAtCenter: true }}>
+              <Button icon={<MoreOutlined />} />
+            </Dropdown>
+          </div>
+        </div>
+      );
+    });
+    return tagList;
   }
 
   return (
@@ -151,17 +201,8 @@ const App: React.FC = () => {
             <button onClick={() => { handleFileAdd() }}><FileAddOutlined /></button>
             <button><FolderAddOutlined /></button>
           </div>
-          <div>
-            <DirectoryTree
-              multiple
-              defaultExpandAll
-              onSelect={onSelect}
-              onExpand={onExpand}
-              treeData={texFileTree}
-              fieldNames={
-                { title: 'name', key: 'file_id' }
-              }
-            />
+          <div className={styles.treeBody}>
+            {renderDirectoryTree()}
           </div>
         </div>
         <div>
