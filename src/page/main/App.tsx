@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 import { AppState } from '@/redux/types/AppState';
 import { useSelector } from 'react-redux';
 import { TexFileModel } from '@/model/file/TexFileModel';
-import { getFileList } from '@/service/file/FileService';
+import { addFile, getFileList } from '@/service/file/FileService';
 import { Modal, Tree } from 'antd';
 import type { DataNode, DirectoryTreeProps } from 'antd/es/tree';
 import { FileAddOutlined, FolderAddOutlined } from "@ant-design/icons";
@@ -40,6 +40,13 @@ const App: React.FC = () => {
 
   const handleOk = () => {
     setIsModalOpen(false);
+    let params = {
+      name: "demo",
+      project_id: projectId,
+      parent: projectId,
+      file_type: 1
+    };
+    addFile(params);
   };
 
   const handleCancel = () => {
@@ -166,8 +173,6 @@ const App: React.FC = () => {
         <div id="preview" className={styles.preview}>preview</div>
       </div>
       <Modal title="创建" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
         <input placeholder="名称"></input>
       </Modal>
     </div>
