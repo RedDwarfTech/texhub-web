@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { EditorView } from "@codemirror/view";
 import { basicSetup } from "codemirror";
 import styles from "./CollarCodeEditor.module.css";
@@ -15,6 +15,9 @@ import { javascript } from '@codemirror/lang-javascript';
 import * as random from 'lib0/random';
 import { WebsocketProvider } from 'y-websocket';
 import React from "react";
+import { AppState } from "@/redux/types/AppState";
+import { useSelector } from "react-redux";
+import 'react-toastify/dist/ReactToastify.css';
 
 export const usercolors = [
   { color: '#30bced', light: '#30bced33' },
@@ -49,26 +52,40 @@ export type EditorProps = {
   docId: string;
 };
 
-const CvCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
+const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<any>();
+  const { file } = useSelector((state: AppState) => state.file);
+  const [activeEditorView, setActiveEditorView] = useState<EditorView>();
 
   React.useEffect(() => {
     const view = initEditor(props.projectId, props.docId);
-    return () => {
+    setActiveEditorView(view);
+   return () => {
       view.destroy();
     };
   }, []);
 
+  React.useEffect(() => {
+    if (!file || !file.file_id) return;
+    const view = initEditor(props.projectId, file.file_id);
+    setActiveEditorView(view);
+    return () => {
+      view.destroy();
+    };
+  }, [file]);
+
   const initEditor = (projectId: string, docId: string): EditorView => {
+    if(activeEditorView){
+      activeEditorView.destroy();
+    }
     let docOpt = {
       guid: docId,
       collectionid: projectId
     };
     const ydoc = new Y.Doc(docOpt);
-    const ytext = ydoc.getText('codemirror');
+    const ytext = ydoc.getText(docId);
     const undoManager = new Y.UndoManager(ytext);
     const wsProvider = new WebsocketProvider('wss://ws.poemhub.top', projectId, ydoc);
-    debugger
     wsProvider.awareness.setLocalStateField('user', {
       name: 'Anonymous ' + Math.floor(Math.random() * 100),
       color: userColor.color,
@@ -91,7 +108,8 @@ const CvCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     return view;
   }
 
-  return <div ref={edContainer} className={styles.container}></div>;
+  return <div ref={edContainer} className={styles.container}>
+  </div>;
 }
 
-export default CvCodeEditor;
+export default CollarCodeEditor;

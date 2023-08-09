@@ -31,3 +31,8 @@ export function delTreeItem(params: any) {
     const actionTypeString: string = FileActionType[FileActionType.ADD_FILE];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
+
+export function chooseFile(params: any) {
+    const actionTypeString: string = FileActionType[FileActionType.CHOOSE_FILE];
+    return XHRClient.dispathAction(params, actionTypeString, store);
+}

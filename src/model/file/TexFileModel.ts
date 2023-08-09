@@ -6,4 +6,5 @@ export interface TexFileModel {
     updated_time: string;
     project_id: string;
     file_id: string;
+    main_flag: number;
 }

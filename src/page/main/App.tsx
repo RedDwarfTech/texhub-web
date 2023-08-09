@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 import { AppState } from '@/redux/types/AppState';
 import { useSelector } from 'react-redux';
 import { TexFileModel } from '@/model/file/TexFileModel';
-import { addFile, delTreeItem, getFileList } from '@/service/file/FileService';
+import { addFile, chooseFile, delTreeItem, getFileList } from '@/service/file/FileService';
 import { Button, Dropdown, MenuProps, Modal } from 'antd';
 import { ExclamationCircleOutlined, FileAddOutlined, FolderAddOutlined, MoreOutlined } from "@ant-design/icons";
 import { ResponseHandler } from 'rdjs-wheel';
@@ -22,7 +22,7 @@ const App: React.FC = () => {
   const { fileTree } = useSelector((state: AppState) => state.file);
   const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<string>("");
+  const [mainFile, setMainFile] = useState<TexFileModel>();
   const { confirm } = Modal;
 
   React.useEffect(() => {
@@ -34,6 +34,8 @@ const App: React.FC = () => {
   React.useEffect(() => {
     if (fileTree && fileTree.length > 0) {
       setTexFileTree(fileTree);
+      let defaultFile = fileTree.filter((file: TexFileModel) => file.main_flag === 1);
+      setMainFile(defaultFile[0]);
     }
   }, [fileTree]);
 
@@ -138,7 +140,7 @@ const App: React.FC = () => {
       content: <div>删除后数据无法恢复，确定要删除？</div>,
       onOk() {
         let params = {
-          file_id: selectedFile
+          file_id: mainFile
         };
         delTreeItem(params).then((resp) => {
           if (ResponseHandler.responseSuccess(resp)) {
@@ -164,11 +166,14 @@ const App: React.FC = () => {
   ];
 
   const handleDropdownClick = (fileId: string) => {
-    setSelectedFile(fileId);
+
   };
 
-  const handleTreeItemClick = (e: any) => {
-    toast.info("点击文件");
+  const handleTreeItemClick = (fileItem: TexFileModel) => {
+    let params = {
+      file_id: fileItem.file_id
+    };
+    chooseFile(params);
   };
 
   const renderDirectoryTree = () => {
@@ -178,7 +183,7 @@ const App: React.FC = () => {
     const tagList: JSX.Element[] = [];
     texFileTree.forEach((item: TexFileModel) => {
       tagList.push(
-        <div key={item.file_id} className={styles.fileItem} onClick={handleTreeItemClick}>
+        <div key={item.file_id} className={styles.fileItem} onClick={() => handleTreeItemClick(item)}>
           <div>{item.name}</div>
           <div className={styles.actions}>
             <Dropdown menu={{ items }}
@@ -194,6 +199,10 @@ const App: React.FC = () => {
       );
     });
     return tagList;
+  }
+
+  if (!mainFile) {
+    return <div>Loading...</div>
   }
 
   return (
@@ -214,7 +223,7 @@ const App: React.FC = () => {
         </div>
         <div id="editor" className={styles.editor}>
           <React.Suspense fallback={<div>Loading...</div>}>
-            <CvCodeEditor projectId={projectId} docId={selectedFile}></CvCodeEditor>
+            <CvCodeEditor projectId={projectId} docId={mainFile?.file_id!}></CvCodeEditor>
           </React.Suspense>
         </div>
         <div>

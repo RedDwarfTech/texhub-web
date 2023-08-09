@@ -1,8 +1,10 @@
+import { TexFileModel } from "@/model/file/TexFileModel";
 import { AppState } from "@/redux/types/AppState";
 
 const initState: AppState["file"] = {
     fileList: [],
-    fileTree: []
+    fileTree: [],
+    file: {} as TexFileModel
 };
 
 const FileReducer = (state = initState, action: any) => {
@@ -16,6 +18,11 @@ const FileReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 fileTree: action.data
+            };
+        case "CHOOSE_FILE":
+            return {
+                ...state,
+                file: action.data
             };
         default:
             break;
