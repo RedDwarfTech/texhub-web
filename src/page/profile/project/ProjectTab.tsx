@@ -54,7 +54,7 @@ const DocTab: React.FC = () => {
         const tagList: JSX.Element[] = [];
         userDocList.forEach((docItem: TexProjectModel) => {
             tagList.push(
-                <label className="list-group-item">
+                <label key={docItem.project_id} className="list-group-item">
                     <div className={styles.docHeader}>
                         <input className="form-check-input me-1" type="checkbox" value="" />
                         <span><a onClick={() => { navigate("/editor", { state: { projectId: docItem.project_id } }) }}>{docItem.doc_name}</a></span>

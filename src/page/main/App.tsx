@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import styles from './App.module.css';
 import { ReactComponent as HiddenContent } from "@/assets/expert/hidden-content.svg";
-const CvCodeEditor = React.lazy(() => import('@/component/common/editor/CvCodeEditor'));
+const CvCodeEditor = React.lazy(() => import('@/component/common/editor/CollarCodeEditor'));
 import TexHeader from '@/component/header/TexHeader';
 import { useLocation } from 'react-router-dom';
 import { AppState } from '@/redux/types/AppState';
@@ -9,9 +9,10 @@ import { useSelector } from 'react-redux';
 import { TexFileModel } from '@/model/file/TexFileModel';
 import { addFile, delTreeItem, getFileList } from '@/service/file/FileService';
 import { Button, Dropdown, MenuProps, Modal } from 'antd';
-import type { DirectoryTreeProps } from 'antd/es/tree';
 import { ExclamationCircleOutlined, FileAddOutlined, FolderAddOutlined, MoreOutlined } from "@ant-design/icons";
 import { ResponseHandler } from 'rdjs-wheel';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App: React.FC = () => {
 
@@ -22,7 +23,6 @@ const App: React.FC = () => {
   const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<string>("");
-
   const { confirm } = Modal;
 
   React.useEffect(() => {
@@ -167,6 +167,10 @@ const App: React.FC = () => {
     setSelectedFile(fileId);
   };
 
+  const handleTreeItemClick = (e: any) => {
+    toast.info("点击文件");
+  };
+
   const renderDirectoryTree = () => {
     if (!texFileTree) {
       return (<div></div>);
@@ -174,7 +178,7 @@ const App: React.FC = () => {
     const tagList: JSX.Element[] = [];
     texFileTree.forEach((item: TexFileModel) => {
       tagList.push(
-        <div className={styles.fileItem}>
+        <div key={item.file_id} className={styles.fileItem} onClick={handleTreeItemClick}>
           <div>{item.name}</div>
           <div className={styles.actions}>
             <Dropdown menu={{ items }}
@@ -210,7 +214,7 @@ const App: React.FC = () => {
         </div>
         <div id="editor" className={styles.editor}>
           <React.Suspense fallback={<div>Loading...</div>}>
-            <CvCodeEditor projectId={projectId} docId={''}></CvCodeEditor>
+            <CvCodeEditor projectId={projectId} docId={selectedFile}></CvCodeEditor>
           </React.Suspense>
         </div>
         <div>
@@ -221,6 +225,7 @@ const App: React.FC = () => {
       <Modal title="创建" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <input placeholder="名称"></input>
       </Modal>
+      <ToastContainer />
     </div>
   );
 }

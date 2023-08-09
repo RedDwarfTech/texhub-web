@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { EditorView } from "@codemirror/view";
 import { basicSetup } from "codemirror";
-import styles from "./CvCodeEditor.module.css";
+import styles from "./CollarCodeEditor.module.css";
 import {
   syntaxHighlighting,
   defaultHighlightStyle,
@@ -68,6 +68,7 @@ const CvCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     const ytext = ydoc.getText('codemirror');
     const undoManager = new Y.UndoManager(ytext);
     const wsProvider = new WebsocketProvider('wss://ws.poemhub.top', projectId, ydoc);
+    debugger
     wsProvider.awareness.setLocalStateField('user', {
       name: 'Anonymous ' + Math.floor(Math.random() * 100),
       color: userColor.color,
