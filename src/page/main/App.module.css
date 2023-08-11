@@ -49,3 +49,12 @@
   width: 12px;
   height: 12px;
 }
+
+.cavasLayer {
+  border: 1px solid black;
+  
+}
+
+.textLayer {
+  min-height: 10px;
+}

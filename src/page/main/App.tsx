@@ -13,6 +13,7 @@ import { ResponseHandler } from 'rdjs-wheel';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EHeader from '@/component/header/editor/EHeader';
+import "pdfjs-dist/web/pdf_viewer.css";
 
 const App: React.FC = () => {
 
@@ -59,15 +60,11 @@ const App: React.FC = () => {
       const textContent = page.getTextContent();
       return textContent;
     }).then(function (textContent: string) {
-      // Assign CSS to the textLayer element
       var textLayer = document.querySelector(`.${styles.textLayer}`) as HTMLDivElement;
-
       textLayer.style.left = canvas.offsetLeft + 'px';
       textLayer.style.top = canvas.offsetTop + 'px';
       textLayer.style.height = canvas.offsetHeight + 'px';
       textLayer.style.width = canvas.offsetWidth + 'px';
-
-      // Pass the data to the method for rendering of text over the pdf canvas.
       pdfJS.renderTextLayer({
         textContent: textContent,
         container: textLayer,
