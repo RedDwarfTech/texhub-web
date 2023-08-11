@@ -42,25 +42,45 @@ const App: React.FC = () => {
   }, [fileTree]);
 
   const initPdf = async () => {
-    // We import this here so that it's only loaded during client-side rendering.
-			const pdfJS = await import('pdfjs-dist/build/pdf');
-			pdfJS.GlobalWorkerOptions.workerSrc =
-				window.location.origin + '/pdf.worker.min.js';
-			const pdf = await pdfJS.getDocument('lshort-zh-cn.pdf').promise;
+    const pdfJS = await import('pdfjs-dist/build/pdf');
+    pdfJS.GlobalWorkerOptions.workerSrc =
+      window.location.origin + '/pdf.worker.min.js';
+    const pdf = await pdfJS.getDocument('lshort-zh-cn.pdf').promise;
+    const page = await pdf.getPage(1);
+    const viewport = page.getViewport({ scale: 1.5 });
+    const canvas: any = canvasRef.current;
+    if (!canvas) return;
+    const canvasContext = canvas.getContext('2d');
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+    const renderContext = { canvasContext, viewport };
+    const renderTask = page.render(renderContext);
+    renderTask.promise.then(function () {
+      const textContent = page.getTextContent();
+      return textContent;
+    }).then(function (textContent: string) {
+      // Assign CSS to the textLayer element
+      var textLayer = document.querySelector(`.${styles.textLayer}`) as HTMLDivElement;
 
-			const page = await pdf.getPage(1);
-			const viewport = page.getViewport({ scale: 1.5 });
+      textLayer.style.left = canvas.offsetLeft + 'px';
+      textLayer.style.top = canvas.offsetTop + 'px';
+      textLayer.style.height = canvas.offsetHeight + 'px';
+      textLayer.style.width = canvas.offsetWidth + 'px';
 
-			// Prepare canvas using PDF page dimensions.
-			const canvas: any = canvasRef.current;
-      if(!canvas) return;
-			const canvasContext = canvas.getContext('2d');
-			canvas.height = viewport.height;
-			canvas.width = viewport.width;
+      // Pass the data to the method for rendering of text over the pdf canvas.
+      pdfJS.renderTextLayer({
+        textContent: textContent,
+        container: textLayer,
+        viewport: viewport,
+        textDivs: []
+      });
+    });
+  }
 
-			// Render PDF page into canvas context.
-			const renderContext = { canvasContext, viewport };
-			page.render(renderContext);
+  const renderPage = () => {
+
+
+
   }
 
   const handleOk = () => {
@@ -257,7 +277,13 @@ const App: React.FC = () => {
           <div className={styles.previewHader}>
           </div>
           <div className={styles.previewBody}>
-            <canvas ref={canvasRef} style={{ height: '100vh' }} />
+            <div className={styles.cavasLayer}>
+              <canvas ref={canvasRef} style={{ height: '100vh' }} />
+            </div>
+            {/*https://stackoverflow.com/questions/33063213/pdf-js-with-text-selection*/}
+            <div className={styles.textLayer}>
+
+            </div>
           </div>
           <div className={styles.previewFooter}>
 
