@@ -4,6 +4,8 @@ import { AppState } from "@/redux/types/AppState";
 import React, { useState } from "react";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { toast, ToastContainer } from 'react-toastify';
+import { compileProject } from "@/service/project/ProjectService";
+import { ResponseHandler } from "rdjs-wheel";
 
 const EHeader: React.FC = () => {
 
@@ -19,6 +21,20 @@ const EHeader: React.FC = () => {
 
     const handleCompile = (mainFile: TexFileModel) => {
         toast.info("trigger compile");
+        if(!mainFile){
+            toast.error("file is null");
+        }
+        let params = {
+            project_id: mainFile.project_id
+        };
+        compileProject(params).then((resp)=>{
+            if(ResponseHandler.responseSuccess(resp)){
+                // get pdf file
+                // get log file
+            }else{
+                toast.error(resp.msg);
+            }
+        });
     }
 
     if (!mainFile) {

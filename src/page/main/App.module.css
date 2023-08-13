@@ -55,6 +55,11 @@
   
 }
 
+.cavasLayer canvas {
+  width: 900px;
+  height: 100vh;
+}
+
 .textLayer {
   min-height: 10px;
 }

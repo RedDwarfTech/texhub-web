@@ -32,3 +32,13 @@ export function deleteProject(proj: any) {
     const actionTypeString: string = ProjectActionType[ProjectActionType.DELETE_PROJ];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
+
+export function compileProject(proj: any) {
+    const config: AxiosRequestConfig = {
+        method: 'put',
+        url: '/tex/project/compile',
+        data: JSON.stringify(proj)
+    };
+    const actionTypeString: string = ProjectActionType[ProjectActionType.COMPILE_PROJ];
+    return XHRClient.requestWithActionType(config, actionTypeString, store);
+}

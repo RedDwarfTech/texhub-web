@@ -13,7 +13,7 @@ import { ResponseHandler } from 'rdjs-wheel';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EHeader from '@/component/header/editor/EHeader';
-import "pdfjs-dist/web/pdf_viewer.css";
+import 'pdfjs-dist/web/pdf_viewer.css';
 
 const App: React.FC = () => {
 
@@ -60,7 +60,7 @@ const App: React.FC = () => {
       const textContent = page.getTextContent();
       return textContent;
     }).then(function (textContent: string) {
-      var textLayer = document.querySelector(`.${styles.textLayer}`) as HTMLDivElement;
+      const textLayer = document.querySelector(".textLayer") as HTMLDivElement;
       textLayer.style.left = canvas.offsetLeft + 'px';
       textLayer.style.top = canvas.offsetTop + 'px';
       textLayer.style.height = canvas.offsetHeight + 'px';
@@ -72,12 +72,6 @@ const App: React.FC = () => {
         textDivs: []
       });
     });
-  }
-
-  const renderPage = () => {
-
-
-
   }
 
   const handleOk = () => {
@@ -275,12 +269,11 @@ const App: React.FC = () => {
           </div>
           <div className={styles.previewBody}>
             <div className={styles.cavasLayer}>
-              <canvas ref={canvasRef} style={{ height: '100vh' }} />
+              <canvas ref={canvasRef} />
+              <div className="textLayer"></div>
             </div>
             {/*https://stackoverflow.com/questions/33063213/pdf-js-with-text-selection*/}
-            <div className={styles.textLayer}>
-
-            </div>
+            
           </div>
           <div className={styles.previewFooter}>
 
