@@ -7,7 +7,8 @@ let devConfigMap = new Map([
     ["appId" , "vOghoo10L9"],
     ["phone","+8615683761628"],
     ["password","12345678"],
-    ["deviceName","dolphin's macbook pro"]
+    ["deviceName","dolphin's macbook pro"],
+    ["compileBaseUrl","https://tex.poemhub.top/tex/static"]
 ]); 
 
 export default devConfigMap;

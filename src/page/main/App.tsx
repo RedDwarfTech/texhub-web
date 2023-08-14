@@ -39,7 +39,7 @@ const App: React.FC = () => {
       setTexFileTree(fileTree);
       let defaultFile = fileTree.filter((file: TexFileModel) => file.main_flag === 1);
       setMainFile(defaultFile[0]);
-      const pdfUrl = readConfig("compileBaseUrl") + "/" + mainFile?.project_id + "/" + mainFile?.name.split(".")[0] + ".pdf";
+      const pdfUrl = readConfig("compileBaseUrl") + "/" + defaultFile[0]?.project_id + "/" + defaultFile[0]?.name.split(".")[0] + ".pdf";
       initPdf(pdfUrl);
     }
   }, [fileTree]);
