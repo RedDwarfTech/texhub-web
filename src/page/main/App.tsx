@@ -46,13 +46,15 @@ const App: React.FC = () => {
   }, [fileTree]);
 
   React.useEffect(()=>{
-    if(!compileResult){
+    if(!compileResult || Object.keys(compileResult).length === 0){
       return;
     }
     let proj_id = compileResult.project_id;
     let vid = compileResult.out_path;
-    const pdfUrl = readConfig("compileBaseUrl") + "/" + proj_id + "/" + vid + "/main.pdf";
-    initPdf(pdfUrl);
+    if(proj_id && vid){
+      const pdfUrl = readConfig("compileBaseUrl") + "/" + proj_id + "/" + vid + "/main.pdf";
+      initPdf(pdfUrl);
+    }
   },[compileResult]);
 
   const initPdf = async (pdfUrl: string) => {
