@@ -27,6 +27,7 @@ const EHeader: React.FC = () => {
         let params = {
             project_id: mainFile.project_id,
             req_time: new Date().getTime(),
+            file_name: mainFile.name
         };
         compileProject(params).then((resp)=>{
             if(ResponseHandler.responseSuccess(resp)){
