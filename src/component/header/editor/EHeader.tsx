@@ -25,7 +25,8 @@ const EHeader: React.FC = () => {
             toast.error("file is null");
         }
         let params = {
-            project_id: mainFile.project_id
+            project_id: mainFile.project_id,
+            req_time: new Date().getTime(),
         };
         compileProject(params).then((resp)=>{
             if(ResponseHandler.responseSuccess(resp)){
