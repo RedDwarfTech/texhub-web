@@ -46,6 +46,9 @@ const App: React.FC = () => {
   }, [fileTree]);
 
   React.useEffect(()=>{
+    if(!compileResult){
+      return;
+    }
     let proj_id = compileResult.project_id;
     let vid = compileResult.out_path;
     const pdfUrl = readConfig("compileBaseUrl") + "/" + proj_id + "/" + vid + "/main.pdf";
