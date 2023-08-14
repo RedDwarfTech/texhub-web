@@ -30,8 +30,7 @@ const EHeader: React.FC = () => {
         };
         compileProject(params).then((resp)=>{
             if(ResponseHandler.responseSuccess(resp)){
-                // get pdf file
-                // get log file
+                
             }else{
                 toast.error(resp.msg);
             }

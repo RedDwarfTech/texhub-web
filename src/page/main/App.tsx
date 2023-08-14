@@ -22,6 +22,7 @@ const App: React.FC = () => {
   const { state } = useLocation();
   const { projectId } = state;
   const { fileTree } = useSelector((state: AppState) => state.file);
+  const { compileResult } = useSelector((state: AppState) => state.proj);
   const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mainFile, setMainFile] = useState<TexFileModel>();
@@ -43,6 +44,13 @@ const App: React.FC = () => {
       initPdf(pdfUrl);
     }
   }, [fileTree]);
+
+  React.useEffect(()=>{
+    let proj_id = compileResult.project_id;
+    let vid = compileResult.out_path;
+    const pdfUrl = readConfig("compileBaseUrl") + "/" + proj_id + "/" + vid + "/main.pdf";
+    initPdf(pdfUrl);
+  },[compileResult]);
 
   const initPdf = async (pdfUrl: string) => {
     const pdfJS = await import('pdfjs-dist/build/pdf');

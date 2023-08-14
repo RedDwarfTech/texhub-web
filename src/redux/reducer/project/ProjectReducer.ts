@@ -1,7 +1,9 @@
+import { CompileResult } from "@/model/doc/CompileResult";
 import { AppState } from "@/redux/types/AppState";
 
 const initState: AppState["proj"] = {
-    projList: []
+    projList: [],
+    compileResult: {} as CompileResult
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -10,6 +12,11 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 projList: action.data
+            };
+        case "COMPILE_PROJ":
+            return {
+                ...state,
+                compileResult: action.data
             };
         default:
             break;
