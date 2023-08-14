@@ -14,6 +14,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EHeader from '@/component/header/editor/EHeader';
 import 'pdfjs-dist/web/pdf_viewer.css';
+import { readConfig } from '@/config/app/config-reader';
 
 const App: React.FC = () => {
 
@@ -31,7 +32,6 @@ const App: React.FC = () => {
     resizeLeft("hiddenContentLeft", "prjTree");
     resizeRight("hiddenContentRight", "editor");
     getFileList(projectId);
-    initPdf();
   }, []);
 
   React.useEffect(() => {
@@ -39,14 +39,16 @@ const App: React.FC = () => {
       setTexFileTree(fileTree);
       let defaultFile = fileTree.filter((file: TexFileModel) => file.main_flag === 1);
       setMainFile(defaultFile[0]);
+      const pdfUrl = readConfig("compileBaseUrl") + "/" + mainFile?.project_id + "/" + mainFile?.name.split(".")[0] + ".pdf";
+      initPdf(pdfUrl);
     }
   }, [fileTree]);
 
-  const initPdf = async () => {
+  const initPdf = async (pdfUrl: string) => {
     const pdfJS = await import('pdfjs-dist/build/pdf');
     pdfJS.GlobalWorkerOptions.workerSrc =
       window.location.origin + '/pdf.worker.min.js';
-    const pdf = await pdfJS.getDocument('lshort-zh-cn.pdf').promise;
+    const pdf = await pdfJS.getDocument(pdfUrl).promise;
     const page = await pdf.getPage(1);
     const viewport = page.getViewport({ scale: 1.5 });
     const canvas: any = canvasRef.current;
