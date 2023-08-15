@@ -25,6 +25,7 @@
     "codemirror": "^6.0.1",
     "lib0": "^0.2.80",
     "pdfjs-dist": "^3.9.179",
+    "query-string": "^8.1.0",
     "rd-component": "^0.1.123",
     "rdjs-wheel": "0.0.19",
     "react": "^18.2.0",

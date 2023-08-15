@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import styles from './App.module.css';
 import { ReactComponent as HiddenContent } from "@/assets/expert/hidden-content.svg";
-const CvCodeEditor = React.lazy(() => import('@/component/common/editor/CollarCodeEditor'));
+const CollarCodeEditor = React.lazy(() => import('@/component/common/editor/CollarCodeEditor'));
 import { useLocation } from 'react-router-dom';
 import { AppState } from '@/redux/types/AppState';
 import { useSelector } from 'react-redux';
@@ -278,7 +278,7 @@ const App: React.FC = () => {
         </div>
         <div id="editor" className={styles.editor}>
           <React.Suspense fallback={<div>Loading...</div>}>
-            <CvCodeEditor projectId={pid.toString()} docId={mainFile?.file_id!}></CvCodeEditor>
+            <CollarCodeEditor projectId={pid.toString()} docId={mainFile?.file_id!}></CollarCodeEditor>
           </React.Suspense>
         </div>
         <div>
