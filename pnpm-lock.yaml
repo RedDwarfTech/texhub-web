@@ -62,6 +62,12 @@ dependencies:
   bootstrap:
     specifier: 5.3.0-alpha1
     version: 5.3.0-alpha1(@popperjs/core@2.11.8)
+  cm6-theme-solarized-dark:
+    specifier: ^0.2.0
+    version: 0.2.0(@codemirror/language@6.8.0)(@codemirror/state@6.2.1)(@codemirror/view@6.16.0)(@lezer/highlight@1.1.6)
+  cm6-theme-solarized-light:
+    specifier: ^0.2.0
+    version: 0.2.0(@codemirror/language@6.8.0)(@codemirror/state@6.2.1)(@codemirror/view@6.16.0)(@lezer/highlight@1.1.6)
   codemirror:
     specifier: ^6.0.1
     version: 6.0.1(@lezer/common@1.0.3)
@@ -5751,6 +5757,34 @@ packages:
   /clsx@1.2.1:
     resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
     engines: {node: '>=6'}
+    dev: false
+
+  /cm6-theme-solarized-dark@0.2.0(@codemirror/language@6.8.0)(@codemirror/state@6.2.1)(@codemirror/view@6.16.0)(@lezer/highlight@1.1.6):
+    resolution: {integrity: sha512-FWtYHcX8NLzNSs21yGbkLF+q/5m2u80ug0JytKoI9nMZWPP5dcnsFYp1iZBEegLehiZnpv1qcmTsLTUG2KD39w==}
+    peerDependencies:
+      '@codemirror/language': ^6.0.0
+      '@codemirror/state': ^6.0.0
+      '@codemirror/view': ^6.0.0
+      '@lezer/highlight': ^1.0.0
+    dependencies:
+      '@codemirror/language': 6.8.0
+      '@codemirror/state': 6.2.1
+      '@codemirror/view': 6.16.0
+      '@lezer/highlight': 1.1.6
+    dev: false
+
+  /cm6-theme-solarized-light@0.2.0(@codemirror/language@6.8.0)(@codemirror/state@6.2.1)(@codemirror/view@6.16.0)(@lezer/highlight@1.1.6):
+    resolution: {integrity: sha512-Iw7Xv+9A6NlT7sRGlM2pOwD3ZBETkAqpb7c6O0LPj5kjwcK6C3k+mvjzaQt1gzfBErMmhL1HHuK07zICeXkE+w==}
+    peerDependencies:
+      '@codemirror/language': ^6.0.0
+      '@codemirror/state': ^6.0.0
+      '@codemirror/view': ^6.0.0
+      '@lezer/highlight': ^1.0.0
+    dependencies:
+      '@codemirror/language': 6.8.0
+      '@codemirror/state': 6.2.1
+      '@codemirror/view': 6.16.0
+      '@lezer/highlight': 1.1.6
     dev: false
 
   /co@4.6.0:

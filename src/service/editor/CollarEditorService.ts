@@ -8,6 +8,7 @@ import { javascript } from "@codemirror/lang-javascript";
 import { yCollab } from "y-codemirror.next";
 import { StreamLanguage, defaultHighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { stex } from "@codemirror/legacy-modes/mode/stex";
+import { solarizedLight } from 'cm6-theme-solarized-light';
 
 export const usercolors = [
     { color: '#30bced', light: '#30bced33' },
@@ -25,11 +26,10 @@ const extensions = [
     EditorView.lineWrapping,
     EditorView.theme({
         '.cm-content': {
-            minHeight: '600px'
+            height: '96vh'
         },
         '.cm-scroller': {
-            maxHeight: '100vh',
-            minHeight: '100vh',
+            
         },
     }),
     StreamLanguage.define(stex),
@@ -72,13 +72,14 @@ export function initEditor(projectId: string, docId: string, activeEditorView: E
         extensions: [
             basicSetup,
             javascript(),
-            yCollab(ytext, wsProvider.awareness, { undoManager })
+            yCollab(ytext, wsProvider.awareness, { undoManager }),
+            extensions,
+            solarizedLight
         ]
     });
     const view = new EditorView({
         state,
         parent: edContainer.current,
-        extensions: [basicSetup, extensions]
     });
     return view;
 }
