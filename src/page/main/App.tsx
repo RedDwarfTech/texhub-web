@@ -15,12 +15,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import EHeader from '@/component/header/editor/EHeader';
 import 'pdfjs-dist/web/pdf_viewer.css';
 import { readConfig } from '@/config/app/config-reader';
+import queryString from 'query-string';
 
 const App: React.FC = () => {
 
   const divRef = useRef<HTMLDivElement>(null);
-  const { state } = useLocation();
-  const { projectId } = state;
+  const location = useLocation();
+  const search = location.search;
+  const params = queryString.parse(search);
+  const pid = params.pid!;
   const { fileTree } = useSelector((state: AppState) => state.file);
   const { compileResult } = useSelector((state: AppState) => state.proj);
   const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
@@ -32,7 +35,9 @@ const App: React.FC = () => {
   React.useEffect(() => {
     resizeLeft("hiddenContentLeft", "prjTree");
     resizeRight("hiddenContentRight", "editor");
-    getFileList(projectId);
+    if(pid){
+      getFileList(pid.toString());
+    }
   }, []);
 
   React.useEffect(() => {
@@ -93,13 +98,13 @@ const App: React.FC = () => {
     setIsModalOpen(false);
     let params = {
       name: "demo",
-      project_id: projectId,
-      parent: projectId,
+      project_id: pid,
+      parent: pid,
       file_type: 1
     };
     addFile(params).then((resp) => {
       if (ResponseHandler.responseSuccess(resp)) {
-        getFileList(projectId);
+        getFileList(pid?.toString());
       }
     });
   };
@@ -194,7 +199,7 @@ const App: React.FC = () => {
         };
         delTreeItem(params).then((resp) => {
           if (ResponseHandler.responseSuccess(resp)) {
-            getFileList(projectId);
+            getFileList(pid.toString());
           }
         });
       },
@@ -273,7 +278,7 @@ const App: React.FC = () => {
         </div>
         <div id="editor" className={styles.editor}>
           <React.Suspense fallback={<div>Loading...</div>}>
-            <CvCodeEditor projectId={projectId} docId={mainFile?.file_id!}></CvCodeEditor>
+            <CvCodeEditor projectId={pid.toString()} docId={mainFile?.file_id!}></CvCodeEditor>
           </React.Suspense>
         </div>
         <div>
@@ -285,7 +290,7 @@ const App: React.FC = () => {
           <div className={styles.previewBody}>
             <div className={styles.cavasLayer}>
               <canvas id="the-cavas" ref={canvasRef} />
-              <div className="textLayer"></div>
+              <div className={styles.textLayer}></div>
             </div>
             {/*https://stackoverflow.com/questions/33063213/pdf-js-with-text-selection*/}
             
