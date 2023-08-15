@@ -29,6 +29,7 @@ const App: React.FC = () => {
   const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mainFile, setMainFile] = useState<TexFileModel>();
+  const [pdfUrl, setPdfUrl] = useState<string>();
   const canvasRef = useRef(null);
   const { confirm } = Modal;
 
@@ -63,6 +64,7 @@ const App: React.FC = () => {
   },[compileResult]);
 
   const initPdf = async (pdfUrl: string) => {
+    setPdfUrl(pdfUrl);
     const pdfJS = await import('pdfjs-dist/build/pdf');
     pdfJS.GlobalWorkerOptions.workerSrc =
       window.location.origin + '/pdf.worker.min.js';
@@ -260,6 +262,26 @@ const App: React.FC = () => {
     return <div>Loading...</div>
   }
 
+  const handleDownloadPdf = async () => {
+    if(!pdfUrl){
+      toast.error("PDF文件Url为空");
+      return;
+    }
+    try {
+      const response = await fetch(pdfUrl);
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(new Blob([blob]));
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.setAttribute('download', 'main.pdf');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+    }
+  }
+
   return (
     <div className={styles.container}>
       <EHeader></EHeader>
@@ -286,6 +308,7 @@ const App: React.FC = () => {
         </div>
         <div id="preview" className={styles.preview}>
           <div className={styles.previewHader}>
+            <button onClick={()=>{handleDownloadPdf()}}>下载PDF</button>
           </div>
           <div className={styles.previewBody}>
             <div className={styles.cavasLayer}>
