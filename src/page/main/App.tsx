@@ -284,14 +284,13 @@ const App: React.FC = () => {
           </div>
           <div className={styles.previewBody}>
             <div className={styles.cavasLayer}>
-              <canvas ref={canvasRef} />
+              <canvas id="the-cavas" ref={canvasRef} />
               <div className="textLayer"></div>
             </div>
             {/*https://stackoverflow.com/questions/33063213/pdf-js-with-text-selection*/}
             
           </div>
           <div className={styles.previewFooter}>
-
           </div>
         </div>
       </div>

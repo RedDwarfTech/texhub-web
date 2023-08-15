@@ -1,3 +1,9 @@
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .header {
   height: 40px;
 }
@@ -5,11 +11,13 @@
 .editorBody {
   display: flex;
   flex-direction: row;
-  width: 100vw;
+  width: 100%;
+  height: 100%;
+  flex-grow: 1;
 }
 
 .prjTree {
-  height: 100vh;
+  height: 100%;
   flex: 0 0 10%;
   display: flex;
   flex-direction: column;
@@ -36,6 +44,21 @@
 
 .preview {
   flex-grow: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.previewHader {
+  height: 40px;
+}
+
+.previewBody {
+  flex-grow: 1;
+}
+
+.previewFooter {
+  height: 40px;
 }
 
 .treeItem {
@@ -52,12 +75,13 @@
 
 .cavasLayer {
   border: 1px solid black;
-  
+  overflow-x: scroll;
+  overflow-y: scroll;
 }
 
 .cavasLayer canvas {
-  width: 900px;
-  height: 100vh;
+  height: 100%;
+  max-width: 100%;
 }
 
 .textLayer {
