@@ -85,7 +85,8 @@ const App: React.FC = () => {
       const textContent = page.getTextContent();
       return textContent;
     }).then(function (textContent: string) {
-      const textLayer = document.querySelector(".textLayer") as HTMLDivElement;
+      const textLayer = document.querySelector(`.${styles.textLayer}`) as HTMLDivElement;
+      if(!textLayer) return;
       textLayer.style.left = canvas.offsetLeft + 'px';
       textLayer.style.top = canvas.offsetTop + 'px';
       textLayer.style.height = canvas.offsetHeight + 'px';
