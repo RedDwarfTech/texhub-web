@@ -16,6 +16,7 @@ import EHeader from '@/component/header/editor/EHeader';
 import 'pdfjs-dist/web/pdf_viewer.css';
 import { readConfig } from '@/config/app/config-reader';
 import queryString from 'query-string';
+import Previewer from '@/component/common/previewer/Previewer';
 
 const App: React.FC = () => {
 
@@ -30,7 +31,6 @@ const App: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mainFile, setMainFile] = useState<TexFileModel>();
   const [pdfUrl, setPdfUrl] = useState<string>();
-  const canvasRef = useRef(null);
   const { confirm } = Modal;
 
   React.useEffect(() => {
@@ -47,7 +47,7 @@ const App: React.FC = () => {
       let defaultFile = fileTree.filter((file: TexFileModel) => file.main_flag === 1);
       setMainFile(defaultFile[0]);
       const pdfUrl = readConfig("compileBaseUrl") + "/" + defaultFile[0]?.project_id + "/" + defaultFile[0]?.name.split(".")[0] + ".pdf";
-      initPdf(pdfUrl);
+      setPdfUrl(pdfUrl);
     }
   }, [fileTree]);
 
@@ -59,49 +59,9 @@ const App: React.FC = () => {
     let vid = compileResult.out_path;
     if (proj_id && vid) {
       const pdfUrl = readConfig("compileBaseUrl") + "/" + proj_id + "/" + vid + "/main.pdf";
-      initPdf(pdfUrl);
+      setPdfUrl(pdfUrl);
     }
   }, [compileResult]);
-
-  const initPdf = async (pdfUrl: string) => {
-    setPdfUrl(pdfUrl);
-    const pdfJS = await import('pdfjs-dist/build/pdf');
-    pdfJS.GlobalWorkerOptions.workerSrc = window.location.origin + '/pdf.worker.min.js';
-    const pdf = await pdfJS.getDocument({
-      url: pdfUrl,
-      cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.9.179/cmaps/',
-      cMapPacked: true,
-    }).promise;
-    const page = await pdf.getPage(1);
-    const viewport = page.getViewport({
-      scale: 1.0
-    });
-    const canvas: any = canvasRef.current;
-    if (!canvas) return;
-    const canvasContext = canvas.getContext('2d');
-    canvas.height = viewport.height;
-    canvas.width = viewport.width;
-    const renderContext = { canvasContext, viewport };
-    const renderTask = page.render(renderContext);
-    renderTask.promise.then(function () {
-      const textContent = page.getTextContent();
-      return textContent;
-    }).then(function (textContent: string) {
-      const textLayer = document.querySelector(`.${styles.textLayer}`) as HTMLDivElement;
-      if(!textLayer) return;
-      textLayer.style.left = canvas.offsetLeft + 'px';
-      textLayer.style.top = canvas.offsetTop + 'px';
-      textLayer.style.height = canvas.offsetHeight + 'px';
-      textLayer.style.width = canvas.offsetWidth + 'px';
-      textLayer.style.setProperty('--scale-factor', '1.0');
-      pdfJS.renderTextLayer({
-        textContentSource: textContent,
-        container: textLayer,
-        viewport: viewport,
-        textDivs: []
-      });
-    });
-  }
 
   const handleOk = () => {
     setIsModalOpen(false);
@@ -318,12 +278,8 @@ const App: React.FC = () => {
             <button onClick={() => { handleDownloadPdf() }}>下载PDF</button>
           </div>
           <div className={styles.previewBody}>
-            <div className={styles.cavasLayer}>
-              <canvas id="the-cavas" ref={canvasRef} />
-              <div className={styles.textLayer}></div>
-            </div>
+            <Previewer pdfUrl={pdfUrl}></Previewer>
             {/*https://stackoverflow.com/questions/33063213/pdf-js-with-text-selection*/}
-
           </div>
           <div className={styles.previewFooter}>
           </div>
