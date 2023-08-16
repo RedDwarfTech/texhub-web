@@ -66,7 +66,7 @@ const App: React.FC = () => {
   const initPdf = async (pdfUrl: string) => {
     setPdfUrl(pdfUrl);
     const pdfJS = await import('pdfjs-dist/build/pdf');
-    PDFJS.cMapUrl= 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.0.288/cmaps/'
+    pdfJS.cMapUrl= 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.0.288/cmaps/'
     pdfJS.GlobalWorkerOptions.workerSrc = window.location.origin + '/pdf.worker.min.js';
     const pdf = await pdfJS.getDocument(pdfUrl).promise;
     const page = await pdf.getPage(1);
