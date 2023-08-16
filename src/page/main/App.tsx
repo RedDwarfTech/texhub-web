@@ -36,7 +36,7 @@ const App: React.FC = () => {
   React.useEffect(() => {
     resizeLeft("hiddenContentLeft", "prjTree");
     resizeRight("hiddenContentRight", "editor");
-    if(pid){
+    if (pid) {
       getFileList(pid.toString());
     }
   }, []);
@@ -51,23 +51,23 @@ const App: React.FC = () => {
     }
   }, [fileTree]);
 
-  React.useEffect(()=>{
-    if(!compileResult || Object.keys(compileResult).length === 0){
+  React.useEffect(() => {
+    if (!compileResult || Object.keys(compileResult).length === 0) {
       return;
     }
     let proj_id = compileResult.project_id;
     let vid = compileResult.out_path;
-    if(proj_id && vid){
+    if (proj_id && vid) {
       const pdfUrl = readConfig("compileBaseUrl") + "/" + proj_id + "/" + vid + "/main.pdf";
       initPdf(pdfUrl);
     }
-  },[compileResult]);
+  }, [compileResult]);
 
   const initPdf = async (pdfUrl: string) => {
     setPdfUrl(pdfUrl);
     const pdfJS = await import('pdfjs-dist/build/pdf');
-    pdfJS.GlobalWorkerOptions.workerSrc =
-      window.location.origin + '/pdf.worker.min.js';
+    PDFJS.cMapUrl= 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.0.288/cmaps/'
+    pdfJS.GlobalWorkerOptions.workerSrc = window.location.origin + '/pdf.worker.min.js';
     const pdf = await pdfJS.getDocument(pdfUrl).promise;
     const page = await pdf.getPage(1);
     const viewport = page.getViewport({ scale: 1.5 });
@@ -263,7 +263,7 @@ const App: React.FC = () => {
   }
 
   const handleDownloadPdf = async () => {
-    if(!pdfUrl){
+    if (!pdfUrl) {
       toast.error("PDF文件Url为空");
       return;
     }
@@ -308,7 +308,7 @@ const App: React.FC = () => {
         </div>
         <div id="preview" className={styles.preview}>
           <div className={styles.previewHader}>
-            <button onClick={()=>{handleDownloadPdf()}}>下载PDF</button>
+            <button onClick={() => { handleDownloadPdf() }}>下载PDF</button>
           </div>
           <div className={styles.previewBody}>
             <div className={styles.cavasLayer}>
@@ -316,7 +316,7 @@ const App: React.FC = () => {
               <div className={styles.textLayer}></div>
             </div>
             {/*https://stackoverflow.com/questions/33063213/pdf-js-with-text-selection*/}
-            
+
           </div>
           <div className={styles.previewFooter}>
           </div>
