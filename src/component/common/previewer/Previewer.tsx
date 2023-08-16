@@ -7,13 +7,17 @@ export type ViewerProps = {
 
 const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
 
-    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const canvasRef = useRef<any>(null);
 
     React.useEffect(() => {
         if (props.pdfUrl) {
             initPdf(props.pdfUrl);
         }
-    }, []);
+    }, [props.pdfUrl]);
+
+    if(!props.pdfUrl){
+        return (<div>Loading</div>);
+    }
 
     const initPdf = async (pdfUrl: string) => {
         const pdfJS = await import('pdfjs-dist/build/pdf');
@@ -30,13 +34,18 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
     }
 
     const renderPdfPage = async (pdf: any, pdfJS: any, pageNum: number) => {
+        if(!canvasRef || !canvasRef.current) return;
+        const docCavas = document.getElementById("the-canvas" + pageNum);
+        if(!docCavas) {
+            const el = window.document.createElement("canvas") as HTMLCanvasElement;
+            el.id ="the-canvas" + pageNum;
+            canvasRef.current.append(el);
+        }
         const page = await pdf.getPage(pageNum);
         const viewport = page.getViewport({
             scale: 1.0
         });
-        let divPage = window.document.createElement("div");
-        if(!canvasRef || !canvasRef.current) return;
-        let canvas = divPage.appendChild(window.document.createElement("canvas"));
+        let canvas = document.getElementById('the-canvas'+pageNum) as HTMLCanvasElement;
         const canvasContext = canvas.getContext('2d');
         canvas.height = viewport.height;
         canvas.width = viewport.width;
@@ -60,12 +69,10 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
                 textDivs: []
             });
         });
-        canvasRef.current.appendChild(divPage);
     }
 
     return (
-        <div className={styles.cavasLayer}>
-            <canvas id="the-cavas" ref={canvasRef} />
+        <div className={styles.cavasLayer}  ref={canvasRef}>
             {/**<div className={styles.textLayer}></div>**/}
         </div>
     );
