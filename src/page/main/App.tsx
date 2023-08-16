@@ -73,7 +73,9 @@ const App: React.FC = () => {
       cMapPacked: true,
     }).promise;
     const page = await pdf.getPage(1);
-    const viewport = page.getViewport(2.0);
+    const viewport = page.getViewport({
+      scale: 1.0
+    });
     const canvas: any = canvasRef.current;
     if (!canvas) return;
     const canvasContext = canvas.getContext('2d');
@@ -91,8 +93,9 @@ const App: React.FC = () => {
       textLayer.style.top = canvas.offsetTop + 'px';
       textLayer.style.height = canvas.offsetHeight + 'px';
       textLayer.style.width = canvas.offsetWidth + 'px';
+      textLayer.style.setProperty('--scale-factor', '1.0');
       pdfJS.renderTextLayer({
-        textContent: textContent,
+        textContentSource: textContent,
         container: textLayer,
         viewport: viewport,
         textDivs: []
