@@ -66,11 +66,14 @@ const App: React.FC = () => {
   const initPdf = async (pdfUrl: string) => {
     setPdfUrl(pdfUrl);
     const pdfJS = await import('pdfjs-dist/build/pdf');
-    pdfJS.cMapUrl= 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.0.288/cmaps/'
     pdfJS.GlobalWorkerOptions.workerSrc = window.location.origin + '/pdf.worker.min.js';
-    const pdf = await pdfJS.getDocument(pdfUrl).promise;
+    const pdf = await pdfJS.getDocument({
+      url: pdfUrl,
+      cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.9.179/cmaps/',
+      cMapPacked: true,
+    }).promise;
     const page = await pdf.getPage(1);
-    const viewport = page.getViewport({ scale: 1.5 });
+    const viewport = page.getViewport(2.0);
     const canvas: any = canvasRef.current;
     if (!canvas) return;
     const canvasContext = canvas.getContext('2d');
