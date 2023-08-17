@@ -44,28 +44,7 @@
   height: 96vh;
 }
 
-.preview {
-  flex-grow: 1;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  height: 96vh;
-}
 
-.previewHader {
-  height: 40px;
-}
-
-.previewBody {
-  flex-grow: 1;
-  background-color: antiquewhite;
-  display: flex;
-  overflow: scroll;
-}
-
-.previewFooter {
-  height: 40px;
-}
 
 .treeItem {
   display: flex;
