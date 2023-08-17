@@ -4,6 +4,7 @@
     display: flex;
     flex-direction: column;
     height: 96vh;
+    overflow: scroll;
 }
 
 .previewHader {

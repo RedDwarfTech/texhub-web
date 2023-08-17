@@ -247,9 +247,11 @@ const App: React.FC = () => {
           <HiddenContent id="hiddenContentLeft" className={styles.hiddenContent} />
         </div>
         <div id="editor" className={styles.editor}>
+          <div className={styles.editorHeader}></div>
           <React.Suspense fallback={<div>Loading...</div>}>
             <CollarCodeEditor projectId={pid.toString()} docId={mainFile?.file_id!}></CollarCodeEditor>
           </React.Suspense>
+          <div className={styles.editorFooter}></div>
         </div>
         <div>
           <HiddenContent id="hiddenContentRight" className={styles.hiddenContent} />

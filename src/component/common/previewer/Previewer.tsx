@@ -2,10 +2,11 @@ import React, { useRef, useState } from 'react';
 import styles from './Previewer.module.css';
 import { toast } from 'react-toastify';
 import type { PDFDocumentProxy, PDFPageProxy, PageViewport, RenderTask } from 'pdfjs-dist';
-import { PDFViewer } from "pdfjs-dist/web/pdf_viewer";
 import { RenderParameters, TextContent } from 'pdfjs-dist/types/src/display/api';
 import { Document, Page, pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+import 'react-pdf/dist/Page/TextLayer.css';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
 
 export type ViewerProps = {
     pdfUrl: string | undefined;
@@ -95,7 +96,6 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
             transform: [PRINT_UNITS, 0, 0, PRINT_UNITS, 0, 0],
         };
         const renderTask: RenderTask = page.render(renderContext);
-
         renderTextLayer(renderTask, pdfJS, page, viewport, canvas);
     }
 
@@ -141,38 +141,13 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
     }
 
     const handleZoomIn = async (pdfUrl: any) => {
-        if (!pdfUrl) {
-            toast.error("PDF文件Url为空");
-            return;
-        }
-        var zoominbutton = document.getElementById("zoominbutton") as HTMLButtonElement;
-        zoominbutton.onclick = function () {
-            if (pdfScale <= 0.25) {
-                return;
-            }
-            setPdfScale(pdfScale - 0.1);
-            //displayPage(currentPdf, pageNum);
-        }
+        setPdfScale(pdfScale + 0.1);
     }
 
     const handleZoomOut = async (pdfUrl: any) => {
-        if (!pdfUrl) {
-            toast.error("PDF文件Url为空");
-            return;
-        }
-        var zoomoutbutton = document.getElementById("zoomoutbutton") as HTMLButtonElement;
-        zoomoutbutton.onclick = function () {
-            if (pdfScale <= 0.25) {
-                return;
-            }
-            setPdfScale(pdfScale + 0.1);
-            //displayPage(currentPdf, pageNum);
-        }
+        setPdfScale(pdfScale - 0.1);
     }
 
-    const displayPage = (pdf: any, pageNum: number) => {
-        pdf.getPage(pageNum).then(function getPage(page: number) { renderPdfPage(pdf, pdfJs, pageNum); });
-    }
     const onDocumentLoadSuccess = () => {
         setNumPages(1);
     }
