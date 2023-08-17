@@ -41,6 +41,7 @@
   resize: horizontal;
   flex: 0 0 60%;
   overflow-y: scroll;
+  height: 96vh;
 }
 
 .preview {
@@ -48,6 +49,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  height: 96vh;
 }
 
 .previewHader {
@@ -56,6 +58,9 @@
 
 .previewBody {
   flex-grow: 1;
+  background-color: antiquewhite;
+  display: flex;
+  overflow: scroll;
 }
 
 .previewFooter {
