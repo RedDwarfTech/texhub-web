@@ -1,13 +1,24 @@
 import React, { useRef, useState } from 'react';
 import styles from './Previewer.module.css';
 import { toast } from 'react-toastify';
-import type { PDFDocumentProxy, PDFPageProxy } from 'pdfjs-dist';
+import type { PDFDocumentProxy, PDFPageProxy, PageViewport, RenderTask } from 'pdfjs-dist';
+import { PDFViewer } from "pdfjs-dist/web/pdf_viewer";
 import { RenderParameters, TextContent } from 'pdfjs-dist/types/src/display/api';
+import { Document, Page, pdfjs } from 'react-pdf';
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 export type ViewerProps = {
     pdfUrl: string | undefined;
 };
 
+/**
+ * improve the pdf image quality: 
+ * https://stackoverflow.com/questions/35400722/pdf-image-quality-is-bad-using-pdf-js
+ * https://stackoverflow.com/questions/49426385/pdf-js-displays-pdf-documents-in-really-low-resolution-blurry-almost-is-this-h
+ * https://stackoverflow.com/questions/21719393/how-to-improve-display-quality-in-pdf-js
+ * 
+ * the pdf scale issue: 
+ */
 const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
 
     const canvasRef = useRef<any>(null);
@@ -15,12 +26,14 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
     const [pdfScale, setPdfScale] = useState<number>(1);
     const [currentPdf, setCurrentPdf] = useState<PDFDocumentProxy>();
     const [pdfJs, setPdfJs] = useState<any>();
-    var DPI = 300;
-    var PRINT_OUTPUT_SCALE = DPI/72;
+    const [numPages, setNumPages] = useState<number>();
+    const [pageNumber, setPageNumber] = useState<number>(1);
+    var PRINT_RESOLUTION = 600;
+    var PRINT_UNITS = PRINT_RESOLUTION / 72;
 
     React.useEffect(() => {
         if (props.pdfUrl) {
-            initPdf(props.pdfUrl);
+            //initPdf(props.pdfUrl);
         }
     }, [props.pdfUrl]);
 
@@ -47,7 +60,7 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
     const renderPdfPage = async (pdf: PDFDocumentProxy, pdfJS: any, pageNum: number) => {
         if (!canvasRef || !canvasRef.current) return;
         const docCavas = document.getElementById("the-canvas" + pageNum);
-        if(docCavas) {
+        if (docCavas) {
             docCavas.remove();
         }
         const el = window.document.createElement("canvas") as HTMLCanvasElement;
@@ -57,21 +70,36 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
             return;
         }
         const page: PDFPageProxy = await pdf.getPage(pageNum);
-        const viewport = page.getViewport({
-            scale: PRINT_OUTPUT_SCALE,
+        const viewport: PageViewport = page.getViewport({
+            scale: pdfScale,
             rotation: 0
         });
+
         let canvas = document.getElementById('the-canvas' + pageNum) as HTMLCanvasElement;
+        canvas.height = Math.floor(viewport.height * PRINT_UNITS);
+        canvas.width = Math.floor(viewport.width * PRINT_UNITS);
         const canvasContext = canvas.getContext('2d');
         if (!canvasContext) return;
-        canvas.height = viewport.height * PRINT_OUTPUT_SCALE;
-        canvas.width = viewport.width * PRINT_OUTPUT_SCALE;
-        const renderContext: RenderParameters = { 
-            canvasContext: canvasContext, 
+        canvasContext.save();
+        canvasContext.scale(pdfScale, pdfScale);
+        canvasContext.fillStyle = 'rgb(255, 255, 255)';
+        canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+        canvasContext.restore();
+        const cavasLayer = document.querySelector(`.${styles.cavasLayer}`) as HTMLDivElement;
+        if (!cavasLayer) return;
+        cavasLayer.style.width = Math.floor(viewport.width / pdfScale) + 'pt';
+        cavasLayer.style.height = Math.floor(viewport.height / pdfScale) + 'pt';
+        const renderContext: RenderParameters = {
+            canvasContext: canvasContext,
             viewport: viewport,
-            transform: [PRINT_OUTPUT_SCALE, 0, 0, PRINT_OUTPUT_SCALE, 0, 0], 
+            transform: [PRINT_UNITS, 0, 0, PRINT_UNITS, 0, 0],
         };
-        const renderTask = page.render(renderContext);
+        const renderTask: RenderTask = page.render(renderContext);
+
+        renderTextLayer(renderTask, pdfJS, page, viewport, canvas);
+    }
+
+    const renderTextLayer = (renderTask: RenderTask, pdfJS: any, page: PDFPageProxy, viewport: PageViewport, canvas: HTMLCanvasElement) => {
         renderTask.promise.then(function () {
             const textContent = page.getTextContent();
             return textContent;
@@ -82,7 +110,7 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
             textLayer.style.top = canvas.offsetTop + 'px';
             textLayer.style.height = canvas.offsetHeight + 'px';
             textLayer.style.width = canvas.offsetWidth + 'px';
-            textLayer.style.setProperty('--scale-factor', PRINT_OUTPUT_SCALE.toString());
+            textLayer.style.setProperty('--scale-factor', pdfScale.toString());
             pdfJS.renderTextLayer({
                 textContentSource: textContent,
                 container: textLayer,
@@ -122,8 +150,8 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
             if (pdfScale <= 0.25) {
                 return;
             }
-            setPdfScale(pdfScale - 0.25);
-            displayPage(currentPdf, pageNum);
+            setPdfScale(pdfScale - 0.1);
+            //displayPage(currentPdf, pageNum);
         }
     }
 
@@ -134,16 +162,19 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
         }
         var zoomoutbutton = document.getElementById("zoomoutbutton") as HTMLButtonElement;
         zoomoutbutton.onclick = function () {
-            if (pdfScale + 0.25) {
+            if (pdfScale <= 0.25) {
                 return;
             }
-            setPdfScale(pdfScale - 0.25);
-            displayPage(currentPdf, pageNum);
+            setPdfScale(pdfScale + 0.1);
+            //displayPage(currentPdf, pageNum);
         }
     }
 
     const displayPage = (pdf: any, pageNum: number) => {
         pdf.getPage(pageNum).then(function getPage(page: number) { renderPdfPage(pdf, pdfJs, pageNum); });
+    }
+    const onDocumentLoadSuccess = () => {
+        setNumPages(1);
     }
 
     return (
@@ -154,9 +185,12 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
                 <button id="zoomoutbutton" onClick={() => { handleZoomOut(props.pdfUrl) }}>缩小</button>
             </div>
             <div className={styles.previewBody}>
-                <div className={styles.cavasLayer} ref={canvasRef}>
-                {/**<div className={styles.textLayer}></div>**/}
-                </div>
+                <Document file={props.pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
+                    <Page scale={pdfScale} pageNumber={pageNumber} />
+                </Document>
+                {/**<div className={styles.cavasLayer} ref={canvasRef}>
+                <div className={styles.textLayer}></div>
+                </div>**/}
                 {/*https://stackoverflow.com/questions/33063213/pdf-js-with-text-selection*/}
             </div>
             <div className={styles.previewFooter}>

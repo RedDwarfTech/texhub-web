@@ -15,6 +15,8 @@
     background-color: antiquewhite;
     display: flex;
     overflow: scroll;
+    align-items: center;
+    justify-content: center;
 }
 
 .previewFooter {

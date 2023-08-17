@@ -17,6 +17,7 @@ import 'pdfjs-dist/web/pdf_viewer.css';
 import { readConfig } from '@/config/app/config-reader';
 import queryString from 'query-string';
 import Previewer from '@/component/common/previewer/Previewer';
+import RdViewer from '@/component/common/previewer/RdViewer';
 
 const App: React.FC = () => {
 
