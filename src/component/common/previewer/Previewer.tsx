@@ -31,6 +31,9 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
     const [pageNumber, setPageNumber] = useState<number>(1);
     var PRINT_RESOLUTION = 600;
     var PRINT_UNITS = PRINT_RESOLUTION / 72;
+    const options = {
+        cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.9.179/cmaps/',
+    };
 
     React.useEffect(() => {
         if (props.pdfUrl) {
@@ -160,7 +163,7 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
                 <button id="zoomoutbutton" onClick={() => { handleZoomOut(props.pdfUrl) }}>缩小</button>
             </div>
             <div className={styles.previewBody}>
-                <Document file={props.pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
+                <Document options={options} file={props.pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
                     <Page scale={pdfScale} pageNumber={pageNumber} />
                 </Document>
                 {/**<div className={styles.cavasLayer} ref={canvasRef}>
