@@ -13,11 +13,15 @@
 
 .previewBody {
     flex-grow: 1;
-    background-color: antiquewhite;
+    background-color: rgb(233,233,233);
     display: flex;
     overflow: scroll;
-    align-items: center;
     justify-content: center;
+}
+
+.pdfPage {
+    margin-top: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 .previewFooter {

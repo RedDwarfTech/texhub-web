@@ -1,9 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './Previewer.module.css';
 import { toast } from 'react-toastify';
-import type { PDFDocumentProxy, PDFPageProxy, PageViewport, RenderTask } from 'pdfjs-dist';
-import { RenderParameters, TextContent } from 'pdfjs-dist/types/src/display/api';
 import { Document, Page, pdfjs } from 'react-pdf';
+import { PDFDocumentProxy } from 'pdfjs-dist';
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -22,105 +21,16 @@ export type ViewerProps = {
  */
 const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
 
-    const canvasRef = useRef<any>(null);
-    const [pageNum, setPageNum] = useState<number>(1);
     const [pdfScale, setPdfScale] = useState<number>(1);
-    const [currentPdf, setCurrentPdf] = useState<PDFDocumentProxy>();
-    const [pdfJs, setPdfJs] = useState<any>();
     const [numPages, setNumPages] = useState<number>();
     const [pageNumber, setPageNumber] = useState<number>(1);
-    var PRINT_RESOLUTION = 600;
-    var PRINT_UNITS = PRINT_RESOLUTION / 72;
+
     const options = {
         cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.9.179/cmaps/',
     };
 
-    React.useEffect(() => {
-        if (props.pdfUrl) {
-            //initPdf(props.pdfUrl);
-        }
-    }, [props.pdfUrl]);
-
     if (!props.pdfUrl) {
         return (<div>Loading</div>);
-    }
-
-    const initPdf = async (pdfUrl: string) => {
-        const pdfJS = await import('pdfjs-dist/build/pdf');
-        pdfJS.GlobalWorkerOptions.workerSrc = window.location.origin + '/pdf.worker.min.js';
-        setPdfJs(pdfJS);
-        const pdf: PDFDocumentProxy = await pdfJS.getDocument({
-            url: pdfUrl,
-            cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.9.179/cmaps/',
-            cMapPacked: true,
-        }).promise;
-        setCurrentPdf(pdf);
-        const totalPages = pdf.numPages;
-        for (let currentPage = 0; currentPage < totalPages; currentPage++) {
-            renderPdfPage(pdf, pdfJS, currentPage + 1);
-        }
-    }
-
-    const renderPdfPage = async (pdf: PDFDocumentProxy, pdfJS: any, pageNum: number) => {
-        if (!canvasRef || !canvasRef.current) return;
-        const docCavas = document.getElementById("the-canvas" + pageNum);
-        if (docCavas) {
-            docCavas.remove();
-        }
-        const el = window.document.createElement("canvas") as HTMLCanvasElement;
-        el.id = "the-canvas" + pageNum;
-        canvasRef.current.append(el);
-        if (pageNum > pdf.numPages) {
-            return;
-        }
-        const page: PDFPageProxy = await pdf.getPage(pageNum);
-        const viewport: PageViewport = page.getViewport({
-            scale: pdfScale,
-            rotation: 0
-        });
-
-        let canvas = document.getElementById('the-canvas' + pageNum) as HTMLCanvasElement;
-        canvas.height = Math.floor(viewport.height * PRINT_UNITS);
-        canvas.width = Math.floor(viewport.width * PRINT_UNITS);
-        const canvasContext = canvas.getContext('2d');
-        if (!canvasContext) return;
-        canvasContext.save();
-        canvasContext.scale(pdfScale, pdfScale);
-        canvasContext.fillStyle = 'rgb(255, 255, 255)';
-        canvasContext.fillRect(0, 0, canvas.width, canvas.height);
-        canvasContext.restore();
-        const cavasLayer = document.querySelector(`.${styles.cavasLayer}`) as HTMLDivElement;
-        if (!cavasLayer) return;
-        cavasLayer.style.width = Math.floor(viewport.width / pdfScale) + 'pt';
-        cavasLayer.style.height = Math.floor(viewport.height / pdfScale) + 'pt';
-        const renderContext: RenderParameters = {
-            canvasContext: canvasContext,
-            viewport: viewport,
-            transform: [PRINT_UNITS, 0, 0, PRINT_UNITS, 0, 0],
-        };
-        const renderTask: RenderTask = page.render(renderContext);
-        renderTextLayer(renderTask, pdfJS, page, viewport, canvas);
-    }
-
-    const renderTextLayer = (renderTask: RenderTask, pdfJS: any, page: PDFPageProxy, viewport: PageViewport, canvas: HTMLCanvasElement) => {
-        renderTask.promise.then(function () {
-            const textContent = page.getTextContent();
-            return textContent;
-        }).then(function (textContent: TextContent) {
-            const textLayer = document.querySelector(`.${styles.textLayer}`) as HTMLDivElement;
-            if (!textLayer) return;
-            textLayer.style.left = canvas.offsetLeft + 'px';
-            textLayer.style.top = canvas.offsetTop + 'px';
-            textLayer.style.height = canvas.offsetHeight + 'px';
-            textLayer.style.width = canvas.offsetWidth + 'px';
-            textLayer.style.setProperty('--scale-factor', pdfScale.toString());
-            pdfJS.renderTextLayer({
-                textContentSource: textContent,
-                container: textLayer,
-                viewport: viewport,
-                textDivs: []
-            });
-        });
     }
 
     const handleDownloadPdf = async (pdfUrl: any) => {
@@ -143,35 +53,44 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
         }
     }
 
-    const handleZoomIn = async (pdfUrl: any) => {
+    const handleZoomIn = async () => {
         setPdfScale(pdfScale + 0.1);
     }
 
-    const handleZoomOut = async (pdfUrl: any) => {
+    const handleZoomOut = async () => {
         setPdfScale(pdfScale - 0.1);
     }
 
-    const onDocumentLoadSuccess = () => {
-        setNumPages(1);
+    const onDocumentLoadSuccess = (pdf: any) => {
+        const { doc, numPages } = pdf;
+        setNumPages(numPages);
+    }
+
+    const renderPages =(totalPageNum: number|undefined) => {
+        if(!totalPageNum || totalPageNum<1) return;
+        const tagList: JSX.Element[] = [];
+        for(let i = 1; i <= totalPageNum; i++){
+            tagList.push(<Page className={styles.pdfPage} scale={pdfScale} pageNumber={i} />);
+        }
+        return tagList;
     }
 
     return (
         <div id="preview" className={styles.preview}>
             <div className={styles.previewHader}>
                 <button onClick={() => { handleDownloadPdf(props.pdfUrl) }}>下载PDF</button>
-                <button id="zoominbutton" onClick={() => { handleZoomIn(props.pdfUrl) }}>放大</button>
-                <button id="zoomoutbutton" onClick={() => { handleZoomOut(props.pdfUrl) }}>缩小</button>
+                <button id="zoominbutton" onClick={() => { handleZoomIn() }}>放大</button>
+                <button id="zoomoutbutton" onClick={() => { handleZoomOut() }}>缩小</button>
             </div>
             <div className={styles.previewBody}>
                 <Document options={options} file={props.pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
-                    <Page scale={pdfScale} pageNumber={pageNumber} />
+                    {renderPages(numPages)}
                 </Document>
-                {/**<div className={styles.cavasLayer} ref={canvasRef}>
-                <div className={styles.textLayer}></div>
-                </div>**/}
-                {/*https://stackoverflow.com/questions/33063213/pdf-js-with-text-selection*/}
             </div>
             <div className={styles.previewFooter}>
+                <p>
+                    Page {pageNumber} of {numPages}
+                </p>
             </div>
         </div>
     );
