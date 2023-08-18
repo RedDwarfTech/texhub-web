@@ -27,10 +27,10 @@ const TexHeader: React.FC = () => {
             </nav>
             <div className={styles.headerOperation}>
                 <div>
-                    <button className="btn btn-outline-info text-light" type="submit">登录</button>
+                    <button className="btn btn-outline-info text-light" onClick={() =>{navigate('/user/login')}}>登录</button>
                 </div>
                 <div>
-                    <button className="btn btn-outline-info text-light" type="submit">注册</button>
+                    <button className="btn btn-outline-info text-light" onClick={() =>{navigate('/user/reg')}}>注册</button>
                 </div>
                 <div className="dropdown">
                     <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">

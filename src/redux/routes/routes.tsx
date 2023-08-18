@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { PaySuccess, RdLogin } from "rd-component";
+import { PaySuccess, RdLogin, RdReg } from "rd-component";
 import "rd-component/dist/style.css";
 import DocTab from "@/page/profile/project/ProjectTab";
 import Home from "@/page/home/Home";
@@ -41,7 +41,7 @@ const routes = createBrowserRouter([
     },
     {
         path: "/user/reg",
-        element: <RdLogin appId={readConfig("appId")} store={store} loginUrl={readConfig("regUrl")} />
+        element: <RdReg appId={readConfig("appId")} store={store} regUrl={readConfig("regUrl")} />
     }
 ]);
 
