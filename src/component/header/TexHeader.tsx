@@ -12,7 +12,7 @@ import React from "react";
 
 const TexHeader: React.FC = () => {
 
-    const { loginUser } = useSelector((state: any) => state.user);
+    const { loginUser } = useSelector((state: any) => state.rdRootReducer.user);
     const navigate = useNavigate();
 
     React.useEffect(() => {
