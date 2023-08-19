@@ -1,7 +1,9 @@
 let devConfigMap = new Map([
     ["wssUrl", "ws://192.168.10.93:58080/post/websocket"],
-    ["logoutUrl", "http://dev-ai.poemhub.top"],
+    ["logoutUrl", "http://dev-tex.poemhub.top"],
     ["baseAuthUrl","http://192.168.10.93:11014"],
+    ["loginUrl", "/texpub/user/login"],
+    ["regUrl", "/texpub/user/reg"],
     ["accessTokenUrlPath","/ai/auth/access-token/refresh"],
     ["appHome","http://192.168.10.93:8084"],
     ["appId" , "vOghoo10L9"],
