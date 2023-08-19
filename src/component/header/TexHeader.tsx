@@ -2,7 +2,7 @@ import "@/scss/style.scss";
 import styles from "./TexHeader.module.css";
 import { useNavigate } from "react-router-dom";
 import { UserService } from "rd-component";
-import avatarImg from "@/asset/icon/avatar.png";
+import avatarImg from "@/assets/icon/avatar.png";
 import { ControlOutlined, LogoutOutlined, PayCircleOutlined } from "@ant-design/icons";
 import { readConfig } from "@/config/app/config-reader";
 import { AuthHandler, ResponseHandler } from "rdjs-wheel";
