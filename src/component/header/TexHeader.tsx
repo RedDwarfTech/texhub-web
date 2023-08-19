@@ -7,9 +7,20 @@ import { ControlOutlined, LogoutOutlined, PayCircleOutlined } from "@ant-design/
 import { readConfig } from "@/config/app/config-reader";
 import { AuthHandler, ResponseHandler } from "rdjs-wheel";
 import store from "@/redux/store/store";
+import { useSelector } from "react-redux";
+import React from "react";
 
 const TexHeader: React.FC = () => {
+
+    const { loginUser } = useSelector((state: any) => state.user);
     const navigate = useNavigate();
+
+    React.useEffect(() => {
+        if (loginUser && Object.keys(loginUser).length > 0) {
+            AuthHandler.storeLoginAuthInfo(loginUser, readConfig("baseAuthUrl"), readConfig("accessTokenUrlPath"));
+            loadCurrentUser();
+        }
+    }, [loginUser]);
 
     const avatarClick = () => {
         const dropdown = document.getElementById("dropdown");
