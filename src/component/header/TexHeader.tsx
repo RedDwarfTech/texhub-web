@@ -52,7 +52,7 @@ const TexHeader: React.FC = () => {
     }
 
     const showUserProfile = () => {
-        handleMenuClick('profile');
+        //handleMenuClick('profile');
         menuClose();
     }
 
@@ -63,11 +63,6 @@ const TexHeader: React.FC = () => {
         }
     }
 
-    const handleMenuClick = (menu: string) => {
-        //props.onMenuClick(menu);
-        menuClose();
-    };
-
     const renderLogin = () => {
         if (UserService.isLoggedIn()) {
             var avatarUrl = localStorage.getItem('avatarUrl');
@@ -75,7 +70,7 @@ const TexHeader: React.FC = () => {
                 <a id="user-menu">
                     {avatarUrl ? <img className={styles.avatarImg} src={avatarUrl} onClick={avatarClick} /> : <img className={styles.avatarImg} src={avatarImg} onClick={avatarClick} ></img>}
                     <div id="dropdown" className={styles.dropdownContent}>
-                        <div onClick={() => handleMenuClick('account')}><PayCircleOutlined /><span>订阅</span></div>
+                        <div onClick={() => handleMenuClick()}><PayCircleOutlined /><span>订阅</span></div>
                         <div onClick={showUserProfile}><ControlOutlined /><span>控制台</span></div>
                         <div onClick={() => UserService.doLoginOut(readConfig("logoutUrl"))}><LogoutOutlined /><span>登出</span></div>
                     </div>
@@ -103,6 +98,11 @@ const TexHeader: React.FC = () => {
             });
         }
     }
+
+    const handleMenuClick = () => {
+        window.open("/goods");
+        menuClose();
+    };
 
     return (
         <div className={styles.headerLayout}>

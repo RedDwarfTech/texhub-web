@@ -8,6 +8,7 @@ import TemplateDetail from "@/page/template/detail/TemplateDetail";
 import { lazy } from "react";
 import store from "../store/store";
 import { readConfig } from "@/config/app/config-reader";
+import Price from "@/component/common/price/Price";
 const App = lazy(() => import('@/page/main/App'));
 
 const routes = createBrowserRouter([
@@ -42,6 +43,10 @@ const routes = createBrowserRouter([
     {
         path: "/user/reg",
         element: <RdReg appId={readConfig("appId")} store={store} regUrl={readConfig("regUrl")} />
+    },
+    {
+        path: "/goods",
+        element: <Price/>
     }
 ]);
 
