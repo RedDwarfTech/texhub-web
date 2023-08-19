@@ -16,6 +16,24 @@ const TexHeader: React.FC = () => {
     const navigate = useNavigate();
 
     React.useEffect(() => {
+        document.addEventListener("click", handleMenuClose);
+        return () => {
+            document.removeEventListener("click", handleMenuClose);
+        };
+    }, []);
+
+    const handleMenuClose = (event: any) => {
+        const menu = document.getElementById('user-menu');
+        const dropdown = document.getElementById('dropdown');
+        if (menu && dropdown) {
+            const target = event.target;
+            if (!menu.contains(target)) {
+                dropdown.style.display = 'none';
+            }
+        }
+    }
+
+    React.useEffect(() => {
         if (loginUser && Object.keys(loginUser).length > 0) {
             AuthHandler.storeLoginAuthInfo(loginUser, readConfig("baseAuthUrl"), readConfig("accessTokenUrlPath"));
             loadCurrentUser();
@@ -55,8 +73,8 @@ const TexHeader: React.FC = () => {
             var avatarUrl = localStorage.getItem('avatarUrl');
             return (
                 <a id="user-menu">
-                    {avatarUrl ? <img className="avatarImg" src={avatarUrl} onClick={avatarClick} /> : <img className="avatarImg" src={avatarImg} onClick={avatarClick} ></img>}
-                    <div id="dropdown" className="dropdown-content">
+                    {avatarUrl ? <img className={styles.avatarImg} src={avatarUrl} onClick={avatarClick} /> : <img className={styles.avatarImg} src={avatarImg} onClick={avatarClick} ></img>}
+                    <div id="dropdown" className={styles.dropdownContent}>
                         <div onClick={() => handleMenuClick('account')}><PayCircleOutlined /><span>订阅</span></div>
                         <div onClick={showUserProfile}><ControlOutlined /><span>控制台</span></div>
                         <div onClick={() => UserService.doLoginOut(readConfig("logoutUrl"))}><LogoutOutlined /><span>登出</span></div>
