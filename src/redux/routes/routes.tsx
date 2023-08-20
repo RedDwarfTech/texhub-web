@@ -5,11 +5,10 @@ import DocTab from "@/page/profile/project/ProjectTab";
 import Home from "@/page/home/Home";
 import Template from "@/page/template/Template";
 import TemplateDetail from "@/page/template/detail/TemplateDetail";
-import { lazy } from "react";
 import store from "../store/store";
 import { readConfig } from "@/config/app/config-reader";
 import Price from "@/component/common/price/Price";
-const App = lazy(() => import('@/page/main/App'));
+import App from "@/page/main/App";
 
 const routes = createBrowserRouter([
     {
