@@ -71,6 +71,9 @@ dependencies:
   codemirror:
     specifier: ^6.0.1
     version: 6.0.1(@lezer/common@1.0.4)
+  dayjs:
+    specifier: ^1.11.9
+    version: 1.11.9
   lib0:
     specifier: ^0.2.82
     version: 0.2.82

@@ -5,9 +5,10 @@ import { createDoc, deleteProject, getProjectList as getProjectList } from "@/se
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { TexProjectModel } from "@/model/doc/TexProjectModel";
-import { ResponseHandler } from "rdjs-wheel";
+import { ResponseHandler, TimeUtils } from "rdjs-wheel";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
+import dayjs from 'dayjs';
 
 const DocTab: React.FC = () => {
 
@@ -53,6 +54,7 @@ const DocTab: React.FC = () => {
         };
         const tagList: JSX.Element[] = [];
         userDocList.forEach((docItem: TexProjectModel) => {
+            const formattedTime = dayjs(docItem.updated_time).format('YYYY-MM-DD HH:mm:ss');
             tagList.push(
                 <label key={docItem.project_id} className="list-group-item">
                     <div className={styles.docHeader}>
@@ -70,7 +72,7 @@ const DocTab: React.FC = () => {
                         </div>
                     </div>
                     <div>
-                        <div>更新时间：{docItem.updated_time}</div>
+                        <div>更新时间：{formattedTime}</div>
                     </div>
                 </label>
             );

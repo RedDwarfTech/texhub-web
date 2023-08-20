@@ -70,7 +70,7 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
         if(!totalPageNum || totalPageNum<1) return;
         const tagList: JSX.Element[] = [];
         for(let i = 1; i <= totalPageNum; i++){
-            tagList.push(<Page className={styles.pdfPage} scale={pdfScale} pageNumber={i} />);
+            tagList.push(<Page key={i} className={styles.pdfPage} scale={pdfScale} pageNumber={i} />);
         }
         return tagList;
     }
