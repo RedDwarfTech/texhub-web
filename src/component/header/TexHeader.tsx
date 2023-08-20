@@ -81,15 +81,23 @@ const TexHeader: React.FC = () => {
         if (accessTokenOrigin) {
             AuthHandler.storeCookieAuthInfo(accessTokenOrigin, readConfig("baseAuthUrl"), readConfig("accessTokenUrlPath"));
             loadCurrentUser();
-            //setIsLoggedIn(true);
         }
-        return (<button className="loginButton" name='aiLoginBtn' onClick={() => { navigate("/user/login") }}>登录</button>);
+        return (
+            <div>
+                <div>
+                    <button className="btn btn-outline-info text-light" onClick={() => { navigate('/user/login') }}>登录</button>
+                </div>
+                <div>
+                    <button className="btn btn-outline-info text-light" onClick={() => { navigate('/user/reg') }}>注册</button>
+                </div>
+            </div>
+        );
     }
 
     const loadCurrentUser = () => {
         if (!localStorage.getItem("userInfo")) {
             //setIsGetUserLoading(true);
-           UserService.getCurrentUser(store).then((data: any) => {
+            UserService.getCurrentUser(store).then((data: any) => {
                 if (ResponseHandler.responseSuccess(data)) {
                     //setUserInfo(data.result);
                     localStorage.setItem("userInfo", JSON.stringify(data.result));
@@ -125,12 +133,6 @@ const TexHeader: React.FC = () => {
                 </div>
             </nav>
             <div className={styles.headerOperation}>
-                <div>
-                    <button className="btn btn-outline-info text-light" onClick={() =>{navigate('/user/login')}}>登录</button>
-                </div>
-                <div>
-                    <button className="btn btn-outline-info text-light" onClick={() =>{navigate('/user/reg')}}>注册</button>
-                </div>
                 {renderLogin()}
                 <div className="dropdown">
                     <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
