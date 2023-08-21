@@ -43,7 +43,14 @@ export function compileProject(proj: any) {
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function getLatestCompile(params: any) {
+export function getLatestCompile(project_id: string) {
+    const params = new URLSearchParams();
+    params.append("project_id",project_id);
+    const config: AxiosRequestConfig = {
+        method: 'get',
+        url: '/tex/project/pdf',
+        params: params
+    };
     const actionTypeString: string = ProjectActionType[ProjectActionType.LATEST_COMPILE];
-    return XHRClient.dispathAction(params, actionTypeString, store);
+    return XHRClient.requestWithActionType(config, actionTypeString, store);
 }

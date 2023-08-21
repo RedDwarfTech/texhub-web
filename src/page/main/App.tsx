@@ -9,7 +9,7 @@ import { TexFileModel } from '@/model/file/TexFileModel';
 import { addFile, chooseFile, delTreeItem, getFileList } from '@/service/file/FileService';
 import { Button, Dropdown, MenuProps, Modal } from 'antd';
 import { ExclamationCircleOutlined, FileAddOutlined, FolderAddOutlined, MoreOutlined } from "@ant-design/icons";
-import { ResponseHandler } from 'rdjs-wheel';
+import { RequestHandler, ResponseHandler } from 'rdjs-wheel';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EHeader from '@/component/header/editor/EHeader';
@@ -17,6 +17,7 @@ import 'pdfjs-dist/web/pdf_viewer.css';
 import { readConfig } from '@/config/app/config-reader';
 import queryString from 'query-string';
 import Previewer from '@/component/common/previewer/Previewer';
+import { getLatestCompile } from '@/service/project/ProjectService';
 
 const App: React.FC = () => {
 
@@ -37,7 +38,11 @@ const App: React.FC = () => {
     resizeLeft("hiddenContentLeft", "prjTree");
     resizeRight("hiddenContentRight", "editor");
     if (pid) {
-      getFileList(pid.toString());
+      getFileList(pid.toString()).then((res)=>{
+        if(ResponseHandler.responseSuccess(res)){
+          getLatestCompile(pid.toString());
+        }
+      });
     }
   }, []);
 
