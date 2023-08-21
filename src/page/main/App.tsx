@@ -17,7 +17,7 @@ import 'pdfjs-dist/web/pdf_viewer.css';
 import { readConfig } from '@/config/app/config-reader';
 import queryString from 'query-string';
 import Previewer from '@/component/common/previewer/Previewer';
-import { getLatestCompile } from '@/service/project/ProjectService';
+import { compileProject, getLatestCompile } from '@/service/project/ProjectService';
 
 const App: React.FC = () => {
 
@@ -38,8 +38,8 @@ const App: React.FC = () => {
     resizeLeft("hiddenContentLeft", "prjTree");
     resizeRight("hiddenContentRight", "editor");
     if (pid) {
-      getFileList(pid.toString()).then((res)=>{
-        if(ResponseHandler.responseSuccess(res)){
+      getFileList(pid.toString()).then((res) => {
+        if (ResponseHandler.responseSuccess(res)) {
           getLatestCompile(pid.toString());
         }
       });
@@ -51,17 +51,17 @@ const App: React.FC = () => {
       setTexFileTree(fileTree);
       let defaultFile = fileTree.filter((file: TexFileModel) => file.main_flag === 1);
       setMainFile(defaultFile[0]);
-      const pdfUrl = readConfig("compileBaseUrl") + "/" + defaultFile[0]?.project_id + "/" + defaultFile[0]?.name.split(".")[0] + ".pdf";
-      setPdfUrl(pdfUrl);
     }
   }, [fileTree]);
 
   React.useEffect(() => {
-    if(latestComp && Object.keys(latestComp).length > 0){
+    if (latestComp && Object.keys(latestComp).length > 0) {
       let pdfUrl = readConfig("compileBaseUrl") + "/" + latestComp.project_id + "/" + latestComp.path + "/main.pdf";
       setPdfUrl(pdfUrl);
+    } else {
+      compile(pid.toString(), "main.tex");
     }
-  },[latestComp]);
+  }, [latestComp]);
 
   React.useEffect(() => {
     if (!compileResult || Object.keys(compileResult).length === 0) {
@@ -74,6 +74,21 @@ const App: React.FC = () => {
       setPdfUrl(pdfUrl);
     }
   }, [compileResult]);
+
+  const compile = (prj_id: string, file_name: string) => {
+    let params = {
+      project_id: prj_id,
+      req_time: new Date().getTime(),
+      file_name: file_name
+    };
+    compileProject(params).then((resp) => {
+      if (ResponseHandler.responseSuccess(resp)) {
+
+      } else {
+        toast.error(resp.msg);
+      }
+    });
+  }
 
   const handleOk = () => {
     setIsModalOpen(false);
