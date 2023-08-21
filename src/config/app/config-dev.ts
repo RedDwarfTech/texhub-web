@@ -6,7 +6,7 @@ let devConfigMap = new Map([
     ["regUrl", "/texpub/user/reg"],
     ["accessTokenUrlPath","/ai/auth/access-token/refresh"],
     ["appHome","http://192.168.10.93:8084"],
-    ["appId" , "vOghoo10L9"],
+    ["appId" , "n29Pa29WS1"],
     ["phone","+8615683761628"],
     ["password","12345678"],
     ["deviceName","dolphin's macbook pro"],

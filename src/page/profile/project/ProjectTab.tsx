@@ -115,9 +115,11 @@ const DocTab: React.FC = () => {
             </ul>
             <div className={styles.docContainer}>
                 <div className={styles.docList}>
-                    <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPrj">
-                        新建
-                    </button>
+                    <div className={styles.docListHeader}>
+                        <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPrj">
+                            新建
+                        </button>
+                    </div>
                     <div className="list-group">
                         {renderDoc()}
                     </div>

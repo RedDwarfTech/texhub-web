@@ -96,12 +96,9 @@ const TexHeader: React.FC = () => {
 
     const loadCurrentUser = () => {
         if (!localStorage.getItem("userInfo")) {
-            //setIsGetUserLoading(true);
-            UserService.getCurrentUser(store).then((data: any) => {
+            UserService.getCurrUser(readConfig("refreshUserUrl")).then((data: any) => {
                 if (ResponseHandler.responseSuccess(data)) {
-                    //setUserInfo(data.result);
                     localStorage.setItem("userInfo", JSON.stringify(data.result));
-                    //setIsGetUserLoading(false);
                 }
             });
         }
