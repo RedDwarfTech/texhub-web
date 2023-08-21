@@ -1,9 +1,11 @@
 import { CompileResult } from "@/model/doc/CompileResult";
+import { LatestCompile } from "@/model/doc/LatestCompile";
 import { AppState } from "@/redux/types/AppState";
 
 const initState: AppState["proj"] = {
     projList: [],
-    compileResult: {} as CompileResult
+    compileResult: {} as CompileResult,
+    latestComp: {} as LatestCompile
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -17,6 +19,11 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 compileResult: action.data
+            };
+        case "LATEST_COMPILE":
+            return {
+                ...state,
+                latestComp: action.data
             };
         default:
             break;

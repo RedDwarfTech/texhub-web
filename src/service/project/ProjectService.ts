@@ -42,3 +42,8 @@ export function compileProject(proj: any) {
     const actionTypeString: string = ProjectActionType[ProjectActionType.COMPILE_PROJ];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
+
+export function getLatestCompile(params: any) {
+    const actionTypeString: string = ProjectActionType[ProjectActionType.LATEST_COMPILE];
+    return XHRClient.dispathAction(params, actionTypeString, store);
+}

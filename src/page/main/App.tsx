@@ -17,7 +17,6 @@ import 'pdfjs-dist/web/pdf_viewer.css';
 import { readConfig } from '@/config/app/config-reader';
 import queryString from 'query-string';
 import Previewer from '@/component/common/previewer/Previewer';
-import RdViewer from '@/component/common/previewer/RdViewer';
 
 const App: React.FC = () => {
 
@@ -27,7 +26,7 @@ const App: React.FC = () => {
   const params = queryString.parse(search);
   const pid = params.pid!;
   const { fileTree } = useSelector((state: AppState) => state.file);
-  const { compileResult } = useSelector((state: AppState) => state.proj);
+  const { compileResult, latestComp } = useSelector((state: AppState) => state.proj);
   const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mainFile, setMainFile] = useState<TexFileModel>();
@@ -51,6 +50,13 @@ const App: React.FC = () => {
       setPdfUrl(pdfUrl);
     }
   }, [fileTree]);
+
+  React.useEffect(() => {
+    if(latestComp && Object.keys(latestComp).length > 0){
+      let pdfUrl = readConfig("compileBaseUrl") + "/" + latestComp.project_id + "/" + latestComp.path + "/main.pdf";
+      setPdfUrl(pdfUrl);
+    }
+  },[latestComp]);
 
   React.useEffect(() => {
     if (!compileResult || Object.keys(compileResult).length === 0) {

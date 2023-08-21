@@ -1,11 +1,12 @@
-export type projectAction = saveDocAction | getDocListAction | compileProjAction;
+export type projectAction = saveDocAction | getDocListAction | compileProjAction | getLatestCompileAction;
 
 export enum ProjectActionType {
     CREATE_DOC,
     GET_PROJ_LIST,
     DELETE_PROJ,
     CLEAR_CURRENT_EDU,
-    COMPILE_PROJ
+    COMPILE_PROJ,
+    LATEST_COMPILE
 }
 
 export interface saveDocAction {
@@ -20,5 +21,10 @@ export interface getDocListAction {
 
 export interface compileProjAction {
     type: ProjectActionType.COMPILE_PROJ;
+    data: any;
+}
+
+export interface getLatestCompileAction {
+    type: ProjectActionType.LATEST_COMPILE;
     data: any;
 }
