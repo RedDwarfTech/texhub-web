@@ -6,11 +6,13 @@ import { TexFileModel } from "@/model/file/TexFileModel";
 import { toast, ToastContainer } from 'react-toastify';
 import { compileProject } from "@/service/project/ProjectService";
 import { ResponseHandler } from "rdjs-wheel";
+import { useNavigate } from "react-router-dom";
 
 const EHeader: React.FC = () => {
 
     const { fileTree } = useSelector((state: AppState) => state.file);
     const [mainFile, setMainFile] = useState<TexFileModel>();
+    const navigate = useNavigate();
 
     React.useEffect(() => {
         if (fileTree && fileTree.length > 0) {
@@ -21,7 +23,7 @@ const EHeader: React.FC = () => {
 
     const handleCompile = (mainFile: TexFileModel) => {
         toast.info("trigger compile");
-        if(!mainFile){
+        if (!mainFile) {
             toast.error("file is null");
         }
         let params = {
@@ -29,10 +31,10 @@ const EHeader: React.FC = () => {
             req_time: new Date().getTime(),
             file_name: mainFile.name
         };
-        compileProject(params).then((resp)=>{
-            if(ResponseHandler.responseSuccess(resp)){
-                
-            }else{
+        compileProject(params).then((resp) => {
+            if (ResponseHandler.responseSuccess(resp)) {
+
+            } else {
                 toast.error(resp.msg);
             }
         });
@@ -46,7 +48,8 @@ const EHeader: React.FC = () => {
         <div className={styles.container}>
             <div></div>
             <div className={styles.actions}>
-                <button onClick={() => { handleCompile(mainFile) }}>编译</button>
+                <button type="button" className="btn btn-primary" onClick={() => { navigate('/doc/tab') }}>个人中心</button>
+                <button type="button" className="btn btn-primary" onClick={() => { handleCompile(mainFile) }}>编译</button>
             </div>
         </div>
     );
