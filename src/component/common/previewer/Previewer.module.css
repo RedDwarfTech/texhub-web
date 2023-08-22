@@ -8,7 +8,11 @@
 }
 
 .previewHader {
-    height: 40px;
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    border: none;
 }
 
 .previewBody {

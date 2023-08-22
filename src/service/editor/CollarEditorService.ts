@@ -55,13 +55,6 @@ export function initEditor(projectId: string, docId: string, activeEditorView: E
     });
     wsProvider.on('status',(event:any) => {
         if (event.status === 'connected') {
-            const message = {
-              type: 'custom',
-              data: {
-                foo: 'bar',
-                baz: 42,
-              },
-            };
             if(wsProvider.ws){
                 //wsProvider.ws.send(JSON.stringify(message));
             }

@@ -23,6 +23,7 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
 
     const [pdfScale, setPdfScale] = useState<number>(1);
     const [numPages, setNumPages] = useState<number>();
+    const [currentPage, setCurrentPage] = useState(1);
     const [pageNumber, setPageNumber] = useState<number>(1);
 
     const options = {
@@ -66,11 +67,30 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
         setNumPages(numPages);
     }
 
-    const renderPages =(totalPageNum: number|undefined) => {
-        if(!totalPageNum || totalPageNum<1) return;
+    const handlePageChange = (page: any) => {
+        //setCurrentPage(page);
+    };
+
+    const handlePageRenderSuccess = (page: any) => {
+        const pageIndex = page._pageIndex + 1;
+        //setCurrentPage(pageIndex);
+        console.log('当前页码：', pageIndex);
+    };
+
+    const renderPages = (totalPageNum: number | undefined) => {
+        if (!totalPageNum || totalPageNum < 1) return;
         const tagList: JSX.Element[] = [];
-        for(let i = 1; i <= totalPageNum; i++){
-            tagList.push(<Page key={i} className={styles.pdfPage} scale={pdfScale} pageNumber={i} />);
+        for (let i = 1; i <= totalPageNum; i++) {
+            tagList.push(
+                <Page key={i}
+                    className={styles.pdfPage}
+                    scale={pdfScale}
+                    onLoad={handlePageChange}
+                    onRenderSuccess={handlePageRenderSuccess}
+                    pageNumber={i} >
+                        
+                </Page>
+            );
         }
         return tagList;
     }
@@ -78,9 +98,9 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
     return (
         <div id="preview" className={styles.preview}>
             <div className={styles.previewHader}>
-                <button onClick={() => { handleDownloadPdf(props.pdfUrl) }}>下载PDF</button>
-                <button id="zoominbutton" onClick={() => { handleZoomIn() }}>放大</button>
-                <button id="zoomoutbutton" onClick={() => { handleZoomOut() }}>缩小</button>
+                <button onClick={() => { handleDownloadPdf(props.pdfUrl) }}><i className="fa fa-download"></i></button>
+                <button id="zoominbutton" onClick={() => { handleZoomIn() }}><i className="fa fa-search-plus"></i></button>
+                <button id="zoomoutbutton" onClick={() => { handleZoomOut() }}><i className="fa fa-search-minus"></i></button>
             </div>
             <div className={styles.previewBody}>
                 <Document options={options} file={props.pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
