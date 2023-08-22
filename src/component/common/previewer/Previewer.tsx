@@ -88,7 +88,7 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
                     onLoad={handlePageChange}
                     onRenderSuccess={handlePageRenderSuccess}
                     pageNumber={i} >
-                        
+
                 </Page>
             );
         }
@@ -98,9 +98,21 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
     return (
         <div id="preview" className={styles.preview}>
             <div className={styles.previewHader}>
-                <button onClick={() => { handleDownloadPdf(props.pdfUrl) }}><i className="fa fa-download"></i></button>
-                <button id="zoominbutton" onClick={() => { handleZoomIn() }}><i className="fa fa-search-plus"></i></button>
-                <button id="zoomoutbutton" onClick={() => { handleZoomOut() }}><i className="fa fa-search-minus"></i></button>
+                <div className={styles.leftAction}>
+                    <button className={styles.previewButton}>预览</button>
+                    <button className={styles.previewButton}>日志</button>
+                </div>
+                <div className={styles.rightAction}>
+                    <button className={styles.previewIconButton} onClick={() => { handleDownloadPdf(props.pdfUrl) }}>
+                        <i className="fa fa-download"></i>
+                    </button>
+                    <button className={styles.previewIconButton} id="zoominbutton" onClick={() => { handleZoomIn() }}>
+                        <i className="fa fa-search-plus"></i>
+                    </button>
+                    <button className={styles.previewIconButton} id="zoomoutbutton" onClick={() => { handleZoomOut() }}>
+                        <i className="fa fa-search-minus"></i>
+                    </button>
+                </div>
             </div>
             <div className={styles.previewBody}>
                 <Document options={options} file={props.pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>

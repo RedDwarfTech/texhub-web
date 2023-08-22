@@ -8,16 +8,39 @@
 }
 
 .previewHader {
-    font-size: 20px;
+    font-size: 16px;
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     gap: 10px;
     border: none;
 }
 
+.previewButton {
+    border: none;
+    background-color: blanchedalmond;
+}
+
+.previewIconButton {
+    border: none;
+    background-color: #ffffff;
+}
+
+.leftAction {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+.rightAction {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
 .previewBody {
     flex-grow: 1;
-    background-color: rgb(233,233,233);
+    background-color: rgb(233, 233, 233);
     display: flex;
     overflow: scroll;
     justify-content: center;
