@@ -25,7 +25,7 @@ const extensions = [
     EditorView.lineWrapping,
     EditorView.theme({
         '.cm-content': {
-            height: '96vh'
+            fontSize: '16px'
         },
         '.cm-scroller': {
             
@@ -63,7 +63,7 @@ export function initEditor(projectId: string, docId: string, activeEditorView: E
         doc: ytext.toString(),
         extensions: [
             basicSetup,
-            yCollab(ytext, wsProvider.awareness, { undoManager }),
+            //yCollab(ytext, wsProvider.awareness, { undoManager }),
             extensions,
             solarizedLight
         ]
