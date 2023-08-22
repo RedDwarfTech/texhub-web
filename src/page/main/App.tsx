@@ -56,10 +56,12 @@ const App: React.FC = () => {
 
   React.useEffect(() => {
     if (latestComp && Object.keys(latestComp).length > 0) {
-      let pdfUrl = readConfig("compileBaseUrl") + "/" + latestComp.project_id + "/" + latestComp.path + "/main.pdf";
-      setPdfUrl(pdfUrl);
-    } else {
-      compile(pid.toString(), "main.tex");
+      if (latestComp.path && latestComp.path.length > 0) {
+        let pdfUrl = readConfig("compileBaseUrl") + "/" + latestComp.project_id + "/" + latestComp.path + "/main.pdf";
+        setPdfUrl(pdfUrl);
+      } else {
+        compile(pid.toString(), "main.tex");
+      }
     }
   }, [latestComp]);
 
@@ -85,7 +87,7 @@ const App: React.FC = () => {
       if (ResponseHandler.responseSuccess(resp)) {
 
       } else {
-        toast.error(resp.msg);
+        //toast.error(resp.msg);
       }
     });
   }

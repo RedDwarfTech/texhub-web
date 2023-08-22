@@ -34,8 +34,10 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     };
   }, [file]);
 
-  return <div ref={edContainer} className={styles.container}>
-  </div>;
+  return (
+  <div ref={edContainer} className={styles.container}>
+  </div>
+  );
 }
 
 export default CollarCodeEditor;
