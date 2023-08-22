@@ -8,8 +8,6 @@ import { yCollab } from "y-codemirror.next";
 import { StreamLanguage, defaultHighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { stex } from "@codemirror/legacy-modes/mode/stex";
 import { solarizedLight } from 'cm6-theme-solarized-light';
-import { completeFromList, completionKeymap } from '@codemirror/autocomplete';
-import { tex } from '@codemirror/lang-tex';
 
 export const usercolors = [
     { color: '#30bced', light: '#30bced33' },

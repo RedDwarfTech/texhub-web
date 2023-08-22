@@ -27,6 +27,13 @@
 .treeMenus {
   display: flex;
   flex-direction: row;
+  background-color: rgb(33,41,53);
+}
+
+.treeBody {
+  background-color: rgb(40, 50, 70);
+  color: white;
+  flex-grow: 1;
 }
 
 .fileItem {

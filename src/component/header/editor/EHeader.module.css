@@ -3,6 +3,7 @@
     flex-direction: row;
     justify-content: space-between;
     height: 4vh;
+    background-color: rgb(20, 22, 32);
 }
 
 .actions {
