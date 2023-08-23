@@ -8,7 +8,7 @@ import { XHRClient } from "rd-component";
 export function getTplList(tag: string) {
     const config: AxiosRequestConfig = {
         method: 'get',
-        url: '/tex/tpl/list?tag=' + tag,
+        url: '/tex/tpl/list' ,
     };
     const actionTypeString: string = TemplateActionType[TemplateActionType.GET_TPL_LIST];
     return XHRClient.requestWithActionType(config, actionTypeString, store);

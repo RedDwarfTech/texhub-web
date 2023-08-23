@@ -6,4 +6,5 @@ export interface TemplateModel {
     updated_time: string;
     preview_url: string;
     intro: string;
+    pdf_name: string;
 }

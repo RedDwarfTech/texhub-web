@@ -10,14 +10,6 @@ export type ViewerProps = {
     pdfUrl: string | undefined;
 };
 
-/**
- * improve the pdf image quality: 
- * https://stackoverflow.com/questions/35400722/pdf-image-quality-is-bad-using-pdf-js
- * https://stackoverflow.com/questions/49426385/pdf-js-displays-pdf-documents-in-really-low-resolution-blurry-almost-is-this-h
- * https://stackoverflow.com/questions/21719393/how-to-improve-display-quality-in-pdf-js
- * 
- * the pdf scale issue: 
- */
 const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
 
     const [pdfScale, setPdfScale] = useState<number>(1);

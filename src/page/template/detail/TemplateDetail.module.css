@@ -16,3 +16,9 @@
 .intro {
     font-size: 17px;
 }
+
+.tplAction {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
