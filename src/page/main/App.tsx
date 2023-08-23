@@ -32,11 +32,11 @@ const App: React.FC = () => {
 
   React.useEffect(() => {
     if (fileTree && fileTree.length > 0) {
-        let defaultFile = fileTree.filter((file: TexFileModel) => file.main_flag === 1);
-        setMainFile(defaultFile[0]);
+      let defaultFile = fileTree.filter((file: TexFileModel) => file.main_flag === 1);
+      setMainFile(defaultFile[0]);
     }
-}, [fileTree]);
-  
+  }, [fileTree]);
+
   React.useEffect(() => {
     resizeLeft("hiddenContentLeft", "prjTree");
     resizeRight("hiddenContentRight", "editor");
@@ -157,6 +157,10 @@ const App: React.FC = () => {
         }
       }
     }, 1500);
+  }
+
+  if (!mainFile || !mainFile.file_id) {
+    return (<div>Loading...</div>);
   }
 
   return (
