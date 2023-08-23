@@ -11,15 +11,15 @@ const Template: React.FC = () => {
 
     const [userTplList, setUserTplList] = useState<TemplateModel[]>([]);
     const { tplList } = useSelector((state: AppState) => state.tpl);
-    const navigate = useNavigate(); 
-    
+    const navigate = useNavigate();
+
     React.useEffect(() => {
         getTplList("all");
-    },[]);
+    }, []);
 
     React.useEffect(() => {
         setUserTplList(tplList);
-    },[tplList])
+    }, [tplList])
 
     const renderTplList = () => {
         if (!userTplList || userTplList.length === 0) {
@@ -29,7 +29,7 @@ const Template: React.FC = () => {
         userTplList.forEach((docItem: TemplateModel) => {
             tagList.push(
                 <div className={`${styles.tplCard} card`}>
-                    <img src={docItem.preview_url} className="card-img-top" onClick={()=>{navigate("/tpl/detail",{ state: { id: docItem.template_id } })}} alt="..."></img>
+                    <img src={docItem.preview_url} className="card-img-top" onClick={() => { navigate("/tpl/detail", { state: { id: docItem.template_id } }) }} alt="..."></img>
                     <div className="card-body">
                         <h6 className="card-title">{docItem.name}</h6>
                     </div>
@@ -40,14 +40,26 @@ const Template: React.FC = () => {
     }
 
     return (
-    <div>
-        <TexHeader></TexHeader>
-        <div className={styles.tplBody}>
-            <div className={styles.container}>
-                {renderTplList()}
+        <div>
+            <TexHeader></TexHeader>
+            <div className={styles.tplBody}>
+                <div className={styles.tplFilter}>
+                    <div>
+                        <input type="text" placeholder="输入检索关键字，按回车键搜索"></input>
+                    </div>
+                    <div>模版类型:
+                        <select>
+                            <option value="option1">简历</option>
+                            <option value="option2">推荐信</option>
+                            <option value="option3">论文</option>
+                        </select>
+                    </div>
+                </div>
+                <div className={styles.container}>
+                    {renderTplList()}
+                </div>
             </div>
         </div>
-    </div>
     );
 }
 

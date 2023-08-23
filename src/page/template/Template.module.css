@@ -18,3 +18,12 @@
 .tplCard {
     width: 400px;
 }
+
+.tplFilter {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    height: 60px;
+}
