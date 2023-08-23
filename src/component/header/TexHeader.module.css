@@ -6,6 +6,12 @@
     background-color: rgb(33, 37, 41);
 }
 
+.loginReg {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
 .headerOperation {
     display: flex;
     flex-direction: row;

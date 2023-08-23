@@ -83,7 +83,7 @@ const TexHeader: React.FC = () => {
             loadCurrentUser();
         }
         return (
-            <div>
+            <div className={styles.loginReg}>
                 <div>
                     <button className="btn btn-outline-info text-light" onClick={() => { navigate('/user/login') }}>登录</button>
                 </div>
