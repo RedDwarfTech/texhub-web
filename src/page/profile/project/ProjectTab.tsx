@@ -26,7 +26,6 @@ const DocTab: React.FC = () => {
 
     React.useEffect(() => {
         setUserDocList(projList);
-        console.log("doclist:", projList);
     }, [projList]);
 
     const handleProjDel = () => {

@@ -8,6 +8,9 @@ import { yCollab } from "y-codemirror.next";
 import { StreamLanguage, defaultHighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { stex } from "@codemirror/legacy-modes/mode/stex";
 import { solarizedLight } from 'cm6-theme-solarized-light';
+import { UserService } from "rd-component";
+import { readConfig } from "@/config/app/config-reader";
+import { UserModel } from "rdjs-wheel";
 
 export const usercolors = [
     { color: '#30bced', light: '#30bced33' },
@@ -47,8 +50,9 @@ export function initEditor(projectId: string, docId: string, activeEditorView: E
     const ytext = ydoc.getText(docId);
     const undoManager = new Y.UndoManager(ytext);
     const wsProvider = new WebsocketProvider('wss://ws.poemhub.top', docId, ydoc);
+    const user: UserModel = UserService.loadCurrUser(false,readConfig("refreshUserUrl"));
     wsProvider.awareness.setLocalStateField('user', {
-        name: 'Anonymous ' + Math.floor(Math.random() * 100),
+        name: user.nickname,
         color: userColor.color,
         colorLight: userColor.light
     });

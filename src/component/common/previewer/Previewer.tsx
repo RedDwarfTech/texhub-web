@@ -67,13 +67,11 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
     }
 
     const handlePageChange = (page: any) => {
-        //setCurrentPage(page);
+        
     };
 
     const handlePageRenderSuccess = (page: any) => {
         const pageIndex = page._pageIndex + 1;
-        //setCurrentPage(pageIndex);
-        console.log('当前页码：', pageIndex);
     };
 
     const renderPages = (totalPageNum: number | undefined) => {
