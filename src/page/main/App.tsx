@@ -264,8 +264,12 @@ const App: React.FC = () => {
       <div className={styles.editorBody}>
         <div id="prjTree" ref={divRef} className={styles.prjTree}>
           <div className={styles.treeMenus}>
-            <button onClick={() => { handleFileAdd() }}><FileAddOutlined /></button>
-            <button><FolderAddOutlined /></button>
+            <button className={styles.menuButton} onClick={() => { handleFileAdd() }}>
+              <i className="fa-solid fa-file-circle-plus"></i>
+            </button>
+            <button className={styles.menuButton}>
+              <i className="fa-solid fa-folder-plus"></i>
+            </button>
           </div>
           <div className={styles.treeBody}>
             {renderDirectoryTree()}
