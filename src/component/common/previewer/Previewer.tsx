@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import styles from './Previewer.module.css';
 import { toast } from 'react-toastify';
 import { Document, Page, pdfjs } from 'react-pdf';
-import { PDFDocumentProxy } from 'pdfjs-dist';
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -23,7 +22,6 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
 
     const [pdfScale, setPdfScale] = useState<number>(1);
     const [numPages, setNumPages] = useState<number>();
-    const [currentPage, setCurrentPage] = useState(1);
     const [pageNumber, setPageNumber] = useState<number>(1);
 
     const options = {
@@ -35,6 +33,7 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
     }
 
     const handleDownloadPdf = async (pdfUrl: any) => {
+        debugger
         if (!pdfUrl) {
             toast.error("PDF文件Url为空");
             return;

@@ -1,0 +1,48 @@
+.treeMenus {
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(33, 41, 53);
+    gap: 5px;
+}
+
+.prjTree {
+    height: 100%;
+    flex: 0 0 10%;
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+}
+
+.menuButton {
+    background-color: rgb(40, 50, 70);
+    color: white;
+    border: none;
+}
+
+.treeBody {
+    background-color: rgb(54, 64, 82);
+    color: white;
+    flex-grow: 1;
+}
+
+.fileItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.fileItem> :last-child {
+    margin-left: auto;
+}
+
+.fileItem:hover {
+    background-color: rgb(93, 97, 123);;
+}
+
+.moreBtn {
+    background-color: transparent;
+    color: white;
+    font-weight: 600;
+    border: none;
+}

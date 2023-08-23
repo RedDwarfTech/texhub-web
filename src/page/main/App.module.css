@@ -16,42 +16,6 @@
   flex-grow: 1;
 }
 
-.prjTree {
-  height: 100%;
-  flex: 0 0 10%;
-  display: flex;
-  flex-direction: column;
-  overflow: scroll;
-}
-
-.treeMenus {
-  display: flex;
-  flex-direction: row;
-  background-color: rgb(33,41,53);
-  gap: 5px;
-}
-
-.treeBody {
-  background-color: rgb(40, 50, 70);
-  color: white;
-  flex-grow: 1;
-}
-
-.menuButton {
-  background-color: rgb(40, 50, 70);
-  color: white;
-  border: none;
-}
-
-.fileItem {
-  display: flex;
-  flex-direction: row;
-}
-
-.fileItem > :last-child {
-  margin-left: auto;
-}
-
 .editor {
   resize: horizontal;
   flex: 0 0 60%;

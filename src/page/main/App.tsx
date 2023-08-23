@@ -5,12 +5,9 @@ const CollarCodeEditor = React.lazy(() => import('@/component/common/editor/Coll
 import { useLocation } from 'react-router-dom';
 import { AppState } from '@/redux/types/AppState';
 import { useSelector } from 'react-redux';
-import { TexFileModel } from '@/model/file/TexFileModel';
-import { addFile, chooseFile, delTreeItem, getFileList } from '@/service/file/FileService';
-import { Button, Dropdown, MenuProps, Modal } from 'antd';
-import { ExclamationCircleOutlined, FileAddOutlined, FolderAddOutlined, MoreOutlined } from "@ant-design/icons";
-import { RequestHandler, ResponseHandler } from 'rdjs-wheel';
-import { toast, ToastContainer } from 'react-toastify';
+import { getFileList } from '@/service/file/FileService';
+import { ResponseHandler } from 'rdjs-wheel';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EHeader from '@/component/header/editor/EHeader';
 import 'pdfjs-dist/web/pdf_viewer.css';
@@ -18,22 +15,28 @@ import { readConfig } from '@/config/app/config-reader';
 import queryString from 'query-string';
 import Previewer from '@/component/common/previewer/Previewer';
 import { compileProject, getLatestCompile } from '@/service/project/ProjectService';
+import ProjectTree from '@/component/common/prjtree/ProjectTree';
+import { TexFileModel } from '@/model/file/TexFileModel';
 
 const App: React.FC = () => {
 
-  const divRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const search = location.search;
   const params = queryString.parse(search);
   const pid = params.pid!;
-  const { fileTree } = useSelector((state: AppState) => state.file);
   const { compileResult, latestComp } = useSelector((state: AppState) => state.proj);
-  const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [mainFile, setMainFile] = useState<TexFileModel>();
   const [pdfUrl, setPdfUrl] = useState<string>();
-  const { confirm } = Modal;
+  const divRef = useRef<HTMLDivElement>(null);
+  const { fileTree } = useSelector((state: AppState) => state.file);
+  const [mainFile, setMainFile] = useState<TexFileModel>();
 
+  React.useEffect(() => {
+    if (fileTree && fileTree.length > 0) {
+        let defaultFile = fileTree.filter((file: TexFileModel) => file.main_flag === 1);
+        setMainFile(defaultFile[0]);
+    }
+}, [fileTree]);
+  
   React.useEffect(() => {
     resizeLeft("hiddenContentLeft", "prjTree");
     resizeRight("hiddenContentRight", "editor");
@@ -45,14 +48,6 @@ const App: React.FC = () => {
       });
     }
   }, []);
-
-  React.useEffect(() => {
-    if (fileTree && fileTree.length > 0) {
-      setTexFileTree(fileTree);
-      let defaultFile = fileTree.filter((file: TexFileModel) => file.main_flag === 1);
-      setMainFile(defaultFile[0]);
-    }
-  }, [fileTree]);
 
   React.useEffect(() => {
     if (latestComp && Object.keys(latestComp).length > 0) {
@@ -91,25 +86,6 @@ const App: React.FC = () => {
       }
     });
   }
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-    let params = {
-      name: "demo",
-      project_id: pid,
-      parent: pid,
-      file_type: 1
-    };
-    addFile(params).then((resp) => {
-      if (ResponseHandler.responseSuccess(resp)) {
-        getFileList(pid?.toString());
-      }
-    });
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
 
   const resizeLeft = (resizeBarName: string, resizeArea: string) => {
     setTimeout(() => {
@@ -183,98 +159,11 @@ const App: React.FC = () => {
     }, 1500);
   }
 
-  const handleFileAdd = () => {
-    setIsModalOpen(true);
-  }
-
-  const handleFileDelete = () => {
-    confirm({
-      icon: <ExclamationCircleOutlined />,
-      content: <div>删除后数据无法恢复，确定要删除？</div>,
-      onOk() {
-        let params = {
-          file_id: mainFile
-        };
-        delTreeItem(params).then((resp) => {
-          if (ResponseHandler.responseSuccess(resp)) {
-            getFileList(pid.toString());
-          }
-        });
-      },
-      onCancel() {
-        console.log('Cancel');
-      },
-    });
-  }
-
-  const items: MenuProps['items'] = [
-    {
-      key: '1',
-      label: (
-        <a target="_blank" rel="noopener noreferrer" onClick={handleFileDelete}>
-          删除
-        </a>
-      ),
-    },
-  ];
-
-  const handleDropdownClick = (fileId: string) => {
-
-  };
-
-  const handleTreeItemClick = (fileItem: TexFileModel) => {
-    let params = {
-      file_id: fileItem.file_id
-    };
-    chooseFile(params);
-  };
-
-  const renderDirectoryTree = () => {
-    if (!texFileTree) {
-      return (<div></div>);
-    }
-    const tagList: JSX.Element[] = [];
-    texFileTree.forEach((item: TexFileModel) => {
-      tagList.push(
-        <div key={item.file_id} className={styles.fileItem} onClick={() => handleTreeItemClick(item)}>
-          <div>{item.name}</div>
-          <div className={styles.actions}>
-            <Dropdown menu={{ items }}
-              onOpenChange={(visible) =>
-                visible && handleDropdownClick(item.file_id)
-              }
-              placement="bottomLeft"
-              arrow={{ pointAtCenter: true }}>
-              <Button icon={<MoreOutlined />} />
-            </Dropdown>
-          </div>
-        </div>
-      );
-    });
-    return tagList;
-  }
-
-  if (!mainFile) {
-    return <div>Loading...</div>
-  }
-
   return (
     <div className={styles.container}>
       <EHeader></EHeader>
       <div className={styles.editorBody}>
-        <div id="prjTree" ref={divRef} className={styles.prjTree}>
-          <div className={styles.treeMenus}>
-            <button className={styles.menuButton} onClick={() => { handleFileAdd() }}>
-              <i className="fa-solid fa-file-circle-plus"></i>
-            </button>
-            <button className={styles.menuButton}>
-              <i className="fa-solid fa-folder-plus"></i>
-            </button>
-          </div>
-          <div className={styles.treeBody}>
-            {renderDirectoryTree()}
-          </div>
-        </div>
+        <ProjectTree projectId={''} divRef={divRef}></ProjectTree>
         <div>
           <HiddenContent id="hiddenContentLeft" className={styles.hiddenContent} />
         </div>
@@ -290,9 +179,6 @@ const App: React.FC = () => {
         </div>
         <Previewer pdfUrl={pdfUrl}></Previewer>
       </div>
-      <Modal title="创建" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <input placeholder="名称"></input>
-      </Modal>
       <ToastContainer />
     </div>
   );
