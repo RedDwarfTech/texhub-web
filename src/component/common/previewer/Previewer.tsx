@@ -85,7 +85,6 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
                     onLoad={handlePageChange}
                     onRenderSuccess={handlePageRenderSuccess}
                     pageNumber={i} >
-
                 </Page>
             );
         }

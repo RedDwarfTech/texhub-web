@@ -34,12 +34,14 @@
     display: flex;
     flex-direction: row;
     gap: 5px;
+    padding-left: 3px;
 }
 
 .rightAction {
     display: flex;
     flex-direction: row;
     gap: 15px;
+    padding-right: 10px;
 }
 
 .previewBody {
