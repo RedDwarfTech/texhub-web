@@ -99,12 +99,16 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
         <div id="preview" className={styles.preview}>
             <div className={styles.previewHader}>
                 <div className={styles.leftAction}>
-                    <button className={styles.previewButton}>预览</button>
-                    <button className={styles.previewButton}>日志</button>
+                    <button className={styles.previewButton}>
+                        <i className="fa-regular fa-file-pdf"></i> 预览
+                    </button>
+                    <button className={styles.previewButton}>
+                        <i className="fa-regular fa-file-lines"></i> 日志
+                    </button>
                 </div>
                 <div className={styles.rightAction}>
                     <button className={styles.previewIconButton} onClick={() => { handleDownloadPdf(props.pdfUrl) }}>
-                        <i className="fa fa-download"></i>
+                        <i className="fa-solid fa-download"></i>
                     </button>
                     <button className={styles.previewIconButton} id="zoominbutton" onClick={() => { handleZoomIn() }}>
                         <i className="fa fa-search-plus"></i>

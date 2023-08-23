@@ -20,17 +20,20 @@
 .previewButton {
     border: none;
     background-color: blanchedalmond;
+    width: 60px;
+    border-radius: 3px 3px 0 0;
 }
 
 .previewIconButton {
     border: none;
-    background-color: #ffffff;
+    background-color: rgb(33,41,53);;
+    color: white;
 }
 
 .leftAction {
     display: flex;
     flex-direction: row;
-    gap: 15px;
+    gap: 5px;
 }
 
 .rightAction {
