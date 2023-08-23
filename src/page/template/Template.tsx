@@ -1,6 +1,6 @@
 import TexHeader from "@/component/header/TexHeader";
 import styles from "./Template.module.css";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { getTplList } from "@/service/tpl/TemplateService";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";

@@ -6,13 +6,13 @@ import avatarImg from "@/assets/icon/avatar.png";
 import { ControlOutlined, LogoutOutlined, PayCircleOutlined } from "@ant-design/icons";
 import { readConfig } from "@/config/app/config-reader";
 import { AuthHandler, ResponseHandler } from "rdjs-wheel";
-import store from "@/redux/store/store";
 import { useSelector } from "react-redux";
-import React from "react";
+import React, { useState } from "react";
 
 const TexHeader: React.FC = () => {
 
     const { loginUser } = useSelector((state: any) => state.rdRootReducer.user);
+    const [isLoggedIn, setIsLoggedIn] = useState(UserService.isLoggedIn() || false);
     const navigate = useNavigate();
 
     React.useEffect(() => {
@@ -64,7 +64,7 @@ const TexHeader: React.FC = () => {
     }
 
     const renderLogin = () => {
-        if (UserService.isLoggedIn()) {
+        if (isLoggedIn) {
             var avatarUrl = localStorage.getItem('avatarUrl');
             return (
                 <a id="user-menu">
@@ -95,13 +95,15 @@ const TexHeader: React.FC = () => {
     }
 
     const loadCurrentUser = () => {
-        if (!localStorage.getItem("userInfo")) {
-            UserService.getCurrUser(readConfig("refreshUserUrl")).then((data: any) => {
-                if (ResponseHandler.responseSuccess(data)) {
-                    localStorage.setItem("userInfo", JSON.stringify(data.result));
-                }
-            });
+        if (localStorage.getItem("userInfo")) {
+            return;
         }
+        UserService.getCurrUser(readConfig("refreshUserUrl")).then((data: any) => {
+            if (ResponseHandler.responseSuccess(data)) {
+                localStorage.setItem("userInfo", JSON.stringify(data.result));
+                setIsLoggedIn(true);
+            }
+        });
     }
 
     const handleMenuClick = () => {
