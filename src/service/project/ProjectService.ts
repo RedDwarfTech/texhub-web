@@ -1,4 +1,5 @@
 import { TexProjectModel } from "@/model/doc/TexProjectModel";
+import { CreateProjReq } from "@/model/request/proj/CreateProjReq";
 import { ProjectActionType } from "@/redux/action/project/ProjectAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
@@ -13,7 +14,7 @@ export function getProjectList(tag: string) {
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function createDoc(doc: TexProjectModel) {
+export function createProject(doc: CreateProjReq) {
     const config: AxiosRequestConfig = {
         method: 'post',
         url: '/tex/project/add',

@@ -1,7 +1,7 @@
 import TexHeader from "@/component/header/TexHeader";
 import styles from "./ProjectTab.module.css";
 import React, { useRef, useState } from "react";
-import { createDoc, deleteProject, getProjectList as getProjectList } from "@/service/project/ProjectService";
+import { createProject, deleteProject, getProjectList as getProjectList } from "@/service/project/ProjectService";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { TexProjectModel } from "@/model/doc/TexProjectModel";
@@ -86,14 +86,10 @@ const DocTab: React.FC = () => {
             toast.warning("登录后即可创建项目");
             return;
         }
-        let doc: TexProjectModel = {
-            doc_name: docName == null ? "" : docName,
-            template_id: 0,
-            created_time: "",
-            updated_time: "",
-            project_id: ""
+        let doc = {
+            name: docName == null ? "" : docName
         };
-        createDoc(doc).then((res) => {
+        createProject(doc).then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
                 getProjectList("all");
                 if (createDocCancelRef && createDocCancelRef.current) {

@@ -2,16 +2,21 @@ import React, { useState } from "react";
 import styles from "./TemplateDetail.module.css";
 import { TemplateModel } from "@/model/tpl/TemplateModel";
 import { getTplDetail } from "@/service/tpl/TemplateService";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import TexHeader from "@/component/header/TexHeader";
 import { readConfig } from "@/config/app/config-reader";
+import { CreateProjReq } from "@/model/request/proj/CreateProjReq";
+import { createProject } from "@/service/project/ProjectService";
+import { ResponseHandler } from "rdjs-wheel";
+import { toast } from "react-toastify";
 
 const TemplateDetail: React.FC = () => {
 
     const [tpl, setTpl] = useState<TemplateModel>();
     const { tplDetail } = useSelector((state: AppState) => state.tpl);
+    const navigate = useNavigate();
     const { state } = useLocation();
     const { id } = state;
 
@@ -32,6 +37,22 @@ const TemplateDetail: React.FC = () => {
         window.open(pdfUrl, '_blank');
     };
 
+    const createProjByTpl = () => {
+        let req:CreateProjReq =  {
+            name: tpl.name,
+            template_id: tpl.template_id
+        };
+        createProject(req).then((res) => {
+            if(ResponseHandler.responseSuccess(res)){
+                debugger
+                let proj_id = res.data.id;
+                navigate('/editor?pid=' + proj_id);
+            }else{
+                toast.error(res.msg)
+            }
+        });
+    }
+
     return (
         <div>
             <TexHeader></TexHeader>
@@ -39,7 +60,7 @@ const TemplateDetail: React.FC = () => {
                 <h6>模版详情</h6>
                 <div className={styles.intro}>模版简介：<span>{tpl.intro}</span></div>
                 <div className={styles.tplAction}>
-                    <button type="button" className="btn btn-primary">使用此模版</button>
+                    <button type="button" className="btn btn-primary" onClick={()=>{createProjByTpl()}}>使用此模版</button>
                     <button type="button" className="btn btn-primary" onClick={() => { previewTplPdf() }}>预览模版PDF</button>
                 </div>
                 <img src={tpl.preview_url} className={styles.tplDemo}></img>
