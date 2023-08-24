@@ -1,7 +1,7 @@
 import TexHeader from "@/component/header/TexHeader";
 import styles from "./ProjectTab.module.css";
 import React, { useRef, useState } from "react";
-import { createProject, deleteProject, getProjectList as getProjectList } from "@/service/project/ProjectService";
+import { createProject, deleteProject, getProjectList } from "@/service/project/ProjectService";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { TexProjectModel } from "@/model/doc/TexProjectModel";

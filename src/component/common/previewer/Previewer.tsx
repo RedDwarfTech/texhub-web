@@ -25,7 +25,6 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
     }
 
     const handleDownloadPdf = async (pdfUrl: any) => {
-        debugger
         if (!pdfUrl) {
             toast.error("PDF文件Url为空");
             return;

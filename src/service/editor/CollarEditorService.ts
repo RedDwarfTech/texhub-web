@@ -51,7 +51,6 @@ export async function initEditor(projectId: string, docId: string, activeEditorV
     const undoManager = new Y.UndoManager(ytext);
     const wsProvider = new WebsocketProvider(readConfig("wssUrl"), docId, ydoc);
     const user: UserModel = await UserService.loadCurrUser(false,readConfig("refreshUserUrl"));
-    debugger
     wsProvider.awareness.setLocalStateField('user', {
         name: user.nickname,
         color: userColor.color,
