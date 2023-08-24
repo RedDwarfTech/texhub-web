@@ -5,10 +5,18 @@ import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
 import { XHRClient } from "rd-component";
 
-export function getTplList(tag: string) {
+export function getTplList(name: string,tplType?: string) {
+    const params = new URLSearchParams();
+    if(name){
+        params.append("name",name);
+    }   
+    if(tplType){
+        params.append("tplType",tplType);
+    }
     const config: AxiosRequestConfig = {
         method: 'get',
-        url: '/tex/tpl/list' ,
+        url: '/tex/tpl/list',
+        params: params
     };
     const actionTypeString: string = TemplateActionType[TemplateActionType.GET_TPL_LIST];
     return XHRClient.requestWithActionType(config, actionTypeString, store);

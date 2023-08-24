@@ -22,7 +22,7 @@ const DocTab: React.FC = () => {
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        getProjectList("all");
+        getProjectList("");
     }, []);
 
     React.useEffect(() => {

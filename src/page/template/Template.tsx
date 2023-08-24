@@ -14,7 +14,7 @@ const Template: React.FC = () => {
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        getTplList("all");
+        getTplList("");
     }, []);
 
     React.useEffect(() => {
@@ -39,20 +39,29 @@ const Template: React.FC = () => {
         return tagList;
     }
 
+    const searchTplList = () => {
+        const selectElement = document.getElementById('tpl-type') as HTMLSelectElement;
+        const selectedValue = selectElement.value;
+        const searchElement = document.getElementById('stext') as HTMLInputElement;
+        const searchValue = searchElement.value;
+        getTplList(searchValue,selectedValue);
+    }
+
     return (
         <div>
             <TexHeader></TexHeader>
             <div className={styles.tplBody}>
                 <div className={styles.tplFilter}>
-                    <div>
-                        <input type="text" placeholder="输入检索关键字，按回车键搜索"></input>
-                    </div>
-                    <div>模版类型:
-                        <select>
-                            <option value="option1">简历</option>
-                            <option value="option2">推荐信</option>
-                            <option value="option3">论文</option>
+                    <div className="mb-3">
+                        <select id="tpl-type" className="form-select">
+                            <option selected value="1">简历</option>
+                            <option value="2">推荐信</option>
+                            <option value="3">论文</option>
                         </select>
+                    </div>
+                    <div className="input-group mb-3">
+                        <input id="stext" type="text" className="form-control" placeholder="输入检索关键字" aria-label="Recipient's username" aria-describedby="button-addon2" />
+                        <button className="btn btn-outline-secondary" onClick={()=>{searchTplList()}} type="button" id="button-addon2">查询</button>
                     </div>
                 </div>
                 <div className={styles.container}>
