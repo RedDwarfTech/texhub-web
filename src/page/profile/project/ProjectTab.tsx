@@ -5,10 +5,11 @@ import { createDoc, deleteProject, getProjectList as getProjectList } from "@/se
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { TexProjectModel } from "@/model/doc/TexProjectModel";
-import { ResponseHandler, TimeUtils } from "rdjs-wheel";
+import { ResponseHandler } from "rdjs-wheel";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
 import dayjs from 'dayjs';
+import { UserService } from "rd-component";
 
 const DocTab: React.FC = () => {
 
@@ -80,6 +81,11 @@ const DocTab: React.FC = () => {
     };
 
     const handleDocCreate = () => {
+        debugger
+        if(!UserService.isLoggedIn()){
+            toast.warning("登录后即可创建项目");
+            return;
+        }
         let doc: TexProjectModel = {
             doc_name: docName == null ? "" : docName,
             template_id: 0,
