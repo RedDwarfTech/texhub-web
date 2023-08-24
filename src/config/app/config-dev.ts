@@ -12,7 +12,8 @@ let devConfigMap = new Map([
     ["deviceName","dolphin's macbook pro"],
     ["refreshUserUrl","/texpub/user/current-user"],
     ["compileBaseUrl","https://tex.poemhub.top/tex/static/proj"],
-    ["tplBaseUrl","https://tex.poemhub.top/tex/static/tpl"]
+    ["tplBaseUrl","https://tex.poemhub.top/tex/static/tpl"],
+    ["wssUrl","wss://ws.poemhub.top"]
 ]); 
 
 export default devConfigMap;

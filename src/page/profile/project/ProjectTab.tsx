@@ -81,7 +81,6 @@ const DocTab: React.FC = () => {
     };
 
     const handleDocCreate = () => {
-        debugger
         if(!UserService.isLoggedIn()){
             toast.warning("登录后即可创建项目");
             return;

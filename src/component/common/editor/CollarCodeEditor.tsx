@@ -18,21 +18,33 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
 
   React.useEffect(() => {
-    const view = initEditor(props.projectId, props.docId, activeEditorView, edContainer);
-    setActiveEditorView(view);
+    initEditor(props.projectId, props.docId, activeEditorView, edContainer).then((view) => {
+      setActiveEditorView(view);
+    });
+    
     return () => {
-      view.destroy();
+      if(activeEditorView){
+        activeEditorView.destroy();
+      }
     };
   }, []);
 
   React.useEffect(() => {
     if (!file || !file.file_id) return;
-    const view = initEditor(props.projectId, file.file_id, activeEditorView, edContainer);
-    setActiveEditorView(view);
+    initEditor(props.projectId, file.file_id, activeEditorView, edContainer).then((view)=>{
+      setActiveEditorView(view);
+    });
+    
     return () => {
-      view.destroy();
+      if(activeEditorView){
+        activeEditorView.destroy();
+      }
     };
   }, [file]);
+
+  const init= () =>{
+    
+  }
 
   return (
   <div ref={edContainer} className={styles.container}>

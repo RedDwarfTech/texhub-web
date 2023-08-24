@@ -38,7 +38,7 @@ const extensions = [
     syntaxHighlighting(defaultHighlightStyle),
 ];
 
-export function initEditor(projectId: string, docId: string, activeEditorView: EditorView | undefined, edContainer: any) {
+export async function initEditor(projectId: string, docId: string, activeEditorView: EditorView | undefined, edContainer: any) {
     if (activeEditorView) {
         activeEditorView.destroy();
     }
@@ -49,8 +49,9 @@ export function initEditor(projectId: string, docId: string, activeEditorView: E
     const ydoc = new Y.Doc(docOpt);
     const ytext = ydoc.getText(docId);
     const undoManager = new Y.UndoManager(ytext);
-    const wsProvider = new WebsocketProvider('wss://ws.poemhub.top', docId, ydoc);
-    const user: UserModel = UserService.loadCurrUser(false,readConfig("refreshUserUrl"));
+    const wsProvider = new WebsocketProvider(readConfig("wssUrl"), docId, ydoc);
+    const user: UserModel = await UserService.loadCurrUser(false,readConfig("refreshUserUrl"));
+    debugger
     wsProvider.awareness.setLocalStateField('user', {
         name: user.nickname,
         color: userColor.color,

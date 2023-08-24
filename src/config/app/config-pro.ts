@@ -9,7 +9,8 @@ let proConfigMap = new Map([
   ["appId" , "n29Pa29WS1"],
   ["refreshUserUrl","/texpub/user/current-user"],
   ["compileBaseUrl","https://tex.poemhub.top/tex/static/proj"],
-  ["tplBaseUrl","https://tex.poemhub.top/tex/static/tpl"]
+  ["tplBaseUrl","https://tex.poemhub.top/tex/static/tpl"],
+  ["wssUrl","wss://ws.poemhub.top"]
 ]); 
 
 export default proConfigMap;
