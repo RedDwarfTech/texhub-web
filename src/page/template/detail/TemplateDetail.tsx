@@ -29,7 +29,7 @@ const TemplateDetail: React.FC = () => {
 
     const previewTplPdf = () => {
         const pdfUrl = readConfig("tplBaseUrl") + "/" + tpl.pdf_name;
-        window.open(pdfUrl);
+        window.open(pdfUrl, '_blank');
     };
 
     return (
