@@ -44,8 +44,7 @@ const TemplateDetail: React.FC = () => {
         };
         createProject(req).then((res) => {
             if(ResponseHandler.responseSuccess(res)){
-                debugger
-                let proj_id = res.data.id;
+                let proj_id = res.result.project_id;
                 navigate('/editor?pid=' + proj_id);
             }else{
                 toast.error(res.msg)
