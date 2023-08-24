@@ -12,6 +12,15 @@ export function getFileList(parent: string) {
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
+export function getMainFile(projectId: string) {
+    const config: AxiosRequestConfig = {
+        method: 'get',
+        url: '/tex/file/main?project_id=' + projectId,
+    };
+    const actionTypeString: string = FileActionType[FileActionType.GET_MAIN_FILE];
+    return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
 export function addFile(params: any) {
     const config: AxiosRequestConfig = {
         method: 'post',

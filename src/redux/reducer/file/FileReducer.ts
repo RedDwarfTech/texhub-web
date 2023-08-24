@@ -4,7 +4,8 @@ import { AppState } from "@/redux/types/AppState";
 const initState: AppState["file"] = {
     fileList: [],
     fileTree: [],
-    file: {} as TexFileModel
+    file: {} as TexFileModel,
+    mainFile: {} as TexFileModel
 };
 
 const FileReducer = (state = initState, action: any) => {
@@ -23,6 +24,11 @@ const FileReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 file: action.data
+            };
+        case "GET_MAIN_FILE":
+            return {
+                ...state,
+                mainFile: action.data
             };
         default:
             break;

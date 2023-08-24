@@ -47,6 +47,9 @@ const App: React.FC = () => {
         }
       });
     }
+    return () => {
+      setMainFile(undefined);
+    };
   }, []);
 
   React.useEffect(() => {
@@ -174,7 +177,7 @@ const App: React.FC = () => {
         <div id="editor" className={styles.editor}>
           <div className={styles.editorHeader}></div>
           <React.Suspense fallback={<div>Loading...</div>}>
-            <CollarCodeEditor projectId={pid.toString()} docId={mainFile?.file_id!}></CollarCodeEditor>
+            <CollarCodeEditor projectId={pid.toString()}></CollarCodeEditor>
           </React.Suspense>
           <div className={styles.editorFooter}></div>
         </div>

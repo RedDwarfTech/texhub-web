@@ -17,6 +17,7 @@ export interface AppState {
     file: {
         fileList: TexFileModel[],
         fileTree: TexFileModel[],
-        file: TexFileModel
+        file: TexFileModel,
+        mainFile: TexFileModel
     }
 }

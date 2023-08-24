@@ -1,5 +1,5 @@
 export interface TexFileModel { 
-    id?: number; 
+    id: number; 
     name: String;
     template_id: number;
     created_time: string;
