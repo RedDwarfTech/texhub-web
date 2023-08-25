@@ -14,11 +14,12 @@ import { UserService } from "rd-component";
 const DocTab: React.FC = () => {
 
     const [userDocList, setUserDocList] = useState<TexProjectModel[]>([]);
-    const [delProject, setDelProject] = useState<TexProjectModel>();
-    const [docName, setDocName] = useState<string>();
+    const [currProject, setCurrProject] = useState<TexProjectModel>();
+    const [projName, setProjName] = useState<string>();
     const { projList } = useSelector((state: AppState) => state.proj);
     const createDocCancelRef = useRef<HTMLButtonElement>(null);
     const delProjCancelRef = useRef<HTMLButtonElement>(null);
+    const editProjCancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
 
     React.useEffect(() => {
@@ -30,25 +31,44 @@ const DocTab: React.FC = () => {
     }, [projList]);
 
     const handleProjDel = () => {
-        if (!delProject) {
+        if (!currProject) {
             toast.info("请选择删除项目");
         }
         let proj = {
-            project_id: delProject?.project_id
+            project_id: currProject?.project_id
         };
         deleteProject(proj).then((resp) => {
-            if(ResponseHandler.responseSuccess(resp)){
+            if (ResponseHandler.responseSuccess(resp)) {
                 getProjectList("all");
                 if (delProjCancelRef && delProjCancelRef.current) {
                     delProjCancelRef.current.click();
                 }
-            }else{
-                toast.error("删除项目失败，{}",resp.msg);
+            } else {
+                toast.error("删除项目失败，{}", resp.msg);
             }
         });
     }
 
-    const renderDoc = () => {
+    const handleProjEdit = () => {
+        if (!currProject) {
+            toast.info("请选择删除项目");
+        }
+        let proj = {
+            project_id: currProject?.project_id
+        };
+        deleteProject(proj).then((resp) => {
+            if (ResponseHandler.responseSuccess(resp)) {
+                getProjectList("all");
+                if (delProjCancelRef && delProjCancelRef.current) {
+                    delProjCancelRef.current.click();
+                }
+            } else {
+                toast.error("删除项目失败，{}", resp.msg);
+            }
+        });
+    }
+
+    const renderProj = () => {
         if (!userDocList || userDocList.length === 0) {
             return (<div></div>);
         };
@@ -59,14 +79,15 @@ const DocTab: React.FC = () => {
                 <label key={docItem.project_id} className="list-group-item">
                     <div className={styles.docHeader}>
                         <input className="form-check-input me-1" type="checkbox" value="" />
-                        <span><a onClick={() => { navigate("/editor?pid=" + docItem.project_id) }}>{docItem.doc_name}</a></span>
+                        <span><a onClick={() => { navigate("/editor?pid=" + docItem.project_id) }}>{docItem.proj_name}</a></span>
                         <div className={styles.option}>
                             <div className="dropdown">
                                 <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                     操作
                                 </button>
                                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setDelProject(docItem) }} data-bs-target="#delPrj">删除</a></li>
+                                    <li><a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#delPrj">删除</a></li>
+                                    <li><a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#editPrj">修改项目名称</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -81,12 +102,12 @@ const DocTab: React.FC = () => {
     };
 
     const handleDocCreate = () => {
-        if(!UserService.isLoggedIn()){
+        if (!UserService.isLoggedIn()) {
             toast.warning("登录后即可创建项目");
             return;
         }
         let doc = {
-            name: docName == null ? "" : docName
+            name: projName == null ? "" : projName
         };
         createProject(doc).then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
@@ -99,7 +120,15 @@ const DocTab: React.FC = () => {
     };
 
     const handleInputChange = (event: any) => {
-        setDocName(event.target.value);
+        setProjName(event.target.value);
+    };
+
+    const handleEditInputChange = (event: any) => {
+        let proj = {
+            ...currProject,
+            proj_name : event.target.value
+        };
+        setCurrProject(proj as TexProjectModel);
     };
 
     return (
@@ -121,7 +150,7 @@ const DocTab: React.FC = () => {
                         </button>
                     </div>
                     <div className="list-group">
-                        {renderDoc()}
+                        {renderProj()}
                     </div>
                 </div>
             </div>
@@ -133,7 +162,7 @@ const DocTab: React.FC = () => {
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            <input id="docName" onChange={handleInputChange} className="form-control" placeholder="项目名称"></input>
+                            <input id="projName" onChange={handleInputChange} className="form-control" placeholder="项目名称"></input>
                         </div>
                         <div className="modal-footer">
                             <button type="button" ref={createDocCancelRef} className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
@@ -155,6 +184,27 @@ const DocTab: React.FC = () => {
                         <div className="modal-footer">
                             <button type="button" ref={delProjCancelRef} className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                             <button type="button" className="btn btn-primary" onClick={() => { handleProjDel() }}>确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="modal" id="editPrj" tabIndex={-1}>
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">编辑项目</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <input id="editProjName"
+                                onChange={handleEditInputChange}
+                                className="form-control"
+                                value={currProject?.proj_name.toString() || ""}
+                                placeholder="项目名称"></input>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" ref={editProjCancelRef} className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                            <button type="button" className="btn btn-primary" onClick={() => { handleProjEdit() }}>确定</button>
                         </div>
                     </div>
                 </div>
