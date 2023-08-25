@@ -78,8 +78,11 @@ const DocTab: React.FC = () => {
             tagList.push(
                 <label key={docItem.project_id} className="list-group-item">
                     <div className={styles.docHeader}>
-                        <input className="form-check-input me-1" type="checkbox" value="" />
-                        <span><a onClick={() => { navigate("/editor?pid=" + docItem.project_id) }}>{docItem.proj_name}</a></span>
+                        <div className={styles.projTiltle}>
+                            <a onClick={() => { navigate("/editor?pid=" + docItem.project_id) }}>
+                                <h6>{docItem.proj_name}</h6>
+                            </a>
+                        </div>
                         <div className={styles.option}>
                             <div className="dropdown">
                                 <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -126,7 +129,7 @@ const DocTab: React.FC = () => {
     const handleEditInputChange = (event: any) => {
         let proj = {
             ...currProject,
-            proj_name : event.target.value
+            proj_name: event.target.value
         };
         setCurrProject(proj as TexProjectModel);
     };

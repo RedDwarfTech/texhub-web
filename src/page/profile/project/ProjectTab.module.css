@@ -18,6 +18,16 @@
     margin-bottom: 20px;
 }
 
-.docHeader > :last-child {
+.docHeader> :last-child {
     margin-left: auto;
-  }
+}
+
+.projTiltle {
+    margin-top: 10px;
+    height: 35px;
+}
+
+.projTiltle:hover {
+    color: rgb(4, 4, 147);
+    text-decoration: underline;
+}
