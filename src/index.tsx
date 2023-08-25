@@ -6,10 +6,34 @@ import { RouterProvider } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import store from '@/redux/store/store';
 import routes from '@/redux/routes/routes';
+import translationEN from '@/locales/en.json';
+import translationZH from '@/locales/zh.json';
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import { UserService } from 'rd-component';
+
+const userLanguage = UserService.getCurrLang();
+
+i18n.use(initReactI18next).init({
+  resources: {
+    en: {
+      translation: translationEN
+    },
+    zh: {
+      translation: translationZH
+    }
+  },
+  lng: userLanguage,
+  fallbackLng: 'zh',
+  interpolation: {
+    escapeValue: false
+  }
+});
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
     <Provider store={store}>
