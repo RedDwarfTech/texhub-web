@@ -17,7 +17,7 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
     const [pageNumber, setPageNumber] = useState<number>(1);
 
     const options = {
-        cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.9.179/cmaps/',
+        cMapUrl: `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/cmaps/`,
     };
 
     if (!props.pdfUrl) {
