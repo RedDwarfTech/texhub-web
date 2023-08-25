@@ -1,4 +1,4 @@
-import { TexProjectModel } from "@/model/doc/TexProjectModel";
+import { TexProjectModel } from "@/model/prj/TexProjectModel";
 import { ProjectActionType } from "@/redux/action/project/ProjectAction";
 import { TemplateActionType } from "@/redux/action/tpl/TemplateAction";
 import store from "@/redux/store/store";

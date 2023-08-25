@@ -1,10 +1,12 @@
-import { CompileResult } from "@/model/doc/CompileResult";
-import { LatestCompile } from "@/model/doc/LatestCompile";
+import { CompileResult } from "@/model/prj/CompileResult";
+import { LatestCompile } from "@/model/prj/LatestCompile";
 import { AppState } from "@/redux/types/AppState";
+import { JoinResult } from "@/model/prj/JoinResult";
 
 const initState: AppState["proj"] = {
     projList: [],
     compileResult: {} as CompileResult,
+    joinResult: {} as JoinResult,
     latestComp: {} as LatestCompile
 };
 
@@ -24,6 +26,11 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 latestComp: action.data
+            };
+        case "JOIN_PROJ":
+            return {
+                ...state,
+                joinResult: action.data
             };
         default:
             break;

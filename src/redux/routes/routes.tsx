@@ -9,6 +9,7 @@ import store from "../store/store";
 import { readConfig } from "@/config/app/config-reader";
 import Price from "@/component/common/price/Price";
 import App from "@/page/main/App";
+import TeXShareRecieved from "@/page/profile/project/share/TexShareRecieved";
 
 const routes = createBrowserRouter([
     {
@@ -46,6 +47,10 @@ const routes = createBrowserRouter([
     {
         path: "/goods",
         element: <Price/>
+    },
+    {
+        path: "/proj/share",
+        element: <TeXShareRecieved/>
     }
 ]);
 

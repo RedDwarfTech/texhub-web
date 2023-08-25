@@ -1,5 +1,5 @@
-import { TexProjectModel } from "@/model/doc/TexProjectModel";
 import { CreateProjReq } from "@/model/request/proj/CreateProjReq";
+import { JoinProjReq } from "@/model/request/proj/JoinProjReq";
 import { ProjectActionType } from "@/redux/action/project/ProjectAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
@@ -21,6 +21,16 @@ export function createProject(doc: CreateProjReq) {
         data: JSON.stringify(doc)
     };
     const actionTypeString: string = ProjectActionType[ProjectActionType.CREATE_DOC];
+    return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
+export function joinProject(req: JoinProjReq) {
+    const config: AxiosRequestConfig = {
+        method: 'post',
+        url: '/tex/project/join',
+        data: JSON.stringify(req)
+    };
+    const actionTypeString: string = ProjectActionType[ProjectActionType.JOIN_PROJ];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 

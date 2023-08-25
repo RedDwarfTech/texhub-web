@@ -14,7 +14,7 @@ let devConfigMap = new Map([
     ["compileBaseUrl","http://dev-tex.poemhub.top/tex/static/proj"],
     ["tplBaseUrl","http://dev-tex.poemhub.top/tex/static/tpl"],
     ["wssUrl","wss://ws.poemhub.top"],
-    ["shareBaseUrl","http://dev-tex.poemhub.top/tex/proj/share"]
+    ["shareBaseUrl","http://dev-tex.poemhub.top/proj/share"]
 ]); 
 
 export default devConfigMap;

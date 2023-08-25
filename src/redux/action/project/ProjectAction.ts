@@ -6,7 +6,8 @@ export enum ProjectActionType {
     DELETE_PROJ,
     CLEAR_CURRENT_EDU,
     COMPILE_PROJ,
-    LATEST_COMPILE
+    LATEST_COMPILE,
+    JOIN_PROJ
 }
 
 export interface saveDocAction {
@@ -26,5 +27,10 @@ export interface compileProjAction {
 
 export interface getLatestCompileAction {
     type: ProjectActionType.LATEST_COMPILE;
+    data: any;
+}
+
+export interface joinProjectAction {
+    type: ProjectActionType.JOIN_PROJ;
     data: any;
 }
