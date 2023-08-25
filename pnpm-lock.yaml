@@ -62,6 +62,9 @@ dependencies:
   bootstrap:
     specifier: 5.3.0-alpha1
     version: 5.3.0-alpha1(@popperjs/core@2.11.8)
+  clipboard-polyfill:
+    specifier: ^4.0.0
+    version: 4.0.0
   cm6-theme-solarized-dark:
     specifier: ^0.2.0
     version: 0.2.0(@codemirror/language@6.9.0)(@codemirror/state@6.2.1)(@codemirror/view@6.16.0)(@lezer/highlight@1.1.6)
@@ -5733,6 +5736,10 @@ packages:
       string-width: 4.2.3
     optionalDependencies:
       '@colors/colors': 1.5.0
+    dev: false
+
+  /clipboard-polyfill@4.0.0:
+    resolution: {integrity: sha512-U4KPNJqAYuyOtixCZZUyWTcj+wlI66j07g5ggMRE2DR1VFu/3ZWXkjLAslmme8i065gBSCUblHET7DKQ2Xg3RA==}
     dev: false
 
   /cliui@7.0.4:

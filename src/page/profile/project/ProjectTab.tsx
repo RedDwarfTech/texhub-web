@@ -10,8 +10,9 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
 import dayjs from 'dayjs';
 import { UserService } from "rd-component";
+import TeXShare from "./share/TeXShare";
 
-const DocTab: React.FC = () => {
+const ProjectTab: React.FC = () => {
 
     const [userDocList, setUserDocList] = useState<TexProjectModel[]>([]);
     const [currProject, setCurrProject] = useState<TexProjectModel>();
@@ -85,12 +86,18 @@ const DocTab: React.FC = () => {
                         </div>
                         <div className={styles.option}>
                             <div className="dropdown">
-                                <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button className="btn btn-secondary dropdown-toggle" 
+                                type="button" 
+                                id="dropdownMenuButton1" 
+                                data-bs-toggle="dropdown" 
+                                onClick={() => { setCurrProject(docItem) }} 
+                                aria-expanded="false">
                                     操作
                                 </button>
                                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                     <li><a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#delPrj">删除</a></li>
                                     <li><a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#editPrj">修改项目名称</a></li>
+                                    <li><a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#sharePrj">分享项目</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -212,9 +219,12 @@ const DocTab: React.FC = () => {
                     </div>
                 </div>
             </div>
+            {
+               (currProject&&currProject.project_id)? <TeXShare projectId={currProject.project_id.toString()}></TeXShare>:<div></div>
+            }
             <ToastContainer />
         </div>
     );
 }
 
-export default DocTab;
+export default ProjectTab;

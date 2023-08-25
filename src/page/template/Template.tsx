@@ -52,7 +52,7 @@ const Template: React.FC = () => {
             <TexHeader></TexHeader>
             <div className={styles.tplBody}>
                 <div className={styles.tplFilter}>
-                    <div className="mb-3">
+                    <div className="mb-3 col-2">
                         <select id="tpl-type" className="form-select">
                             <option selected value="1">简历</option>
                             <option value="2">推荐信</option>
