@@ -183,7 +183,9 @@ const App: React.FC = () => {
         <div>
           <HiddenContent id="hiddenContentRight" className={styles.hiddenContent} />
         </div>
-        <Previewer pdfUrl={pdfUrl}></Previewer>
+        {
+          pdfUrl?<Previewer pdfUrl={pdfUrl}></Previewer>:<div>Loading...</div>
+        }
       </div>
       <ToastContainer />
     </div>
