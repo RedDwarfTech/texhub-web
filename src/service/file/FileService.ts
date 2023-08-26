@@ -33,10 +33,13 @@ export function getFileCode(fileId: string) {
 export function updateFileInit(fileId: string) {
     const params = new URLSearchParams();
     params.append("file_id",fileId);
+    let req = {
+        file_id: fileId
+    };
     const config: AxiosRequestConfig = {
         method: 'put',
         url: '/tex/file/inited',
-        data: params
+        data: JSON.stringify(req)
     };
     const actionTypeString: string = FileActionType[FileActionType.GET_FILE_CODE];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
