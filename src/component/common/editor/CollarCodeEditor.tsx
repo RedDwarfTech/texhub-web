@@ -66,7 +66,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   React.useEffect(() => {
     if (!file || !file.file_id) return;
-    initEditor(props.projectId, file.file_id, activeEditorView, edContainer).then((view) => {
+    initEditor(props.projectId, file.file_id, "",activeEditorView, edContainer).then((view) => {
       setActiveEditorView(view);
     });
 
