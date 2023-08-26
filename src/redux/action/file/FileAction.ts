@@ -1,11 +1,12 @@
-export type fileAction = getFileListAction | chooseFileAction | getMainFileAction;
+export type fileAction = getFileListAction | chooseFileAction | getMainFileAction | getFileCodeAction;
 
 export enum FileActionType {
     GET_FILE_LIST,
     GET_FILE_TREE,
     ADD_FILE,
     CHOOSE_FILE,
-    GET_MAIN_FILE
+    GET_MAIN_FILE,
+    GET_FILE_CODE
 }
 
 export interface getFileListAction {
@@ -30,5 +31,10 @@ export interface chooseFileAction {
 
 export interface getMainFileAction {
     type: FileActionType.GET_MAIN_FILE;
+    data: any;
+}
+
+export interface getFileCodeAction {
+    type: FileActionType.GET_FILE_CODE;
     data: any;
 }

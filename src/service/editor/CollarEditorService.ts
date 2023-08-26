@@ -31,14 +31,19 @@ const extensions = [
             fontSize: '16px'
         },
         '.cm-scroller': {
-            
+
         },
     }),
     StreamLanguage.define(stex),
     syntaxHighlighting(defaultHighlightStyle),
 ];
 
-export async function initEditor(projectId: string, docId: string, activeEditorView: EditorView | undefined, edContainer: any) {
+export async function initEditor(
+    projectId: string,
+    docId: string,
+    initContext: string,
+    activeEditorView: EditorView | undefined,
+    edContainer: any) {
     if (activeEditorView) {
         activeEditorView.destroy();
     }
@@ -50,18 +55,20 @@ export async function initEditor(projectId: string, docId: string, activeEditorV
     const ytext = ydoc.getText(docId);
     const undoManager = new Y.UndoManager(ytext);
     const wsProvider = new WebsocketProvider(readConfig("wssUrl"), docId, ydoc);
-    const user: UserModel = await UserService.loadCurrUser(false,readConfig("refreshUserUrl"));
+    const user: UserModel = await UserService.loadCurrUser(false, readConfig("refreshUserUrl"));
     wsProvider.awareness.setLocalStateField('user', {
         name: user.nickname,
         color: userColor.color,
         colorLight: userColor.light
     });
-    wsProvider.on('status',(event:any) => {
+    wsProvider.on('status', (event: any) => {
         if (event.status === 'connected') {
-            if(wsProvider.ws){
-                //wsProvider.ws.send(JSON.stringify(message));
+            if (wsProvider.ws) {
+                if (initContext && initContext.length > 0) {
+                    ytext.insert(0, initContext);
+                }
             }
-          }
+        }
     });
     const state = EditorState.create({
         doc: ytext.toString(),

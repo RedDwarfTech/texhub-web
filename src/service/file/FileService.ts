@@ -21,6 +21,15 @@ export function getMainFile(projectId: string) {
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
+export function getFileCode(fileId: string) {
+    const config: AxiosRequestConfig = {
+        method: 'get',
+        url: '/tex/file/code?file_id=' + fileId,
+    };
+    const actionTypeString: string = FileActionType[FileActionType.GET_FILE_CODE];
+    return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
 export function addFile(params: any) {
     const config: AxiosRequestConfig = {
         method: 'post',

@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import 'react-toastify/dist/ReactToastify.css';
 import { initEditor } from "@/service/editor/CollarEditorService";
 import { TexFileModel } from "@/model/file/TexFileModel";
-import { getMainFile } from "@/service/file/FileService";
+import { getFileCode, getMainFile } from "@/service/file/FileService";
 
 export type EditorProps = {
   projectId: string;
@@ -15,7 +15,7 @@ export type EditorProps = {
 
 const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<any>();
-  const { file, mainFile } = useSelector((state: AppState) => state.file);
+  const { file, mainFile, fileCode } = useSelector((state: AppState) => state.file);
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
 
@@ -24,10 +24,17 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }, []);
 
   React.useEffect(() => {
+    if (!mainFile || Object.keys(mainFile).length === 0) {
+      return;
+    }
     let editorView: any = null;
-    if (mainFile && Object.keys(mainFile).length > 0) {
+    if(mainFile.yjs_initial == 0){
+      debugger
+      getFileCode(mainFile.file_id);
+    }else{
+      debugger
       const init = async () => {
-        editorView = await initEditor(props.projectId, mainFile.file_id, activeEditorView, edContainer);
+        editorView = await initEditor(props.projectId, mainFile.file_id,"", activeEditorView, edContainer);
         setActiveEditorView(editorView);
       };
       init();
@@ -39,6 +46,23 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       }
     };
   }, [mainFile]);
+
+  React.useEffect(() => {
+    let editorView: any = null;
+    if (fileCode && fileCode.length > 0) {
+      const init = async () => {
+        editorView = await initEditor(props.projectId, mainFile.file_id, fileCode.toString(), activeEditorView, edContainer);
+        setActiveEditorView(editorView);
+      };
+      init();
+      setMainFileModel(mainFile);
+    }
+    return () => {
+      if (editorView) {
+        editorView.destroy();
+      }
+    };
+  }, [fileCode]);
 
   React.useEffect(() => {
     if (!file || !file.file_id) return;

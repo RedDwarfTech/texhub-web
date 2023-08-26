@@ -5,7 +5,8 @@ const initState: AppState["file"] = {
     fileList: [],
     fileTree: [],
     file: {} as TexFileModel,
-    mainFile: {} as TexFileModel
+    mainFile: {} as TexFileModel,
+    fileCode: ''
 };
 
 const FileReducer = (state = initState, action: any) => {
@@ -29,6 +30,11 @@ const FileReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 mainFile: action.data
+            };
+        case "GET_FILE_CODE":
+            return {
+                ...state,
+                fileCode: action.data
             };
         default:
             break;
