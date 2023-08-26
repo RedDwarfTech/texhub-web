@@ -10,7 +10,7 @@ import { stex } from "@codemirror/legacy-modes/mode/stex";
 import { solarizedLight } from 'cm6-theme-solarized-light';
 import { UserService } from "rd-component";
 import { readConfig } from "@/config/app/config-reader";
-import { UserModel } from "rdjs-wheel";
+import { UserModel, WheelGlobal } from "rdjs-wheel";
 
 export const usercolors = [
     { color: '#30bced', light: '#30bced33' },
@@ -38,7 +38,7 @@ const extensions = [
     syntaxHighlighting(defaultHighlightStyle),
 ];
 
-export async function initEditor(
+export function initEditor(
     projectId: string,
     docId: string,
     initContext: string,
@@ -55,7 +55,9 @@ export async function initEditor(
     const ytext = ydoc.getText(docId);
     const undoManager = new Y.UndoManager(ytext);
     const wsProvider = new WebsocketProvider(readConfig("wssUrl"), docId, ydoc);
-    const user: UserModel = await UserService.loadCurrUser(false, readConfig("refreshUserUrl"));
+    const uInfo = localStorage.getItem("userInfo");
+    if (!uInfo) return;
+    const user: UserModel = JSON.parse(uInfo);
     wsProvider.awareness.setLocalStateField('user', {
         name: user.nickname,
         color: userColor.color,

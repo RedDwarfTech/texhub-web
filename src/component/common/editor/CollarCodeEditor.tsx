@@ -16,6 +16,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<any>();
   const { file, mainFile, fileCode } = useSelector((state: AppState) => state.file);
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
+  let editorView: any = null;
 
   React.useEffect(() => {
     getMainFile(props.projectId);
@@ -25,43 +26,48 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     if (!mainFile || Object.keys(mainFile).length === 0) {
       return;
     }
-    let editorView: any = null;
     if (mainFile.yjs_initial === 0) {
       getFileCode(mainFile.file_id);
     }
     if (mainFile.yjs_initial === 1) {
-      const init = async () => {
-        editorView = await initEditor(props.projectId, mainFile.file_id, "", activeEditorView, edContainer);
-        setActiveEditorView(editorView);
-      };
-      init();
+      init("");
     }
+    return () => {
+      destroy();
+    };
   }, [mainFile]);
 
   React.useEffect(() => {
-    let editorView: any = null;
     if (fileCode && fileCode.length > 0) {
-      const init = async () => {
-        editorView = await initEditor(props.projectId, mainFile.file_id, fileCode.toString(), activeEditorView, edContainer);
-        setActiveEditorView(editorView);
-        updateFileInit(mainFile.file_id);
-      };
-      init();
+      init(fileCode.toString());
     }
+    return () => {
+      destroy()
+    };
   }, [fileCode]);
 
   React.useEffect(() => {
     if (!file || !file.file_id) return;
-    initEditor(props.projectId, file.file_id, "", activeEditorView, edContainer).then((view) => {
-      setActiveEditorView(view);
-    });
-
+    init("");
     return () => {
-      if (activeEditorView) {
-        activeEditorView.destroy();
-      }
+      destroy();
     };
   }, [file]);
+
+  const init = (initCode: string) => {
+    editorView = initEditor(props.projectId, mainFile.file_id, initCode, activeEditorView, edContainer);
+    setActiveEditorView(editorView);
+    updateFileInit(mainFile.file_id);
+  };
+
+  const destroy = () => {
+    if (editorView) {
+      editorView.destroy();
+    }
+    if (activeEditorView) {
+      setActiveEditorView(undefined);
+    }
+  }
 
   return (
     <div ref={edContainer} className={styles.container}>
