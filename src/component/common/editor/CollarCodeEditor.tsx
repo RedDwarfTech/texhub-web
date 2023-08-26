@@ -28,11 +28,10 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       return;
     }
     let editorView: any = null;
-    if (mainFile.yjs_initial == 0) {
-      debugger
+    if (mainFile.yjs_initial === 0) {
       getFileCode(mainFile.file_id);
-    } else {
-      debugger
+    }
+    if (mainFile.yjs_initial === 1) {
       const init = async () => {
         editorView = await initEditor(props.projectId, mainFile.file_id, "", activeEditorView, edContainer);
         setActiveEditorView(editorView);
