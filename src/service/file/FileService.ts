@@ -41,7 +41,7 @@ export function updateFileInit(fileId: string) {
         url: '/tex/file/inited',
         data: JSON.stringify(req)
     };
-    const actionTypeString: string = FileActionType[FileActionType.GET_FILE_CODE];
+    const actionTypeString: string = FileActionType[FileActionType.UPDATE_FILE_INITIAL];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 

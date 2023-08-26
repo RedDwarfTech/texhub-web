@@ -40,6 +40,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       setMainFileModel(mainFile);
     }
     return () => {
+      debugger
       if (editorView) {
         editorView.destroy();
       }
@@ -58,6 +59,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       setMainFileModel(mainFile);
     }
     return () => {
+      debugger
       if (editorView) {
         editorView.destroy();
       }
@@ -71,6 +73,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     });
 
     return () => {
+      debugger
       if (activeEditorView) {
         activeEditorView.destroy();
       }
