@@ -36,11 +36,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       };
       init();
     }
-    return () => {
-      if (editorView) {
-        editorView.destroy();
-      }
-    };
   }, [mainFile]);
 
   React.useEffect(() => {
@@ -53,11 +48,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       };
       init();
     }
-    return () => {
-      if (editorView) {
-        editorView.destroy();
-      }
-    };
   }, [fileCode]);
 
   React.useEffect(() => {
