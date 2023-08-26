@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import 'react-toastify/dist/ReactToastify.css';
 import { initEditor } from "@/service/editor/CollarEditorService";
 import { TexFileModel } from "@/model/file/TexFileModel";
-import { getFileCode, getMainFile } from "@/service/file/FileService";
+import { getFileCode, getMainFile, updateFileInit } from "@/service/file/FileService";
 
 export type EditorProps = {
   projectId: string;
@@ -28,13 +28,13 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       return;
     }
     let editorView: any = null;
-    if(mainFile.yjs_initial == 0){
+    if (mainFile.yjs_initial == 0) {
       debugger
       getFileCode(mainFile.file_id);
-    }else{
+    } else {
       debugger
       const init = async () => {
-        editorView = await initEditor(props.projectId, mainFile.file_id,"", activeEditorView, edContainer);
+        editorView = await initEditor(props.projectId, mainFile.file_id, "", activeEditorView, edContainer);
         setActiveEditorView(editorView);
       };
       init();
@@ -53,6 +53,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       const init = async () => {
         editorView = await initEditor(props.projectId, mainFile.file_id, fileCode.toString(), activeEditorView, edContainer);
         setActiveEditorView(editorView);
+        updateFileInit(mainFile.file_id);
       };
       init();
       setMainFileModel(mainFile);
@@ -66,7 +67,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   React.useEffect(() => {
     if (!file || !file.file_id) return;
-    initEditor(props.projectId, file.file_id, "",activeEditorView, edContainer).then((view) => {
+    initEditor(props.projectId, file.file_id, "", activeEditorView, edContainer).then((view) => {
       setActiveEditorView(view);
     });
 

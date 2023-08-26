@@ -1,4 +1,4 @@
-export type fileAction = getFileListAction | chooseFileAction | getMainFileAction | getFileCodeAction;
+export type fileAction = getFileListAction | chooseFileAction | getMainFileAction | getFileCodeAction | updateFileInitAction;
 
 export enum FileActionType {
     GET_FILE_LIST,
@@ -6,7 +6,8 @@ export enum FileActionType {
     ADD_FILE,
     CHOOSE_FILE,
     GET_MAIN_FILE,
-    GET_FILE_CODE
+    GET_FILE_CODE,
+    UPDATE_FILE_INITIAL
 }
 
 export interface getFileListAction {
@@ -36,5 +37,10 @@ export interface getMainFileAction {
 
 export interface getFileCodeAction {
     type: FileActionType.GET_FILE_CODE;
+    data: any;
+}
+
+export interface updateFileInitAction {
+    type: FileActionType.UPDATE_FILE_INITIAL;
     data: any;
 }

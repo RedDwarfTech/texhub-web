@@ -30,6 +30,18 @@ export function getFileCode(fileId: string) {
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
+export function updateFileInit(fileId: string) {
+    const params = new URLSearchParams();
+    params.append("file_id",fileId);
+    const config: AxiosRequestConfig = {
+        method: 'put',
+        url: '/tex/file/inited',
+        data: params
+    };
+    const actionTypeString: string = FileActionType[FileActionType.GET_FILE_CODE];
+    return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
 export function addFile(params: any) {
     const config: AxiosRequestConfig = {
         method: 'post',
