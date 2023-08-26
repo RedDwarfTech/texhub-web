@@ -1,20 +1,17 @@
 import { joinProject } from "@/service/project/ProjectService";
 import { UserService } from "rd-component";
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import queryString from 'query-string';
-import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
+import { useSearchParams } from "react-router-dom"
 
 const TeXShareRecieved: React.FC = () => {
 
     const navigate = useNavigate();
-    const location = useLocation();
-    const search = location.search;
-    const params = queryString.parse(search);
-    const pid = params.pid!;
     const { joinResult } = useSelector((state: AppState) => state.proj);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const pid = searchParams.get("projectId");
 
     React.useEffect(() => {
         if (!UserService.isLoggedIn()) {
@@ -35,14 +32,8 @@ const TeXShareRecieved: React.FC = () => {
                 project_id: pid as String
             };
             joinProject(joinReq);
-
-        } else {
-            toast.error("project信息为空");
-            return;
         }
     }
-
-
 
     return (
         <div>Share</div>
