@@ -4,7 +4,7 @@ import { Button, Dropdown, MenuProps, Modal } from "antd";
 import { addFile, chooseFile, delTreeItem, getFileList } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
 import { TexFileModel } from "@/model/file/TexFileModel";
-import { ExclamationCircleOutlined, MoreOutlined } from "@ant-design/icons";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import React from "react";

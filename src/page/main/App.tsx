@@ -15,7 +15,6 @@ import queryString from 'query-string';
 import Previewer from '@/component/common/previewer/Previewer';
 import { compileProject, getLatestCompile } from '@/service/project/ProjectService';
 import ProjectTree from '@/component/common/prjtree/ProjectTree';
-import { TexFileModel } from '@/model/file/TexFileModel';
 
 const App: React.FC = () => {
 
@@ -26,15 +25,6 @@ const App: React.FC = () => {
   const { compileResult, latestComp } = useSelector((state: AppState) => state.proj);
   const [pdfUrl, setPdfUrl] = useState<string>();
   const divRef = useRef<HTMLDivElement>(null);
-  const { fileTree } = useSelector((state: AppState) => state.file);
-  const [mainFile, setMainFile] = useState<TexFileModel>();
-
-  React.useEffect(() => {
-    if (fileTree && fileTree.length > 0) {
-      let defaultFile = fileTree.filter((file: TexFileModel) => file.main_flag === 1);
-      setMainFile(defaultFile[0]);
-    }
-  }, [fileTree]);
 
   React.useEffect(() => {
     resizeLeft("hiddenContentLeft", "prjTree");
@@ -47,7 +37,6 @@ const App: React.FC = () => {
       });
     }
     return () => {
-      setMainFile(undefined);
     };
   }, []);
 
@@ -159,10 +148,6 @@ const App: React.FC = () => {
         }
       }
     }, 1500);
-  }
-
-  if (!mainFile || !mainFile.file_id) {
-    return (<div>Loading...</div>);
   }
 
   return (
