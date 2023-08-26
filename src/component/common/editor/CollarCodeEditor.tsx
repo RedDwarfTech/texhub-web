@@ -40,6 +40,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   React.useEffect(() => {
     if (fileCode && fileCode.length > 0) {
       init(fileCode.toString());
+      updateFileInit(mainFile.file_id);
     }
     return () => {
       destroy()
@@ -57,7 +58,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const init = (initCode: string) => {
     editorView = initEditor(props.projectId, mainFile.file_id, initCode, activeEditorView, edContainer);
     setActiveEditorView(editorView);
-    updateFileInit(mainFile.file_id);
   };
 
   const destroy = () => {
