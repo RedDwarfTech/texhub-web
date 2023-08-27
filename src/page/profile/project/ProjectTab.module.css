@@ -31,3 +31,8 @@
     color: rgb(4, 4, 147);
     text-decoration: underline;
 }
+
+.projList {
+    width: 80%;
+    margin: 0 auto;
+}

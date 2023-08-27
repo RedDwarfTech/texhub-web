@@ -86,12 +86,12 @@ const ProjectTab: React.FC = () => {
                         </div>
                         <div className={styles.option}>
                             <div className="dropdown">
-                                <button className="btn btn-secondary dropdown-toggle" 
-                                type="button" 
-                                id="dropdownMenuButton1" 
-                                data-bs-toggle="dropdown" 
-                                onClick={() => { setCurrProject(docItem) }} 
-                                aria-expanded="false">
+                                <button className="btn btn-secondary dropdown-toggle"
+                                    type="button"
+                                    id="dropdownMenuButton1"
+                                    data-bs-toggle="dropdown"
+                                    onClick={() => { setCurrProject(docItem) }}
+                                    aria-expanded="false">
                                     操作
                                 </button>
                                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -144,23 +144,27 @@ const ProjectTab: React.FC = () => {
     return (
         <div>
             <TexHeader></TexHeader>
-            <ul className="nav nav-tabs">
-                <li className="nav-item">
-                    <a className="nav-link active" aria-current="page" href="#">全部</a>
-                </li>
-                <li className="nav-item">
-                    <a className="nav-link" href="#">分享</a>
-                </li>
-            </ul>
-            <div className={styles.docContainer}>
-                <div className={styles.docList}>
-                    <div className={styles.docListHeader}>
-                        <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPrj">
-                            新建
-                        </button>
-                    </div>
-                    <div className="list-group">
-                        {renderProj()}
+            <div className={styles.projBody}>
+                <div className={styles.projList}>
+                    <ul className="nav nav-tabs">
+                        <li className="nav-item">
+                            <a className="nav-link active" aria-current="page" href="#">全部</a>
+                        </li>
+                        <li className="nav-item">
+                            <a className="nav-link" href="#">分享给我</a>
+                        </li>
+                    </ul>
+                    <div className={styles.docContainer}>
+                        <div className={styles.docList}>
+                            <div className={styles.docListHeader}>
+                                <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPrj">
+                                    新建
+                                </button>
+                            </div>
+                            <div className="list-group">
+                                {renderProj()}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -220,7 +224,7 @@ const ProjectTab: React.FC = () => {
                 </div>
             </div>
             {
-               (currProject&&currProject.project_id)? <TeXShare projectId={currProject.project_id.toString()}></TeXShare>:<div></div>
+                (currProject && currProject.project_id) ? <TeXShare projectId={currProject.project_id.toString()}></TeXShare> : <div></div>
             }
             <ToastContainer />
         </div>

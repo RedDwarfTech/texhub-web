@@ -110,11 +110,6 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
                     {renderPages(numPages)}
                 </Document>
             </div>
-            <div className={styles.previewFooter}>
-                <p>
-                    Page {pageNumber} of {numPages}
-                </p>
-            </div>
         </div>
     );
 }

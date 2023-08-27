@@ -154,7 +154,7 @@ const App: React.FC = () => {
     <div className={styles.container}>
       <EHeader></EHeader>
       <div className={styles.editorBody}>
-        <ProjectTree projectId={''} divRef={divRef}></ProjectTree>
+        {pid ? <ProjectTree projectId={pid as string} divRef={divRef}></ProjectTree> : <div>Loading...</div>}
         <div>
           <HiddenContent id="hiddenContentLeft" className={styles.hiddenContent} />
         </div>
@@ -169,7 +169,7 @@ const App: React.FC = () => {
           <HiddenContent id="hiddenContentRight" className={styles.hiddenContent} />
         </div>
         {
-          pdfUrl?<Previewer pdfUrl={pdfUrl}></Previewer>:<div>Loading...</div>
+          pdfUrl ? <Previewer pdfUrl={pdfUrl}></Previewer> : <div>Loading...</div>
         }
       </div>
       <ToastContainer />

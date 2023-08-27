@@ -163,6 +163,9 @@ dependencies:
     version: 13.6.7
 
 devDependencies:
+  '@types/bootstrap':
+    specifier: ^5.2.6
+    version: 5.2.6
   '@types/redux-logger':
     specifier: ^3.0.9
     version: 3.0.9
@@ -2953,7 +2956,6 @@ packages:
 
   /@popperjs/core@2.11.8:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
-    dev: false
 
   /@rc-component/color-picker@1.4.1(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-vh5EWqnsayZa/JwUznqDaPJz39jznx/YDbyBuVJntv735tKXKwEUZZb2jYEldOg+NKWZwtALjGMrNeGBmqFoEw==}
@@ -4004,6 +4006,12 @@ packages:
     dependencies:
       '@types/node': 16.18.44
     dev: false
+
+  /@types/bootstrap@5.2.6:
+    resolution: {integrity: sha512-BlAc3YATdasbHoxMoBWODrSF6qwQO/E9X8wVxCCSa6rWjnaZfpkr2N6pUMCY6jj2+wf0muUtLySbvU9etX6YqA==}
+    dependencies:
+      '@popperjs/core': 2.11.8
+    dev: true
 
   /@types/chrome@0.0.178:
     resolution: {integrity: sha512-U+G5YG2pH0qvLrYVJ9aT5VbPXYR3fAFyCuRBRAA14Pv7GrkFzDJuXPspgdeLYaKzGEp4rymUkuqUOuFz18LI1g==}

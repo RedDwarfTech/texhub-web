@@ -7,5 +7,6 @@ export interface TexFileModel {
     project_id: string;
     file_id: string;
     main_flag: number;
+    file_type: number;
     yjs_initial: number;
 }

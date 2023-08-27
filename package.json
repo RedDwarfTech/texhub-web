@@ -82,6 +82,7 @@
     ]
   },
   "devDependencies": {
+    "@types/bootstrap": "^5.2.6",
     "@types/redux-logger": "^3.0.9"
   }
 }
