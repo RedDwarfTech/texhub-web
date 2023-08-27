@@ -70,9 +70,17 @@ const TexHeader: React.FC = () => {
                 <a id="user-menu">
                     {avatarUrl ? <img className={styles.avatarImg} src={avatarUrl} onClick={avatarClick} /> : <img className={styles.avatarImg} src={avatarImg} onClick={avatarClick} ></img>}
                     <div id="dropdown" className={styles.dropdownContent}>
-                        <div onClick={() => handleMenuClick()}><PayCircleOutlined /><span>订阅</span></div>
-                        <div onClick={showUserProfile}><ControlOutlined /><span>控制台</span></div>
-                        <div onClick={() => UserService.doLoginOut(readConfig("logoutUrl"))}><LogoutOutlined /><span>登出</span></div>
+                        <div onClick={() => handleMenuClick()}>
+                            <i className="fa-solid fa-wallet"></i>
+                            <span>订阅</span>
+                        </div>
+                        <div onClick={showUserProfile}>
+                            <i className="fa-solid fa-gear"></i>
+                            <span>控制台</span></div>
+                        <div onClick={() => UserService.doLoginOut(readConfig("logoutUrl"))}>
+                            <i className="fa-solid fa-right-from-bracket"></i>
+                            <span>登出</span>
+                        </div>
                     </div>
                 </a>
             );
