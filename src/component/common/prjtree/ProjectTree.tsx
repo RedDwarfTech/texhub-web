@@ -23,8 +23,10 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
     const { fileTree } = useSelector((state: AppState) => state.file);
     const [mainFile, setMainFile] = useState<TexFileModel>();
-    const { confirm } = Modal;
     const pid = props.projectId;
+    const selected = localStorage.getItem("proj-select-file:" + pid);
+    const [selectedFile, setSelectedFile] = useState<TexFileModel>(selected ? JSON.parse(selected) : null);
+    const { confirm } = Modal;
 
     React.useEffect(() => {
         if (fileTree && fileTree.length > 0) {
@@ -66,15 +68,15 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     };
 
     const renderIcon = (item: TexFileModel) => {
-        if(item.file_type === 1) {
+        if (item.file_type === 1) {
             return (<i className="fa-regular fa-file"></i>);
         }
-        if(item.file_type === 2){
+        if (item.file_type === 2) {
             return (
-            <div className={styles.menuIcons}>
-                <i className="fa-solid fa-chevron-right"></i>
-                <i className="fa-regular fa-folder"></i>
-            </div>
+                <div className={styles.menuIcons}>
+                    <i className="fa-solid fa-chevron-right"></i>
+                    <i className="fa-regular fa-folder"></i>
+                </div>
             );
         }
     }
@@ -86,7 +88,8 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         const tagList: JSX.Element[] = [];
         texFileTree.forEach((item: TexFileModel) => {
             tagList.push(
-                <div key={item.file_id} className={styles.fileItem} onClick={() => handleTreeItemClick(item)}>
+                <div key={item.file_id}
+                    className={(selectedFile && item.file_id == selectedFile.file_id) ? styles.fileItemSelected : styles.fileItem} onClick={() => handleTreeItemClick(item)}>
                     {renderIcon(item)}
                     <div>{item.name}</div>
                     <div className={styles.actions}>
@@ -144,6 +147,8 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         let params = {
             file_id: fileItem.file_id
         };
+        localStorage.setItem("proj-select-file:" + pid, JSON.stringify(fileItem));
+        setSelectedFile(fileItem);
         chooseFile(params);
     };
 
