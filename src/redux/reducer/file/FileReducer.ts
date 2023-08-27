@@ -36,6 +36,11 @@ const FileReducer = (state = initState, action: any) => {
                 ...state,
                 fileCode: action.data
             };
+        case "UPDATE_FILE_INITIAL":
+            return {
+                ...state,
+                mainFile: action.data
+            };
         default:
             break;
     }

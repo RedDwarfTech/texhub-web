@@ -54,7 +54,9 @@ export function initEditor(
     const ydoc = new Y.Doc(docOpt);
     const ytext = ydoc.getText(docId);
     const undoManager = new Y.UndoManager(ytext);
-    const wsProvider = new WebsocketProvider(readConfig("wssUrl"), docId, ydoc);
+    const wsProvider = new WebsocketProvider(readConfig("wssUrl"), docId, ydoc,{
+        maxBackoffTime: 3
+    });
     const uInfo = localStorage.getItem("userInfo");
     if (!uInfo) return;
     const user: UserModel = JSON.parse(uInfo);
@@ -67,6 +69,7 @@ export function initEditor(
         if (event.status === 'connected') {
             if (wsProvider.ws) {
                 if (initContext && initContext.length > 0) {
+                    console.log("write: {}",initContext);
                     ytext.insert(0, initContext);
                 }
             }
