@@ -15,7 +15,7 @@ export type EditorProps = {
 
 const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<any>();
-  const { file, mainFile, fileCode } = useSelector((state: AppState) => state.file);
+  const { activeFile, mainFile, fileCode } = useSelector((state: AppState) => state.file);
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   let editorView: any = null;
@@ -56,18 +56,16 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }, [fileCode]);
 
   React.useEffect(() => {
-    if (!file || !file.file_id) return;
-    if (file && file.file_type !== 0) {
-      debugger
-      init("",file.file_id);
+    if (!activeFile || !activeFile.file_id) return;
+    if (activeFile && activeFile.file_type !== 0) {
+      init("",activeFile.file_id);
     }
     return () => {
       destroy();
     };
-  }, [file]);
+  }, [activeFile]);
 
   const init = (initCode: string, file_id: string) => {
-    debugger
     editorView = initEditor(props.projectId, file_id, initCode, activeEditorView, edContainer);
     setActiveEditorView(editorView);
   };

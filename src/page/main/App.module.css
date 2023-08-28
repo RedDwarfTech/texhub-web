@@ -16,6 +16,13 @@
   flex-grow: 1;
 }
 
+.editorFooter {
+  height: 3vh;
+  background-color: rgb(29, 35, 47);
+  color: white;
+  width: 100%;
+}
+
 .editor {
   resize: horizontal;
   flex: 0 0 60%;

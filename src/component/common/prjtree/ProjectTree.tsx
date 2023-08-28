@@ -1,6 +1,6 @@
 import { RefObject, useState } from "react";
 import styles from './ProjectTree.module.css';
-import { addFile, chooseFile, delTreeItem, getFileList } from "@/service/file/FileService";
+import { addFile, chooseFile, delTreeItem, getFileList, switchFile } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { AppState } from "@/redux/types/AppState";
@@ -177,6 +177,9 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         setSelectedFile(fileItem);
         if (fileItem.file_id === selectedFile.file_id) return;
         chooseFile(fileItem);
+        if(fileItem.file_type !== 0){
+            switchFile(fileItem);
+        }
     };
 
     const handleFolderAddConfirm = () => {

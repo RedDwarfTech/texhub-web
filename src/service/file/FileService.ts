@@ -70,3 +70,8 @@ export function chooseFile(file: TexFileModel) {
     const actionTypeString: string = FileActionType[FileActionType.CHOOSE_FILE];
     return XHRClient.dispathAction(file, actionTypeString, store);
 }
+
+export function switchFile(file: TexFileModel) {
+    const actionTypeString: string = FileActionType[FileActionType.SWITCH_EDITOR_FILE];
+    return XHRClient.dispathAction(file, actionTypeString, store);
+}

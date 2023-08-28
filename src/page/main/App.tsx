@@ -15,6 +15,7 @@ import queryString from 'query-string';
 import Previewer from '@/component/common/previewer/Previewer';
 import { compileProject, getLatestCompile } from '@/service/project/ProjectService';
 import ProjectTree from '@/component/common/prjtree/ProjectTree';
+import { TexFileModel } from '@/model/file/TexFileModel';
 
 const App: React.FC = () => {
 
@@ -23,7 +24,10 @@ const App: React.FC = () => {
   const params = queryString.parse(search);
   const pid = params.pid!;
   const { compileResult, latestComp } = useSelector((state: AppState) => state.proj);
+  const { activeFile, selectItem } = useSelector((state: AppState) => state.file);
   const [pdfUrl, setPdfUrl] = useState<string>();
+  const [activeFileModel, setActiveFileModel] = useState<TexFileModel>();
+  const [selectedItem, setSelectedItem] = useState<TexFileModel>();
   const divRef = useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -39,6 +43,14 @@ const App: React.FC = () => {
     return () => {
     };
   }, []);
+
+  React.useEffect(() => {
+    setActiveFileModel(activeFile);
+  }, [activeFile]);
+
+  React.useEffect(() => {
+    setSelectedItem(selectItem);
+  }, [selectItem]);
 
   React.useEffect(() => {
     if (latestComp && Object.keys(latestComp).length > 0) {
@@ -163,7 +175,9 @@ const App: React.FC = () => {
           <React.Suspense fallback={<div>Loading...</div>}>
             <CollarCodeEditor projectId={pid.toString()}></CollarCodeEditor>
           </React.Suspense>
-          <div className={styles.editorFooter}></div>
+          <div className={styles.editorFooter}>
+            {activeFileModel ? activeFileModel.name : "ddd"}
+          </div>
         </div>
         <div>
           <HiddenContent id="hiddenContentRight" className={styles.hiddenContent} />
