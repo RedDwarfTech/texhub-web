@@ -95,6 +95,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         texFileTree.forEach((item: TexFileModel) => {
             tagList.push(
                 <div key={item.file_id}
+                    onClick={() => handleTreeItemClick(item)}
                     className={(selectedFile && item.file_id == selectedFile.file_id) ? styles.fileItemSelected : styles.fileItem} >
                     {renderIcon(item)}
                     <div>{item.name}</div>
