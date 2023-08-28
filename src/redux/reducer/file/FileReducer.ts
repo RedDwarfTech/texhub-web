@@ -25,7 +25,7 @@ const FileReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 file: action.data
-            };
+            };   
         case "GET_MAIN_FILE":
             return {
                 ...state,

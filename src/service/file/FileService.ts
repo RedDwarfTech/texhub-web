@@ -1,3 +1,4 @@
+import { TexFileModel } from "@/model/file/TexFileModel";
 import { FileActionType } from "@/redux/action/file/FileAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
@@ -65,7 +66,7 @@ export function delTreeItem(params: any) {
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function chooseFile(params: any) {
+export function chooseFile(file: TexFileModel) {
     const actionTypeString: string = FileActionType[FileActionType.CHOOSE_FILE];
-    return XHRClient.dispathAction(params, actionTypeString, store);
+    return XHRClient.dispathAction(file, actionTypeString, store);
 }

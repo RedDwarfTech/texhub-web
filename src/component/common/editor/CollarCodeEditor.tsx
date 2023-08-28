@@ -35,8 +35,8 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     if (mainFile.yjs_initial === 0 && editorView == null) {
       getFileCode(mainFile.file_id);
     }
-    if ( mainFile.yjs_initial === 1 && editorView == null) {
-      init("");
+    if (mainFile.yjs_initial === 1 && editorView == null) {
+      init("", mainFile.file_id);
     }
     return () => {
       destroy();
@@ -45,8 +45,8 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   React.useEffect(() => {
     if (fileCode && fileCode.length > 0) {
-      if(mainFileModel && mainFileModel.yjs_initial === 0){
-        init(fileCode.toString());
+      if (mainFileModel && mainFileModel.yjs_initial === 0) {
+        init(fileCode.toString(), mainFile.file_id);
         updateFileInit(mainFile.file_id);
       }
     }
@@ -57,14 +57,18 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   React.useEffect(() => {
     if (!file || !file.file_id) return;
-    init("");
+    if (file && file.file_type !== 0) {
+      debugger
+      init("",file.file_id);
+    }
     return () => {
       destroy();
     };
   }, [file]);
 
-  const init = (initCode: string) => {
-    editorView = initEditor(props.projectId, mainFile.file_id, initCode, activeEditorView, edContainer);
+  const init = (initCode: string, file_id: string) => {
+    debugger
+    editorView = initEditor(props.projectId, file_id, initCode, activeEditorView, edContainer);
     setActiveEditorView(editorView);
   };
 

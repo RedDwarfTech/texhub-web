@@ -71,7 +71,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             parent: parentId,
             file_type: 1
         };
-        debugger
         addFile(params).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
                 getFileList(pid?.toString());
@@ -95,22 +94,22 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
 
     const handleClick = (itemId: string, itemList: TexFileModel[]) => {
         const updatedItems: TexFileModel[] = itemList.map(item => {
-          if (item.file_id === itemId) {
-            return {
-              ...item,
-              expand: item.expand?!item.expand:true,
-            };
-          } else if (item.children) {
-            return {
-              ...item,
-              children: handleClick(itemId, item.children)
-            };
-          } else {
-            return item;
-          }
+            if (item.file_id === itemId) {
+                return {
+                    ...item,
+                    expand: item.expand ? !item.expand : true,
+                };
+            } else if (item.children) {
+                return {
+                    ...item,
+                    children: handleClick(itemId, item.children)
+                };
+            } else {
+                return item;
+            }
         });
         return updatedItems;
-      };
+    };
 
     const expandFolder = (item: TexFileModel) => {
         if (!texFileTree || texFileTree.length === 0) return;
@@ -174,12 +173,10 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     };
 
     const handleTreeItemClick = (fileItem: TexFileModel) => {
-        let params = {
-            file_id: fileItem.file_id
-        };
         localStorage.setItem("proj-select-file:" + pid, JSON.stringify(fileItem));
         setSelectedFile(fileItem);
-        chooseFile(params);
+        if (fileItem.file_id === selectedFile.file_id) return;
+        chooseFile(fileItem);
     };
 
     const handleFolderAddConfirm = () => {
