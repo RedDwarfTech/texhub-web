@@ -51,6 +51,14 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         }
     }
 
+    const handleModal = (show: boolean, modalId: string) => {
+        let modal = document.getElementById(modalId);
+        if (modal) {
+            var myModal = new bootstrap.Modal(modal);
+            show ? myModal.show() : myModal.hide();
+        }
+    }
+
     const handleOk = () => {
         let params = {
             name: createFileName,
@@ -92,14 +100,14 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                     <div>{item.name}</div>
                     <div className={styles.actions}>
                         <div className="dropdown">
-                            <button className="btn text-white" type="button" id={"dropdownMenuButton1" + item.id} data-bs-toggle="dropdown" aria-expanded="false">
+                            <button className="btn text-white" type="button" id={"dropdownMenuButton1" + item.id} data-bs-toggle="dropdown" aria-expanded="false" onClick={() => { handleDropdownClick(item) }}>
                                 <i className="fa-solid fa-ellipsis-vertical"></i>
                             </button>
                             <ul className="dropdown-menu" aria-labelledby={"dropdownMenuButton1" + item.id}>
-                                <li><a className="dropdown-item" onClick={() =>{showDeleteConfirm(true)}}>删除</a></li>
-                                <li><a className="dropdown-item" onClick={() => {handleFileRename}}>重命名</a></li>
-                                <li><a className="dropdown-item" href="#">下载文件</a></li>
-                                <li><a className="dropdown-item" href="#">移动到文件夹</a></li>
+                                <li><a className="dropdown-item" onClick={() => { handleModal(true, "deleteFileModal") }}>删除</a></li>
+                                <li><a className="dropdown-item" onClick={() => { handleModal(true, "renameFileModal") }}>重命名</a></li>
+                                <li><a className="dropdown-item" onClick={() => { handleModal(true, "downloadFileModal") }}>下载文件</a></li>
+                                <li><a className="dropdown-item" onClick={() => { handleModal(true, "moveFileModal") }}>移动到文件夹</a></li>
                             </ul>
                         </div>
                     </div>
@@ -107,18 +115,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             );
         });
         return tagList;
-    }
-
-    const showDeleteConfirm = (show: boolean) => {
-        let modal = document.getElementById('deleteFileModal');
-        if (modal) {
-            var myModal = new bootstrap.Modal(modal);
-            if (show) {
-                myModal.show();
-            } else {
-
-            }
-        }
     }
 
     const handleFileDelete = () => {
@@ -131,21 +127,11 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         };
         delTreeItem(params).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                showDeleteConfirm(false);
+
                 getFileList(pid.toString());
             }
         });
     };
-
-    const handleFileRename = () => {
-        let modal = document.getElementById('renameFileModal');
-        if (modal) {
-            var myModal = new bootstrap.Modal(modal);
-            myModal.show();
-        }
-    };
-
-   
 
     const handleDropdownClick = (file: TexFileModel) => {
         setDelFile(file);
@@ -222,7 +208,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                            <button type="button" className="btn btn-primary" onClick={() => { handleOk() }}>确定</button>
+                            <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={() => { handleOk() }}>确定</button>
                         </div>
                     </div>
                 </div>
@@ -247,7 +233,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                            <button type="button" className="btn btn-primary" onClick={() => { handleFolderAddConfirm() }}>确定</button>
+                            <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={() => { handleFolderAddConfirm() }}>确定</button>
                         </div>
                     </div>
                 </div>
@@ -272,7 +258,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                            <button type="button" className="btn btn-primary" onClick={() => { handleFolderAddConfirm() }}>确定</button>
+                            <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={() => { handleFolderAddConfirm() }}>确定</button>
                         </div>
                     </div>
                 </div>
@@ -291,7 +277,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                            <button type="button" className="btn btn-primary" onClick={() => { handleFileDelete() }}>确定</button>
+                            <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={() => { handleFileDelete() }}>确定</button>
                         </div>
                     </div>
                 </div>
