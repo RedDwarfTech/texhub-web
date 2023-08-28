@@ -9,4 +9,7 @@ export interface TexFileModel {
     main_flag: number;
     file_type: number;
     yjs_initial: number;
+    parent: string;
+    expand: boolean;
+    children: TexFileModel[]
 }

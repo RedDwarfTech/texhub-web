@@ -60,12 +60,18 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     }
 
     const handleOk = () => {
+        if (!selectedFile) {
+            toast.warning("请指定文件创建的位置");
+            return;
+        }
+        let parentId = (selectedFile.file_type === 0) ? selectedFile.file_id : selectedFile.parent;
         let params = {
             name: createFileName,
             project_id: pid,
-            parent: pid,
+            parent: parentId,
             file_type: 1
         };
+        debugger
         addFile(params).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
                 getFileList(pid?.toString());
@@ -77,41 +83,70 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         if (item.file_type === 1) {
             return (<i className="fa-regular fa-file"></i>);
         }
-        if (item.file_type === 2) {
+        if (item.file_type === 0) {
             return (
                 <div className={styles.menuIcons}>
-                    <i className="fa-solid fa-chevron-right"></i>
+                    <i className="fa-solid fa-chevron-right" onClick={() => { expandFolder(item) }}></i>
                     <i className="fa-regular fa-folder"></i>
                 </div>
             );
         }
     }
 
-    const renderDirectoryTree = () => {
-        if (!texFileTree) {
+    const handleClick = (itemId: string, itemList: TexFileModel[]) => {
+        const updatedItems: TexFileModel[] = itemList.map(item => {
+          if (item.file_id === itemId) {
+            return {
+              ...item,
+              expand: item.expand?!item.expand:true,
+            };
+          } else if (item.children) {
+            return {
+              ...item,
+              children: handleClick(itemId, item.children)
+            };
+          } else {
+            return item;
+          }
+        });
+        return updatedItems;
+      };
+
+    const expandFolder = (item: TexFileModel) => {
+        if (!texFileTree || texFileTree.length === 0) return;
+        const updatedItems = handleClick(item.file_id, texFileTree);
+        setTexFileTree(updatedItems);
+    }
+
+    const renderDirectoryTree = (fileTree: TexFileModel[], level: number) => {
+        if (!fileTree) {
             return (<div></div>);
         }
         const tagList: JSX.Element[] = [];
-        texFileTree.forEach((item: TexFileModel) => {
+        fileTree.forEach((item: TexFileModel) => {
+            let marginText = (25 * level).toString() + 'px';
             tagList.push(
-                <div key={item.file_id}
-                    onClick={() => handleTreeItemClick(item)}
-                    className={(selectedFile && item.file_id == selectedFile.file_id) ? styles.fileItemSelected : styles.fileItem} >
-                    {renderIcon(item)}
-                    <div>{item.name}</div>
-                    <div className={styles.actions}>
-                        <div className="dropdown">
-                            <button className="btn text-white" type="button" id={"dropdownMenuButton1" + item.id} data-bs-toggle="dropdown" aria-expanded="false" onClick={() => { handleDropdownClick(item) }}>
-                                <i className="fa-solid fa-ellipsis-vertical"></i>
-                            </button>
-                            <ul className="dropdown-menu" aria-labelledby={"dropdownMenuButton1" + item.id}>
-                                <li><a className="dropdown-item" onClick={() => { handleModal(true, "deleteFileModal") }}>删除</a></li>
-                                <li><a className="dropdown-item" onClick={() => { handleModal(true, "renameFileModal") }}>重命名</a></li>
-                                <li><a className="dropdown-item" onClick={() => { handleModal(true, "downloadFileModal") }}>下载文件</a></li>
-                                <li><a className="dropdown-item" onClick={() => { handleModal(true, "moveFileModal") }}>移动到文件夹</a></li>
-                            </ul>
+                <div id={item.file_id} key={item.file_id} style={{ marginLeft: marginText }} >
+                    <div key={item.file_id}
+                        onClick={() => handleTreeItemClick(item)}
+                        className={(selectedFile && item.file_id == selectedFile.file_id) ? styles.fileItemSelected : styles.fileItem} >
+                        {renderIcon(item)}
+                        <div>{item.name}</div>
+                        <div className={styles.actions}>
+                            <div className="dropdown">
+                                <button className="btn text-white" type="button" id={"dropdownMenuButton1" + item.id} data-bs-toggle="dropdown" aria-expanded="false" onClick={() => { handleDropdownClick(item) }}>
+                                    <i className="fa-solid fa-ellipsis-vertical"></i>
+                                </button>
+                                <ul className="dropdown-menu" aria-labelledby={"dropdownMenuButton1" + item.id}>
+                                    <li><a className="dropdown-item" onClick={() => { handleModal(true, "deleteFileModal") }}>删除</a></li>
+                                    <li><a className="dropdown-item" onClick={() => { handleModal(true, "renameFileModal") }}>重命名</a></li>
+                                    <li><a className="dropdown-item" onClick={() => { handleModal(true, "downloadFileModal") }}>下载文件</a></li>
+                                    <li><a className="dropdown-item" onClick={() => { handleModal(true, "moveFileModal") }}>移动到文件夹</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
+                    {(item.children && item.children.length > 0 && item.expand) ? renderDirectoryTree(item.children, level + 1) : <div></div>}
                 </div>
             );
         });
@@ -155,7 +190,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             name: folderName,
             project_id: pid,
             parent: pid,
-            file_type: 2
+            file_type: 0
         };
         addFile(params).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
@@ -187,7 +222,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                 </button>
             </div>
             <div className={styles.treeBody}>
-                {renderDirectoryTree()}
+                {renderDirectoryTree(texFileTree, 0)}
             </div>
             <div className="modal fade" id="createFileModal" aria-labelledby="createModalLabel" aria-hidden="true">
                 <div className="modal-dialog">
