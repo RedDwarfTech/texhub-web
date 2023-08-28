@@ -52,7 +52,7 @@ const ProjectTab: React.FC = () => {
 
     const handleProjEdit = () => {
         if (!currProject) {
-            toast.info("请选择删除项目");
+            toast.info("请选择编辑项目");
         }
         let proj = {
             project_id: currProject?.project_id

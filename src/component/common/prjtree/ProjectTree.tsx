@@ -1,14 +1,13 @@
 import { RefObject, useState } from "react";
 import styles from './ProjectTree.module.css';
-import { Button, Dropdown, MenuProps, Modal } from "antd";
 import { addFile, chooseFile, delTreeItem, getFileList } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
 import { TexFileModel } from "@/model/file/TexFileModel";
-import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import React from "react";
 import * as bootstrap from 'bootstrap';
+import { toast } from "react-toastify";
 
 export type TreeProps = {
     projectId: string;
@@ -19,14 +18,14 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
 
     const divRef = props.divRef;
     const [folderName, setFolderName] = useState('');
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [createFileName, setCreateFileName] = useState('');
     const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
     const { fileTree } = useSelector((state: AppState) => state.file);
     const [mainFile, setMainFile] = useState<TexFileModel>();
     const pid = props.projectId;
     const selected = localStorage.getItem("proj-select-file:" + pid);
     const [selectedFile, setSelectedFile] = useState<TexFileModel>(selected ? JSON.parse(selected) : null);
-    const { confirm } = Modal;
+    const [delFile, setDelFile] = useState<TexFileModel>();
 
     React.useEffect(() => {
         if (fileTree && fileTree.length > 0) {
@@ -37,7 +36,11 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     }, [fileTree]);
 
     const handleFileAdd = () => {
-        setIsModalOpen(true);
+        let modal = document.getElementById('createFileModal');
+        if (modal) {
+            var myModal = new bootstrap.Modal(modal);
+            myModal.show();
+        }
     }
 
     const handleFolderAdd = () => {
@@ -49,9 +52,8 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     }
 
     const handleOk = () => {
-        setIsModalOpen(false);
         let params = {
-            name: "demo",
+            name: createFileName,
             project_id: pid,
             parent: pid,
             file_type: 1
@@ -61,10 +63,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                 getFileList(pid?.toString());
             }
         });
-    };
-
-    const handleCancel = () => {
-        setIsModalOpen(false);
     };
 
     const renderIcon = (item: TexFileModel) => {
@@ -89,18 +87,21 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         texFileTree.forEach((item: TexFileModel) => {
             tagList.push(
                 <div key={item.file_id}
-                    className={(selectedFile && item.file_id == selectedFile.file_id) ? styles.fileItemSelected : styles.fileItem} onClick={() => handleTreeItemClick(item)}>
+                    className={(selectedFile && item.file_id == selectedFile.file_id) ? styles.fileItemSelected : styles.fileItem} >
                     {renderIcon(item)}
                     <div>{item.name}</div>
                     <div className={styles.actions}>
-                        <Dropdown menu={{ items }}
-                            onOpenChange={(visible) =>
-                                visible && handleDropdownClick(item.file_id)
-                            }
-                            placement="bottomLeft"
-                            arrow={{ pointAtCenter: true }}>
-                            <Button className={styles.moreBtn} icon={<i className="fa-solid fa-ellipsis-vertical"></i>} />
-                        </Dropdown>
+                        <div className="dropdown">
+                            <button className="btn text-white" type="button" id={"dropdownMenuButton1" + item.id} data-bs-toggle="dropdown" aria-expanded="false">
+                                <i className="fa-solid fa-ellipsis-vertical"></i>
+                            </button>
+                            <ul className="dropdown-menu" aria-labelledby={"dropdownMenuButton1" + item.id}>
+                                <li><a className="dropdown-item" onClick={() =>{showDeleteConfirm(true)}}>删除</a></li>
+                                <li><a className="dropdown-item" onClick={() => {handleFileRename}}>重命名</a></li>
+                                <li><a className="dropdown-item" href="#">下载文件</a></li>
+                                <li><a className="dropdown-item" href="#">移动到文件夹</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             );
@@ -108,39 +109,46 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         return tagList;
     }
 
+    const showDeleteConfirm = (show: boolean) => {
+        let modal = document.getElementById('deleteFileModal');
+        if (modal) {
+            var myModal = new bootstrap.Modal(modal);
+            if (show) {
+                myModal.show();
+            } else {
+
+            }
+        }
+    }
+
     const handleFileDelete = () => {
-        confirm({
-            icon: <ExclamationCircleOutlined />,
-            content: <div>删除后数据无法恢复，确定要删除？</div>,
-            onOk() {
-                let params = {
-                    file_id: mainFile
-                };
-                delTreeItem(params).then((resp) => {
-                    if (ResponseHandler.responseSuccess(resp)) {
-                        getFileList(pid.toString());
-                    }
-                });
-            },
-            onCancel() {
-                console.log('Cancel');
-            },
+        if (!delFile) {
+            toast.error("请先选择要删除的文件");
+            return;
+        }
+        let params = {
+            file_id: delFile?.file_id
+        };
+        delTreeItem(params).then((resp) => {
+            if (ResponseHandler.responseSuccess(resp)) {
+                showDeleteConfirm(false);
+                getFileList(pid.toString());
+            }
         });
     };
 
-    const items: MenuProps['items'] = [
-        {
-            key: '1',
-            label: (
-                <a target="_blank" rel="noopener noreferrer" onClick={handleFileDelete}>
-                    删除
-                </a>
-            ),
-        },
-    ];
+    const handleFileRename = () => {
+        let modal = document.getElementById('renameFileModal');
+        if (modal) {
+            var myModal = new bootstrap.Modal(modal);
+            myModal.show();
+        }
+    };
 
-    const handleDropdownClick = (fileId: string) => {
+   
 
+    const handleDropdownClick = (file: TexFileModel) => {
+        setDelFile(file);
     };
 
     const handleTreeItemClick = (fileItem: TexFileModel) => {
@@ -173,6 +181,10 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         setFolderName(event.target.value);
     };
 
+    const handleFileInputChange = (event: any) => {
+        setCreateFileName(event.target.value);
+    };
+
     if (!mainFile) {
         return <div>Loading...</div>
     }
@@ -190,9 +202,31 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             <div className={styles.treeBody}>
                 {renderDirectoryTree()}
             </div>
-            <Modal title="创建文件" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                <input placeholder="名称"></input>
-            </Modal>
+            <div className="modal fade" id="createFileModal" aria-labelledby="createModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="createModalLabel">创建文件</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <div className="input-group flex-nowrap">
+                                <input id="folderName"
+                                    type="text"
+                                    onChange={handleFileInputChange}
+                                    className="form-control"
+                                    placeholder="新名称"
+                                    aria-label="Username"
+                                    aria-describedby="addon-wrapping" />
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                            <button type="button" className="btn btn-primary" onClick={() => { handleOk() }}>确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div className="modal fade" id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog">
                     <div className="modal-content">
@@ -214,6 +248,50 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                             <button type="button" className="btn btn-primary" onClick={() => { handleFolderAddConfirm() }}>确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="modal fade" id="renameFileModal" aria-labelledby="renameModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="renameModalLabel">重命名</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <div className="input-group flex-nowrap">
+                                <input id="folderName"
+                                    type="text"
+                                    onChange={handleInputChange}
+                                    className="form-control"
+                                    placeholder="新名称"
+                                    aria-label="Username"
+                                    aria-describedby="addon-wrapping" />
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                            <button type="button" className="btn btn-primary" onClick={() => { handleFolderAddConfirm() }}>确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="modal fade" id="deleteFileModal" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="deleteModalLabel">删除文件</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <div className="input-group flex-nowrap">
+                                删除后数据无法恢复，确定要删除文件吗？
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                            <button type="button" className="btn btn-primary" onClick={() => { handleFileDelete() }}>确定</button>
                         </div>
                     </div>
                 </div>
