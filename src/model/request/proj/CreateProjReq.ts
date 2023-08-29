@@ -1,4 +1,4 @@
 export interface CreateProjReq { 
-    name: String;
+    name: string;
     template_id?: number;
 }

@@ -4,7 +4,7 @@ let devConfigMap = new Map([
     ["baseAuthUrl","http://192.168.10.93:11014"],
     ["loginUrl", "/texpub/user/login"],
     ["regUrl", "/texpub/user/reg"],
-    ["accessTokenUrlPath","/ai/auth/access-token/refresh"],
+    ["accessTokenUrlPath","/texpub/auth/access-token/refresh"],
     ["appHome","http://192.168.10.93:8084"],
     ["appId" , "n29Pa29WS1"],
     ["phone","+8615683761628"],

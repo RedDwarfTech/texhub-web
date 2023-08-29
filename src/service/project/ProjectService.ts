@@ -4,6 +4,10 @@ import { ProjectActionType } from "@/redux/action/project/ProjectAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
 import { XHRClient } from "rd-component";
+import { EventSourcePolyfill } from 'event-source-polyfill';
+import { AuthHandler, RequestHandler } from 'rdjs-wheel';
+import { v4 as uuid } from 'uuid';
+import { CompileProjReq } from "@/model/request/proj/CompileProjReq";
 
 export function getProjectList(tag: string) {
     const config: AxiosRequestConfig = {
@@ -44,10 +48,20 @@ export function deleteProject(proj: any) {
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function compileProject(proj: any) {
+export function compileProject(proj: CompileProjReq) {
     const config: AxiosRequestConfig = {
         method: 'put',
         url: '/tex/project/compile',
+        data: JSON.stringify(proj)
+    };
+    const actionTypeString: string = ProjectActionType[ProjectActionType.COMPILE_PROJ];
+    return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
+export function compileProjectStream(proj: any) {
+    const config: AxiosRequestConfig = {
+        method: 'put',
+        url: '/tex/project/log/stream',
         data: JSON.stringify(proj)
     };
     const actionTypeString: string = ProjectActionType[ProjectActionType.COMPILE_PROJ];
@@ -65,3 +79,36 @@ export function getLatestCompile(project_id: string) {
     const actionTypeString: string = ProjectActionType[ProjectActionType.LATEST_COMPILE];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
+
+export function doCompilePreCheck(params: CompileProjReq, onSseMessage: (msg: string, eventSource: EventSourcePolyfill) => void) {
+    if (AuthHandler.isTokenNeedRefresh(60)) {
+      RequestHandler.handleWebAccessTokenExpire()
+        .then((data) => {
+          doSseChatAsk(params, onSseMessage);
+        });
+    } else {
+      doSseChatAsk(params, onSseMessage);
+    }
+  }
+  
+  export function doSseChatAsk(params: CompileProjReq, onSseMessage: (msg: string, eventSource: EventSourcePolyfill) => void) {
+    let eventSource: EventSourcePolyfill;
+    const accessToken = localStorage.getItem("x-access-token");
+    var queryString = Object.keys(params).map(key => key + '=' + params[key as keyof CompileProjReq]).join('&');
+    eventSource = new EventSourcePolyfill('/tex/project/log/stream?' + queryString, {
+      headers: {
+        'x-access-token': accessToken ?? "",
+        'x-request-id': uuid(),
+      }
+    });
+    eventSource.onopen = () => {
+  
+    }
+    eventSource.onerror = (error:any) => {
+      console.log("compile project error", error);
+      eventSource.close();
+    }
+    eventSource.onmessage = (e: any) => {
+      onSseMessage(e.data, eventSource);
+    };
+  }

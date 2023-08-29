@@ -7,7 +7,8 @@ export enum ProjectActionType {
     CLEAR_CURRENT_EDU,
     COMPILE_PROJ,
     LATEST_COMPILE,
-    JOIN_PROJ
+    JOIN_PROJ,
+    COMPILE_PROJ_STREAM
 }
 
 export interface saveDocAction {
@@ -32,5 +33,10 @@ export interface getLatestCompileAction {
 
 export interface joinProjectAction {
     type: ProjectActionType.JOIN_PROJ;
+    data: any;
+}
+
+export interface compileProjectStreamAction {
+    type: ProjectActionType.COMPILE_PROJ_STREAM;
     data: any;
 }

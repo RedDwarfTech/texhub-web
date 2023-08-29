@@ -1,3 +1,3 @@
 export interface JoinProjReq { 
-    project_id: String;
+    project_id: string;
 }
