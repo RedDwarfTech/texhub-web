@@ -7,6 +7,7 @@ import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import { AppState } from '@/redux/types/AppState';
 import { useSelector } from 'react-redux';
+import MemoizedPDFPreview from './doc/MemoizedPDFPreview';
 
 const Previewer: React.FC = () => {
 
@@ -107,11 +108,11 @@ const Previewer: React.FC = () => {
                     </button>
                 </div>
             </div>
-            <div className={styles.previewBody}>
-                <Document options={options} file={curPdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
-                    {renderPages(numPages)}
-                </Document>
-            </div>
+            <MemoizedPDFPreview curPdfUrl={pdfUrl} 
+            options={options} 
+            onDocumentLoadSuccess={onDocumentLoadSuccess} 
+            numPages={numPages||1} 
+            pdfScale={pdfScale}></MemoizedPDFPreview>
         </div>
     );
 }
