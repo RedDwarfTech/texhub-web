@@ -22,14 +22,14 @@ jobs:
           CI: false
 
       - name: Build image push to aliyun
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v3
         with:
-          registry: ${{ secrets.ALI_DOCKER_HUB_REGISTRY }}
-          username: ${{ secrets.ALIYUN_DOCKER_REPO_USER_NAME }}
-          password: ${{ secrets.ALIYUN_DOCKER_REPO_USER_PASSWORD }}
-          tags: ${{ github.sha }}
-          repository: reddwarf-pro/texhub-web
-          path: '.'
+          context: .
+          tags: ${{ secrets.ALI_DOCKER_HUB_REGISTRY }}/reddwarf-pro/texhub-web:${{ github.sha }} 
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          file: Dockerfile
+          push: true
     
        # https://github.com/steebchen/kubectl
       - name: deploy to cluster
