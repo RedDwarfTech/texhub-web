@@ -44,14 +44,6 @@
     padding-right: 10px;
 }
 
-.previewBody {
-    flex-grow: 1;
-    background-color: rgb(233, 233, 233);
-    display: flex;
-    overflow: scroll;
-    justify-content: center;
-}
-
 .pdfPage {
     margin-top: 10px;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);

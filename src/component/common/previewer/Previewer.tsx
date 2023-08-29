@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './Previewer.module.css';
 import { toast } from 'react-toastify';
-import { Document, Page, pdfjs } from 'react-pdf';
+import { pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -18,7 +18,6 @@ const Previewer: React.FC = () => {
 
     React.useEffect(() => {
         if (pdfUrl && pdfUrl.length > 0) {
-            debugger
             setCurPdfUrl(pdfUrl);
         }
     }, [pdfUrl]);
@@ -56,33 +55,8 @@ const Previewer: React.FC = () => {
     }
 
     const onDocumentLoadSuccess = (pdf: any) => {
-        const { doc, numPages } = pdf;
+        const { numPages } = pdf;
         setNumPages(numPages);
-    }
-
-    const handlePageChange = (page: any) => {
-
-    };
-
-    const handlePageRenderSuccess = (page: any) => {
-        const pageIndex = page._pageIndex + 1;
-    };
-
-    const renderPages = (totalPageNum: number | undefined) => {
-        if (!totalPageNum || totalPageNum < 1) return;
-        const tagList: JSX.Element[] = [];
-        for (let i = 1; i <= totalPageNum; i++) {
-            tagList.push(
-                <Page key={i}
-                    className={styles.pdfPage}
-                    scale={pdfScale}
-                    onLoad={handlePageChange}
-                    onRenderSuccess={handlePageRenderSuccess}
-                    pageNumber={i} >
-                </Page>
-            );
-        }
-        return tagList;
     }
 
     return (
@@ -108,11 +82,11 @@ const Previewer: React.FC = () => {
                     </button>
                 </div>
             </div>
-            <MemoizedPDFPreview curPdfUrl={pdfUrl} 
-            options={options} 
-            onDocumentLoadSuccess={onDocumentLoadSuccess} 
-            numPages={numPages||1} 
-            pdfScale={pdfScale}></MemoizedPDFPreview>
+            <MemoizedPDFPreview curPdfUrl={pdfUrl}
+                options={options}
+                onDocumentLoadSuccess={onDocumentLoadSuccess}
+                numPages={numPages || 1}
+                pdfScale={pdfScale}></MemoizedPDFPreview>
         </div>
     );
 }

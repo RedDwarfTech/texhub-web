@@ -45,7 +45,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, o
         </div>
     );
 }, (prevProps, nextProps) => {
-    // 自定义比较函数，判断 pdfUrl 是否改变
     return prevProps.curPdfUrl === nextProps.curPdfUrl;
 });
 
