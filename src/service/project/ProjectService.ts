@@ -68,6 +68,11 @@ export function compileProjectStream(proj: any) {
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
+export function updatePdfUrl(pdfUrl: string) {
+  const actionTypeString: string = ProjectActionType[ProjectActionType.RENDER_PDF];
+  return XHRClient.dispathAction(pdfUrl, actionTypeString, store);
+}
+
 export function getLatestCompile(project_id: string) {
     const params = new URLSearchParams();
     params.append("project_id",project_id);

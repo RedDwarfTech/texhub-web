@@ -10,7 +10,8 @@ export interface AppState {
         projList: TexProjectModel[],
         compileResult: CompileResult,
         latestComp: LatestCompile,
-        joinResult: JoinResult
+        joinResult: JoinResult,
+        pdfUrl: string
     },
     tpl: {
         tplList: TemplateModel[],

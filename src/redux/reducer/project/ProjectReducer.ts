@@ -7,7 +7,8 @@ const initState: AppState["proj"] = {
     projList: [],
     compileResult: {} as CompileResult,
     joinResult: {} as JoinResult,
-    latestComp: {} as LatestCompile
+    latestComp: {} as LatestCompile,
+    pdfUrl: ""
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -31,6 +32,11 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 joinResult: action.data
+            };
+        case "RENDER_PDF":
+            return {
+                ...state,
+                pdfUrl: action.data
             };
         default:
             break;

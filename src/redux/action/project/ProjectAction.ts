@@ -8,7 +8,8 @@ export enum ProjectActionType {
     COMPILE_PROJ,
     LATEST_COMPILE,
     JOIN_PROJ,
-    COMPILE_PROJ_STREAM
+    COMPILE_PROJ_STREAM,
+    RENDER_PDF
 }
 
 export interface saveDocAction {
@@ -38,5 +39,10 @@ export interface joinProjectAction {
 
 export interface compileProjectStreamAction {
     type: ProjectActionType.COMPILE_PROJ_STREAM;
+    data: any;
+}
+
+export interface renderPdfAction {
+    type: ProjectActionType.RENDER_PDF;
     data: any;
 }

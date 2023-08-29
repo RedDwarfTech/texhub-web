@@ -5,24 +5,26 @@ import { Document, Page, pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
+import { AppState } from '@/redux/types/AppState';
+import { useSelector } from 'react-redux';
 
-export type ViewerProps = {
-    pdfUrl: string | undefined;
-};
-
-const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
+const Previewer: React.FC = () => {
 
     const [pdfScale, setPdfScale] = useState<number>(1);
     const [numPages, setNumPages] = useState<number>();
-    const [pageNumber, setPageNumber] = useState<number>(1);
+    const [curPdfUrl, setCurPdfUrl] = useState<string>();
+    const { pdfUrl } = useSelector((state: AppState) => state.proj);
+
+    React.useEffect(() => {
+        if (pdfUrl && pdfUrl.length > 0) {
+            debugger
+            setCurPdfUrl(pdfUrl);
+        }
+    }, [pdfUrl]);
 
     const options = {
         cMapUrl: `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/cmaps/`,
     };
-
-    if (!props.pdfUrl) {
-        return (<div>Loading</div>);
-    }
 
     const handleDownloadPdf = async (pdfUrl: any) => {
         if (!pdfUrl) {
@@ -58,7 +60,7 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
     }
 
     const handlePageChange = (page: any) => {
-        
+
     };
 
     const handlePageRenderSuccess = (page: any) => {
@@ -94,7 +96,7 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
                     </button>
                 </div>
                 <div className={styles.rightAction}>
-                    <button className={styles.previewIconButton} onClick={() => { handleDownloadPdf(props.pdfUrl) }}>
+                    <button className={styles.previewIconButton} onClick={() => { handleDownloadPdf(curPdfUrl) }}>
                         <i className="fa-solid fa-download"></i>
                     </button>
                     <button className={styles.previewIconButton} id="zoominbutton" onClick={() => { handleZoomIn() }}>
@@ -106,7 +108,7 @@ const Previewer: React.FC<ViewerProps> = (props: ViewerProps) => {
                 </div>
             </div>
             <div className={styles.previewBody}>
-                <Document options={options} file={props.pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
+                <Document options={options} file={curPdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
                     {renderPages(numPages)}
                 </Document>
             </div>

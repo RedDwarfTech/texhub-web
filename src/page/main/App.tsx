@@ -13,7 +13,7 @@ import EHeader from '@/component/header/editor/EHeader';
 import { readConfig } from '@/config/app/config-reader';
 import queryString from 'query-string';
 import Previewer from '@/component/common/previewer/Previewer';
-import { compileProject, getLatestCompile } from '@/service/project/ProjectService';
+import { compileProject, getLatestCompile, updatePdfUrl } from '@/service/project/ProjectService';
 import ProjectTree from '@/component/common/prjtree/ProjectTree';
 import { TexFileModel } from '@/model/file/TexFileModel';
 
@@ -25,7 +25,6 @@ const App: React.FC = () => {
   const pid = params.pid!;
   const { compileResult, latestComp } = useSelector((state: AppState) => state.proj);
   const { activeFile, selectItem } = useSelector((state: AppState) => state.file);
-  const [pdfUrl, setPdfUrl] = useState<string>();
   const [activeFileModel, setActiveFileModel] = useState<TexFileModel>();
   const [selectedItem, setSelectedItem] = useState<TexFileModel>();
   const divRef = useRef<HTMLDivElement>(null);
@@ -56,7 +55,7 @@ const App: React.FC = () => {
     if (latestComp && Object.keys(latestComp).length > 0) {
       if (latestComp.path && latestComp.path.length > 0) {
         let pdfUrl = readConfig("compileBaseUrl") + "/" + latestComp.project_id + "/" + latestComp.path + "/main.pdf";
-        setPdfUrl(pdfUrl);
+        updatePdfUrl(pdfUrl);
       } else {
         compile(pid.toString(), "main.tex");
       }
@@ -71,7 +70,7 @@ const App: React.FC = () => {
     let vid = compileResult.out_path;
     if (proj_id && vid) {
       const pdfUrl = readConfig("compileBaseUrl") + "/" + proj_id + "/" + vid + "/main.pdf";
-      setPdfUrl(pdfUrl);
+      updatePdfUrl(pdfUrl);
     }
   }, [compileResult]);
 
@@ -182,9 +181,7 @@ const App: React.FC = () => {
         <div>
           <HiddenContent id="hiddenContentRight" className={styles.hiddenContent} />
         </div>
-        {
-          pdfUrl ? <Previewer pdfUrl={pdfUrl}></Previewer> : <div>Loading...</div>
-        }
+        <Previewer></Previewer>
       </div>
       <ToastContainer />
     </div>
