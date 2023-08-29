@@ -137,6 +137,9 @@ dependencies:
   typescript:
     specifier: ^4.9.5
     version: 4.9.5
+  uuid:
+    specifier: ^9.0.0
+    version: 9.0.0
   vite:
     specifier: ^4.4.9
     version: 4.4.9(@types/node@16.18.46)(sass@1.66.1)
