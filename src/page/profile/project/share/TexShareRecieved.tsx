@@ -29,7 +29,7 @@ const TeXShareRecieved: React.FC = () => {
     const handleJoin = () => {
         if (pid) {
             let joinReq = {
-                project_id: pid as String
+                project_id: pid as string
             };
             joinProject(joinReq);
         }
