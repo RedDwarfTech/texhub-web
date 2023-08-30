@@ -8,9 +8,8 @@ import { yCollab } from "y-codemirror.next";
 import { StreamLanguage, defaultHighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { stex } from "@codemirror/legacy-modes/mode/stex";
 import { solarizedLight } from 'cm6-theme-solarized-light';
-import { UserService } from "rd-component";
 import { readConfig } from "@/config/app/config-reader";
-import { UserModel, WheelGlobal } from "rdjs-wheel";
+import { UserModel } from "rdjs-wheel";
 
 export const usercolors = [
     { color: '#30bced', light: '#30bced33' },
@@ -54,7 +53,7 @@ export function initEditor(
     const ydoc = new Y.Doc(docOpt);
     const ytext = ydoc.getText(docId);
     const undoManager = new Y.UndoManager(ytext);
-    const wsProvider = new WebsocketProvider(readConfig("wssUrl"), docId, ydoc,{
+    const wsProvider = new WebsocketProvider(readConfig("wssUrl"), docId, ydoc, {
         maxBackoffTime: 3
     });
     const uInfo = localStorage.getItem("userInfo");
@@ -69,7 +68,7 @@ export function initEditor(
         if (event.status === 'connected') {
             if (wsProvider.ws) {
                 if (initContext && initContext.length > 0) {
-                    console.log("write: {}",initContext);
+                    console.log("write: {}", initContext);
                     ytext.insert(0, initContext);
                 }
             }
@@ -84,6 +83,9 @@ export function initEditor(
             solarizedLight
         ]
     });
+    if (edContainer.current && edContainer.current.children && edContainer.current.children.length > 0) {
+        return;
+    }
     const view = new EditorView({
         state,
         parent: edContainer.current,

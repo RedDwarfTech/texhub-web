@@ -104,6 +104,7 @@ export function doCompilePreCheck(params: CompileProjReq, onSseMessage: (msg: st
       headers: {
         'x-access-token': accessToken ?? "",
         'x-request-id': uuid(),
+        'content-type': 'application/json'
       }
     });
     eventSource.onopen = () => {

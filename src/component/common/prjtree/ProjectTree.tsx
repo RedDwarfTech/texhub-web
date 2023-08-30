@@ -175,7 +175,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const handleTreeItemClick = (fileItem: TexFileModel) => {
         localStorage.setItem("proj-select-file:" + pid, JSON.stringify(fileItem));
         setSelectedFile(fileItem);
-        if (fileItem.file_id === selectedFile.file_id) return;
+        if (selectedFile && fileItem.file_id === selectedFile.file_id) return;
         chooseFile(fileItem);
         if(fileItem.file_type !== 0){
             switchFile(fileItem);
