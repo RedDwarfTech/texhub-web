@@ -8,7 +8,6 @@ import { compileProject, doCompilePreCheck, getTempAuthCode } from "@/service/pr
 import { ResponseHandler } from "rdjs-wheel";
 import { useNavigate } from "react-router-dom";
 import { CompileProjReq } from "@/model/request/proj/CompileProjReq";
-import { EventSourcePolyfill } from "event-source-polyfill";
 
 const EHeader: React.FC = () => {
 
@@ -38,7 +37,7 @@ const EHeader: React.FC = () => {
                 };
                 compileProject(params).then((resp) => {
                     if (ResponseHandler.responseSuccess(resp)) {
-        
+
                     } else {
                         toast.error(resp.msg);
                     }
@@ -47,7 +46,7 @@ const EHeader: React.FC = () => {
         });
     }
 
-    const onSseMessage = (msg: string, eventSource: EventSourcePolyfill) => {
+    const onSseMessage = (msg: string, eventSource: EventSource) => {
         console.log("sse message: {}", msg);
     }
 

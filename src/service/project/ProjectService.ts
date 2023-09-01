@@ -94,7 +94,7 @@ export function getTempAuthCode() {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function doCompilePreCheck(params: CompileProjReq, onSseMessage: (msg: string, eventSource: EventSourcePolyfill) => void) {
+export function doCompilePreCheck(params: CompileProjReq, onSseMessage: (msg: string, eventSource: EventSource) => void) {
   if (AuthHandler.isTokenNeedRefresh(60)) {
     RequestHandler.handleWebAccessTokenExpire()
       .then((data) => {
@@ -105,36 +105,18 @@ export function doCompilePreCheck(params: CompileProjReq, onSseMessage: (msg: st
   }
 }
 
-export function doCompile(params: CompileProjReq, onSseMessage: (msg: string, eventSource: EventSourcePolyfill) => void) {
+export function doCompile(params: CompileProjReq, onSseMessage: (msg: string, eventSource: EventSource) => void) {
   var queryString = Object.keys(params).map(key => key + '=' + params[key as keyof CompileProjReq]).join('&');
-  const eventNative: EventSource = new EventSource('/tex/project/log/stream?' + queryString, {
-    //headers: { 'Content-Type': 'application/'}
-  });
-  eventNative.onmessage = function (event) {
-    console.log(event.data);
-  };
-}
-
-export function doSseChatAsk(params: CompileProjReq, onSseMessage: (msg: string, eventSource: EventSourcePolyfill) => void) {
-  let eventSource: EventSourcePolyfill;
-  const accessToken = localStorage.getItem("x-access-token");
-  var queryString = Object.keys(params).map(key => key + '=' + params[key as keyof CompileProjReq]).join('&');
-  eventSource = new EventSourcePolyfill('/tex/project/log/stream?' + queryString, {
-    headers: {
-      'x-access-token': accessToken ?? "",
-      'x-request-id': uuid()
-    }
-  });
-  eventSource.onopen = () => {
+  let eventNative = new EventSource('/tex/project/log/stream?' + queryString);
+  eventNative.onopen = () => {
 
   }
-  eventSource.onerror = (error: any) => {
+  eventNative.onerror = (error: any) => {
     console.log("compile project error", error);
-    eventSource.close();
+    eventNative.close();
   }
-  eventSource.onmessage = (e: any) => {
-    debugger
-    onSseMessage(e.data, eventSource);
+  eventNative.onmessage = (e: any) => {
+    onSseMessage(e.data, eventNative);
   };
 }
 
