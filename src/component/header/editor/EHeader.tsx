@@ -43,7 +43,7 @@ const EHeader: React.FC = () => {
     }
 
     const onSseMessage = (msg: string, eventSource: EventSourcePolyfill) => {
-        console.log("sse: {}",msg);
+        console.log("sse message: {}",msg);
     }
 
     const handleStreamCompile = (mainFile: TexFileModel) => {
