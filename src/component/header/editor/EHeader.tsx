@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { toast } from 'react-toastify';
 import { compileProject, doCompilePreCheck, getTempAuthCode } from "@/service/project/ProjectService";
-import { ResponseHandler } from "rdjs-wheel";
+import { ResponseHandler, SSEMessage } from "rdjs-wheel";
 import { useNavigate } from "react-router-dom";
 import { CompileProjReq } from "@/model/request/proj/CompileProjReq";
 
@@ -47,6 +47,10 @@ const EHeader: React.FC = () => {
     }
 
     const onSseMessage = (msg: string, eventSource: EventSource) => {
+        const message: SSEMessage = JSON.parse(msg);
+        if (message.event_type === 'TEX_COMP_END') {
+            eventSource.close();
+        }
         console.log("sse message: {}", msg);
     }
 
