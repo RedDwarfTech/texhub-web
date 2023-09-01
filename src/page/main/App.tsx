@@ -7,13 +7,13 @@ import { AppState } from '@/redux/types/AppState';
 import { useSelector } from 'react-redux';
 import { getFileList } from '@/service/file/FileService';
 import { ResponseHandler } from 'rdjs-wheel';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EHeader from '@/component/header/editor/EHeader';
 import { readConfig } from '@/config/app/config-reader';
 import queryString from 'query-string';
 import Previewer from '@/component/common/previewer/Previewer';
-import { compileProject, getLatestCompile, updatePdfUrl } from '@/service/project/ProjectService';
+import { compileProject, getLatestCompile, getTempAuthCode, updatePdfUrl } from '@/service/project/ProjectService';
 import ProjectTree from '@/component/common/prjtree/ProjectTree';
 import { TexFileModel } from '@/model/file/TexFileModel';
 
@@ -75,16 +75,23 @@ const App: React.FC = () => {
   }, [compileResult]);
 
   const compile = (prj_id: string, file_name: string) => {
-    let params = {
-      project_id: prj_id,
-      req_time: new Date().getTime(),
-      file_name: file_name
-    };
-    compileProject(params).then((resp) => {
+    getTempAuthCode().then((resp) => {
       if (ResponseHandler.responseSuccess(resp)) {
+        let params = {
+          project_id: prj_id,
+          req_time: new Date().getTime(),
+          file_name: file_name,
+          tac: resp.result
+        };
+        compileProject(params).then((resp) => {
+          if (ResponseHandler.responseSuccess(resp)) {
 
+          } else {
+            //toast.error(resp.msg);
+          }
+        });
       } else {
-        //toast.error(resp.msg);
+        toast.error(resp.msg);
       }
     });
   }

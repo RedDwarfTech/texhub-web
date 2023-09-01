@@ -85,14 +85,23 @@ export function getLatestCompile(project_id: string) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
+export function getTempAuthCode() {
+  const config: AxiosRequestConfig = {
+    method: 'get',
+    url: '/tex/project/temp/code',
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.GET_TEMP_AUTH_CODE];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
 export function doCompilePreCheck(params: CompileProjReq, onSseMessage: (msg: string, eventSource: EventSourcePolyfill) => void) {
   if (AuthHandler.isTokenNeedRefresh(60)) {
     RequestHandler.handleWebAccessTokenExpire()
       .then((data) => {
-        doSseChatAsk(params, onSseMessage);
+        doCompile(params, onSseMessage);
       });
   } else {
-    doSseChatAsk(params, onSseMessage);
+    doCompile(params, onSseMessage);
   }
 }
 

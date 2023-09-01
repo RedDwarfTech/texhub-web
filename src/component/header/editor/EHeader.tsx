@@ -4,7 +4,7 @@ import { AppState } from "@/redux/types/AppState";
 import React, { useState } from "react";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { toast } from 'react-toastify';
-import { compileProject, doCompilePreCheck } from "@/service/project/ProjectService";
+import { compileProject, doCompilePreCheck, getTempAuthCode } from "@/service/project/ProjectService";
 import { ResponseHandler } from "rdjs-wheel";
 import { useNavigate } from "react-router-dom";
 import { CompileProjReq } from "@/model/request/proj/CompileProjReq";
@@ -28,34 +28,44 @@ const EHeader: React.FC = () => {
         if (!mainFile) {
             toast.error("file is null");
         }
-        let params = {
-            project_id: mainFile.project_id,
-            req_time: new Date().getTime(),
-            file_name: mainFile.name
-        };
-        compileProject(params).then((resp) => {
+        getTempAuthCode().then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-
-            } else {
-                toast.error(resp.msg);
+                let params = {
+                    project_id: mainFile.project_id,
+                    req_time: new Date().getTime(),
+                    file_name: mainFile.name,
+                    tac: resp.result
+                };
+                compileProject(params).then((resp) => {
+                    if (ResponseHandler.responseSuccess(resp)) {
+        
+                    } else {
+                        toast.error(resp.msg);
+                    }
+                });
             }
         });
     }
 
     const onSseMessage = (msg: string, eventSource: EventSourcePolyfill) => {
-        console.log("sse message: {}",msg);
+        console.log("sse message: {}", msg);
     }
 
     const handleStreamCompile = (mainFile: TexFileModel) => {
         if (!mainFile) {
             toast.error("file is null");
         }
-        let params :CompileProjReq= {
-            project_id: mainFile.project_id,
-            req_time: new Date().getTime(),
-            file_name: mainFile.name
-        };
-        doCompilePreCheck(params, onSseMessage);
+        getTempAuthCode().then((resp) => {
+            if (ResponseHandler.responseSuccess(resp)) {
+                let params: CompileProjReq = {
+                    project_id: mainFile.project_id,
+                    req_time: new Date().getTime(),
+                    file_name: mainFile.name,
+                    tac: resp.result
+                };
+                doCompilePreCheck(params, onSseMessage);
+            }
+        });
     }
 
     if (!mainFile) {

@@ -9,7 +9,8 @@ export enum ProjectActionType {
     LATEST_COMPILE,
     JOIN_PROJ,
     COMPILE_PROJ_STREAM,
-    RENDER_PDF
+    RENDER_PDF,
+    GET_TEMP_AUTH_CODE
 }
 
 export interface saveDocAction {
