@@ -4,9 +4,7 @@ import { ProjectActionType } from "@/redux/action/project/ProjectAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
 import { XHRClient } from "rd-component";
-import { EventSourcePolyfill } from 'event-source-polyfill';
 import { AuthHandler, RequestHandler } from 'rdjs-wheel';
-import { v4 as uuid } from 'uuid';
 import { CompileProjReq } from "@/model/request/proj/CompileProjReq";
 
 export function getProjectList(tag: string) {
