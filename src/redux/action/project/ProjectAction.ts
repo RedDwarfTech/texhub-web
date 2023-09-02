@@ -1,4 +1,4 @@
-export type projectAction = saveDocAction | getDocListAction | compileProjAction | getLatestCompileAction | renderLogAction;
+export type projectAction = saveDocAction | getDocListAction | compileProjAction | getLatestCompileAction | renderLogAction | clearCompLogAction;
 
 export enum ProjectActionType {
     CREATE_DOC,
@@ -11,7 +11,8 @@ export enum ProjectActionType {
     COMPILE_PROJ_STREAM,
     RENDER_PDF,
     GET_TEMP_AUTH_CODE,
-    APPEND_LOG
+    APPEND_LOG,
+    CLEAR_COMP_LOG
 }
 
 export interface saveDocAction {
@@ -51,5 +52,10 @@ export interface renderPdfAction {
 
 export interface renderLogAction {
     type: ProjectActionType.APPEND_LOG;
+    data: string;
+}
+
+export interface clearCompLogAction {
+    type: ProjectActionType.CLEAR_COMP_LOG;
     data: string;
 }

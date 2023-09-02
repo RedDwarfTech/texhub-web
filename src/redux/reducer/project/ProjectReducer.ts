@@ -44,6 +44,11 @@ const ProjectReducer = (state = initState, action: any) => {
                 ...state,
                 logText: action.data
             };
+        case "CLEAR_COMP_LOG":
+            return {
+                ...state,
+                logText: action.data
+            };
         default:
             break;
     }

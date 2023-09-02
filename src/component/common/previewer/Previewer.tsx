@@ -26,6 +26,10 @@ const Previewer: React.FC = () => {
 
     React.useEffect(() => {
         if (logText && logText.length > 0) {
+            if(logText ==="clear"){
+                setCurLogText("");
+                return;
+            }
             setCurLogText((prevState) => {
                 return (prevState + logText)
             });
