@@ -4,7 +4,7 @@ import { AppState } from "@/redux/types/AppState";
 import React, { useState } from "react";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { toast } from 'react-toastify';
-import { compileProject, doCompilePreCheck, getTempAuthCode } from "@/service/project/ProjectService";
+import { compileProject, doCompilePreCheck, getTempAuthCode, updateLogText } from "@/service/project/ProjectService";
 import { ResponseHandler, SSEMessage } from "rdjs-wheel";
 import { useNavigate } from "react-router-dom";
 import { CompileProjReq } from "@/model/request/proj/CompileProjReq";
@@ -47,7 +47,7 @@ const EHeader: React.FC = () => {
     }
 
     const onSseMessage = (msg: string, eventSource: EventSource) => {
-        console.log("sse message:", msg);
+        updateLogText(msg);
     }
 
     const handleStreamCompile = (mainFile: TexFileModel) => {

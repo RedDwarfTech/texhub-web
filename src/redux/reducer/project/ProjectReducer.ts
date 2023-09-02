@@ -8,7 +8,8 @@ const initState: AppState["proj"] = {
     compileResult: {} as CompileResult,
     joinResult: {} as JoinResult,
     latestComp: {} as LatestCompile,
-    pdfUrl: ""
+    pdfUrl: "",
+    logText: "",
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -37,6 +38,11 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 pdfUrl: action.data
+            };
+        case "APPEND_LOG":
+            return {
+                ...state,
+                logText: action.data
             };
         default:
             break;

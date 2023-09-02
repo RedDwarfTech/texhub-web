@@ -1,4 +1,4 @@
-export type projectAction = saveDocAction | getDocListAction | compileProjAction | getLatestCompileAction;
+export type projectAction = saveDocAction | getDocListAction | compileProjAction | getLatestCompileAction | renderLogAction;
 
 export enum ProjectActionType {
     CREATE_DOC,
@@ -10,7 +10,8 @@ export enum ProjectActionType {
     JOIN_PROJ,
     COMPILE_PROJ_STREAM,
     RENDER_PDF,
-    GET_TEMP_AUTH_CODE
+    GET_TEMP_AUTH_CODE,
+    APPEND_LOG
 }
 
 export interface saveDocAction {
@@ -46,4 +47,9 @@ export interface compileProjectStreamAction {
 export interface renderPdfAction {
     type: ProjectActionType.RENDER_PDF;
     data: any;
+}
+
+export interface renderLogAction {
+    type: ProjectActionType.APPEND_LOG;
+    data: string;
 }

@@ -125,3 +125,7 @@ export function doCompile(params: CompileProjReq, onSseMessage: (msg: string, ev
   });
 }
 
+export function updateLogText(logContent: string) {
+  const actionTypeString: string = ProjectActionType[ProjectActionType.APPEND_LOG];
+  return XHRClient.dispathAction(logContent, actionTypeString, store);
+}

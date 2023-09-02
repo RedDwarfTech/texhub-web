@@ -14,14 +14,22 @@ const Previewer: React.FC = () => {
     const [pdfScale, setPdfScale] = useState<number>(1);
     const [numPages, setNumPages] = useState<number>();
     const [curPdfUrl, setCurPdfUrl] = useState<string>();
+    const [curLogText, setCurLogText] = useState<string>('');
     const [curPreviewTab, setCurPreviewTab] = useState<string>('pdfview');
-    const { pdfUrl } = useSelector((state: AppState) => state.proj);
+    const { pdfUrl, logText } = useSelector((state: AppState) => state.proj);
 
     React.useEffect(() => {
         if (pdfUrl && pdfUrl.length > 0) {
             setCurPdfUrl(pdfUrl);
         }
     }, [pdfUrl]);
+
+    React.useEffect(()=>{
+        if(logText && logText.length > 0){
+            const legacyLog = curLogText;
+            setCurLogText(legacyLog + logText);
+        }
+    },[logText]);
 
     const options = {
         cMapUrl: `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/cmaps/`,
@@ -72,7 +80,11 @@ const Previewer: React.FC = () => {
     }
 
     const renderLogView = () => {
-        return (<div>Log...</div>);
+        return (
+        <div>
+            <div className={styles.logContent} id="logtext">{curLogText}</div>
+        </div>
+        );
     }
 
     const renderPdfView = () => {
