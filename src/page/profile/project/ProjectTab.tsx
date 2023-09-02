@@ -111,9 +111,17 @@ const ProjectTab: React.FC = () => {
         return tagList;
     };
 
-    const handleDocCreate = () => {
+    const handleProjCreate = () => {
         if (!UserService.isLoggedIn()) {
             toast.warning("登录后即可创建项目");
+            return;
+        }
+        if(projName == null || projName.length == 0) {
+            toast.warning("请填写项目名称");
+            return;
+        }
+        if(projName.length > 256){
+            toast.warning("超过项目名称长度限制");
             return;
         }
         let doc = {
@@ -180,7 +188,7 @@ const ProjectTab: React.FC = () => {
                         </div>
                         <div className="modal-footer">
                             <button type="button" ref={createDocCancelRef} className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                            <button type="button" className="btn btn-primary" onClick={() => { handleDocCreate() }}>确定</button>
+                            <button type="button" className="btn btn-primary" onClick={() => { handleProjCreate() }}>确定</button>
                         </div>
                     </div>
                 </div>
