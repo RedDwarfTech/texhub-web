@@ -47,11 +47,7 @@ const EHeader: React.FC = () => {
     }
 
     const onSseMessage = (msg: string, eventSource: EventSource) => {
-        const message: SSEMessage = JSON.parse(msg);
-        if (message.event_type === 'TEX_COMP_END') {
-            eventSource.close();
-        }
-        console.log("sse message: {}", msg);
+        console.log("sse message:", msg);
     }
 
     const handleStreamCompile = (mainFile: TexFileModel) => {

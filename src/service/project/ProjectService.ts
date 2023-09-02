@@ -107,14 +107,21 @@ export function doCompile(params: CompileProjReq, onSseMessage: (msg: string, ev
   var queryString = Object.keys(params).map(key => key + '=' + params[key as keyof CompileProjReq]).join('&');
   let eventNative = new EventSource('/tex/project/log/stream?' + queryString);
   eventNative.onopen = () => {
-
   }
   eventNative.onerror = (error: any) => {
     console.log("compile project error", error);
     eventNative.close();
   }
-  eventNative.onmessage = (e: any) => {
-    onSseMessage(e.data, eventNative);
+  eventNative.onmessage = (event: any) => {
+    onSseMessage(event.data, eventNative);
   };
+
+  eventNative.addEventListener("TEX_COMP_LOG", function(event: any) {
+    onSseMessage(event.data, eventNative);
+  });
+
+  eventNative.addEventListener("TEX_COMP_END", function() {
+    eventNative.close();
+  });
 }
 

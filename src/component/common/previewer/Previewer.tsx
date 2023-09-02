@@ -14,6 +14,7 @@ const Previewer: React.FC = () => {
     const [pdfScale, setPdfScale] = useState<number>(1);
     const [numPages, setNumPages] = useState<number>();
     const [curPdfUrl, setCurPdfUrl] = useState<string>();
+    const [curPreviewTab, setCurPreviewTab] = useState<string>('pdfview');
     const { pdfUrl } = useSelector((state: AppState) => state.proj);
 
     React.useEffect(() => {
@@ -59,14 +60,39 @@ const Previewer: React.FC = () => {
         setNumPages(numPages);
     }
 
+    const renderPreviewTab = () => {
+        switch (curPreviewTab) {
+            case "pdfview":
+                return renderPdfView();
+            case "logview":
+                return renderLogView();
+            default:
+                return (<div></div>);
+        }
+    }
+
+    const renderLogView = () => {
+        return (<div>Log...</div>);
+    }
+
+    const renderPdfView = () => {
+        return (
+            <MemoizedPDFPreview curPdfUrl={pdfUrl}
+                options={options}
+                onDocumentLoadSuccess={onDocumentLoadSuccess}
+                numPages={numPages || 1}
+                pdfScale={pdfScale}></MemoizedPDFPreview>
+        );
+    }
+
     return (
         <div id="preview" className={styles.preview}>
             <div className={styles.previewHader}>
                 <div className={styles.leftAction}>
-                    <button className={styles.previewButton}>
+                    <button className={styles.previewButton} onClick={()=>{setCurPreviewTab("pdfview")}}>
                         <i className="fa-regular fa-file-pdf"></i> 预览
                     </button>
-                    <button className={styles.previewButton}>
+                    <button className={styles.previewButton} onClick={() => { setCurPreviewTab("logview") }}>
                         <i className="fa-regular fa-file-lines"></i> 日志
                     </button>
                 </div>
@@ -82,11 +108,7 @@ const Previewer: React.FC = () => {
                     </button>
                 </div>
             </div>
-            <MemoizedPDFPreview curPdfUrl={pdfUrl}
-                options={options}
-                onDocumentLoadSuccess={onDocumentLoadSuccess}
-                numPages={numPages || 1}
-                pdfScale={pdfScale}></MemoizedPDFPreview>
+            {renderPreviewTab()}
         </div>
     );
 }
