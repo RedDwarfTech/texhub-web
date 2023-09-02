@@ -24,12 +24,13 @@ const Previewer: React.FC = () => {
         }
     }, [pdfUrl]);
 
-    React.useEffect(()=>{
-        if(logText && logText.length > 0){
-            const legacyLog = curLogText;
-            setCurLogText(legacyLog + logText);
+    React.useEffect(() => {
+        if (logText && logText.length > 0) {
+            setCurLogText((prevState) => {
+                return (prevState + logText)
+            });
         }
-    },[logText]);
+    }, [logText]);
 
     const options = {
         cMapUrl: `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/cmaps/`,
@@ -81,9 +82,9 @@ const Previewer: React.FC = () => {
 
     const renderLogView = () => {
         return (
-        <div>
-            <div className={styles.logContent} id="logtext">{curLogText}</div>
-        </div>
+            <div>
+                <div className={styles.logContent} id="logtext">{curLogText}</div>
+            </div>
         );
     }
 
@@ -101,7 +102,7 @@ const Previewer: React.FC = () => {
         <div id="preview" className={styles.preview}>
             <div className={styles.previewHader}>
                 <div className={styles.leftAction}>
-                    <button className={styles.previewButton} onClick={()=>{setCurPreviewTab("pdfview")}}>
+                    <button className={styles.previewButton} onClick={() => { setCurPreviewTab("pdfview") }}>
                         <i className="fa-regular fa-file-pdf"></i> 预览
                     </button>
                     <button className={styles.previewButton} onClick={() => { setCurPreviewTab("logview") }}>

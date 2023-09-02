@@ -75,3 +75,10 @@
     height: 100%;
     width: 100%;
 }
+
+.logContent {
+    padding-left: 10px;
+    padding-top: 20px;
+    padding-right: 10px;
+    word-wrap: break-word;
+}
