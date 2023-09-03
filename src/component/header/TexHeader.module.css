@@ -37,6 +37,7 @@
   right: 4%;
   top: 4%;
   border-radius: 5px;
+  overflow: hidden;
 }
 
 /* Links inside the dropdown */
@@ -47,7 +48,6 @@
   display: block;
   width: 100%;
   border-bottom: 2px solid #eee;
-  border-radius: 5px;
 }
 
 .dropdownContent span {
@@ -60,7 +60,7 @@
 }
 
 .dropdownContent div:hover {
-  background-color: #f1f1f1
+  background-color: #D3D3D3
 }
 
 .menuIcon {
