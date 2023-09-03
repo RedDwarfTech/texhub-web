@@ -76,6 +76,7 @@ const ProjectTab: React.FC = () => {
         const tagList: JSX.Element[] = [];
         userDocList.forEach((docItem: TexProjectModel) => {
             const formattedTime = dayjs(docItem.updated_time).format('YYYY-MM-DD HH:mm:ss');
+            const projCreatedTime = dayjs(docItem.created_time).format('YYYY-MM-DD HH:mm:ss'); 
             tagList.push(
                 <label key={docItem.project_id} className="list-group-item">
                     <div className={styles.docHeader}>
@@ -102,8 +103,10 @@ const ProjectTab: React.FC = () => {
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <div>更新时间：{formattedTime}</div>
+                    <div className = {styles.projAttr}>
+                        <div><span>来自：</span>{docItem.nickname}</div>
+                        <div><span>创建时间：</span>{projCreatedTime}</div>
+                        <div><span>更新时间：</span>{formattedTime}</div>
                     </div>
                 </label>
             );

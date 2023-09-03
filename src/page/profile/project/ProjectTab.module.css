@@ -32,6 +32,18 @@
     text-decoration: underline;
 }
 
+.projAttr {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.projAttr span {
+    color: #696969;
+}
+
 .projList {
     width: 80%;
     margin: 0 auto;
