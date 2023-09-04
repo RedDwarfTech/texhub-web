@@ -23,7 +23,7 @@ const App: React.FC = () => {
   const search = location.search;
   const params = queryString.parse(search);
   const pid = params.pid!;
-  const { compileResult, latestComp } = useSelector((state: AppState) => state.proj);
+  const { compileResult, latestComp, endSignal } = useSelector((state: AppState) => state.proj);
   const { activeFile, selectItem } = useSelector((state: AppState) => state.file);
   const [activeFileModel, setActiveFileModel] = useState<TexFileModel>();
   const [selectedItem, setSelectedItem] = useState<TexFileModel>();
@@ -42,6 +42,12 @@ const App: React.FC = () => {
     return () => {
     };
   }, []);
+
+  React.useEffect(() => {
+    if (endSignal && endSignal.length > 0 && endSignal === "TEX_COMP_END") {
+      getLatestCompile(pid.toString());
+    }
+}, [endSignal]);
 
   React.useEffect(() => {
     setActiveFileModel(activeFile);

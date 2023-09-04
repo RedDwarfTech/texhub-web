@@ -12,7 +12,8 @@ export enum ProjectActionType {
     RENDER_PDF,
     GET_TEMP_AUTH_CODE,
     APPEND_LOG,
-    CLEAR_COMP_LOG
+    CLEAR_COMP_LOG,
+    TEX_COMP_END
 }
 
 export interface saveDocAction {

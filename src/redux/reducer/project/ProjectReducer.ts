@@ -10,6 +10,7 @@ const initState: AppState["proj"] = {
     latestComp: {} as LatestCompile,
     pdfUrl: "",
     logText: "",
+    endSignal: ""
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -48,6 +49,11 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 logText: action.data
+            };
+        case "TEX_COMP_END":
+            return {
+                ...state,
+                endSignal: action.data
             };
         default:
             break;

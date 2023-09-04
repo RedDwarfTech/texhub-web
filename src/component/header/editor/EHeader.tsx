@@ -4,10 +4,11 @@ import { AppState } from "@/redux/types/AppState";
 import React, { useState } from "react";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { toast } from 'react-toastify';
-import { clearCompLogText, compileProject, doCompilePreCheck, getTempAuthCode, updateLogText } from "@/service/project/ProjectService";
-import { ResponseHandler, SSEMessage } from "rdjs-wheel";
+import { clearCompLogText, doCompilePreCheck, getTempAuthCode, sendCompileRequest, updateLogText } from "@/service/project/ProjectService";
+import { ResponseHandler } from "rdjs-wheel";
 import { useNavigate } from "react-router-dom";
-import { CompileProjReq } from "@/model/request/proj/CompileProjReq";
+import {  CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
+import { CompileProjReq } from "@/model/request/proj/CompileProjReq copy";
 
 const EHeader: React.FC = () => {
 
@@ -22,28 +23,15 @@ const EHeader: React.FC = () => {
         }
     }, [fileTree]);
 
-    const handleCompile = (mainFile: TexFileModel) => {
+    const handleQueueCompile = (mainFile: TexFileModel) => {
         toast.info("trigger compile");
         if (!mainFile) {
             toast.error("file is null");
         }
-        getTempAuthCode().then((resp) => {
-            if (ResponseHandler.responseSuccess(resp)) {
-                let params = {
-                    project_id: mainFile.project_id,
-                    req_time: new Date().getTime(),
-                    file_name: mainFile.name,
-                    tac: resp.result
-                };
-                compileProject(params).then((resp) => {
-                    if (ResponseHandler.responseSuccess(resp)) {
-
-                    } else {
-                        toast.error(resp.msg);
-                    }
-                });
-            }
-        });
+        let req: CompileQueueReq = {
+            project_id: mainFile.project_id
+        };
+        sendCompileRequest(req);
     }
 
     const onSseMessage = (msg: string, eventSource: EventSource) => {
@@ -77,7 +65,7 @@ const EHeader: React.FC = () => {
             <div></div>
             <div className={styles.actions}>
                 <button type="button" className="btn btn-primary" onClick={() => { navigate('/doc/tab') }}>个人中心</button>
-                <button type="button" className="btn btn-primary" onClick={() => { handleCompile(mainFile) }}>编译</button>
+                <button type="button" className="btn btn-primary" onClick={() => { handleQueueCompile(mainFile) }}>编译(异步队列)</button>
                 <button type="button" className="btn btn-primary" onClick={() => { handleStreamCompile(mainFile) }}>编译Stream</button>
             </div>
         </div>

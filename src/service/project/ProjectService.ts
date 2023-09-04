@@ -1,3 +1,5 @@
+import { CompileProjReq } from "@/model/request/proj/CompileProjReq copy";
+import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
 import { CreateProjReq } from "@/model/request/proj/CreateProjReq";
 import { JoinProjReq } from "@/model/request/proj/JoinProjReq";
 import { ProjectActionType } from "@/redux/action/project/ProjectAction";
@@ -5,7 +7,6 @@ import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
 import { XHRClient } from "rd-component";
 import { AuthHandler, RequestHandler } from 'rdjs-wheel';
-import { CompileProjReq } from "@/model/request/proj/CompileProjReq";
 
 export function getProjectList(tag: string) {
   const config: AxiosRequestConfig = {
@@ -46,7 +47,7 @@ export function deleteProject(proj: any) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function compileProject(proj: CompileProjReq) {
+export function compileProject(proj: CompileQueueReq) {
   const config: AxiosRequestConfig = {
     method: 'put',
     url: '/tex/project/compile',
@@ -92,6 +93,16 @@ export function getTempAuthCode() {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
+export function sendCompileRequest(req: CompileQueueReq) {
+  const config: AxiosRequestConfig = {
+    method: 'post',
+    url: '/tex/project/compile/queue',
+    data: JSON.stringify(req)
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.GET_TEMP_AUTH_CODE];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
 export function doCompilePreCheck(params: CompileProjReq, onSseMessage: (msg: string, eventSource: EventSource) => void) {
   if (AuthHandler.isTokenNeedRefresh(60)) {
     RequestHandler.handleWebAccessTokenExpire()
@@ -121,6 +132,8 @@ export function doCompile(params: CompileProjReq, onSseMessage: (msg: string, ev
   });
 
   eventNative.addEventListener("TEX_COMP_END", function() {
+    const actionTypeString: string = ProjectActionType[ProjectActionType.TEX_COMP_END];
+  return XHRClient.dispathAction("TEX_COMP_END", actionTypeString, store);
     eventNative.close();
   });
 }

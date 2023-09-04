@@ -12,7 +12,8 @@ export interface AppState {
         latestComp: LatestCompile,
         joinResult: JoinResult,
         pdfUrl: string,
-        logText: string
+        logText: string,
+        endSignal: string
     },
     tpl: {
         tplList: TemplateModel[],
