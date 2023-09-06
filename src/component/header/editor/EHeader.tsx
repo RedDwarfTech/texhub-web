@@ -24,7 +24,7 @@ const EHeader: React.FC = () => {
     }, [fileTree]);
 
     const handleQueueCompile = (mainFile: TexFileModel) => {
-        toast.info("trigger compile");
+        toast.info("编译请求已发送");
         if (!mainFile) {
             toast.error("file is null");
         }
@@ -65,8 +65,7 @@ const EHeader: React.FC = () => {
             <div></div>
             <div className={styles.actions}>
                 <button type="button" className="btn btn-primary" onClick={() => { navigate('/doc/tab') }}>个人中心</button>
-                <button type="button" className="btn btn-primary" onClick={() => { handleQueueCompile(mainFile) }}>编译(异步队列)</button>
-                <button type="button" className="btn btn-primary" onClick={() => { handleStreamCompile(mainFile) }}>编译Stream</button>
+                <button type="button" className="btn btn-primary" onClick={() => { handleQueueCompile(mainFile) }}>编译</button>
             </div>
         </div>
     );
