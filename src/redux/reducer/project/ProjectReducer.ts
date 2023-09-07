@@ -62,6 +62,11 @@ const ProjectReducer = (state = initState, action: any) => {
                 ...state,
                 queue: action.data
             };  
+        case "GET_COMP_QUEUE_STATUS":
+            return {
+                ...state,
+                queue: action.data
+            };
         default:
             break;
     }
