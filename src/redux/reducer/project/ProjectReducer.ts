@@ -2,6 +2,7 @@ import { CompileResult } from "@/model/prj/CompileResult";
 import { LatestCompile } from "@/model/prj/LatestCompile";
 import { AppState } from "@/redux/types/AppState";
 import { JoinResult } from "@/model/prj/JoinResult";
+import { CompileQueue } from "@/model/prj/CompileQueue";
 
 const initState: AppState["proj"] = {
     projList: [],
@@ -10,7 +11,8 @@ const initState: AppState["proj"] = {
     latestComp: {} as LatestCompile,
     pdfUrl: "",
     logText: "",
-    endSignal: ""
+    endSignal: "",
+    queue: {} as CompileQueue
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -55,6 +57,11 @@ const ProjectReducer = (state = initState, action: any) => {
                 ...state,
                 endSignal: action.data
             };
+        case "ADD_QUEUE_COMPILE":
+            return {
+                ...state,
+                queue: action.data
+            };  
         default:
             break;
     }

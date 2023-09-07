@@ -93,17 +93,26 @@ export function getTempAuthCode() {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function sendCompileRequest(req: CompileQueueReq) {
+export function getCompQueueStatus(id: number) {
+  const config: AxiosRequestConfig = {
+    method: 'get',
+    url: '/tex/project/queue/status?id=' + id,
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.GET_COMP_QUEUE_STATUS];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
+export function sendQueueCompileRequest(req: CompileQueueReq) {
   const config: AxiosRequestConfig = {
     method: 'post',
     url: '/tex/project/compile/queue',
     data: JSON.stringify(req)
   };
-  const actionTypeString: string = ProjectActionType[ProjectActionType.GET_TEMP_AUTH_CODE];
+  const actionTypeString: string = ProjectActionType[ProjectActionType.ADD_QUEUE_COMPILE];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function doCompilePreCheck(params: CompileProjReq, onSseMessage: (msg: string, eventSource: EventSource) => void) {
+export function doCompileLogPreCheck(params: CompileProjReq, onSseMessage: (msg: string, eventSource: EventSource) => void) {
   if (AuthHandler.isTokenNeedRefresh(60)) {
     RequestHandler.handleWebAccessTokenExpire()
       .then((data) => {
@@ -116,7 +125,7 @@ export function doCompilePreCheck(params: CompileProjReq, onSseMessage: (msg: st
 
 export function doCompile(params: CompileProjReq, onSseMessage: (msg: string, eventSource: EventSource) => void) {
   var queryString = Object.keys(params).map(key => key + '=' + params[key as keyof CompileProjReq]).join('&');
-  let eventNative = new EventSource('/tex/project/log/stream?' + queryString);
+  let eventNative = new EventSource('/tex/project/compile/qlog?' + queryString);
   eventNative.onopen = () => {
   }
   eventNative.onerror = (error: any) => {
@@ -127,13 +136,13 @@ export function doCompile(params: CompileProjReq, onSseMessage: (msg: string, ev
     onSseMessage(event.data, eventNative);
   };
 
-  eventNative.addEventListener("TEX_COMP_LOG", function(event: any) {
+  eventNative.addEventListener("TEX_COMP_LOG", function (event: any) {
     onSseMessage(event.data, eventNative);
   });
 
-  eventNative.addEventListener("TEX_COMP_END", function() {
+  eventNative.addEventListener("TEX_COMP_END", function () {
     const actionTypeString: string = ProjectActionType[ProjectActionType.TEX_COMP_END];
-  return XHRClient.dispathAction("TEX_COMP_END", actionTypeString, store);
+    return XHRClient.dispathAction("TEX_COMP_END", actionTypeString, store);
     eventNative.close();
   });
 }

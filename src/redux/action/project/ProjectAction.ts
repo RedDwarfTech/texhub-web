@@ -1,4 +1,4 @@
-export type projectAction = saveDocAction | getDocListAction | compileProjAction | getLatestCompileAction | renderLogAction | clearCompLogAction;
+export type projectAction = saveDocAction | getDocListAction | compileProjAction | getLatestCompileAction | renderLogAction | clearCompLogAction|addQueueCompileAction|getCompQueueStatusAction;
 
 export enum ProjectActionType {
     CREATE_DOC,
@@ -13,7 +13,9 @@ export enum ProjectActionType {
     GET_TEMP_AUTH_CODE,
     APPEND_LOG,
     CLEAR_COMP_LOG,
-    TEX_COMP_END
+    TEX_COMP_END,
+    ADD_QUEUE_COMPILE,
+    GET_COMP_QUEUE_STATUS
 }
 
 export interface saveDocAction {
@@ -58,5 +60,15 @@ export interface renderLogAction {
 
 export interface clearCompLogAction {
     type: ProjectActionType.CLEAR_COMP_LOG;
+    data: string;
+}
+
+export interface addQueueCompileAction {
+    type: ProjectActionType.ADD_QUEUE_COMPILE;
+    data: string;
+}
+
+export interface getCompQueueStatusAction {
+    type: ProjectActionType.GET_COMP_QUEUE_STATUS;
     data: string;
 }

@@ -4,6 +4,7 @@ import { TexProjectModel } from "@/model/prj/TexProjectModel";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { TemplateModel } from "@/model/tpl/TemplateModel";
 import { JoinResult } from "@/model/prj/JoinResult";
+import { CompileQueue } from "@/model/prj/CompileQueue";
 
 export interface AppState {
     proj: {
@@ -13,7 +14,8 @@ export interface AppState {
         joinResult: JoinResult,
         pdfUrl: string,
         logText: string,
-        endSignal: string
+        endSignal: string,
+        queue: CompileQueue
     },
     tpl: {
         tplList: TemplateModel[],

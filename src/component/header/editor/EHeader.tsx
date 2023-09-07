@@ -4,15 +4,20 @@ import { AppState } from "@/redux/types/AppState";
 import React, { useState } from "react";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { toast } from 'react-toastify';
-import { clearCompLogText, doCompilePreCheck, getTempAuthCode, sendCompileRequest, updateLogText } from "@/service/project/ProjectService";
+import {
+    clearCompLogText, doCompileLogPreCheck,
+    getCompQueueStatus,
+    getTempAuthCode, sendQueueCompileRequest, updateLogText
+} from "@/service/project/ProjectService";
 import { ResponseHandler } from "rdjs-wheel";
 import { useNavigate } from "react-router-dom";
-import {  CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
+import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
 import { CompileProjReq } from "@/model/request/proj/CompileProjReq copy";
 
 const EHeader: React.FC = () => {
 
     const { fileTree } = useSelector((state: AppState) => state.file);
+    const { queue } = useSelector((state: AppState) => state.proj);
     const [mainFile, setMainFile] = useState<TexFileModel>();
     const navigate = useNavigate();
 
@@ -23,6 +28,36 @@ const EHeader: React.FC = () => {
         }
     }, [fileTree]);
 
+    React.useEffect(() => {
+        let interval: NodeJS.Timeout | null = null;
+        if (queue && Object.keys(queue).length > 0) {
+            if (queue.comp_status === 0) {
+                interval = setInterval(() => {
+                    getCompQueueStatus(queue.id);
+                }, 5000);
+            }
+            if (queue.comp_status !== 0 && interval) {
+                clearInterval(interval);
+            }
+            if(queue.comp_status === 1){
+                if(!mainFile){
+                    return;
+                }
+                let req :CompileProjReq = {
+                    project_id: mainFile.project_id,
+                    req_time: 0,
+                    file_name: "main.tex"
+                };
+                doCompileLogPreCheck(req, onSseMessage);
+            }
+            return () => {
+                if (interval) {
+                    clearInterval(interval);
+                }
+            };
+        }
+    }, [queue]);
+
     const handleQueueCompile = (mainFile: TexFileModel) => {
         toast.info("编译请求已发送");
         if (!mainFile) {
@@ -31,7 +66,7 @@ const EHeader: React.FC = () => {
         let req: CompileQueueReq = {
             project_id: mainFile.project_id
         };
-        sendCompileRequest(req);
+        sendQueueCompileRequest(req);
     }
 
     const onSseMessage = (msg: string, eventSource: EventSource) => {
@@ -51,7 +86,7 @@ const EHeader: React.FC = () => {
                     file_name: mainFile.name,
                     tac: resp.result
                 };
-                doCompilePreCheck(params, onSseMessage);
+                // doCompilePreCheck(params, onSseMessage);
             }
         });
     }
