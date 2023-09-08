@@ -1,4 +1,4 @@
-import { CompileProjReq } from "@/model/request/proj/CompileProjReq copy";
+import { CompileProjLog } from "@/model/request/proj/CompileProjLog";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
 import { CreateProjReq } from "@/model/request/proj/CreateProjReq";
 import { JoinProjReq } from "@/model/request/proj/JoinProjReq";
@@ -112,7 +112,7 @@ export function sendQueueCompileRequest(req: CompileQueueReq) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function doCompileLogPreCheck(params: CompileProjReq, onSseMessage: (msg: string, eventSource: EventSource) => void) {
+export function doCompileLogPreCheck(params: CompileProjLog, onSseMessage: (msg: string, eventSource: EventSource) => void) {
   if (AuthHandler.isTokenNeedRefresh(60)) {
     RequestHandler.handleWebAccessTokenExpire()
       .then((data) => {
@@ -123,8 +123,8 @@ export function doCompileLogPreCheck(params: CompileProjReq, onSseMessage: (msg:
   }
 }
 
-export function doCompile(params: CompileProjReq, onSseMessage: (msg: string, eventSource: EventSource) => void) {
-  var queryString = Object.keys(params).map(key => key + '=' + params[key as keyof CompileProjReq]).join('&');
+export function doCompile(params: CompileProjLog, onSseMessage: (msg: string, eventSource: EventSource) => void) {
+  var queryString = Object.keys(params).map(key => key + '=' + params[key as keyof CompileProjLog]).join('&');
   let eventNative = new EventSource('/tex/project/compile/qlog?' + queryString);
   eventNative.onopen = () => {
   }
@@ -141,9 +141,10 @@ export function doCompile(params: CompileProjReq, onSseMessage: (msg: string, ev
   });
 
   eventNative.addEventListener("TEX_COMP_END", function () {
+    debugger
     const actionTypeString: string = ProjectActionType[ProjectActionType.TEX_COMP_END];
-    return XHRClient.dispathAction("TEX_COMP_END", actionTypeString, store);
     eventNative.close();
+    return XHRClient.dispathAction("TEX_COMP_END", actionTypeString, store);
   });
 }
 

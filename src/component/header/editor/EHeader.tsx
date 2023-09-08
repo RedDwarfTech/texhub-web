@@ -5,14 +5,13 @@ import React, { useState } from "react";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { toast } from 'react-toastify';
 import {
-    clearCompLogText, doCompileLogPreCheck,
+    doCompileLogPreCheck,
     getCompQueueStatus,
-    getTempAuthCode, sendQueueCompileRequest, updateLogText
+    sendQueueCompileRequest, updateLogText
 } from "@/service/project/ProjectService";
-import { ResponseHandler } from "rdjs-wheel";
 import { useNavigate } from "react-router-dom";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
-import { CompileProjReq } from "@/model/request/proj/CompileProjReq copy";
+import { CompileProjLog } from "@/model/request/proj/CompileProjLog";
 
 const EHeader: React.FC = () => {
 
@@ -39,14 +38,14 @@ const EHeader: React.FC = () => {
             if (queue.comp_status !== 0 && interval) {
                 clearInterval(interval);
             }
-            if(queue.comp_status === 1){
-                if(!mainFile){
+            if (queue.comp_status === 1) {
+                if (!mainFile) {
                     return;
                 }
-                let req :CompileProjReq = {
+                let req: CompileProjLog = {
                     project_id: mainFile.project_id,
-                    req_time: 0,
-                    file_name: "main.tex"
+                    file_name: "main.tex",
+                    version_no: queue.version_no
                 };
                 doCompileLogPreCheck(req, onSseMessage);
             }
@@ -71,24 +70,6 @@ const EHeader: React.FC = () => {
 
     const onSseMessage = (msg: string, eventSource: EventSource) => {
         updateLogText(msg);
-    }
-
-    const handleStreamCompile = (mainFile: TexFileModel) => {
-        if (!mainFile) {
-            toast.error("file is null");
-        }
-        clearCompLogText('clear');
-        getTempAuthCode().then((resp) => {
-            if (ResponseHandler.responseSuccess(resp)) {
-                let params: CompileProjReq = {
-                    project_id: mainFile.project_id,
-                    req_time: new Date().getTime(),
-                    file_name: mainFile.name,
-                    tac: resp.result
-                };
-                // doCompilePreCheck(params, onSseMessage);
-            }
-        });
     }
 
     if (!mainFile) {
