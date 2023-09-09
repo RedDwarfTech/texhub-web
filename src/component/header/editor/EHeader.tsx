@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { toast } from 'react-toastify';
 import {
+    clearCompLogText,
     compileProjectLog,
     doCompileLogPreCheck,
     getCompQueueStatus,
@@ -73,6 +74,7 @@ const EHeader: React.FC = () => {
         sendQueueCompileRequest(req).then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
                 showPreviewTab("logview");
+                clearCompLogText("Compiling......");
             }
         });
     }

@@ -157,7 +157,7 @@ export function updateLogText(logContent: string) {
 }
 
 export function clearCompLogText(logContent: string) {
-  const actionTypeString: string = ProjectActionType[ProjectActionType.APPEND_LOG];
+  const actionTypeString: string = ProjectActionType[ProjectActionType.CLEAR_COMP_LOG];
   return XHRClient.dispathAction(logContent, actionTypeString, store);
 }
 
