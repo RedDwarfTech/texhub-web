@@ -94,10 +94,14 @@ const Previewer: React.FC = () => {
         }
     }
 
+    const createMarkup = () => {
+        return { __html: curLogText };
+    }
+
     const renderLogView = () => {
         return (
             <div className={styles.logContainer}>
-                <div className={styles.logContent} id="logtext">{curLogText}</div>
+                <div className={styles.logContent} id="logtext" dangerouslySetInnerHTML={createMarkup()}></div>
             </div>
         );
     }
