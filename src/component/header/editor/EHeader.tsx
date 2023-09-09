@@ -85,8 +85,12 @@ const EHeader: React.FC = () => {
         <div className={styles.container}>
             <div></div>
             <div className={styles.actions}>
-                <button type="button" className="btn btn-primary" onClick={() => { navigate('/doc/tab') }}>个人中心</button>
-                <button type="button" className="btn btn-primary" onClick={() => { handleQueueCompile(mainFile) }}>编译</button>
+                <button type="button" className="btn btn-primary btn-sm" onClick={() => { navigate('/doc/tab') }}>
+                    <i className="fa-solid fa-user"></i> 个人中心
+                </button>
+                <button type="button" className="btn btn-primary btn-sm" onClick={() => { handleQueueCompile(mainFile) }}>
+                    <i className="fa-solid fa-play"></i> 编译
+                </button>
             </div>
         </div>
     );
