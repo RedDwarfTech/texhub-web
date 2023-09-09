@@ -58,10 +58,14 @@ export function compileProject(proj: CompileQueueReq) {
 }
 
 export function compileProjectLog(projLog: CompileProjLog) {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(projLog)) {
+    params.append(key, value);
+  }
   const config: AxiosRequestConfig = {
     method: 'get',
     url: '/tex/project/compile/log',
-    params: JSON.stringify(projLog)
+    params: params,
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.GET_COMPILE_LOG];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
