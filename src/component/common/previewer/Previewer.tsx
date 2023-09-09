@@ -95,7 +95,9 @@ const Previewer: React.FC = () => {
     }
 
     const createMarkup = () => {
-        return { __html: curLogText?.replace('\n','<br/>') };
+        let formatted = curLogText?.replace(/\n/g,'<br/>');
+        debugger
+        return { __html: formatted};
     }
 
     const renderLogView = () => {
