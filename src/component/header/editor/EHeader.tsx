@@ -74,7 +74,7 @@ const EHeader: React.FC = () => {
         sendQueueCompileRequest(req).then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
                 showPreviewTab("logview");
-                clearCompLogText("Compiling......");
+                clearCompLogText("====CLEAR====");
             }
         });
     }

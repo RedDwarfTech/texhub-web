@@ -25,7 +25,11 @@ const Previewer: React.FC = () => {
     }, [pdfUrl]);
 
     React.useEffect(() => {
-        setCurLogText(logText);
+        if(logText && logText === "====CLEAR===="){
+            setCurLogText("");
+        }else{
+            setCurLogText(logText);
+        }
     }, [logText]);
 
     React.useEffect(() => {
@@ -36,7 +40,7 @@ const Previewer: React.FC = () => {
 
     React.useEffect(() => {
         if (streamLogText && streamLogText.length > 0) {
-            if (streamLogText === "clear") {
+            if (streamLogText === "====CLEAR====") {
                 setCurLogText("");
                 return;
             }
