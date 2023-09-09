@@ -12,7 +12,8 @@ const initState: AppState["proj"] = {
     pdfUrl: "",
     logText: "",
     endSignal: "",
-    queue: {} as CompileQueue
+    queue: {} as CompileQueue,
+    tabName: ""
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -66,6 +67,11 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 queue: action.data
+            };
+        case "SHOW_PREVIEW_TAB":
+            return {
+                ...state,
+                tabName: action.data
             };
         default:
             break;

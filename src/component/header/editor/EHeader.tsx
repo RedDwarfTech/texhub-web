@@ -7,11 +7,12 @@ import { toast } from 'react-toastify';
 import {
     doCompileLogPreCheck,
     getCompQueueStatus,
-    sendQueueCompileRequest, updateLogText
+    sendQueueCompileRequest, showPreviewTab, updateLogText
 } from "@/service/project/ProjectService";
 import { useNavigate } from "react-router-dom";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
 import { CompileProjLog } from "@/model/request/proj/CompileProjLog";
+import { ResponseHandler } from "rdjs-wheel";
 
 const EHeader: React.FC = () => {
 
@@ -58,14 +59,18 @@ const EHeader: React.FC = () => {
     }, [queue]);
 
     const handleQueueCompile = (mainFile: TexFileModel) => {
-        toast.info("编译请求已发送");
+        toast.info("编译请求已提交");
         if (!mainFile) {
             toast.error("file is null");
         }
         let req: CompileQueueReq = {
             project_id: mainFile.project_id
         };
-        sendQueueCompileRequest(req);
+        sendQueueCompileRequest(req).then((res) => {
+            if (ResponseHandler.responseSuccess(res)) {
+                showPreviewTab("logview");
+            }
+        });
     }
 
     const onSseMessage = (msg: string, eventSource: EventSource) => {

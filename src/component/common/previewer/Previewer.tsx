@@ -16,13 +16,19 @@ const Previewer: React.FC = () => {
     const [curPdfUrl, setCurPdfUrl] = useState<string>();
     const [curLogText, setCurLogText] = useState<string>('');
     const [curPreviewTab, setCurPreviewTab] = useState<string>('pdfview');
-    const { pdfUrl, logText } = useSelector((state: AppState) => state.proj);
+    const { pdfUrl, logText, tabName } = useSelector((state: AppState) => state.proj);
 
     React.useEffect(() => {
         if (pdfUrl && pdfUrl.length > 0) {
             setCurPdfUrl(pdfUrl);
         }
     }, [pdfUrl]);
+
+    React.useEffect(() => {
+        if (tabName && tabName.length > 0) {
+            setCurPreviewTab(tabName);
+        }
+    }, [tabName]);
 
     React.useEffect(() => {
         if (logText && logText.length > 0) {

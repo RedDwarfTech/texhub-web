@@ -157,3 +157,8 @@ export function clearCompLogText(logContent: string) {
   const actionTypeString: string = ProjectActionType[ProjectActionType.APPEND_LOG];
   return XHRClient.dispathAction(logContent, actionTypeString, store);
 }
+
+export function showPreviewTab(tabName: string) {
+  const actionTypeString: string = ProjectActionType[ProjectActionType.SHOW_PREVIEW_TAB];
+  return XHRClient.dispathAction(tabName, actionTypeString, store);
+}

@@ -45,6 +45,7 @@ const App: React.FC = () => {
 
   React.useEffect(() => {
     if (endSignal && endSignal.length > 0 && endSignal === "TEX_COMP_END") {
+      debugger
       getLatestCompile(pid.toString());
     }
 }, [endSignal]);

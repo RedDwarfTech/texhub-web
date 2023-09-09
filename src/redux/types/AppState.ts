@@ -15,7 +15,8 @@ export interface AppState {
         pdfUrl: string,
         logText: string,
         endSignal: string,
-        queue: CompileQueue
+        queue: CompileQueue,
+        tabName: string,
     },
     tpl: {
         tplList: TemplateModel[],
