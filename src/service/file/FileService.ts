@@ -49,7 +49,7 @@ export function updateFileInit(fileId: string) {
 export function addFile(params: any) {
     const config: AxiosRequestConfig = {
         method: 'post',
-        url: '/tex/file/add?parent=' + parent,
+        url: '/tex/file/add',
         data: JSON.stringify(params)
     };
     const actionTypeString: string = FileActionType[FileActionType.ADD_FILE];

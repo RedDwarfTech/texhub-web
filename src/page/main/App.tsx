@@ -13,7 +13,7 @@ import EHeader from '@/component/header/editor/EHeader';
 import { readConfig } from '@/config/app/config-reader';
 import queryString from 'query-string';
 import Previewer from '@/component/common/previewer/Previewer';
-import { compileProject, getLatestCompile, getTempAuthCode, updatePdfUrl } from '@/service/project/ProjectService';
+import { compileProject, getLatestCompile, getTempAuthCode, sendQueueCompileRequest, updatePdfUrl } from '@/service/project/ProjectService';
 import ProjectTree from '@/component/common/prjtree/ProjectTree';
 import { TexFileModel } from '@/model/file/TexFileModel';
 
@@ -45,7 +45,6 @@ const App: React.FC = () => {
 
   React.useEffect(() => {
     if (endSignal && endSignal.length > 0 && endSignal === "TEX_COMP_END") {
-      debugger
       getLatestCompile(pid.toString());
     }
 }, [endSignal]);
@@ -64,7 +63,7 @@ const App: React.FC = () => {
         let pdfUrl = readConfig("compileBaseUrl") + "/" + latestComp.project_id + "/" + latestComp.path + "/main.pdf";
         updatePdfUrl(pdfUrl);
       } else {
-        compile(pid.toString(), "main.tex");
+        compile(pid.toString());
       }
     }
   }, [latestComp]);
@@ -81,16 +80,13 @@ const App: React.FC = () => {
     }
   }, [compileResult]);
 
-  const compile = (prj_id: string, file_name: string) => {
+  const compile = (prj_id: string) => {
     getTempAuthCode().then((resp) => {
       if (ResponseHandler.responseSuccess(resp)) {
         let params = {
-          project_id: prj_id,
-          req_time: new Date().getTime(),
-          file_name: file_name,
-          tac: resp.result
+          project_id: prj_id
         };
-        compileProject(params).then((resp) => {
+        sendQueueCompileRequest(params).then((resp) => {
           if (ResponseHandler.responseSuccess(resp)) {
 
           } else {
