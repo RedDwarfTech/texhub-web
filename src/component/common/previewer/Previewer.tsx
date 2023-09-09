@@ -95,7 +95,7 @@ const Previewer: React.FC = () => {
     }
 
     const createMarkup = () => {
-        return { __html: curLogText };
+        return { __html: curLogText?.replace('\n','<br/>') };
     }
 
     const renderLogView = () => {
