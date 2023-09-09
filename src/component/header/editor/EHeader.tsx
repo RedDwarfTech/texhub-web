@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { toast } from 'react-toastify';
 import {
+    compileProjectLog,
     doCompileLogPreCheck,
     getCompQueueStatus,
     sendQueueCompileRequest, showPreviewTab, updateLogText
@@ -39,16 +40,19 @@ const EHeader: React.FC = () => {
             if (queue.comp_status !== 0 && interval) {
                 clearInterval(interval);
             }
+            if (!mainFile) {
+                return;
+            }
+            let req: CompileProjLog = {
+                project_id: mainFile.project_id,
+                file_name: "main.tex",
+                version_no: queue.version_no
+            };
             if (queue.comp_status === 1) {
-                if (!mainFile) {
-                    return;
-                }
-                let req: CompileProjLog = {
-                    project_id: mainFile.project_id,
-                    file_name: "main.tex",
-                    version_no: queue.version_no
-                };
                 doCompileLogPreCheck(req, onSseMessage);
+            }
+            if (queue.comp_status === 2) {
+                compileProjectLog(req);
             }
             return () => {
                 if (interval) {

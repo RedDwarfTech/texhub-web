@@ -17,6 +17,7 @@ export interface AppState {
         endSignal: string,
         queue: CompileQueue,
         tabName: string,
+        streamLogText: string,
     },
     tpl: {
         tplList: TemplateModel[],

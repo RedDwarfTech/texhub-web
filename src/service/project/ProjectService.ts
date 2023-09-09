@@ -57,13 +57,13 @@ export function compileProject(proj: CompileQueueReq) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function compileProjectStream(proj: any) {
+export function compileProjectLog(projLog: CompileProjLog) {
   const config: AxiosRequestConfig = {
-    method: 'put',
-    url: '/tex/project/log/stream',
-    data: JSON.stringify(proj)
+    method: 'get',
+    url: '/tex/project/compile/log',
+    data: JSON.stringify(projLog)
   };
-  const actionTypeString: string = ProjectActionType[ProjectActionType.COMPILE_PROJ];
+  const actionTypeString: string = ProjectActionType[ProjectActionType.GET_COMPILE_LOG];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
@@ -125,7 +125,7 @@ export function doCompileLogPreCheck(params: CompileProjLog, onSseMessage: (msg:
 
 export function doCompile(params: CompileProjLog, onSseMessage: (msg: string, eventSource: EventSource) => void) {
   var queryString = Object.keys(params).map(key => key + '=' + params[key as keyof CompileProjLog]).join('&');
-  let eventNative = new EventSource('/tex/project/compile/qlog?' + queryString);
+  let eventNative = new EventSource('/tex/project/compile/log/stream?' + queryString);
   eventNative.onopen = () => {
   }
   eventNative.onerror = (error: any) => {

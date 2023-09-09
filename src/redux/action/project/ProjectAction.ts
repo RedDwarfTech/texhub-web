@@ -16,7 +16,8 @@ export enum ProjectActionType {
     TEX_COMP_END,
     ADD_QUEUE_COMPILE,
     GET_COMP_QUEUE_STATUS,
-    SHOW_PREVIEW_TAB
+    SHOW_PREVIEW_TAB,
+    GET_COMPILE_LOG
 }
 
 export interface saveDocAction {
@@ -76,5 +77,10 @@ export interface getCompQueueStatusAction {
 
 export interface showPreviewTabAction {
     type: ProjectActionType.SHOW_PREVIEW_TAB;
+    data: string;
+}
+
+export interface getCompileLogAction {
+    type: ProjectActionType.GET_COMPILE_LOG;
     data: string;
 }

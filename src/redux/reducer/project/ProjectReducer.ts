@@ -11,6 +11,7 @@ const initState: AppState["proj"] = {
     latestComp: {} as LatestCompile,
     pdfUrl: "",
     logText: "",
+    streamLogText: "",
     endSignal: "",
     queue: {} as CompileQueue,
     tabName: ""
@@ -46,12 +47,13 @@ const ProjectReducer = (state = initState, action: any) => {
         case "APPEND_LOG":
             return {
                 ...state,
-                logText: action.data
+                streamLogText: action.data
             };
         case "CLEAR_COMP_LOG":
             return {
                 ...state,
-                logText: action.data
+                logText: action.data,
+                streamLogText: action.data
             };
         case "TEX_COMP_END":
             return {
@@ -72,6 +74,11 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 tabName: action.data
+            };
+        case "GET_COMPILE_LOG":
+            return {
+                ...state,
+                logText: action.data
             };
         default:
             break;
