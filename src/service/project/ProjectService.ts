@@ -145,7 +145,6 @@ export function doCompile(params: CompileProjLog, onSseMessage: (msg: string, ev
   });
 
   eventNative.addEventListener("TEX_COMP_END", function () {
-    debugger
     const actionTypeString: string = ProjectActionType[ProjectActionType.TEX_COMP_END];
     eventNative.close();
     return XHRClient.dispathAction("TEX_COMP_END", actionTypeString, store);
