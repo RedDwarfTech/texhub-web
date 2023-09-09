@@ -13,7 +13,7 @@ import EHeader from '@/component/header/editor/EHeader';
 import { readConfig } from '@/config/app/config-reader';
 import queryString from 'query-string';
 import Previewer from '@/component/common/previewer/Previewer';
-import { compileProject, getLatestCompile, getTempAuthCode, sendQueueCompileRequest, updatePdfUrl } from '@/service/project/ProjectService';
+import { compileProject, getLatestCompile, getTempAuthCode, sendQueueCompileRequest, showPreviewTab, updatePdfUrl } from '@/service/project/ProjectService';
 import ProjectTree from '@/component/common/prjtree/ProjectTree';
 import { TexFileModel } from '@/model/file/TexFileModel';
 
@@ -45,9 +45,13 @@ const App: React.FC = () => {
 
   React.useEffect(() => {
     if (endSignal && endSignal.length > 0 && endSignal === "TEX_COMP_END") {
-      getLatestCompile(pid.toString());
+      getLatestCompile(pid.toString()).then((res) => {
+        if (ResponseHandler.responseSuccess(res)) {
+          showPreviewTab("pdfview");
+        }
+      });
     }
-}, [endSignal]);
+  }, [endSignal]);
 
   React.useEffect(() => {
     setActiveFileModel(activeFile);
