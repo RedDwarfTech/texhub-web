@@ -92,7 +92,7 @@ const Previewer: React.FC = () => {
 
     const renderLogView = () => {
         return (
-            <div>
+            <div className={styles.logContainer}>
                 <div className={styles.logContent} id="logtext">{curLogText}</div>
             </div>
         );

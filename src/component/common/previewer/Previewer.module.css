@@ -76,6 +76,10 @@
     width: 100%;
 }
 
+.logContainer {
+    overflow: scroll;
+}
+
 .logContent {
     padding-left: 10px;
     padding-top: 20px;
