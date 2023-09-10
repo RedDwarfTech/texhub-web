@@ -1,18 +1,25 @@
 .tplBody{
     width: 100%;
     background-color: rgb(248, 248, 248);
+    height: 93.7vh;
+}
+
+.tplContainer {
+    overflow: hidden;
 }
 
 .container {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 50px;
     flex-wrap: wrap;
     margin: 0 auto;
-    width: 90%;
+    width: 100%;
     padding-top: 50px;
+    overflow-y: scroll;
+    height: 84.7vh;
 }
 
 .tplCard {
@@ -24,7 +31,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    height: 160px;
+    height: 9vh;
     width: 50%;
     margin: 0 auto;
 }

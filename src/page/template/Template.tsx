@@ -54,7 +54,7 @@ const Template: React.FC = () => {
     }
 
     return (
-        <div>
+        <div className={styles.tplContainer}>
             <TexHeader></TexHeader>
             <div className={styles.tplBody}>
                 <div className={styles.tplFilter}>
