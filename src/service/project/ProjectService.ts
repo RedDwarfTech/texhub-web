@@ -2,16 +2,22 @@ import { CompileProjLog } from "@/model/request/proj/CompileProjLog";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
 import { CreateProjReq } from "@/model/request/proj/CreateProjReq";
 import { JoinProjReq } from "@/model/request/proj/JoinProjReq";
+import { QueryProjReq } from "@/model/request/proj/QueryProjReq";
 import { ProjectActionType } from "@/redux/action/project/ProjectAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
 import { XHRClient } from "rd-component";
 import { AuthHandler, RequestHandler } from 'rdjs-wheel';
 
-export function getProjectList(tag: string) {
+export function getProjectList(req: QueryProjReq) {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(req)) {
+    params.append(key, value);
+  }
   const config: AxiosRequestConfig = {
     method: 'get',
-    url: '/tex/project/list?tag=' + tag,
+    url: '/tex/project/list',
+    params: params
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.GET_PROJ_LIST];
   return XHRClient.requestWithActionType(config, actionTypeString, store);

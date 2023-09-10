@@ -13,7 +13,7 @@ import EHeader from '@/component/header/editor/EHeader';
 import { readConfig } from '@/config/app/config-reader';
 import queryString from 'query-string';
 import Previewer from '@/component/common/previewer/Previewer';
-import { compileProject, getLatestCompile, getTempAuthCode, sendQueueCompileRequest, showPreviewTab, updatePdfUrl } from '@/service/project/ProjectService';
+import { getLatestCompile, getTempAuthCode, sendQueueCompileRequest, showPreviewTab, updatePdfUrl } from '@/service/project/ProjectService';
 import ProjectTree from '@/component/common/prjtree/ProjectTree';
 import { TexFileModel } from '@/model/file/TexFileModel';
 

@@ -11,12 +11,14 @@ import { toast, ToastContainer } from 'react-toastify';
 import dayjs from 'dayjs';
 import { UserService } from "rd-component";
 import TeXShare from "./share/TeXShare";
+import { QueryProjReq } from "@/model/request/proj/QueryProjReq";
 
 const ProjectTab: React.FC = () => {
 
     const [userDocList, setUserDocList] = useState<TexProjectModel[]>([]);
     const [currProject, setCurrProject] = useState<TexProjectModel>();
     const [projName, setProjName] = useState<string>();
+    const [activeTab, setActiveTab] = useState<number>(1);
     const { projList } = useSelector((state: AppState) => state.proj);
     const createDocCancelRef = useRef<HTMLButtonElement>(null);
     const delProjCancelRef = useRef<HTMLButtonElement>(null);
@@ -24,7 +26,7 @@ const ProjectTab: React.FC = () => {
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        getProjectList("");
+        getProjectList(getProjFilter());
     }, []);
 
     React.useEffect(() => {
@@ -40,7 +42,7 @@ const ProjectTab: React.FC = () => {
         };
         deleteProject(proj).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                getProjectList("all");
+                getProjectList(getProjFilter());
                 if (delProjCancelRef && delProjCancelRef.current) {
                     delProjCancelRef.current.click();
                 }
@@ -59,7 +61,7 @@ const ProjectTab: React.FC = () => {
         };
         deleteProject(proj).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                getProjectList("all");
+                getProjectList(getProjFilter());
                 if (delProjCancelRef && delProjCancelRef.current) {
                     delProjCancelRef.current.click();
                 }
@@ -69,6 +71,19 @@ const ProjectTab: React.FC = () => {
         });
     }
 
+    const getProjFilter = (): QueryProjReq => {
+        let query:QueryProjReq = {
+            
+        };
+        if (activeTab === 1) {
+            return query;
+        } else if (activeTab === 2) {
+            query.role_id = 2;
+            return query;
+        }
+        return query;
+    }
+
     const renderProj = () => {
         if (!userDocList || userDocList.length === 0) {
             return (<div></div>);
@@ -76,7 +91,7 @@ const ProjectTab: React.FC = () => {
         const tagList: JSX.Element[] = [];
         userDocList.forEach((docItem: TexProjectModel) => {
             const formattedTime = dayjs(docItem.updated_time).format('YYYY-MM-DD HH:mm:ss');
-            const projCreatedTime = dayjs(docItem.created_time).format('YYYY-MM-DD HH:mm:ss'); 
+            const projCreatedTime = dayjs(docItem.created_time).format('YYYY-MM-DD HH:mm:ss');
             tagList.push(
                 <label key={docItem.project_id} className="list-group-item">
                     <div className={styles.docHeader}>
@@ -103,7 +118,7 @@ const ProjectTab: React.FC = () => {
                             </div>
                         </div>
                     </div>
-                    <div className = {styles.projAttr}>
+                    <div className={styles.projAttr}>
                         <div><span>来自：</span>{docItem.nickname}</div>
                         <div><span>创建时间：</span>{projCreatedTime}</div>
                         <div><span>更新时间：</span>{formattedTime}</div>
@@ -119,11 +134,11 @@ const ProjectTab: React.FC = () => {
             toast.warning("登录后即可创建项目");
             return;
         }
-        if(projName == null || projName.length == 0) {
+        if (projName == null || projName.length == 0) {
             toast.warning("请填写项目名称");
             return;
         }
-        if(projName.length > 256){
+        if (projName.length > 256) {
             toast.warning("超过项目名称长度限制");
             return;
         }
@@ -132,7 +147,7 @@ const ProjectTab: React.FC = () => {
         };
         createProject(doc).then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
-                getProjectList("all");
+                getProjectList(getProjFilter());
                 if (createDocCancelRef && createDocCancelRef.current) {
                     createDocCancelRef.current.click();
                 }
@@ -152,6 +167,10 @@ const ProjectTab: React.FC = () => {
         setCurrProject(proj as TexProjectModel);
     };
 
+    const handleTabClick = (activeTab: number) => {
+        setActiveTab(activeTab);
+    }
+
     return (
         <div>
             <TexHeader></TexHeader>
@@ -159,10 +178,15 @@ const ProjectTab: React.FC = () => {
                 <div className={styles.projList}>
                     <ul className="nav nav-tabs">
                         <li className="nav-item">
-                            <a className="nav-link active" aria-current="page" href="#">全部</a>
+                            <a className={activeTab === 1 ? "nav-link active" : "nav-link"}
+                                aria-current="page"
+                                onClick={() => { handleTabClick(1) }}
+                                href="#">全部</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#">分享给我</a>
+                            <a className={activeTab === 2 ? "nav-link active" : "nav-link"}
+                                href="#"
+                                onClick={() => { handleTabClick(2) }}>分享给我</a>
                         </li>
                     </ul>
                     <div className={styles.docContainer}>
