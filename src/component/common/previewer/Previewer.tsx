@@ -45,7 +45,8 @@ const Previewer: React.FC = () => {
                 return;
             }
             setCurLogText((prevState) => {
-                return (prevState + streamLogText)
+                let newLogText = prevState + "<br/>" + streamLogText;
+                return (newLogText);
             });
         }
     }, [streamLogText]);
