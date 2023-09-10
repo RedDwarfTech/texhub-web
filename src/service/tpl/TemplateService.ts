@@ -11,7 +11,7 @@ export function getTplList(name: string,tplType?: string) {
         params.append("name",name);
     }   
     if(tplType){
-        params.append("tplType",tplType);
+        params.append("tpl_type",tplType);
     }
     const config: AxiosRequestConfig = {
         method: 'get',
