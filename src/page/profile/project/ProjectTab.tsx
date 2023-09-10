@@ -19,6 +19,7 @@ const ProjectTab: React.FC = () => {
     const [currProject, setCurrProject] = useState<TexProjectModel>();
     const [projName, setProjName] = useState<string>();
     const [activeTab, setActiveTab] = useState<number>(1);
+    const [projReq, setProjReq] = useState<QueryProjReq>();
     const { projList } = useSelector((state: AppState) => state.proj);
     const createDocCancelRef = useRef<HTMLButtonElement>(null);
     const delProjCancelRef = useRef<HTMLButtonElement>(null);
@@ -167,8 +168,19 @@ const ProjectTab: React.FC = () => {
         setCurrProject(proj as TexProjectModel);
     };
 
-    const handleTabClick = (activeTab: number) => {
-        setActiveTab(activeTab);
+    const handleTabClick = (clickTab: number) => {
+        setActiveTab(clickTab);
+        if(clickTab === 1){
+            let projReq = {
+            };
+            getProjectList(projReq);
+        }
+        if(clickTab === 2){
+            let projReq = {
+                role_id: 2
+            };
+            getProjectList(projReq);
+        }
     }
 
     return (
