@@ -44,10 +44,10 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     }
 
     const handleFolderAdd = () => {
-        let modal = document.getElementById('exampleModal');
+        let modal = document.getElementById('createFolderModal');
         if (modal) {
-            var myModal = new bootstrap.Modal(modal);
-            myModal.show();
+            var addFolderModal = new bootstrap.Modal(modal);
+            addFolderModal.show();
         }
     }
 
@@ -162,7 +162,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         };
         delTreeItem(params).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-
                 getFileList(pid.toString());
             }
         });
@@ -184,12 +183,17 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
 
     const handleFolderAddConfirm = () => {
         if (!folderName || folderName.length === 0) {
+            toast.warn("请输入文件夹名称");
+            return;
+        }
+        let parentId = getParentId();
+        if(!parentId || parentId.length === 0){
             return;
         }
         let params = {
             name: folderName,
             project_id: pid,
-            parent: pid,
+            parent: parentId,
             file_type: 0
         };
         addFile(params).then((resp) => {
@@ -197,6 +201,18 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                 getFileList(pid?.toString());
             }
         });
+    }
+
+    const getParentId =(): string => {
+        if(!selectedFile){
+            toast.warn("请选择目录位置");
+            return "";
+        }
+        if(selectedFile.file_type === 0){
+            return selectedFile.file_id;
+        }else{
+            return selectedFile.parent;
+        }
     }
 
     const handleInputChange = (event: any) => {
@@ -249,11 +265,11 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                     </div>
                 </div>
             </div>
-            <div className="modal fade" id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className="modal fade" id="createFolderModal" aria-labelledby="createFolderModalLabel" aria-hidden="true">
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">创建文件夹</h5>
+                            <h5 className="modal-title" id="createFolderModalLabel">创建文件夹</h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
