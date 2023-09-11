@@ -123,8 +123,9 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         }
         const tagList: JSX.Element[] = [];
         fileTree.forEach((item: TexFileModel) => {
+            let marginText = (level === 0) ? "8px" : "23px";
             tagList.push(
-                <div id={item.file_id} key={item.file_id} style={{ marginLeft: "25px" }} >
+                <div id={item.file_id} key={item.file_id} style={{ marginLeft: marginText }} >
                     <div key={item.file_id}
                         onClick={() => handleTreeItemClick(item)}
                         className={(selectedFile && item.file_id == selectedFile.file_id) ? styles.fileItemSelected : styles.fileItem} >
@@ -175,7 +176,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         setSelectedFile(fileItem);
         if (selectedFile && fileItem.file_id === selectedFile.file_id) return;
         chooseFile(fileItem);
-        if(fileItem.file_type !== 0){
+        if (fileItem.file_type !== 0) {
             switchFile(fileItem);
         }
     };
@@ -186,7 +187,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             return;
         }
         let parentId = getParentId();
-        if(!parentId || parentId.length === 0){
+        if (!parentId || parentId.length === 0) {
             return;
         }
         let params = {
@@ -202,14 +203,14 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         });
     }
 
-    const getParentId =(): string => {
-        if(!selectedFile){
+    const getParentId = (): string => {
+        if (!selectedFile) {
             toast.warn("请选择目录位置");
             return "";
         }
-        if(selectedFile.file_type === 0){
+        if (selectedFile.file_type === 0) {
             return selectedFile.file_id;
-        }else{
+        } else {
             return selectedFile.parent;
         }
     }
