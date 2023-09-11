@@ -45,7 +45,9 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, o
         </div>
     );
 }, (prevProps, nextProps) => {
-    return prevProps.curPdfUrl === nextProps.curPdfUrl;
+    let shouldRerender = (prevProps.curPdfUrl === nextProps.curPdfUrl)
+        && (prevProps.pdfScale === nextProps.pdfScale)
+    return shouldRerender;
 });
 
 export default MemoizedPDFPreview;
