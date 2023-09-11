@@ -44,7 +44,7 @@ const App: React.FC = () => {
   }, []);
 
   React.useEffect(() => {
-    if (endSignal && endSignal.length > 0 && endSignal === "TEX_COMP_END") {
+    if (endSignal && endSignal.length > 0) {
       getLatestCompile(pid.toString()).then((res) => {
         if (ResponseHandler.responseSuccess(res)) {
           showPreviewTab("pdfview");

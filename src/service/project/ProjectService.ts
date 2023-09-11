@@ -7,7 +7,7 @@ import { ProjectActionType } from "@/redux/action/project/ProjectAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
 import { XHRClient } from "rd-component";
-import { AuthHandler, RequestHandler } from 'rdjs-wheel';
+import { AuthHandler, BaseMethods, RequestHandler } from 'rdjs-wheel';
 
 export function getProjectList(req: QueryProjReq) {
   const params = new URLSearchParams();
@@ -150,10 +150,11 @@ export function doCompile(params: CompileProjLog, onSseMessage: (msg: string, ev
     onSseMessage(event.data, eventNative);
   });
 
-  eventNative.addEventListener("TEX_COMP_END", function () {
+  eventNative.addEventListener("TEX_COMP_END", function (event: any) {
     const actionTypeString: string = ProjectActionType[ProjectActionType.TEX_COMP_END];
     eventNative.close();
-    return XHRClient.dispathAction("TEX_COMP_END", actionTypeString, store);
+    let randomStr = BaseMethods.genRandomStr(6);
+    return XHRClient.dispathAction(randomStr, actionTypeString, store);
   });
 }
 

@@ -123,7 +123,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         }
         const tagList: JSX.Element[] = [];
         fileTree.forEach((item: TexFileModel) => {
-            let marginText = (level === 0) ? "8px" : "23px";
+            let marginText = (level === 0) ? "6px" : "20px";
             tagList.push(
                 <div id={item.file_id} key={item.file_id} style={{ marginLeft: marginText }} >
                     <div key={item.file_id}

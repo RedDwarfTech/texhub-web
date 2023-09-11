@@ -1,4 +1,4 @@
-export type projectAction = saveDocAction | getDocListAction | compileProjAction | getLatestCompileAction | renderLogAction | clearCompLogAction|addQueueCompileAction|getCompQueueStatusAction;
+export type projectAction = saveDocAction | getDocListAction | compileProjAction | getLatestCompileAction | renderLogAction | clearCompLogAction | addQueueCompileAction | getCompQueueStatusAction | texCompEndAction;
 
 export enum ProjectActionType {
     CREATE_DOC,
@@ -82,5 +82,10 @@ export interface showPreviewTabAction {
 
 export interface getCompileLogAction {
     type: ProjectActionType.GET_COMPILE_LOG;
+    data: string;
+}
+
+export interface texCompEndAction {
+    type: ProjectActionType.TEX_COMP_END;
     data: string;
 }
