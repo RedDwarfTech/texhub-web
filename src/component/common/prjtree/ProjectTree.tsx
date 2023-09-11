@@ -123,9 +123,8 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         }
         const tagList: JSX.Element[] = [];
         fileTree.forEach((item: TexFileModel) => {
-            let marginText = (25 * level).toString() + 'px';
             tagList.push(
-                <div id={item.file_id} key={item.file_id} style={{ marginLeft: marginText }} >
+                <div id={item.file_id} key={item.file_id} style={{ marginLeft: "25px" }} >
                     <div key={item.file_id}
                         onClick={() => handleTreeItemClick(item)}
                         className={(selectedFile && item.file_id == selectedFile.file_id) ? styles.fileItemSelected : styles.fileItem} >

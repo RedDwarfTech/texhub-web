@@ -25,9 +25,9 @@ const Previewer: React.FC = () => {
     }, [pdfUrl]);
 
     React.useEffect(() => {
-        if(logText && logText === "====CLEAR===="){
+        if (logText && logText === "====CLEAR====") {
             setCurLogText("");
-        }else{
+        } else {
             setCurLogText(logText);
         }
     }, [logText]);
@@ -45,7 +45,7 @@ const Previewer: React.FC = () => {
                 return;
             }
             setCurLogText((prevState) => {
-                let newLogText = prevState + "<br/>" + streamLogText;
+                let newLogText = (prevState && prevState.length > 0) ? prevState + "<br/>" + streamLogText : prevState + streamLogText;
                 return (newLogText);
             });
         }
@@ -100,8 +100,8 @@ const Previewer: React.FC = () => {
     }
 
     const createMarkup = () => {
-        let formatted = curLogText?.replace(/\n/g,'<br/>');
-        return { __html: formatted};
+        let formatted = curLogText?.replace(/\n/g, '<br/>');
+        return { __html: formatted };
     }
 
     const renderLogView = () => {
