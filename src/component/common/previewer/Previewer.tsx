@@ -8,15 +8,17 @@ import 'react-pdf/dist/Page/AnnotationLayer.css';
 import { AppState } from '@/redux/types/AppState';
 import { useSelector } from 'react-redux';
 import MemoizedPDFPreview from './doc/MemoizedPDFPreview';
+import { CompileStatus } from '@/model/prj/compile/CompileStatus';
 
 const Previewer: React.FC = () => {
 
     const [pdfScale, setPdfScale] = useState<number>(1);
     const [numPages, setNumPages] = useState<number>();
     const [curPdfUrl, setCurPdfUrl] = useState<string>();
+    const [compStatus, setCompStatus] = useState<CompileStatus>(CompileStatus.COMPLETE);
     const [curLogText, setCurLogText] = useState<string>('');
     const [curPreviewTab, setCurPreviewTab] = useState<string>('pdfview');
-    const { pdfUrl, streamLogText, logText, tabName } = useSelector((state: AppState) => state.proj);
+    const { pdfUrl, streamLogText, logText, tabName, compileStatus } = useSelector((state: AppState) => state.proj);
 
     React.useEffect(() => {
         if (pdfUrl && pdfUrl.length > 0) {
@@ -25,9 +27,14 @@ const Previewer: React.FC = () => {
     }, [pdfUrl]);
 
     React.useEffect(() => {
+        setCompStatus(compileStatus);
+    }, [compileStatus]);
+
+    React.useEffect(() => {
         if (logText && logText === "====CLEAR====") {
             setCurLogText("");
         } else {
+            setCompStatus(CompileStatus.COMPILING);
             setCurLogText(logText);
         }
     }, [logText]);
@@ -105,6 +112,17 @@ const Previewer: React.FC = () => {
     }
 
     const renderLogView = () => {
+        if (compStatus === CompileStatus.WAITING) {
+            return (
+                <div className={styles.logLoadingContainer}>
+                    <div className="d-flex justify-content-center">
+                        <div className="spinner-border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
         return (
             <div className={styles.logContainer}>
                 <div className={styles.logContent} id="logtext" dangerouslySetInnerHTML={createMarkup()}></div>
@@ -123,22 +141,22 @@ const Previewer: React.FC = () => {
     }
 
     const renderPreviewHeaderAction = () => {
-        if(curPreviewTab === "pdfview"){
+        if (curPreviewTab === "pdfview") {
             return (
-            <div className={styles.rightAction}>
-                <button className={styles.previewIconButton} onClick={() => { handleDownloadPdf(curPdfUrl) }}>
-                    <i className="fa-solid fa-download"></i>
-                </button>
-                <button className={styles.previewIconButton} id="zoominbutton" onClick={() => { handleZoomIn() }}>
-                    <i className="fa fa-search-plus"></i>
-                </button>
-                <button className={styles.previewIconButton} id="zoomoutbutton" onClick={() => { handleZoomOut() }}>
-                    <i className="fa fa-search-minus"></i>
-                </button>
-            </div>
+                <div className={styles.rightAction}>
+                    <button className={styles.previewIconButton} onClick={() => { handleDownloadPdf(curPdfUrl) }}>
+                        <i className="fa-solid fa-download"></i>
+                    </button>
+                    <button className={styles.previewIconButton} id="zoominbutton" onClick={() => { handleZoomIn() }}>
+                        <i className="fa fa-search-plus"></i>
+                    </button>
+                    <button className={styles.previewIconButton} id="zoomoutbutton" onClick={() => { handleZoomOut() }}>
+                        <i className="fa fa-search-minus"></i>
+                    </button>
+                </div>
             );
         }
-        if(curPreviewTab === "logview"){
+        if (curPreviewTab === "logview") {
             return (<div></div>);
         }
         return (<div></div>);

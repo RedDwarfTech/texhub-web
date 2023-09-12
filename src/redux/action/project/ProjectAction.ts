@@ -1,3 +1,5 @@
+import { CompileStatus } from "@/model/prj/compile/CompileStatus";
+
 export type projectAction = saveDocAction | getDocListAction | compileProjAction | getLatestCompileAction | renderLogAction | clearCompLogAction | addQueueCompileAction | getCompQueueStatusAction | texCompEndAction | getProjInfoAction|delProjInfoAction;
 
 export enum ProjectActionType {
@@ -19,7 +21,8 @@ export enum ProjectActionType {
     ADD_QUEUE_COMPILE,
     GET_COMP_QUEUE_STATUS,
     SHOW_PREVIEW_TAB,
-    GET_COMPILE_LOG
+    GET_COMPILE_LOG,
+    SET_COMPILE_STATUS
 }
 
 export interface saveDocAction {
@@ -100,4 +103,9 @@ export interface getProjInfoAction {
 export interface delProjInfoAction {
     type: ProjectActionType.DELETE_PROJ_INFO;
     data: string;
+}
+
+export interface setCompileStatusAction {
+    type: ProjectActionType.SET_COMPILE_STATUS;
+    data: CompileStatus;
 }

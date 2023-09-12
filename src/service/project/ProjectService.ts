@@ -1,3 +1,4 @@
+import { CompileStatus } from "@/model/prj/compile/CompileStatus";
 import { CompileProjLog } from "@/model/request/proj/CompileProjLog";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
 import { CreateProjReq } from "@/model/request/proj/CreateProjReq";
@@ -168,6 +169,7 @@ export function doCompile(params: CompileProjLog, onSseMessage: (msg: string, ev
   eventNative.addEventListener("TEX_COMP_END", function (event: any) {
     const actionTypeString: string = ProjectActionType[ProjectActionType.TEX_COMP_END];
     eventNative.close();
+    setCompileStatus(CompileStatus.COMPLETE);
     let randomStr = BaseMethods.genRandomStr(6);
     return XHRClient.dispathAction(randomStr, actionTypeString, store);
   });
@@ -191,4 +193,9 @@ export function showPreviewTab(tabName: string) {
 export function delProjInfo() {
   const actionTypeString: string = ProjectActionType[ProjectActionType.DELETE_PROJ_INFO];
   return XHRClient.dispathAction("", actionTypeString, store);
+}
+
+export function setCompileStatus(compStatus: CompileStatus) {
+  const actionTypeString: string = ProjectActionType[ProjectActionType.SET_COMPILE_STATUS];
+  return XHRClient.dispathAction(compStatus, actionTypeString, store);
 }

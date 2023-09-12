@@ -9,12 +9,13 @@ import {
     compileProjectLog,
     doCompileLogPreCheck,
     getCompQueueStatus,
-    sendQueueCompileRequest, showPreviewTab, updateLogText
+    sendQueueCompileRequest, setCompileStatus, showPreviewTab, updateLogText
 } from "@/service/project/ProjectService";
 import { useNavigate } from "react-router-dom";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
 import { CompileProjLog } from "@/model/request/proj/CompileProjLog";
 import { ResponseHandler } from "rdjs-wheel";
+import { CompileStatus } from "@/model/prj/compile/CompileStatus";
 
 const EHeader: React.FC = () => {
 
@@ -80,6 +81,7 @@ const EHeader: React.FC = () => {
         sendQueueCompileRequest(req).then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
                 showPreviewTab("logview");
+                setCompileStatus(CompileStatus.WAITING);
                 clearCompLogText("====CLEAR====");
             }
         });

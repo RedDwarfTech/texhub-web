@@ -87,3 +87,8 @@
     word-wrap: break-word;
     font-size: 15px;
 }
+
+.logLoadingContainer {
+    height: 100%;
+    margin-top: 200px;
+}

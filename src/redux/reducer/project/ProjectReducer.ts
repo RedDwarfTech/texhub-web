@@ -4,6 +4,7 @@ import { AppState } from "@/redux/types/AppState";
 import { JoinResult } from "@/model/prj/JoinResult";
 import { CompileQueue } from "@/model/prj/CompileQueue";
 import { ProjInfo } from "@/model/prj/ProjInfo";
+import { CompileStatus } from "@/model/prj/compile/CompileStatus";
 
 const initState: AppState["proj"] = {
     projList: [],
@@ -16,7 +17,8 @@ const initState: AppState["proj"] = {
     endSignal: "",
     queue: {} as CompileQueue,
     tabName: "",
-    projInfo: {} as ProjInfo
+    projInfo: {} as ProjInfo,
+    compileStatus: {} as CompileStatus
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -91,6 +93,11 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 projInfo: action.data
+            };
+        case "SET_COMPILE_STATUS":
+            return {
+                ...state,
+                compileStatus: action.data
             };
         default:
             break;
