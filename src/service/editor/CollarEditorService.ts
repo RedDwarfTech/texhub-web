@@ -10,6 +10,7 @@ import { stex } from "@codemirror/legacy-modes/mode/stex";
 import { solarizedLight } from 'cm6-theme-solarized-light';
 import { readConfig } from "@/config/app/config-reader";
 import { UserModel } from "rdjs-wheel";
+import { toast } from "react-toastify";
 
 export const usercolors = [
     { color: '#30bced', light: '#30bced33' },
@@ -22,6 +23,8 @@ export const usercolors = [
     { color: '#1be7ff', light: '#1be7ff33' }
 ];
 export const userColor = usercolors[random.uint32() % usercolors.length];
+const wsMaxRetries = 3;
+let wsRetryCount = 0;
 const extensions = [
     EditorView.contentAttributes.of({ spellcheck: 'true' }),
     EditorView.lineWrapping,
@@ -72,6 +75,14 @@ export function initEditor(
                     ytext.insert(0, initContext);
                 }
             }
+        } else if (event.status === 'disconnected' && wsRetryCount < wsMaxRetries) {
+            wsRetryCount++;
+            setTimeout(() => {
+                wsProvider.connect();
+            }, 2000);
+        } else {
+            toast.error("无法建立实时协作连接");
+            return;
         }
     });
     const state = EditorState.create({
