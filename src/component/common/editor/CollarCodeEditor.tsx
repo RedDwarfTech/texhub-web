@@ -6,8 +6,9 @@ import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import 'react-toastify/dist/ReactToastify.css';
 import { initEditor } from "@/service/editor/CollarEditorService";
-import { getFileCode, getMainFile, updateFileInit } from "@/service/file/FileService";
+import { updateFileInit } from "@/service/file/FileService";
 import { TexFileModel } from "@/model/file/TexFileModel";
+import { delProjInfo } from "@/service/project/ProjectService";
 
 export type EditorProps = {
   projectId: string;

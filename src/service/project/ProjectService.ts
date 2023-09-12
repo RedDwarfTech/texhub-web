@@ -187,3 +187,8 @@ export function showPreviewTab(tabName: string) {
   const actionTypeString: string = ProjectActionType[ProjectActionType.SHOW_PREVIEW_TAB];
   return XHRClient.dispathAction(tabName, actionTypeString, store);
 }
+
+export function delProjInfo() {
+  const actionTypeString: string = ProjectActionType[ProjectActionType.DELETE_PROJ_INFO];
+  return XHRClient.dispathAction("", actionTypeString, store);
+}

@@ -93,11 +93,15 @@ const EHeader: React.FC = () => {
         return <div>Loading...</div>
     }
 
+    const handleNavProfile = () => {
+        navigate('/doc/tab');
+    }
+
     return (
         <div className={styles.container}>
             <div></div>
             <div className={styles.actions}>
-                <button type="button" className="btn btn-primary btn-sm" onClick={() => { navigate('/doc/tab') }}>
+                <button type="button" className="btn btn-primary btn-sm" onClick={() => {handleNavProfile() }}>
                     <i className="fa-solid fa-user"></i> 个人中心
                 </button>
                 <button type="button" className="btn btn-primary btn-sm" onClick={() => { handleQueueCompile(mainFile) }}>

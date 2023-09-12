@@ -87,6 +87,11 @@ const ProjectReducer = (state = initState, action: any) => {
                 ...state,
                 projInfo: action.data
             };
+        case "DELETE_PROJ_INFO":
+            return {
+                ...state,
+                projInfo: action.data
+            };
         default:
             break;
     }
