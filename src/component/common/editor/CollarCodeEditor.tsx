@@ -16,37 +16,25 @@ export type EditorProps = {
 const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<any>();
   const { activeFile, mainFile, fileCode } = useSelector((state: AppState) => state.file);
+  const { projInfo } = useSelector((state: AppState) => state.proj);
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   let editorView: any = null;
 
   React.useEffect(() => {
-    getMainFile(props.projectId);
-    return () => {
-      destroy();
-    };
-  }, []);
-
-  React.useEffect(() => {
-    if (!mainFile || Object.keys(mainFile).length === 0) {
-      return;
-    }
-    setMainFileModel(mainFile);
-    if (mainFile.yjs_initial === 0 && editorView == null) {
-      getFileCode(mainFile.file_id);
-    }
-    if (mainFile.yjs_initial === 1 && editorView == null) {
-      init("", mainFile.file_id);
+    if(projInfo && Object.keys(projInfo).length > 0){
+      setMainFileModel(projInfo.main_file);
+      init("", projInfo.main_file.file_id);
     }
     return () => {
       destroy();
     };
-  }, [mainFile]);
+  }, [projInfo]);
 
   React.useEffect(() => {
     if (fileCode && fileCode.length > 0) {
       if (mainFileModel && mainFileModel.yjs_initial === 0) {
-        init(fileCode.toString(), mainFile.file_id);
+        init("", mainFile.file_id);
         updateFileInit(mainFile.file_id);
       }
     }

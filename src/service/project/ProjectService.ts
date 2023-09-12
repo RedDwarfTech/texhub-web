@@ -3,6 +3,7 @@ import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
 import { CreateProjReq } from "@/model/request/proj/CreateProjReq";
 import { JoinProjReq } from "@/model/request/proj/JoinProjReq";
 import { QueryProjReq } from "@/model/request/proj/QueryProjReq";
+import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 import { ProjectActionType } from "@/redux/action/project/ProjectAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
@@ -20,6 +21,20 @@ export function getProjectList(req: QueryProjReq) {
     params: params
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.GET_PROJ_LIST];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
+export function getProjectInfo(req: QueryProjInfo) {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(req)) {
+    params.append(key, value);
+  }
+  const config: AxiosRequestConfig = {
+    method: 'get',
+    url: '/tex/project/info',
+    params: params
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.GET_PROJ_INFO];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 

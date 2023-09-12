@@ -19,7 +19,7 @@ import { ResponseHandler } from "rdjs-wheel";
 const EHeader: React.FC = () => {
 
     const { fileTree } = useSelector((state: AppState) => state.file);
-    const { queue } = useSelector((state: AppState) => state.proj);
+    const { queue, projInfo } = useSelector((state: AppState) => state.proj);
     const [mainFile, setMainFile] = useState<TexFileModel>();
     const navigate = useNavigate();
 
@@ -29,6 +29,12 @@ const EHeader: React.FC = () => {
             setMainFile(defaultFile[0]);
         }
     }, [fileTree]);
+
+    React.useEffect(() => {
+        if (projInfo && Object.keys(projInfo).length > 0) {
+            setMainFile(projInfo.main_file);
+        }
+    }, [projInfo]);
 
     React.useEffect(() => {
         let interval: NodeJS.Timeout | null = null;

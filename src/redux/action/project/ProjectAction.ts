@@ -1,8 +1,9 @@
-export type projectAction = saveDocAction | getDocListAction | compileProjAction | getLatestCompileAction | renderLogAction | clearCompLogAction | addQueueCompileAction | getCompQueueStatusAction | texCompEndAction;
+export type projectAction = saveDocAction | getDocListAction | compileProjAction | getLatestCompileAction | renderLogAction | clearCompLogAction | addQueueCompileAction | getCompQueueStatusAction | texCompEndAction | getProjInfoAction;
 
 export enum ProjectActionType {
     CREATE_DOC,
     GET_PROJ_LIST,
+    GET_PROJ_INFO,
     DELETE_PROJ,
     CLEAR_CURRENT_EDU,
     COMPILE_PROJ,
@@ -87,5 +88,10 @@ export interface getCompileLogAction {
 
 export interface texCompEndAction {
     type: ProjectActionType.TEX_COMP_END;
+    data: string;
+}
+
+export interface getProjInfoAction {
+    type: ProjectActionType.GET_PROJ_INFO;
     data: string;
 }

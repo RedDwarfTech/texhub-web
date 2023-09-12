@@ -3,6 +3,7 @@ import { LatestCompile } from "@/model/prj/LatestCompile";
 import { AppState } from "@/redux/types/AppState";
 import { JoinResult } from "@/model/prj/JoinResult";
 import { CompileQueue } from "@/model/prj/CompileQueue";
+import { ProjInfo } from "@/model/prj/ProjInfo";
 
 const initState: AppState["proj"] = {
     projList: [],
@@ -14,7 +15,8 @@ const initState: AppState["proj"] = {
     streamLogText: "",
     endSignal: "",
     queue: {} as CompileQueue,
-    tabName: ""
+    tabName: "",
+    projInfo: {} as ProjInfo
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -79,6 +81,11 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 logText: action.data
+            };
+        case "GET_PROJ_INFO":
+            return {
+                ...state,
+                projInfo: action.data
             };
         default:
             break;

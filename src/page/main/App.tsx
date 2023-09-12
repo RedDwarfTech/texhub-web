@@ -5,7 +5,6 @@ const CollarCodeEditor = React.lazy(() => import('@/component/common/editor/Coll
 import { useLocation } from 'react-router-dom';
 import { AppState } from '@/redux/types/AppState';
 import { useSelector } from 'react-redux';
-import { getFileList } from '@/service/file/FileService';
 import { ResponseHandler } from 'rdjs-wheel';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,9 +12,10 @@ import EHeader from '@/component/header/editor/EHeader';
 import { readConfig } from '@/config/app/config-reader';
 import queryString from 'query-string';
 import Previewer from '@/component/common/previewer/Previewer';
-import { getLatestCompile, getTempAuthCode, sendQueueCompileRequest, showPreviewTab, updatePdfUrl } from '@/service/project/ProjectService';
+import { getLatestCompile, getProjectInfo, getTempAuthCode, sendQueueCompileRequest, showPreviewTab, updatePdfUrl } from '@/service/project/ProjectService';
 import ProjectTree from '@/component/common/prjtree/ProjectTree';
 import { TexFileModel } from '@/model/file/TexFileModel';
+import { QueryProjInfo } from '@/model/request/proj/query/QueryProjInfo';
 
 const App: React.FC = () => {
 
@@ -23,7 +23,7 @@ const App: React.FC = () => {
   const search = location.search;
   const params = queryString.parse(search);
   const pid = params.pid!;
-  const { compileResult, latestComp, endSignal } = useSelector((state: AppState) => state.proj);
+  const { compileResult, latestComp, endSignal, projInfo } = useSelector((state: AppState) => state.proj);
   const { activeFile, selectItem } = useSelector((state: AppState) => state.file);
   const [activeFileModel, setActiveFileModel] = useState<TexFileModel>();
   const [selectedItem, setSelectedItem] = useState<TexFileModel>();
@@ -33,7 +33,10 @@ const App: React.FC = () => {
     resizeLeft("hiddenContentLeft", "prjTree");
     resizeRight("hiddenContentRight", "editor");
     if (pid) {
-      getFileList(pid.toString()).then((res) => {
+      let query:QueryProjInfo = {
+        project_id: pid.toString()
+      };
+      getProjectInfo(query).then((res) => {
         if (ResponseHandler.responseSuccess(res)) {
           getLatestCompile(pid.toString());
         }
@@ -52,6 +55,12 @@ const App: React.FC = () => {
       });
     }
   }, [endSignal]);
+
+  React.useEffect(() => {
+    if (projInfo && Object.keys(projInfo).length > 0) {
+      console.log(projInfo);
+    }
+  }, [projInfo]);
 
   React.useEffect(() => {
     setActiveFileModel(activeFile);

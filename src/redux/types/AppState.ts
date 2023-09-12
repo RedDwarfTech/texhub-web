@@ -5,6 +5,7 @@ import { TexFileModel } from "@/model/file/TexFileModel";
 import { TemplateModel } from "@/model/tpl/TemplateModel";
 import { JoinResult } from "@/model/prj/JoinResult";
 import { CompileQueue } from "@/model/prj/CompileQueue";
+import { ProjInfo } from "@/model/prj/ProjInfo";
 
 export interface AppState {
     proj: {
@@ -18,6 +19,7 @@ export interface AppState {
         queue: CompileQueue,
         tabName: string,
         streamLogText: string,
+        projInfo: ProjInfo
     },
     tpl: {
         tplList: TemplateModel[],

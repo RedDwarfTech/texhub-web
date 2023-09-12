@@ -21,11 +21,19 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const [createFileName, setCreateFileName] = useState('');
     const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
     const { fileTree } = useSelector((state: AppState) => state.file);
+    const { projInfo } = useSelector((state: AppState) => state.proj);
     const [mainFile, setMainFile] = useState<TexFileModel>();
     const pid = props.projectId;
     const selected = localStorage.getItem("proj-select-file:" + pid);
     const [selectedFile, setSelectedFile] = useState<TexFileModel>(selected ? JSON.parse(selected) : null);
     const [delFile, setDelFile] = useState<TexFileModel>();
+
+    React.useEffect(() => {
+        if (projInfo && Object.keys(projInfo).length > 0) {
+            setTexFileTree(projInfo.tree);
+            setMainFile(projInfo.main_file);
+        }
+    }, [projInfo]);
 
     React.useEffect(() => {
         if (fileTree && fileTree.length > 0) {
