@@ -122,6 +122,28 @@ const Previewer: React.FC = () => {
         );
     }
 
+    const renderPreviewHeaderAction = () => {
+        if(curPreviewTab === "pdfview"){
+            return (
+            <div className={styles.rightAction}>
+                <button className={styles.previewIconButton} onClick={() => { handleDownloadPdf(curPdfUrl) }}>
+                    <i className="fa-solid fa-download"></i>
+                </button>
+                <button className={styles.previewIconButton} id="zoominbutton" onClick={() => { handleZoomIn() }}>
+                    <i className="fa fa-search-plus"></i>
+                </button>
+                <button className={styles.previewIconButton} id="zoomoutbutton" onClick={() => { handleZoomOut() }}>
+                    <i className="fa fa-search-minus"></i>
+                </button>
+            </div>
+            );
+        }
+        if(curPreviewTab === "logview"){
+            return (<div></div>);
+        }
+        return (<div></div>);
+    }
+
     return (
         <div id="preview" className={styles.preview}>
             <div className={styles.previewHader}>
@@ -133,17 +155,7 @@ const Previewer: React.FC = () => {
                         <i className="fa-regular fa-file-lines"></i> 日志
                     </button>
                 </div>
-                <div className={styles.rightAction}>
-                    <button className={styles.previewIconButton} onClick={() => { handleDownloadPdf(curPdfUrl) }}>
-                        <i className="fa-solid fa-download"></i>
-                    </button>
-                    <button className={styles.previewIconButton} id="zoominbutton" onClick={() => { handleZoomIn() }}>
-                        <i className="fa fa-search-plus"></i>
-                    </button>
-                    <button className={styles.previewIconButton} id="zoomoutbutton" onClick={() => { handleZoomOut() }}>
-                        <i className="fa fa-search-minus"></i>
-                    </button>
-                </div>
+                {renderPreviewHeaderAction()}
             </div>
             {renderPreviewTab()}
         </div>
