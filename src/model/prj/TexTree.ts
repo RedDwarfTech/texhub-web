@@ -1,5 +1,5 @@
-import { TexFile } from "./TexFile";
+import { TexFileModel } from "../file/TexFileModel";
 
 export interface TexTree { 
-    files: TexFile[]; 
+    files: TexFileModel[]; 
 }
