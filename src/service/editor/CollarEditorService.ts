@@ -81,6 +81,7 @@ export function initEditor(
                 wsProvider.connect();
             }, 2000);
         } else {
+            wsProvider.destroy();
             toast.error("无法建立实时协作连接");
             return;
         }
