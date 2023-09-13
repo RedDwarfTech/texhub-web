@@ -1,0 +1,53 @@
+.panelContainer {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    overflow: hidden;
+    width: 80%;
+}
+
+.panelMenu {
+    flex: 0 0 150px;
+    border-right: 1px solid rgb(218, 215, 215);
+}
+
+.menuItem {
+    display: flex;
+    cursor: pointer;
+    margin-top: 5px;
+    height: 58px;
+    width: 100%;
+    align-items: center;
+}
+
+.menuItem:hover {
+    background-color: rgba(0,0,0,.15);
+}
+
+.menuItem span {
+    font-size: 17px;
+    font-weight: 400;
+    margin-left: 20px;
+    align-items: center;
+}
+
+.panelContent {
+    flex: 1;
+    padding: 20px;
+    width: 100%;
+}
+
+.userInfo {
+    font-size: 17px;
+    margin-top: 10px;
+}
+
+.dangerZoneRow{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.loginRow {
+    margin-bottom: 20px;
+}

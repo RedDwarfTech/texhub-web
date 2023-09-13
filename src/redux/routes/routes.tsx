@@ -10,6 +10,7 @@ import { readConfig } from "@/config/app/config-reader";
 import Price from "@/component/common/price/Price";
 import App from "@/page/main/App";
 import TeXShareRecieved from "@/page/profile/project/share/TexShareRecieved";
+import Settings from "@/page/profile/panel/Settings";
 
 const routes = createBrowserRouter([
     {
@@ -43,6 +44,10 @@ const routes = createBrowserRouter([
     {
         path: "/user/reg",
         element: <RdReg appId={readConfig("appId")} store={store} regUrl={readConfig("regUrl")} />
+    },
+    {
+        path: "/user/panel",
+        element: <Settings/>
     },
     {
         path: "/goods",

@@ -52,7 +52,7 @@ const TexHeader: React.FC = () => {
     }
 
     const showUserProfile = () => {
-        //handleMenuClick('profile');
+        navigate("/user/panel");
         menuClose();
     }
 
