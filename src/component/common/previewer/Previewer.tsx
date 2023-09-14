@@ -34,7 +34,6 @@ const Previewer: React.FC = () => {
         if (logText && logText === "====CLEAR====") {
             setCurLogText("");
         } else {
-            setCompStatus(CompileStatus.COMPILING);
             setCurLogText(logText);
         }
     }, [logText]);
@@ -51,6 +50,7 @@ const Previewer: React.FC = () => {
                 setCurLogText("");
                 return;
             }
+            setCompStatus(CompileStatus.COMPILING);
             setCurLogText((prevState) => {
                 let newLogText = (prevState && prevState.length > 0) ? prevState + "<br/>" + streamLogText : prevState + streamLogText;
                 return (newLogText);
