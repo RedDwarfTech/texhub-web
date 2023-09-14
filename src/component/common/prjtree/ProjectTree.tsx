@@ -138,7 +138,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                         onClick={() => handleTreeItemClick(item)}
                         className={(selectedFile && item.file_id == selectedFile.file_id) ? styles.fileItemSelected : styles.fileItem} >
                         {renderIcon(item)}
-                        <div>{item.name}</div>
+                        <div className={styles.fileName}>{item.name}</div>
                         <div className={styles.actions}>
                             <div className="dropdown">
                                 <button className="btn text-white" type="button" id={"dropdownMenuButton1" + item.id} data-bs-toggle="dropdown" aria-expanded="false" onClick={() => { handleDropdownClick(item) }}>

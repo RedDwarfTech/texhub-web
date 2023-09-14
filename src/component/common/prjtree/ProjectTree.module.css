@@ -47,6 +47,11 @@
     height: 34px;
 }
 
+.fileName{
+    overflow: hidden;
+    white-space: nowrap;
+}
+
 .fileItemSelected {
     display: flex;
     flex-direction: row;
