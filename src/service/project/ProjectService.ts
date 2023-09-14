@@ -4,6 +4,7 @@ import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
 import { CreateProjReq } from "@/model/request/proj/CreateProjReq";
 import { JoinProjReq } from "@/model/request/proj/JoinProjReq";
 import { QueryProjReq } from "@/model/request/proj/QueryProjReq";
+import { CreateTplProjReq } from "@/model/request/proj/create/CreateTplProjReq";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 import { ProjectActionType } from "@/redux/action/project/ProjectAction";
 import store from "@/redux/store/store";
@@ -43,6 +44,16 @@ export function createProject(doc: CreateProjReq) {
   const config: AxiosRequestConfig = {
     method: 'post',
     url: '/tex/project/add',
+    data: JSON.stringify(doc)
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.CREATE_DOC];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
+export function createProjectFromTpl(doc: CreateTplProjReq) {
+  const config: AxiosRequestConfig = {
+    method: 'post',
+    url: '/tex/project/add-from-tpl',
     data: JSON.stringify(doc)
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.CREATE_DOC];
