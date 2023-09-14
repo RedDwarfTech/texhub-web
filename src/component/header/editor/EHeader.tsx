@@ -53,7 +53,7 @@ const EHeader: React.FC = () => {
             }
             let req: CompileProjLog = {
                 project_id: mainFile.project_id,
-                file_name: "main.tex",
+                file_name: mainFile.name,
                 version_no: queue.version_no
             };
             if (queue.comp_status === 1) {
