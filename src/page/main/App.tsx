@@ -27,6 +27,7 @@ const App: React.FC = () => {
   const { activeFile, selectItem } = useSelector((state: AppState) => state.file);
   const [activeFileModel, setActiveFileModel] = useState<TexFileModel>();
   const [selectedItem, setSelectedItem] = useState<TexFileModel>();
+  const [mainFile, setMainFile] = useState<TexFileModel>();
   const divRef = useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -59,6 +60,7 @@ const App: React.FC = () => {
   React.useEffect(() => {
     if (projInfo && Object.keys(projInfo).length > 0) {
       console.log(projInfo);
+      setMainFile(projInfo.main_file);
     }
   }, [projInfo]);
 
@@ -73,7 +75,8 @@ const App: React.FC = () => {
   React.useEffect(() => {
     if (latestComp && Object.keys(latestComp).length > 0) {
       if (latestComp.path && latestComp.path.length > 0) {
-        let pdfUrl = readConfig("compileBaseUrl") + "/" + latestComp.project_id + "/" + latestComp.path + "/main.pdf";
+        let file_without_ext = mainFile?.name.replace(/\.[^/.]+$/, '');
+        let pdfUrl = readConfig("compileBaseUrl") + "/" + latestComp.project_id + "/" + latestComp.path +"/"+ file_without_ext + ".pdf";
         updatePdfUrl(pdfUrl);
       } else {
         compile(pid.toString());
@@ -88,7 +91,8 @@ const App: React.FC = () => {
     let proj_id = compileResult.project_id;
     let vid = compileResult.out_path;
     if (proj_id && vid) {
-      const pdfUrl = readConfig("compileBaseUrl") + "/" + proj_id + "/" + vid + "/main.pdf";
+      let file_without_ext = mainFile?.name.replace(/\.[^/.]+$/, '');
+      const pdfUrl = readConfig("compileBaseUrl") + "/" + proj_id + "/" + vid + "/"+ file_without_ext +".pdf";
       updatePdfUrl(pdfUrl);
     }
   }, [compileResult]);

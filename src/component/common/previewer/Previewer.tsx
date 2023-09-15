@@ -73,7 +73,7 @@ const Previewer: React.FC = () => {
             const downloadUrl = window.URL.createObjectURL(new Blob([blob]));
             const link = document.createElement('a');
             link.href = downloadUrl;
-            link.setAttribute('download', 'main.pdf');
+            link.setAttribute('download', new Date().getTime() + '.pdf');
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
