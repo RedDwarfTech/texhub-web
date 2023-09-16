@@ -8,7 +8,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { initEditor } from "@/service/editor/CollarEditorService";
 import { updateFileInit } from "@/service/file/FileService";
 import { TexFileModel } from "@/model/file/TexFileModel";
-import { delProjInfo } from "@/service/project/ProjectService";
 
 export type EditorProps = {
   projectId: string;

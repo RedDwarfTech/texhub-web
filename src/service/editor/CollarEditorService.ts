@@ -86,6 +86,10 @@ export function initEditor(
             return;
         }
     });
+    ydoc.on('update',() => {
+        console.log("update");
+        //undoManager.
+    });
     const state = EditorState.create({
         doc: ytext.toString(),
         extensions: [

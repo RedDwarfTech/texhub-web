@@ -34,7 +34,7 @@ const App: React.FC = () => {
     resizeLeft("hiddenContentLeft", "prjTree");
     resizeRight("hiddenContentRight", "editor");
     if (pid) {
-      let query:QueryProjInfo = {
+      let query: QueryProjInfo = {
         project_id: pid.toString()
       };
       getProjectInfo(query).then((res) => {
@@ -75,8 +75,8 @@ const App: React.FC = () => {
   React.useEffect(() => {
     if (latestComp && Object.keys(latestComp).length > 0) {
       if (latestComp.path && latestComp.path.length > 0) {
-        let file_without_ext = mainFile?.name.replace(/\.[^/.]+$/, '');
-        let pdfUrl = readConfig("compileBaseUrl") + "/" + latestComp.project_id + "/" + latestComp.path +"/"+ file_without_ext + ".pdf";
+        debugger
+        let pdfUrl = joinUrl(readConfig("compileBaseUrl"), latestComp.path);
         updatePdfUrl(pdfUrl);
       } else {
         compile(pid.toString());
@@ -88,14 +88,21 @@ const App: React.FC = () => {
     if (!compileResult || Object.keys(compileResult).length === 0) {
       return;
     }
+    debugger
     let proj_id = compileResult.project_id;
     let vid = compileResult.out_path;
     if (proj_id && vid) {
       let file_without_ext = mainFile?.name.replace(/\.[^/.]+$/, '');
-      const pdfUrl = readConfig("compileBaseUrl") + "/" + proj_id + "/" + vid + "/"+ file_without_ext +".pdf";
+      const pdfUrl = readConfig("compileBaseUrl") + "/" + proj_id + "/" + vid + "/" + file_without_ext + ".pdf";
       updatePdfUrl(pdfUrl);
     }
   }, [compileResult]);
+
+
+  const joinUrl = (...paths: string[]) => {
+    const normalizedPaths = paths.map(path => path.replace(/^\/|\/$/g, ''));
+    return normalizedPaths.join('/');
+  }
 
   const compile = (prj_id: string) => {
     getTempAuthCode().then((resp) => {

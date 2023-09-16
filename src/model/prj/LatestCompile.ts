@@ -1,4 +1,4 @@
 export interface LatestCompile { 
-    path: String;
-    project_id: String;
+    path: string;
+    project_id: string;
 }
