@@ -43,7 +43,6 @@ const TemplateDetail: React.FC = () => {
         };
         createProjectFromTpl(req).then((res) => {
             if(ResponseHandler.responseSuccess(res)){
-                debugger
                 let proj_id = res.result.project_id;
                 navigate('/editor?pid=' + proj_id);
             }else{

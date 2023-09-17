@@ -62,11 +62,14 @@ export function initEditor(
     const uInfo = localStorage.getItem("userInfo");
     if (!uInfo) return;
     const user: UserModel = JSON.parse(uInfo);
-    wsProvider.awareness.setLocalStateField('user', {
+    const ydocUser = {
         name: user.nickname,
         color: userColor.color,
         colorLight: userColor.light
-    });
+    };
+    const permanentUserData = new Y.PermanentUserData(ydoc);
+    permanentUserData.setUserMapping(ydoc, ydoc.clientID, ydocUser.name)
+    wsProvider.awareness.setLocalStateField('user', ydocUser);
     wsProvider.on('status', (event: any) => {
         if (event.status === 'connected') {
             if (wsProvider.ws) {

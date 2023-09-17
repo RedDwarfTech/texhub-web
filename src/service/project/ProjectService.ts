@@ -50,6 +50,19 @@ export function createProject(doc: CreateProjReq) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
+export function uploadProjectFile(doc: File) {
+  const formData = new FormData();
+  formData.append('files', doc);
+  const config: AxiosRequestConfig = {
+    method: 'post',
+    headers: { 'Content-Type': 'multipart/form-data'},
+    url: '/tex/project/file/upload',
+    data: formData
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.UPLOAD_PROJ_FILE];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
 export function createProjectFromTpl(doc: CreateTplProjReq) {
   const config: AxiosRequestConfig = {
     method: 'post',

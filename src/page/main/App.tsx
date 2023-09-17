@@ -75,7 +75,6 @@ const App: React.FC = () => {
   React.useEffect(() => {
     if (latestComp && Object.keys(latestComp).length > 0) {
       if (latestComp.path && latestComp.path.length > 0) {
-        debugger
         let pdfUrl = joinUrl(readConfig("compileBaseUrl"), latestComp.path);
         updatePdfUrl(pdfUrl);
       } else {
@@ -88,7 +87,6 @@ const App: React.FC = () => {
     if (!compileResult || Object.keys(compileResult).length === 0) {
       return;
     }
-    debugger
     let proj_id = compileResult.project_id;
     let vid = compileResult.out_path;
     if (proj_id && vid) {

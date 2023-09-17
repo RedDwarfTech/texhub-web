@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import React from "react";
 import * as bootstrap from 'bootstrap';
 import { toast } from "react-toastify";
+import TreeUpload from "./upload/TreeUpload";
 
 export type TreeProps = {
     projectId: string;
@@ -51,11 +52,11 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         }
     }
 
-    const handleFolderAdd = () => {
-        let modal = document.getElementById('createFolderModal');
+    const handleHeaderAction = (id: string) => {
+        let modal = document.getElementById(id);
         if (modal) {
-            var addFolderModal = new bootstrap.Modal(modal);
-            addFolderModal.show();
+            var myModal = new bootstrap.Modal(modal);
+            myModal.show();
         }
     }
 
@@ -241,8 +242,11 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                 <button className={styles.menuButton} onClick={() => { handleFileAdd() }}>
                     <i className="fa-solid fa-file-circle-plus"></i>
                 </button>
-                <button className={styles.menuButton} onClick={() => { handleFolderAdd() }}>
+                <button className={styles.menuButton} onClick={() => { handleHeaderAction("createFolderModal") }}>
                     <i className="fa-solid fa-folder-plus"></i>
+                </button>
+                <button className={styles.menuButton} onClick={() => { handleHeaderAction("uploadFileModal") }}>
+                    <i className="fa-solid fa-upload"></i>
                 </button>
             </div>
             <div className={styles.treeBody}>
@@ -342,6 +346,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                     </div>
                 </div>
             </div>
+            <TreeUpload></TreeUpload>
         </div>
     );
 }
