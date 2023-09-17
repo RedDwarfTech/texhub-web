@@ -1,6 +1,8 @@
 import { TexFileModel } from "@/model/file/TexFileModel";
+import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 import { AppState } from "@/redux/types/AppState";
-import { uploadProjectFile } from "@/service/project/ProjectService";
+import { getProjectInfo, uploadProjectFile } from "@/service/project/ProjectService";
+import { ResponseHandler } from "rdjs-wheel";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -24,11 +26,18 @@ const TreeUpload: React.FC<TreeUploadProps> = (props: TreeUploadProps) => {
         if (fileInput && fileInput.current && fileInput.current.files && fileInput.current.files.length > 0) {
             const uploadFile = fileInput.current?.files[0];
             console.log(uploadFile);
-            if (!selectItem) {
-                toast("请选择文件上传位置");
+            if (!selectedFile || selectedFile.file_id == undefined) {
+                toast.warn("请选择文件上传位置");
                 return;
             }
-            uploadProjectFile(uploadFile, props.projectId, selectedFile.file_id);
+            uploadProjectFile(uploadFile, props.projectId, selectedFile.file_id).then((res) => {
+                if (ResponseHandler.responseSuccess(res)) {
+                    let query: QueryProjInfo = {
+                        project_id: props.projectId
+                    };
+                    getProjectInfo(query);
+                }
+            });
         }
     }
 
