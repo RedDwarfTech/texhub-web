@@ -50,9 +50,11 @@ export function createProject(doc: CreateProjReq) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function uploadProjectFile(doc: File) {
+export function uploadProjectFile(doc: File, project_id: string, parent: string) {
   const formData = new FormData();
-  formData.append('files', doc);
+  formData.append('file', doc);
+  formData.append('project_id', project_id);
+  formData.append('parent',parent);
   const config: AxiosRequestConfig = {
     method: 'post',
     headers: { 'Content-Type': 'multipart/form-data'},

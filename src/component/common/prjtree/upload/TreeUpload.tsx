@@ -1,15 +1,34 @@
+import { TexFileModel } from "@/model/file/TexFileModel";
+import { AppState } from "@/redux/types/AppState";
 import { uploadProjectFile } from "@/service/project/ProjectService";
-import React from "react";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
-const TreeUpload: React.FC = () => {
+export type TreeUploadProps = {
+    projectId: string;
+};
+
+const TreeUpload: React.FC<TreeUploadProps> = (props: TreeUploadProps) => {
 
     const fileInput = React.createRef<HTMLInputElement>();
+    const { selectItem } = useSelector((state: AppState) => state.file);
+    const selected = localStorage.getItem("proj-select-file:" + props.projectId);
+    const [selectedFile, setSelectedFile] = useState<TexFileModel>(selected ? JSON.parse(selected) : null);
+
+    React.useEffect(() => {
+        setSelectedFile(selectItem);
+    }, [selectItem]);
 
     const handleOk = () => {
         if (fileInput && fileInput.current && fileInput.current.files && fileInput.current.files.length > 0) {
-            const selectedFile = fileInput.current?.files[0];
-            console.log(selectedFile);
-            uploadProjectFile(selectedFile);
+            const uploadFile = fileInput.current?.files[0];
+            console.log(uploadFile);
+            if (!selectItem) {
+                toast("请选择文件上传位置");
+                return;
+            }
+            uploadProjectFile(uploadFile, props.projectId, selectedFile.file_id);
         }
     }
 

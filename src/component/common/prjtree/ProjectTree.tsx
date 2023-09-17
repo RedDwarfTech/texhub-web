@@ -346,7 +346,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                     </div>
                 </div>
             </div>
-            <TreeUpload></TreeUpload>
+            <TreeUpload projectId={pid}></TreeUpload>
         </div>
     );
 }
