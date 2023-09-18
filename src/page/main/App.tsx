@@ -12,7 +12,7 @@ import EHeader from '@/component/header/editor/EHeader';
 import { readConfig } from '@/config/app/config-reader';
 import queryString from 'query-string';
 import Previewer from '@/component/common/previewer/Previewer';
-import { getLatestCompile, getProjectInfo, getTempAuthCode, sendQueueCompileRequest, showPreviewTab, updatePdfUrl } from '@/service/project/ProjectService';
+import { getLatestCompile, getProjectInfo, getTempAuthCode, sendQueueCompileRequest, setCompileQueue, setLatestCompile, showPreviewTab, updatePdfUrl } from '@/service/project/ProjectService';
 import ProjectTree from '@/component/common/prjtree/ProjectTree';
 import { TexFileModel } from '@/model/file/TexFileModel';
 import { QueryProjInfo } from '@/model/request/proj/query/QueryProjInfo';
@@ -49,11 +49,12 @@ const App: React.FC = () => {
 
   React.useEffect(() => {
     if (endSignal && endSignal.length > 0) {
-      getLatestCompile(pid.toString()).then((res) => {
-        if (ResponseHandler.responseSuccess(res)) {
-          showPreviewTab("pdfview");
-        }
-      });
+      let result = JSON.parse(endSignal);
+      setLatestCompile(result.comp);
+      setCompileQueue(result.queue);
+      if(result && result.queue && result.queue.comp_result === 0) {
+        showPreviewTab("pdfview");
+      }
     }
   }, [endSignal]);
 

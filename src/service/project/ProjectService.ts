@@ -1,3 +1,5 @@
+import { CompileQueue } from "@/model/prj/CompileQueue";
+import { LatestCompile } from "@/model/prj/LatestCompile";
 import { CompileStatus } from "@/model/prj/compile/CompileStatus";
 import { CompileProjLog } from "@/model/request/proj/CompileProjLog";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
@@ -196,8 +198,7 @@ export function doCompile(params: CompileProjLog, onSseMessage: (msg: string, ev
     const actionTypeString: string = ProjectActionType[ProjectActionType.TEX_COMP_END];
     eventNative.close();
     setCompileStatus(CompileStatus.COMPLETE);
-    let randomStr = BaseMethods.genRandomStr(6);
-    return XHRClient.dispathAction(randomStr, actionTypeString, store);
+    return XHRClient.dispathAction(event.data, actionTypeString, store);
   });
 }
 
@@ -224,4 +225,14 @@ export function delProjInfo() {
 export function setCompileStatus(compStatus: CompileStatus) {
   const actionTypeString: string = ProjectActionType[ProjectActionType.SET_COMPILE_STATUS];
   return XHRClient.dispathAction(compStatus, actionTypeString, store);
+}
+
+export function setLatestCompile(data: LatestCompile) {
+  const actionTypeString: string = ProjectActionType[ProjectActionType.LATEST_COMPILE];
+  return XHRClient.dispathAction(data, actionTypeString, store);
+}
+
+export function setCompileQueue(data: CompileQueue) {
+  const actionTypeString: string = ProjectActionType[ProjectActionType.GET_COMP_QUEUE_STATUS];
+  return XHRClient.dispathAction(data, actionTypeString, store);
 }
