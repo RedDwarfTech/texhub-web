@@ -176,7 +176,7 @@ const Previewer: React.FC = () => {
             if (curCompileQueue.comp_result === 1) {
                 return (<i className="fa-solid fa-bug text-danger"></i>);
             }
-            if(curCompileQueue.comp_result === 0) {
+            if (curCompileQueue.comp_result === 0) {
                 return (<i className="fa-solid fa-square-check text-success"></i>);
             }
         }

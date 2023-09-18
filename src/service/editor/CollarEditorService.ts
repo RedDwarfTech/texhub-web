@@ -57,7 +57,9 @@ export function initEditor(
     const ytext = ydoc.getText(docId);
     const undoManager = new Y.UndoManager(ytext);
     const wsProvider = new WebsocketProvider(readConfig("wssUrl"), docId, ydoc, {
-        maxBackoffTime: 3
+        params: {
+            auth: "ACCESS_TOKEN"
+        }
     });
     const uInfo = localStorage.getItem("userInfo");
     if (!uInfo) return;
