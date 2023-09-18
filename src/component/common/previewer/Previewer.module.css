@@ -20,7 +20,7 @@
 .previewButton {
     border: none;
     background-color: blanchedalmond;
-    width: 60px;
+    padding: 4px;
     border-radius: 3px 3px 0 0;
 }
 
