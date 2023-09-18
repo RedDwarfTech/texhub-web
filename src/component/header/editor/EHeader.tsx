@@ -54,7 +54,8 @@ const EHeader: React.FC = () => {
             let req: CompileProjLog = {
                 project_id: mainFile.project_id,
                 file_name: mainFile.name,
-                version_no: queue.version_no
+                version_no: queue.version_no,
+                qid: queue.id
             };
             if (queue.comp_status === 1) {
                 doCompileLogPreCheck(req, onSseMessage);
