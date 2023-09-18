@@ -3,4 +3,5 @@ export interface CompileQueue {
     comp_status: number;
     id: number;
     version_no: string;
+    comp_result: number;
 }

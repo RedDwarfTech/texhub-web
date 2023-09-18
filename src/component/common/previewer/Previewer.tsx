@@ -9,6 +9,7 @@ import { AppState } from '@/redux/types/AppState';
 import { useSelector } from 'react-redux';
 import MemoizedPDFPreview from './doc/MemoizedPDFPreview';
 import { CompileStatus } from '@/model/prj/compile/CompileStatus';
+import { CompileQueue } from '@/model/prj/CompileQueue';
 
 const Previewer: React.FC = () => {
 
@@ -18,7 +19,8 @@ const Previewer: React.FC = () => {
     const [compStatus, setCompStatus] = useState<CompileStatus>(CompileStatus.COMPLETE);
     const [curLogText, setCurLogText] = useState<string>('');
     const [curPreviewTab, setCurPreviewTab] = useState<string>('pdfview');
-    const { pdfUrl, streamLogText, logText, tabName, compileStatus } = useSelector((state: AppState) => state.proj);
+    const [curCompileQueue, setCurCompileQueue] = useState<CompileQueue>();
+    const { pdfUrl, streamLogText, logText, tabName, compileStatus, queue } = useSelector((state: AppState) => state.proj);
 
     React.useEffect(() => {
         if (pdfUrl && pdfUrl.length > 0) {
@@ -27,13 +29,20 @@ const Previewer: React.FC = () => {
     }, [pdfUrl]);
 
     React.useEffect(() => {
+        setCurCompileQueue(queue);
+    }, [queue]);
+
+    React.useEffect(() => {
         setCompStatus(compileStatus);
     }, [compileStatus]);
 
     React.useEffect(() => {
         if (logText && logText === "====CLEAR====") {
             setCurLogText("");
-        } else {
+            return;
+        }
+        if (logText && logText.length > 0 && logText !== "====CLEAR====") {
+            setCompStatus(CompileStatus.COMPLETE);
             setCurLogText(logText);
         }
     }, [logText]);
@@ -162,6 +171,17 @@ const Previewer: React.FC = () => {
         return (<div></div>);
     }
 
+    const renderCompiled = () => {
+        if (curCompileQueue && Object.keys(curCompileQueue).length > 0) {
+            if (curCompileQueue.comp_result === 1) {
+                return (<i className="fa-solid fa-bug"></i>);
+            }
+            if(curCompileQueue.comp_result === 0) {
+                return (<i className="fa-solid fa-square-check"></i>);
+            }
+        }
+    }
+
     return (
         <div id="preview" className={styles.preview}>
             <div className={styles.previewHader}>
@@ -170,7 +190,7 @@ const Previewer: React.FC = () => {
                         <i className="fa-regular fa-file-pdf"></i> 预览
                     </button>
                     <button className={styles.previewButton} onClick={() => { setCurPreviewTab("logview") }}>
-                        <i className="fa-regular fa-file-lines"></i> 日志
+                        <i className="fa-regular fa-file-lines"></i> 日志 {renderCompiled()}
                     </button>
                 </div>
                 {renderPreviewHeaderAction()}

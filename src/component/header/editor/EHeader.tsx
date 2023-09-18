@@ -71,7 +71,6 @@ const EHeader: React.FC = () => {
     }, [queue]);
 
     const handleQueueCompile = (mainFile: TexFileModel) => {
-        toast.info("编译请求已提交");
         if (!mainFile) {
             toast.error("file is null");
         }
