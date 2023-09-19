@@ -74,6 +74,10 @@ export function initEditor(
     const permanentUserData = new Y.PermanentUserData(ydoc);
     permanentUserData.setUserMapping(ydoc, ydoc.clientID, ydocUser.name)
     wsProvider.awareness.setLocalStateField('user', ydocUser);
+    wsProvider.on('connection-error', (event: any) => {
+        wsProvider.shouldConnect = false;
+        wsProvider.ws?.close()
+    });
     wsProvider.on('status', (event: any) => {
         if (event.status === 'connected') {
             if (wsProvider.ws) {
