@@ -9,7 +9,7 @@ import { StreamLanguage, defaultHighlightStyle, syntaxHighlighting } from "@code
 import { stex } from "@codemirror/legacy-modes/mode/stex";
 import { solarizedLight } from 'cm6-theme-solarized-light';
 import { readConfig } from "@/config/app/config-reader";
-import { UserModel } from "rdjs-wheel";
+import { UserModel, WheelGlobal } from "rdjs-wheel";
 import { toast } from "react-toastify";
 
 export const usercolors = [
@@ -57,8 +57,9 @@ export function initEditor(
     const ytext = ydoc.getText(docId);
     const undoManager = new Y.UndoManager(ytext);
     const wsProvider = new WebsocketProvider(readConfig("wssUrl"), docId, ydoc, {
+        maxBackoffTime: 1000000,
         params: {
-            auth: "ACCESS_TOKEN"
+            token: localStorage.getItem(WheelGlobal.ACCESS_TOKEN_NAME) ?? ""
         }
     });
     const uInfo = localStorage.getItem("userInfo");
@@ -91,7 +92,7 @@ export function initEditor(
             return;
         }
     });
-    ydoc.on('update',() => {
+    ydoc.on('update', () => {
         console.log("update");
         //undoManager.
     });
