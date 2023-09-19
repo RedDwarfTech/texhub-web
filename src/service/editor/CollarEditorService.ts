@@ -59,7 +59,8 @@ export function initEditor(
     const wsProvider = new WebsocketProvider(readConfig("wssUrl"), docId, ydoc, {
         maxBackoffTime: 1000000,
         params: {
-            token: localStorage.getItem(WheelGlobal.ACCESS_TOKEN_NAME) ?? ""
+            // https://self-issued.info/docs/draft-ietf-oauth-v2-bearer.html#query-param
+            access_token: localStorage.getItem(WheelGlobal.ACCESS_TOKEN_NAME) ?? ""
         }
     });
     const uInfo = localStorage.getItem("userInfo");
