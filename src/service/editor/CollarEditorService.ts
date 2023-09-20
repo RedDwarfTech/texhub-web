@@ -75,6 +75,7 @@ export function initEditor(
     permanentUserData.setUserMapping(ydoc, ydoc.clientID, ydocUser.name)
     wsProvider.awareness.setLocalStateField('user', ydocUser);
     wsProvider.on('connection-error', (event: any) => {
+        debugger
         wsProvider.shouldConnect = false;
         wsProvider.ws?.close()
     });
