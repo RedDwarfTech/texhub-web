@@ -24,7 +24,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   React.useEffect(() => {
     if(projInfo && Object.keys(projInfo).length > 0){
       setMainFileModel(projInfo.main_file);
-      init("", projInfo.main_file.file_id);
+      init(projInfo.main_file.file_id);
     }
     return () => {
       destroy();
@@ -34,7 +34,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   React.useEffect(() => {
     if (fileCode && fileCode.length > 0) {
       if (mainFileModel && mainFileModel.yjs_initial === 0) {
-        init("", mainFile.file_id);
+        init(mainFile.file_id);
         updateFileInit(mainFile.file_id);
       }
     }
@@ -46,15 +46,15 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   React.useEffect(() => {
     if (!activeFile || !activeFile.file_id) return;
     if (activeFile && activeFile.file_type !== 0) {
-      init("",activeFile.file_id);
+      init(activeFile.file_id);
     }
     return () => {
       destroy();
     };
   }, [activeFile]);
 
-  const init = (initCode: string, file_id: string) => {
-    editorView = initEditor(props.projectId, file_id, initCode, activeEditorView, edContainer);
+  const init = (file_id: string) => {
+    editorView = initEditor(props.projectId, file_id, activeEditorView, edContainer);
     setActiveEditorView(editorView);
   };
 

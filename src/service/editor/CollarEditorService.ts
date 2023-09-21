@@ -43,7 +43,6 @@ const extensions = [
 export function initEditor(
     projectId: string,
     docId: string,
-    initContext: string,
     activeEditorView: EditorView | undefined,
     edContainer: any) {
     if (activeEditorView) {
@@ -63,8 +62,12 @@ export function initEditor(
             access_token: localStorage.getItem(WheelGlobal.ACCESS_TOKEN_NAME) ?? ""
         }
     });
+    debugger
     const uInfo = localStorage.getItem("userInfo");
-    if (!uInfo) return;
+    if (!uInfo) {
+        console.error("user info is null",uInfo);
+        return;
+    };
     const user: UserModel = JSON.parse(uInfo);
     const ydocUser = {
         name: user.nickname,
@@ -75,17 +78,16 @@ export function initEditor(
     permanentUserData.setUserMapping(ydoc, ydoc.clientID, ydocUser.name)
     wsProvider.awareness.setLocalStateField('user', ydocUser);
     wsProvider.on('connection-error', (event: any) => {
-        debugger
         wsProvider.shouldConnect = false;
         wsProvider.ws?.close()
+    });
+    wsProvider.on('message',(event: MessageEvent)=>{
+        console.log(event.data);
     });
     wsProvider.on('status', (event: any) => {
         if (event.status === 'connected') {
             if (wsProvider.ws) {
-                if (initContext && initContext.length > 0) {
-                    console.log("write: {}", initContext);
-                    ytext.insert(0, initContext);
-                }
+                
             }
         } else if (event.status === 'disconnected' && wsRetryCount < wsMaxRetries) {
             wsRetryCount++;
@@ -112,8 +114,10 @@ export function initEditor(
         ]
     });
     if (edContainer.current && edContainer.current.children && edContainer.current.children.length > 0) {
+        debugger
         return;
     }
+    debugger
     const view = new EditorView({
         state,
         parent: edContainer.current,
