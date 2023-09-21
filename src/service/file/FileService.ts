@@ -46,6 +46,16 @@ export function updateFileInit(fileId: string) {
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
+export function renameFile(fileInfo: any) {    
+    const config: AxiosRequestConfig = {
+        method: 'patch',
+        url: '/tex/file/rename',
+        data: JSON.stringify(fileInfo)
+    };
+    const actionTypeString: string = FileActionType[FileActionType.UPDATE_FILE_INITIAL];
+    return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
 export function addFile(params: any) {
     const config: AxiosRequestConfig = {
         method: 'post',

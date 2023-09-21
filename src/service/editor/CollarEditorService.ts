@@ -29,6 +29,7 @@ const extensions = [
     EditorView.contentAttributes.of({ spellcheck: 'true' }),
     EditorView.lineWrapping,
     EditorView.theme({
+        "&": {height: "100%"},
         '.cm-content': {
             fontSize: '16px'
         },

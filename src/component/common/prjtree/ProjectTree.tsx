@@ -1,6 +1,6 @@
 import { RefObject, useState } from "react";
 import styles from './ProjectTree.module.css';
-import { addFile, chooseFile, delTreeItem, getFileList, switchFile } from "@/service/file/FileService";
+import { addFile, chooseFile, delTreeItem, getFileList, renameFile, switchFile } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { AppState } from "@/redux/types/AppState";
@@ -19,6 +19,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
 
     const divRef = props.divRef;
     const [folderName, setFolderName] = useState('');
+    const [renameFileName, setRenameFileName] = useState('');
     const [createFileName, setCreateFileName] = useState('');
     const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
     const { fileTree } = useSelector((state: AppState) => state.file);
@@ -167,7 +168,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         const tagList: JSX.Element[] = [];
         fileTree.forEach((item: TexFileModel) => {
             let expandStatus: boolean = getExpandStatus(item);
-            console.log("filename: {},expand status: {}", item.name, expandStatus);
             let marginText = (level === 0) ? "6px" : "20px";
             tagList.push(
                 <div id={item.file_id} key={item.file_id} style={{ marginLeft: marginText }} >
@@ -226,6 +226,22 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         }
     };
 
+    const handleRenameFile = () => {
+        if(!renameFileName || renameFileName.length === 0) {
+            toast.warn("请输入文件新名称");
+            return;
+        }
+        let req ={
+            file_id: selectedFile.file_id,
+            name: renameFileName
+        };
+        renameFile(req).then((res)=>{
+            if(ResponseHandler.responseSuccess(res)){
+                getFileList(pid?.toString());
+            }
+        });
+    }
+
     const handleFolderAddConfirm = () => {
         if (!folderName || folderName.length === 0) {
             toast.warn("请输入文件夹名称");
@@ -262,6 +278,10 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
 
     const handleInputChange = (event: any) => {
         setFolderName(event.target.value);
+    };
+
+    const handleRenameFileChange = (event: any) => {
+        setRenameFileName(event.target.value);
     };
 
     const handleFileInputChange = (event: any) => {
@@ -349,7 +369,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                             <div className="input-group flex-nowrap">
                                 <input id="folderName"
                                     type="text"
-                                    onChange={handleInputChange}
+                                    onChange={handleRenameFileChange}
                                     className="form-control"
                                     placeholder="新名称"
                                     aria-label="Username"
@@ -358,7 +378,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                            <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={() => { handleFolderAddConfirm() }}>确定</button>
+                            <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={() => { handleRenameFile() }}>确定</button>
                         </div>
                     </div>
                 </div>

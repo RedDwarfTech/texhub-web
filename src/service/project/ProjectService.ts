@@ -12,7 +12,7 @@ import { ProjectActionType } from "@/redux/action/project/ProjectAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
 import { XHRClient } from "rd-component";
-import { AuthHandler, BaseMethods, RequestHandler } from 'rdjs-wheel';
+import { AuthHandler, RequestHandler } from 'rdjs-wheel';
 
 export function getProjectList(req: QueryProjReq) {
   const params = new URLSearchParams();

@@ -8,7 +8,8 @@ export enum FileActionType {
     GET_MAIN_FILE,
     GET_FILE_CODE,
     UPDATE_FILE_INITIAL,
-    SWITCH_EDITOR_FILE
+    SWITCH_EDITOR_FILE,
+    RENAME_FILE
 }
 
 export interface getFileListAction {
@@ -48,5 +49,10 @@ export interface updateFileInitAction {
 
 export interface switchEditorFileAction {
     type: FileActionType.SWITCH_EDITOR_FILE;
+    data: any;
+}
+
+export interface renameFileAction {
+    type: FileActionType.RENAME_FILE;
     data: any;
 }
