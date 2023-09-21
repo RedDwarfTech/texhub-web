@@ -101,7 +101,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         }
     }
 
-    const handleClick = (itemId: string, itemList: TexFileModel[]) => {
+    const handleExpandClick = (itemId: string, itemList: TexFileModel[]) => {
         const updatedItems: TexFileModel[] = itemList.map(item => {
             if (item.file_id === itemId) {
                 return {
@@ -111,7 +111,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             } else if (item.children) {
                 return {
                     ...item,
-                    children: handleClick(itemId, item.children)
+                    children: handleExpandClick(itemId, item.children)
                 };
             } else {
                 return item;
@@ -122,8 +122,42 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
 
     const expandFolder = (item: TexFileModel) => {
         if (!texFileTree || texFileTree.length === 0) return;
-        const updatedItems = handleClick(item.file_id, texFileTree);
+        const updatedItems = handleExpandClick(item.file_id, texFileTree);
+        localStorage.setItem("projTree", JSON.stringify(updatedItems));
         setTexFileTree(updatedItems);
+    }
+
+    const getExpandStatus = (item: TexFileModel): boolean => {
+        let cachedStatus = localStorage.getItem("projTree");
+        if (!cachedStatus) return false;
+        let cachedItems: TexFileModel[] = JSON.parse(cachedStatus);
+        const result = searchSingle(cachedItems, item.file_id);
+        return result;
+    }
+
+    const searchNodeByFileId = (node: TexFileModel, fileId: string): TexFileModel | null => {
+        if (node.file_id === fileId) {
+          return node;
+        }
+        if (node.children && node.children.length > 0) {
+          for (const child of node.children) {
+            const result = searchNodeByFileId(child, fileId);
+            if (result) {
+              return result;
+            }
+          }
+        }
+        return null;
+      }
+
+    const searchSingle = (cachedItems: TexFileModel[],  fid: string) :boolean => {
+        for (const item of cachedItems) {
+            let nodes = searchNodeByFileId(item, fid);
+            if(nodes != null){
+                return nodes.expand?nodes.expand:false;
+            }
+        }
+        return false;
     }
 
     const renderDirectoryTree = (fileTree: TexFileModel[], level: number) => {
@@ -132,6 +166,8 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         }
         const tagList: JSX.Element[] = [];
         fileTree.forEach((item: TexFileModel) => {
+            let expandStatus: boolean = getExpandStatus(item);
+            console.log("filename: {},expand status: {}", item.name, expandStatus);
             let marginText = (level === 0) ? "6px" : "20px";
             tagList.push(
                 <div id={item.file_id} key={item.file_id} style={{ marginLeft: marginText }} >
@@ -154,7 +190,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                             </div>
                         </div>
                     </div>
-                    {(item.children && item.children.length > 0 && item.expand) ? renderDirectoryTree(item.children, level + 1) : <div></div>}
+                    {(item.children && item.children.length > 0 && expandStatus) ? renderDirectoryTree(item.children, level + 1) : <div></div>}
                 </div>
             );
         });
