@@ -131,7 +131,7 @@ export function getLatestCompile(project_id: string) {
   params.append("project_id", project_id);
   const config: AxiosRequestConfig = {
     method: 'get',
-    url: '/tex/project/pdf',
+    url: '/tex/project/latest/pdf',
     params: params
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.LATEST_COMPILE];

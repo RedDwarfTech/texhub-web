@@ -62,7 +62,6 @@ export function initEditor(
             access_token: localStorage.getItem(WheelGlobal.ACCESS_TOKEN_NAME) ?? ""
         }
     });
-    debugger
     const uInfo = localStorage.getItem("userInfo");
     if (!uInfo) {
         console.error("user info is null",uInfo);
@@ -101,8 +100,7 @@ export function initEditor(
         }
     });
     ydoc.on('update', () => {
-        console.log("update");
-        //undoManager.
+        // console.log("update");
     });
     const state = EditorState.create({
         doc: ytext.toString(),
@@ -114,10 +112,8 @@ export function initEditor(
         ]
     });
     if (edContainer.current && edContainer.current.children && edContainer.current.children.length > 0) {
-        debugger
         return;
     }
-    debugger
     const view = new EditorView({
         state,
         parent: edContainer.current,
