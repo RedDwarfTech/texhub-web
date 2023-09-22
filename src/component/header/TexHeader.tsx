@@ -3,7 +3,6 @@ import styles from "./TexHeader.module.css";
 import { useNavigate } from "react-router-dom";
 import { UserService } from "rd-component";
 import avatarImg from "@/assets/icon/avatar.png";
-import { ControlOutlined, LogoutOutlined, PayCircleOutlined } from "@ant-design/icons";
 import { readConfig } from "@/config/app/config-reader";
 import { AuthHandler, ResponseHandler } from "rdjs-wheel";
 import { useSelector } from "react-redux";
@@ -121,7 +120,7 @@ const TexHeader: React.FC = () => {
 
     return (
         <div className={styles.headerLayout}>
-            <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+            <nav className="navbar navbar-expand-sm navbar-dark">
                 <div className="container-fluid">
                     <a className="navbar-brand text-light" href="/">TeXHub</a>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
