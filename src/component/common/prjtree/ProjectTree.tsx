@@ -61,7 +61,9 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         }
     }
 
-    const handleModal = (show: boolean, modalId: string) => {
+    const handleModal = (e: React.MouseEvent<HTMLAnchorElement>, show: boolean, modalId: string) => {
+        e.preventDefault();
+        e.stopPropagation();
         let modal = document.getElementById(modalId);
         if (modal) {
             var myModal = new bootstrap.Modal(modal);
@@ -95,7 +97,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         if (item.file_type === 0) {
             return (
                 <div className={styles.menuIcons}>
-                    <i className="fa-solid fa-chevron-right" onClick={() => { expandFolder(item) }}></i>
+                    <i className="fa-solid fa-chevron-right" onClick={(e:React.MouseEvent<HTMLElement>) => { handleExpandFolder(e,item) }}></i>
                     <i className="fa-regular fa-folder"></i>
                 </div>
             );
@@ -121,7 +123,9 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         return updatedItems;
     };
 
-    const expandFolder = (item: TexFileModel) => {
+    const handleExpandFolder = (e: React.MouseEvent<HTMLElement>,item: TexFileModel) => {
+        e.preventDefault();
+        e.stopPropagation();
         if (!texFileTree || texFileTree.length === 0) return;
         const updatedItems = handleExpandClick(item.file_id, texFileTree);
         localStorage.setItem("projTree", JSON.stringify(updatedItems));
@@ -138,24 +142,24 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
 
     const searchNodeByFileId = (node: TexFileModel, fileId: string): TexFileModel | null => {
         if (node.file_id === fileId) {
-          return node;
+            return node;
         }
         if (node.children && node.children.length > 0) {
-          for (const child of node.children) {
-            const result = searchNodeByFileId(child, fileId);
-            if (result) {
-              return result;
+            for (const child of node.children) {
+                const result = searchNodeByFileId(child, fileId);
+                if (result) {
+                    return result;
+                }
             }
-          }
         }
         return null;
-      }
+    }
 
-    const searchSingle = (cachedItems: TexFileModel[],  fid: string) :boolean => {
+    const searchSingle = (cachedItems: TexFileModel[], fid: string): boolean => {
         for (const item of cachedItems) {
             let nodes = searchNodeByFileId(item, fid);
-            if(nodes != null){
-                return nodes.expand?nodes.expand:false;
+            if (nodes != null) {
+                return nodes.expand ? nodes.expand : false;
             }
         }
         return false;
@@ -172,20 +176,25 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             tagList.push(
                 <div id={item.file_id} key={item.file_id} style={{ marginLeft: marginText }} >
                     <div key={item.file_id}
-                        onClick={() => handleTreeItemClick(item)}
+                        onClick={(e: React.MouseEvent<HTMLDivElement>) => handleTreeItemClick(e,item)}
                         className={(selectedFile && item.file_id == selectedFile.file_id) ? styles.fileItemSelected : styles.fileItem} >
                         {renderIcon(item)}
                         <div className={styles.fileName}>{item.name}</div>
                         <div className={styles.actions}>
                             <div className="dropdown">
-                                <button className="btn text-white" type="button" id={"dropdownMenuButton1" + item.id} data-bs-toggle="dropdown" aria-expanded="false" onClick={() => { handleDropdownClick(item) }}>
+                                <button className="btn text-white"
+                                    type="button"
+                                    id={"dropdownMenuButton1" + item.id}
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => { handleDropdownClick(e, item) }}>
                                     <i className="fa-solid fa-ellipsis-vertical"></i>
                                 </button>
                                 <ul className="dropdown-menu" aria-labelledby={"dropdownMenuButton1" + item.id}>
-                                    <li><a className="dropdown-item" onClick={() => { handleModal(true, "deleteFileModal") }}>删除</a></li>
-                                    <li><a className="dropdown-item" onClick={() => { handleModal(true, "renameFileModal") }}>重命名</a></li>
-                                    <li><a className="dropdown-item" onClick={() => { handleModal(true, "downloadFileModal") }}>下载文件</a></li>
-                                    <li><a className="dropdown-item" onClick={() => { handleModal(true, "moveFileModal") }}>移动到文件夹</a></li>
+                                    <li><a className="dropdown-item" onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { handleModal(e, true, "deleteFileModal") }}>删除</a></li>
+                                    <li><a className="dropdown-item" onClick={(e) => { handleModal(e, true, "renameFileModal") }}>重命名</a></li>
+                                    <li><a className="dropdown-item" onClick={(e) => { handleModal(e, true, "downloadFileModal") }}>下载文件</a></li>
+                                    <li><a className="dropdown-item" onClick={(e) => { handleModal(e, true, "moveFileModal") }}>移动到文件夹</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -212,11 +221,15 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         });
     };
 
-    const handleDropdownClick = (file: TexFileModel) => {
+    const handleDropdownClick = (e: React.MouseEvent<HTMLButtonElement>, file: TexFileModel) => {
+        e.preventDefault();
+        e.stopPropagation();
         setDelFile(file);
     };
 
-    const handleTreeItemClick = (fileItem: TexFileModel) => {
+    const handleTreeItemClick = (e: React.MouseEvent<HTMLDivElement>, fileItem: TexFileModel) => {
+        e.preventDefault();
+        e.stopPropagation();
         localStorage.setItem("proj-select-file:" + pid, JSON.stringify(fileItem));
         setSelectedFile(fileItem);
         if (selectedFile && fileItem.file_id === selectedFile.file_id) return;
@@ -227,16 +240,16 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     };
 
     const handleRenameFile = () => {
-        if(!renameFileName || renameFileName.length === 0) {
+        if (!renameFileName || renameFileName.length === 0) {
             toast.warn("请输入文件新名称");
             return;
         }
-        let req ={
+        let req = {
             file_id: selectedFile.file_id,
             name: renameFileName
         };
-        renameFile(req).then((res)=>{
-            if(ResponseHandler.responseSuccess(res)){
+        renameFile(req).then((res) => {
+            if (ResponseHandler.responseSuccess(res)) {
                 getFileList(pid?.toString());
             }
         });
