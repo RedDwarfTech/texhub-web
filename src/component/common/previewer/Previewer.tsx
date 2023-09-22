@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './Previewer.module.css';
+import pdfStyles from './doc/MemoizedPDFPreview.module.css';
 import { toast } from 'react-toastify';
 import { pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
@@ -104,11 +105,6 @@ const Previewer: React.FC = () => {
         setPdfScale(pdfScale - 0.1);
     }
 
-    const onDocumentLoadSuccess = (pdf: any) => {
-        const { numPages } = pdf;
-        setNumPages(numPages);
-    }
-
     const renderPreviewTab = () => {
         switch (curPreviewTab) {
             case "pdfview":
@@ -144,12 +140,12 @@ const Previewer: React.FC = () => {
         );
     }
 
+    
+
     const renderPdfView = () => {
         return (
             <MemoizedPDFPreview curPdfUrl={pdfUrl}
                 options={options}
-                onDocumentLoadSuccess={onDocumentLoadSuccess}
-                numPages={numPages || 1}
                 pdfScale={pdfScale}></MemoizedPDFPreview>
         );
     }

@@ -5,3 +5,7 @@
     overflow: scroll;
     justify-content: center;
 }
+
+.pdfPage {
+    width: auto;
+}
