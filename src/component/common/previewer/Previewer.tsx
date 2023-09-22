@@ -10,6 +10,8 @@ import { useSelector } from 'react-redux';
 import MemoizedPDFPreview from './doc/MemoizedPDFPreview';
 import { CompileStatus } from '@/model/prj/compile/CompileStatus';
 import { CompileQueue } from '@/model/prj/CompileQueue';
+import { Options } from 'react-pdf/dist/cjs/shared/types';
+import { getAccessToken } from '../cache/Cache';
 
 const Previewer: React.FC = () => {
 
@@ -67,8 +69,11 @@ const Previewer: React.FC = () => {
         }
     }, [streamLogText]);
 
-    const options = {
+    const options: Options = {
         cMapUrl: `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/cmaps/`,
+        httpHeaders: {
+            'Authorization': 'Bearer ' + getAccessToken()
+        }
     };
 
     const handleDownloadPdf = async (pdfUrl: any) => {

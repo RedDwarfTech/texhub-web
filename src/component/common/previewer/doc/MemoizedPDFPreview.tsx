@@ -1,10 +1,11 @@
 import React from 'react';
 import { Document, Page } from 'react-pdf';
 import styles from "./MemoizedPDFPreview.module.css";
+import { Options } from 'react-pdf/dist/cjs/shared/types';
 
 interface PDFPreviewProps {
     curPdfUrl: string;
-    options: any;
+    options: Options;
     onDocumentLoadSuccess: (pdf: any) => void;
     numPages: number;
     pdfScale: number;
