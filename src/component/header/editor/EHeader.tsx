@@ -16,6 +16,7 @@ import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
 import { CompileProjLog } from "@/model/request/proj/CompileProjLog";
 import { ResponseHandler } from "rdjs-wheel";
 import { CompileStatus } from "@/model/prj/compile/CompileStatus";
+import { getAccessToken } from "@/component/common/cache/Cache";
 
 const EHeader: React.FC = () => {
 
@@ -55,7 +56,8 @@ const EHeader: React.FC = () => {
                 project_id: mainFile.project_id,
                 file_name: mainFile.name,
                 version_no: queue.version_no,
-                qid: queue.id
+                qid: queue.id,
+                access_token:  getAccessToken()
             };
             if (queue.comp_status === 1) {
                 doCompileLogPreCheck(req, onSseMessage);

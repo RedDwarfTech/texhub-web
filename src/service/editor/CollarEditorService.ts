@@ -29,7 +29,7 @@ const extensions = [
     EditorView.contentAttributes.of({ spellcheck: 'true' }),
     EditorView.lineWrapping,
     EditorView.theme({
-        "&": {height: "100%"},
+        "&": { height: "100%" },
         '.cm-content': {
             fontSize: '16px'
         },
@@ -65,7 +65,7 @@ export function initEditor(
     });
     const uInfo = localStorage.getItem("userInfo");
     if (!uInfo) {
-        console.error("user info is null",uInfo);
+        console.error("user info is null", uInfo);
         return;
     };
     const user: UserModel = JSON.parse(uInfo);
@@ -81,13 +81,13 @@ export function initEditor(
         wsProvider.shouldConnect = false;
         wsProvider.ws?.close()
     });
-    wsProvider.on('message',(event: MessageEvent)=>{
+    wsProvider.on('message', (event: MessageEvent) => {
         console.log(event.data);
     });
     wsProvider.on('status', (event: any) => {
         if (event.status === 'connected') {
             if (wsProvider.ws) {
-                
+
             }
         } else if (event.status === 'disconnected' && wsRetryCount < wsMaxRetries) {
             wsRetryCount++;
