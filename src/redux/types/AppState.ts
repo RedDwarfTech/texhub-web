@@ -7,6 +7,7 @@ import { JoinResult } from "@/model/prj/JoinResult";
 import { CompileQueue } from "@/model/prj/CompileQueue";
 import { ProjInfo } from "@/model/prj/ProjInfo";
 import { CompileStatus } from "@/model/prj/compile/CompileStatus";
+import { ProjAttribute } from "@/model/prj/config/ProjAttribute";
 
 export interface AppState {
     proj: {
@@ -22,6 +23,7 @@ export interface AppState {
         streamLogText: string,
         projInfo: ProjInfo,
         compileStatus: CompileStatus,
+        projAttr: ProjAttribute
     },
     tpl: {
         tplList: TemplateModel[],

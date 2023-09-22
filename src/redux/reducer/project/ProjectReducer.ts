@@ -5,6 +5,7 @@ import { JoinResult } from "@/model/prj/JoinResult";
 import { CompileQueue } from "@/model/prj/CompileQueue";
 import { ProjInfo } from "@/model/prj/ProjInfo";
 import { CompileStatus } from "@/model/prj/compile/CompileStatus";
+import { ProjAttribute } from "@/model/prj/config/ProjAttribute";
 
 const initState: AppState["proj"] = {
     projList: [],
@@ -18,7 +19,10 @@ const initState: AppState["proj"] = {
     queue: {} as CompileQueue,
     tabName: "",
     projInfo: {} as ProjInfo,
-    compileStatus: {} as CompileStatus
+    compileStatus: {} as CompileStatus,
+    projAttr: {
+        pdfScale: 1
+    } as ProjAttribute
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -98,6 +102,12 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 compileStatus: action.data
+            };
+        case "PROJ_ATTR":
+            const newObject: ProjAttribute = { ...state.projAttr, ...action.data };
+            return {
+                ...state,
+                projAttr: newObject
             };
         default:
             break;

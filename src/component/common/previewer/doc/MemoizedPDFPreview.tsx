@@ -2,18 +2,26 @@ import React, { useState } from 'react';
 import { Document, Page } from 'react-pdf';
 import styles from "./MemoizedPDFPreview.module.css";
 import { DocumentCallback, Options, PageCallback } from 'react-pdf/dist/cjs/shared/types';
+import { AppState } from '@/redux/types/AppState';
+import { useSelector } from 'react-redux';
+import { ProjAttribute } from '@/model/prj/config/ProjAttribute';
 
 interface PDFPreviewProps {
     curPdfUrl: string;
     options: Options;
-    pdfScale: number;
 }
 
-const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, options, pdfScale }) => {
+const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, options }) => {
 
     const [numPages, setNumPages] = useState<number>();
     const [currentPage, setCurrentPage] = useState<number>(1);
-    
+    const [projAttribute, setProjAttribute] = useState<ProjAttribute>({pdfScale: 1});
+    const { projAttr } = useSelector((state: AppState) => state.proj);
+
+    React.useEffect(()=>{
+        setProjAttribute(projAttr);
+    },[projAttr]);
+
     const handlePageChange = (page: any) => {
 
     };
@@ -26,29 +34,27 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, o
             }
         })
     }, {
-        root: null,
         threshold: 0.5,
     })
 
     const goPage = (i: number) => {
         let element = document.querySelectorAll(`.${styles.pdfPage}`);
         if (element && element.length > 0) {
-            element[i]!.scrollIntoView({ behavior: 'smooth' });
+            element[i-1]!.scrollIntoView({ behavior: 'smooth' });
         }
     }
 
     const handlePageRenderSuccess = (page: PageCallback) => {
-        //goPage(2);
         let elements = document.querySelectorAll(`.${styles.pdfPage}`);
         if (elements && elements.length > 0) {
             elements.forEach(box => io.observe(box));
         }
     };
 
-    const onDocumentLoadSuccess1 = (pdf: DocumentCallback) => {
+    const onDocumentLoadSuccess = (pdf: DocumentCallback) => {
         const { numPages } = pdf;
         setNumPages(numPages);
-        goPage(2);
+        goPage(currentPage);
     }
 
     const renderPages = (totalPageNum: number | undefined) => {
@@ -58,7 +64,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, o
             tagList.push(
                 <Page key={i}
                     className={styles.pdfPage}
-                    scale={pdfScale}
+                    scale={projAttribute.pdfScale}
                     onLoad={handlePageChange}
                     onChange={handlePageChange}
                     onRenderSuccess={handlePageRenderSuccess}
@@ -69,19 +75,17 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, o
         return tagList;
     }
 
-
     return (
         <div className={styles.previewBody}>
             <Document options={options}
                 file={curPdfUrl}
-                onLoadSuccess={onDocumentLoadSuccess1}>
+                onLoadSuccess={onDocumentLoadSuccess}>
                 {renderPages(numPages)}
             </Document>
         </div>
     );
 }, (prevProps, nextProps) => {
     let shouldRerender = (prevProps.curPdfUrl === nextProps.curPdfUrl)
-        && (prevProps.pdfScale === nextProps.pdfScale)
     return shouldRerender;
 });
 

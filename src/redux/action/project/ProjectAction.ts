@@ -1,4 +1,5 @@
 import { CompileStatus } from "@/model/prj/compile/CompileStatus";
+import { ProjAttribute } from "@/model/prj/config/ProjAttribute";
 
 export type projectAction = saveDocAction | getDocListAction | compileProjAction | getLatestCompileAction | renderLogAction | clearCompLogAction | addQueueCompileAction | getCompQueueStatusAction | texCompEndAction | getProjInfoAction | delProjInfoAction | uploadProjFileAction;
 
@@ -23,7 +24,8 @@ export enum ProjectActionType {
     SHOW_PREVIEW_TAB,
     GET_COMPILE_LOG,
     SET_COMPILE_STATUS,
-    UPLOAD_PROJ_FILE
+    UPLOAD_PROJ_FILE,
+    PROJ_ATTR
 }
 
 export interface saveDocAction {
@@ -114,4 +116,9 @@ export interface setCompileStatusAction {
 export interface uploadProjFileAction {
     type: ProjectActionType.UPLOAD_PROJ_FILE;
     data: CompileStatus;
+}
+
+export interface setProjAttrAction {
+    type: ProjectActionType.PROJ_ATTR;
+    data: ProjAttribute;
 }

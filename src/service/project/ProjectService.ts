@@ -1,6 +1,7 @@
 import { CompileQueue } from "@/model/prj/CompileQueue";
 import { LatestCompile } from "@/model/prj/LatestCompile";
 import { CompileStatus } from "@/model/prj/compile/CompileStatus";
+import { ProjAttribute } from "@/model/prj/config/ProjAttribute";
 import { CompileProjLog } from "@/model/request/proj/CompileProjLog";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
 import { CreateProjReq } from "@/model/request/proj/CreateProjReq";
@@ -234,5 +235,10 @@ export function setLatestCompile(data: LatestCompile) {
 
 export function setCompileQueue(data: CompileQueue) {
   const actionTypeString: string = ProjectActionType[ProjectActionType.GET_COMP_QUEUE_STATUS];
+  return XHRClient.dispathAction(data, actionTypeString, store);
+}
+
+export function setProjAttr(data: ProjAttribute) {
+  const actionTypeString: string = ProjectActionType[ProjectActionType.PROJ_ATTR];
   return XHRClient.dispathAction(data, actionTypeString, store);
 }
