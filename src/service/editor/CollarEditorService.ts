@@ -1,4 +1,5 @@
 import { EditorView } from "@codemirror/view";
+// @ts-ignore
 import { WebsocketProvider } from "y-websocket";
 import * as Y from 'yjs';
 import * as random from 'lib0/random';
@@ -9,8 +10,9 @@ import { StreamLanguage, defaultHighlightStyle, syntaxHighlighting } from "@code
 import { stex } from "@codemirror/legacy-modes/mode/stex";
 import { solarizedLight } from 'cm6-theme-solarized-light';
 import { readConfig } from "@/config/app/config-reader";
-import { UserModel, WheelGlobal } from "rdjs-wheel";
+import { RequestHandler, ResponseHandler, UserModel, WheelGlobal } from "rdjs-wheel";
 import { toast } from "react-toastify";
+import { UserService } from "rd-component";
 
 export const usercolors = [
     { color: '#30bced', light: '#30bced33' },
@@ -41,6 +43,24 @@ const extensions = [
     syntaxHighlighting(defaultHighlightStyle),
 ];
 
+const handleWsAuth = (event: any, wsProvider: WebsocketProvider) => {
+    if (event.status === 'failed1') {
+        wsProvider.shouldConnect = false;
+        wsProvider.ws?.close()
+    }
+    if (event.status === 'failed') {
+        debugger
+        RequestHandler.handleWebAccessTokenExpire().then((res) => {
+            if (ResponseHandler.responseSuccess(res)) {
+                wsProvider.shouldConnect = true;
+            } else {
+                wsProvider.shouldConnect = false;
+                wsProvider.ws?.close();
+            }
+        })
+    }
+}
+
 export function initEditor(
     projectId: string,
     docId: string,
@@ -60,7 +80,7 @@ export function initEditor(
         maxBackoffTime: 1000000,
         params: {
             // https://self-issued.info/docs/draft-ietf-oauth-v2-bearer.html#query-param
-            access_token: localStorage.getItem(WheelGlobal.ACCESS_TOKEN_NAME) ?? ""
+            access_token: "d" + localStorage.getItem(WheelGlobal.ACCESS_TOKEN_NAME) ?? ""
         }
     });
     const uInfo = localStorage.getItem("userInfo");
@@ -77,6 +97,9 @@ export function initEditor(
     const permanentUserData = new Y.PermanentUserData(ydoc);
     permanentUserData.setUserMapping(ydoc, ydoc.clientID, ydocUser.name)
     wsProvider.awareness.setLocalStateField('user', ydocUser);
+    wsProvider.on('auth', (event: any) => {
+        handleWsAuth(event, wsProvider);
+    });
     wsProvider.on('connection-error', (event: any) => {
         wsProvider.shouldConnect = false;
         wsProvider.ws?.close()
