@@ -12,7 +12,6 @@ import { solarizedLight } from 'cm6-theme-solarized-light';
 import { readConfig } from "@/config/app/config-reader";
 import { RequestHandler, ResponseHandler, UserModel, WheelGlobal } from "rdjs-wheel";
 import { toast } from "react-toastify";
-import { UserService } from "rd-component";
 
 export const usercolors = [
     { color: '#30bced', light: '#30bced33' },
@@ -43,16 +42,17 @@ const extensions = [
     syntaxHighlighting(defaultHighlightStyle),
 ];
 
-const handleWsAuth = (event: any, wsProvider: WebsocketProvider) => {
-    if (event.status === 'failed1') {
+const handleWsAuth = (event: any, wsProvider: WebsocketProvider, ydoc: Y.Doc, docId: string) => {
+    if (event.status === 'failed') {
         wsProvider.shouldConnect = false;
         wsProvider.ws?.close()
     }
-    if (event.status === 'failed') {
+    if (event.status === 'expired') {
         debugger
         RequestHandler.handleWebAccessTokenExpire().then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
-                wsProvider.shouldConnect = true;
+                wsProvider.ws?.close();
+                wsProvider = doWsConn(ydoc,docId);
             } else {
                 wsProvider.shouldConnect = false;
                 wsProvider.ws?.close();
@@ -61,26 +61,12 @@ const handleWsAuth = (event: any, wsProvider: WebsocketProvider) => {
     }
 }
 
-export function initEditor(
-    projectId: string,
-    docId: string,
-    activeEditorView: EditorView | undefined,
-    edContainer: any) {
-    if (activeEditorView) {
-        activeEditorView.destroy();
-    }
-    let docOpt = {
-        guid: docId,
-        collectionid: projectId
-    };
-    const ydoc = new Y.Doc(docOpt);
-    const ytext = ydoc.getText(docId);
-    const undoManager = new Y.UndoManager(ytext);
+const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
     const wsProvider = new WebsocketProvider(readConfig("wssUrl"), docId, ydoc, {
         maxBackoffTime: 1000000,
         params: {
             // https://self-issued.info/docs/draft-ietf-oauth-v2-bearer.html#query-param
-            access_token: "d" + localStorage.getItem(WheelGlobal.ACCESS_TOKEN_NAME) ?? ""
+            access_token: localStorage.getItem(WheelGlobal.ACCESS_TOKEN_NAME) ?? ""
         }
     });
     const uInfo = localStorage.getItem("userInfo");
@@ -98,7 +84,7 @@ export function initEditor(
     permanentUserData.setUserMapping(ydoc, ydoc.clientID, ydocUser.name)
     wsProvider.awareness.setLocalStateField('user', ydocUser);
     wsProvider.on('auth', (event: any) => {
-        handleWsAuth(event, wsProvider);
+        handleWsAuth(event, wsProvider, ydoc, docId);
     });
     wsProvider.on('connection-error', (event: any) => {
         wsProvider.shouldConnect = false;
@@ -123,6 +109,25 @@ export function initEditor(
             return;
         }
     });
+    return wsProvider;
+}
+
+export function initEditor(
+    projectId: string,
+    docId: string,
+    activeEditorView: EditorView | undefined,
+    edContainer: any) {
+    if (activeEditorView) {
+        activeEditorView.destroy();
+    }
+    let docOpt = {
+        guid: docId,
+        collectionid: projectId
+    };
+    const ydoc = new Y.Doc(docOpt);
+    const ytext = ydoc.getText(docId);
+    const undoManager = new Y.UndoManager(ytext);
+    let wsProvider = doWsConn(ydoc, docId);
     ydoc.on('update', () => {
         // console.log("update");
     });
