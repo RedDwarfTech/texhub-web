@@ -170,7 +170,16 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             return (<div></div>);
         }
         const tagList: JSX.Element[] = [];
-        fileTree.forEach((item: TexFileModel) => {
+        const sortedData = fileTree.sort((a, b) => {
+            if (a.file_type === 0 && b.file_type !== 0) {
+                return -1; 
+            }
+            if (a.file_type !== 0 && b.file_type === 0) {
+                return 1; 
+            }
+            return 0; 
+        });
+        sortedData.forEach((item: TexFileModel) => {
             let expandStatus: boolean = getExpandStatus(item);
             let marginText = (level === 0) ? "6px" : "20px";
             tagList.push(

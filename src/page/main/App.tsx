@@ -13,7 +13,7 @@ import { readConfig } from '@/config/app/config-reader';
 import queryString from 'query-string';
 import Previewer from '@/component/common/previewer/Previewer';
 import { getLatestCompile, getProjectInfo, getTempAuthCode, sendQueueCompileRequest, setCompileQueue, setLatestCompile, showPreviewTab, updatePdfUrl } from '@/service/project/ProjectService';
-import ProjectTree from '@/component/common/prjtree/ProjectTree';
+import ProjectTree from '@/component/common/projtree/ProjectTree';
 import { TexFileModel } from '@/model/file/TexFileModel';
 import { QueryProjInfo } from '@/model/request/proj/query/QueryProjInfo';
 
