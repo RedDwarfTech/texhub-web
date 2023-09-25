@@ -32,14 +32,14 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
 
     React.useEffect(() => {
         if (projInfo && Object.keys(projInfo).length > 0) {
-            setTexFileTree(projInfo.tree);
+            handleFileTreeUpdate(projInfo.tree);
             setMainFile(projInfo.main_file);
         }
     }, [projInfo]);
 
     React.useEffect(() => {
         if (fileTree && fileTree.length > 0) {
-            setTexFileTree(fileTree);
+            handleFileTreeUpdate(fileTree);
             let defaultFile = fileTree.filter((file: TexFileModel) => file.main_flag === 1);
             setMainFile(defaultFile[0]);
         }
@@ -51,6 +51,30 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             var myModal = new bootstrap.Modal(modal);
             myModal.show();
         }
+    }
+
+    const handleFileTreeUpdate = (tree: TexFileModel[]) => {
+        let legacyTree = localStorage.getItem('projTree');
+        if (legacyTree) {
+            // do the tree expand field merge
+            let cacheTree = JSON.parse(legacyTree);
+            mergeTreeExpand(tree, cacheTree);
+            setTexFileTree(tree);
+        } else {
+            setTexFileTree(tree);
+        }
+    }
+
+    const mergeTreeExpand = (newTree: TexFileModel[], cacheTree: TexFileModel[]) => {
+        newTree.forEach(newNode => {
+            let expandStatus = searchSingle(cacheTree, newNode.file_id);
+            if (expandStatus) {
+                newNode.expand = expandStatus;
+            }
+            if (newNode.children && newNode.children.length > 0) {
+                mergeTreeExpand(newNode.children, cacheTree);
+            }
+        });
     }
 
     const handleHeaderAction = (id: string) => {
@@ -97,7 +121,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         if (item.file_type === 0) {
             return (
                 <div className={styles.menuIcons}>
-                    <i className="fa-solid fa-chevron-right" onClick={(e:React.MouseEvent<HTMLElement>) => { handleExpandFolder(e,item) }}></i>
+                    <i className="fa-solid fa-chevron-right" onClick={(e: React.MouseEvent<HTMLElement>) => { handleExpandFolder(e, item) }}></i>
                     <i className="fa-regular fa-folder"></i>
                 </div>
             );
@@ -123,7 +147,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         return updatedItems;
     };
 
-    const handleExpandFolder = (e: React.MouseEvent<HTMLElement>,item: TexFileModel) => {
+    const handleExpandFolder = (e: React.MouseEvent<HTMLElement>, item: TexFileModel) => {
         e.preventDefault();
         e.stopPropagation();
         if (!texFileTree || texFileTree.length === 0) return;
@@ -172,12 +196,12 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         const tagList: JSX.Element[] = [];
         const sortedData = fileTree.sort((a, b) => {
             if (a.file_type === 0 && b.file_type !== 0) {
-                return -1; 
+                return -1;
             }
             if (a.file_type !== 0 && b.file_type === 0) {
-                return 1; 
+                return 1;
             }
-            return 0; 
+            return 0;
         });
         sortedData.forEach((item: TexFileModel) => {
             let expandStatus: boolean = getExpandStatus(item);
@@ -185,7 +209,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             tagList.push(
                 <div id={item.file_id} key={item.file_id} style={{ marginLeft: marginText }} >
                     <div key={item.file_id}
-                        onClick={(e: React.MouseEvent<HTMLDivElement>) => handleTreeItemClick(e,item)}
+                        onClick={(e: React.MouseEvent<HTMLDivElement>) => handleTreeItemClick(e, item)}
                         className={(selectedFile && item.file_id == selectedFile.file_id) ? styles.fileItemSelected : styles.fileItem} >
                         {renderIcon(item)}
                         <div className={styles.fileName}>{item.name}</div>
