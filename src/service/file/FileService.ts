@@ -46,10 +46,13 @@ export function updateFileInit(fileId: string) {
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function renameFile(fileInfo: any) {    
+export function renameFileImpl(fileInfo: any) {    
     const config: AxiosRequestConfig = {
         method: 'patch',
         url: '/tex/file/rename',
+        headers: {
+            'content-type': 'application/json'
+        },
         data: JSON.stringify(fileInfo)
     };
     const actionTypeString: string = FileActionType[FileActionType.UPDATE_FILE_INITIAL];

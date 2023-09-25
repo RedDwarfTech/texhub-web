@@ -1,6 +1,6 @@
 import { RefObject, useState } from "react";
 import styles from './ProjectTree.module.css';
-import { addFile, chooseFile, delTreeItem, getFileList, renameFile, switchFile } from "@/service/file/FileService";
+import { addFile, chooseFile, delTreeItem, getFileList, renameFileImpl, switchFile } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { AppState } from "@/redux/types/AppState";
@@ -19,7 +19,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
 
     const divRef = props.divRef;
     const [folderName, setFolderName] = useState('');
-    const [renameFileName, setRenameFileName] = useState('');
     const [createFileName, setCreateFileName] = useState('');
     const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
     const { fileTree } = useSelector((state: AppState) => state.file);
@@ -29,6 +28,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const selected = localStorage.getItem("proj-select-file:" + pid);
     const [selectedFile, setSelectedFile] = useState<TexFileModel>(selected ? JSON.parse(selected) : null);
     const [delFile, setDelFile] = useState<TexFileModel>();
+    const [renameFile, setRenameFile] = useState<TexFileModel>();
 
     React.useEffect(() => {
         if (projInfo && Object.keys(projInfo).length > 0) {
@@ -85,11 +85,12 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         }
     }
 
-    const handleModal = (e: React.MouseEvent<HTMLAnchorElement>, show: boolean, modalId: string) => {
+    const handleModal = (e: React.MouseEvent<HTMLAnchorElement>, show: boolean, modalId: string, file: TexFileModel) => {
         e.preventDefault();
         e.stopPropagation();
         let modal = document.getElementById(modalId);
         if (modal) {
+            setRenameFile(file);
             var myModal = new bootstrap.Modal(modal);
             show ? myModal.show() : myModal.hide();
         }
@@ -224,10 +225,10 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                                     <i className="fa-solid fa-ellipsis-vertical"></i>
                                 </button>
                                 <ul className="dropdown-menu" aria-labelledby={"dropdownMenuButton1" + item.id}>
-                                    <li><a className="dropdown-item" onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { handleModal(e, true, "deleteFileModal") }}>删除</a></li>
-                                    <li><a className="dropdown-item" onClick={(e) => { handleModal(e, true, "renameFileModal") }}>重命名</a></li>
-                                    <li><a className="dropdown-item" onClick={(e) => { handleModal(e, true, "downloadFileModal") }}>下载文件</a></li>
-                                    <li><a className="dropdown-item" onClick={(e) => { handleModal(e, true, "moveFileModal") }}>移动到文件夹</a></li>
+                                    <li><a className="dropdown-item" onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { handleModal(e, true, "deleteFileModal", item) }}>删除</a></li>
+                                    <li><a className="dropdown-item" onClick={(e) => { handleModal(e, true, "renameFileModal", item) }}>重命名</a></li>
+                                    <li><a className="dropdown-item" onClick={(e) => { handleModal(e, true, "downloadFileModal", item) }}>下载文件</a></li>
+                                    <li><a className="dropdown-item" onClick={(e) => { handleModal(e, true, "moveFileModal", item) }}>移动到文件夹</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -273,15 +274,15 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     };
 
     const handleRenameFile = () => {
-        if (!renameFileName || renameFileName.length === 0) {
+        if (!renameFile || renameFile.name.length ===0) {
             toast.warn("请输入文件新名称");
             return;
         }
         let req = {
-            file_id: selectedFile.file_id,
-            name: renameFileName
+            file_id: renameFile.file_id,
+            name: renameFile.name
         };
-        renameFile(req).then((res) => {
+        renameFileImpl(req).then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
                 getFileList(pid?.toString());
             }
@@ -326,8 +327,15 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         setFolderName(event.target.value);
     };
 
-    const handleRenameFileChange = (event: any) => {
-        setRenameFileName(event.target.value);
+    const handleRenameFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if(!renameFile){
+            return;
+        }
+        let newFile: TexFileModel = { 
+            ...renameFile,
+            name: event.target.value
+        };
+        setRenameFile(newFile);
     };
 
     const handleFileInputChange = (event: any) => {
@@ -419,6 +427,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                                     className="form-control"
                                     placeholder="新名称"
                                     aria-label="Username"
+                                    value={renameFile?renameFile.name:""}
                                     aria-describedby="addon-wrapping" />
                             </div>
                         </div>
