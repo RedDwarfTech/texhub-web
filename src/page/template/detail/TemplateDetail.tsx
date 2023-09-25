@@ -59,7 +59,7 @@ const TemplateDetail: React.FC = () => {
                 <div className={styles.intro}>模版简介：<span>{tpl.intro}</span></div>
                 <div className={styles.tplAction}>
                     <button type="button" className="btn btn-primary" onClick={()=>{createProjByTpl()}}>以此模版创建项目</button>
-                    <button type="button" className="btn btn-primary" onClick={() => { previewTplPdf() }}>预览模版PDF</button>
+                    <button type="button" className="btn btn-primary" onClick={() => { previewTplPdf() }}>预览模版</button>
                 </div>
                 <img src={tpl.preview_url} className={styles.tplDemo}></img>
             </div>

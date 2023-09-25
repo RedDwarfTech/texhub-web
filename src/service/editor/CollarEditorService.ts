@@ -44,11 +44,13 @@ const extensions = [
 
 const handleWsAuth = (event: any, wsProvider: WebsocketProvider, ydoc: Y.Doc, docId: string) => {
     if (event.status === 'failed') {
+        toast.error("access token授权失败");
         wsProvider.shouldConnect = false;
         wsProvider.ws?.close()
     }
     if (event.status === 'expired') {
         debugger
+        toast.error("access token授权过期");
         RequestHandler.handleWebAccessTokenExpire().then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
                 wsProvider.ws?.close();
@@ -84,6 +86,7 @@ const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
     permanentUserData.setUserMapping(ydoc, ydoc.clientID, ydocUser.name)
     wsProvider.awareness.setLocalStateField('user', ydocUser);
     wsProvider.on('auth', (event: any) => {
+        debugger
         handleWsAuth(event, wsProvider, ydoc, docId);
     });
     wsProvider.on('connection-error', (event: any) => {
@@ -104,6 +107,7 @@ const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
                 wsProvider.connect();
             }, 2000);
         } else {
+            debugger
             wsProvider.destroy();
             toast.error("无法建立实时协作连接");
             return;
