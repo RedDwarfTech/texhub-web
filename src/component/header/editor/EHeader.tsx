@@ -17,6 +17,7 @@ import { CompileProjLog } from "@/model/request/proj/CompileProjLog";
 import { ResponseHandler } from "rdjs-wheel";
 import { CompileStatus } from "@/model/prj/compile/CompileStatus";
 import { getAccessToken } from "@/component/common/cache/Cache";
+import ProjSetting from "@/page/main/setting/ProjSetting";
 
 const EHeader: React.FC = () => {
 
@@ -57,7 +58,7 @@ const EHeader: React.FC = () => {
                 file_name: mainFile.name,
                 version_no: queue.version_no,
                 qid: queue.id,
-                access_token:  getAccessToken()
+                access_token: getAccessToken()
             };
             if (queue.comp_status === 1) {
                 doCompileLogPreCheck(req, onSseMessage);
@@ -89,6 +90,10 @@ const EHeader: React.FC = () => {
         });
     }
 
+    const handleSettings = (mainFile: TexFileModel) => {
+
+    }
+
     const onSseMessage = (msg: string, eventSource: EventSource) => {
         updateLogText(msg);
     }
@@ -105,13 +110,22 @@ const EHeader: React.FC = () => {
         <div className={styles.container}>
             <div></div>
             <div className={styles.actions}>
-                <button type="button" className="btn btn-primary btn-sm" onClick={() => {handleNavProfile() }}>
-                    <i className="fa-solid fa-user"></i> 个人中心
-                </button>
                 <button type="button" className="btn btn-primary btn-sm" onClick={() => { handleQueueCompile(mainFile) }}>
                     <i className="fa-solid fa-play"></i> 编译
                 </button>
+                <button type="button"
+                    className="btn btn-primary btn-sm"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasExample"
+                    aria-controls="offcanvasExample"
+                    onClick={() => { handleSettings(mainFile) }}>
+                    <i className="fa-solid fa-cog"></i> 设置
+                </button>
+                <button type="button" className="btn btn-primary btn-sm" onClick={() => { handleNavProfile() }}>
+                    <i className="fa-solid fa-user"></i> 个人中心
+                </button>
             </div>
+            <ProjSetting></ProjSetting>
         </div>
     );
 }
