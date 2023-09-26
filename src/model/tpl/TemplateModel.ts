@@ -7,4 +7,5 @@ export interface TemplateModel {
     preview_url: string;
     intro: string;
     pdf_name: string;
+    source: string;
 }

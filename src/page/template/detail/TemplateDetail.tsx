@@ -37,6 +37,11 @@ const TemplateDetail: React.FC = () => {
         window.open(pdfUrl, '_blank');
     };
 
+    const openTplSrc = (tpl: TemplateModel) => {
+        if(!tpl || !tpl.source) return;
+        window.open(tpl.source);
+    }
+
     const createProjByTpl = () => {
         let req:CreateTplProjReq =  {
             template_id: tpl.template_id
@@ -60,6 +65,7 @@ const TemplateDetail: React.FC = () => {
                 <div className={styles.tplAction}>
                     <button type="button" className="btn btn-primary" onClick={()=>{createProjByTpl()}}>以此模版创建项目</button>
                     <button type="button" className="btn btn-primary" onClick={() => { previewTplPdf() }}>预览模版</button>
+                    <button type="button" className="btn btn-primary" onClick={() => {openTplSrc(tpl)}}>模版来源</button>
                 </div>
                 <img src={tpl.preview_url} className={styles.tplDemo}></img>
             </div>
