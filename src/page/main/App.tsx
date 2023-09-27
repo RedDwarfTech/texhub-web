@@ -92,7 +92,7 @@ const App: React.FC = () => {
     let vid = compileResult.out_path;
     if (proj_id && vid) {
       let file_without_ext = mainFile?.name.replace(/\.[^/.]+$/, '');
-      const pdfUrl = readConfig("compileBaseUrl") + "/" + proj_id + "/" + vid + "/" + file_without_ext + ".pdf";
+      const pdfUrl = readConfig("compileBaseUrl") + "/" + proj_id + "/" + file_without_ext + ".pdf";
       updatePdfUrl(pdfUrl);
     }
   }, [compileResult]);
