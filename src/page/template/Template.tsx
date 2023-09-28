@@ -60,10 +60,12 @@ const Template: React.FC = () => {
                 <div className={styles.tplFilter}>
                     <div className="mb-3 col-2">
                         <select id="tpl-type" className="form-select" defaultValue="1" onChange={selectChanged}>
+                            <option value="">全部</option>
                             <option value="1">简历</option>
                             <option value="2">推荐信</option>
                             <option value="3">论文</option>
                             <option value="4">毕业设计</option>
+                            <option value="5">其他</option>
                         </select>
                     </div>
                     <div className="input-group mb-3">
