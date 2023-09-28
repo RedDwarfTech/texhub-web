@@ -3,6 +3,8 @@
     align-items: center;
     justify-content: center;
     margin-top: 20px;
+    gap: 15px;
+    flex-direction: column;
 }
 
 .docList {
@@ -47,4 +49,9 @@
 .projList {
     width: 80%;
     margin: 0 auto;
+}
+
+.helpTip {
+    font-size: 14px;
+    color: darkgray;
 }

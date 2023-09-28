@@ -212,6 +212,12 @@ const ProjectTab: React.FC = () => {
                                 {renderProj()}
                             </div>
                         </div>
+                        <div className={styles.helpTip}>
+                            <p>如果您在使用过程中遇到问题，可发邮件到： 
+                                <a href="mailto:jiangxiaoqiang@poemhub.top">jiangxiaoqiang@poemhub.top</a>
+                            ,我们会第一时间处理
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
