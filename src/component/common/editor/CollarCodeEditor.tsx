@@ -8,6 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { initEditor } from "@/service/editor/CollarEditorService";
 import { updateFileInit } from "@/service/file/FileService";
 import { TexFileModel } from "@/model/file/TexFileModel";
+import { getPdfPosition } from "@/service/project/ProjectService";
+import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
 
 export type EditorProps = {
   projectId: string;
@@ -22,7 +24,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   let editorView: any = null;
 
   React.useEffect(() => {
-    if(projInfo && Object.keys(projInfo).length > 0){
+    if (projInfo && Object.keys(projInfo).length > 0) {
       setMainFileModel(projInfo.main_file);
       init(projInfo.main_file.file_id);
     }
@@ -67,8 +69,27 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     }
   }
 
+  const handlePdfLocate = () => {
+    if (mainFileModel && mainFileModel.name) {
+      let req: QueryPdfPos = {
+        project_id: props.projectId,
+        file: mainFileModel.name,
+        line: 1,
+        column: 5
+      };
+      getPdfPosition(req);
+    }
+  }
+
   return (
-    <div ref={edContainer} className={styles.container}>
+    <div className={styles.container}>
+      <div className={styles.editorHeader}>
+        <button className={styles.menuButton} onClick={() => { handlePdfLocate() }}>
+          <i className="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+      <div ref={edContainer} className={styles.editorContainer}>
+      </div>
     </div>
   );
 }

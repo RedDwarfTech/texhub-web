@@ -42,7 +42,7 @@ const EHeader: React.FC = () => {
     React.useEffect(() => {
         let interval: NodeJS.Timeout | null = null;
         if (queue && Object.keys(queue).length > 0) {
-            if (queue.comp_status === 0) {
+            if (queue.comp_status === CompileStatus.COMPILING) {
                 interval = setInterval(() => {
                     getCompQueueStatus(queue.id);
                 }, 5000);
@@ -60,10 +60,10 @@ const EHeader: React.FC = () => {
                 qid: queue.id,
                 access_token: getAccessToken()
             };
-            if (queue.comp_status === 1) {
+            if (queue.comp_status === CompileStatus.WAITING) {
                 doCompileLogPreCheck(req, onSseMessage);
             }
-            if (queue.comp_status === 2) {
+            if (queue.comp_status === CompileStatus.COMPLETE) {
                 compileProjectLog(req);
             }
             return () => {

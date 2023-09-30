@@ -203,7 +203,6 @@ const App: React.FC = () => {
           <HiddenContent id="hiddenContentLeft" className={styles.hiddenContent} />
         </div>
         <div id="editor" className={styles.editor}>
-          <div className={styles.editorHeader}></div>
           <React.Suspense fallback={<div>Loading...</div>}>
             <CollarCodeEditor projectId={pid.toString()}></CollarCodeEditor>
           </React.Suspense>

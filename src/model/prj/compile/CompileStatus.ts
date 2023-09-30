@@ -1,5 +1,5 @@
 export enum CompileStatus {
-    WAITING = 1,
-    COMPILING = 2,
-    COMPLETE = 3,
+    WAITING = 0,
+    COMPILING = 1,
+    COMPLETE = 2,
 }

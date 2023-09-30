@@ -59,7 +59,7 @@ const Template: React.FC = () => {
             <div className={styles.tplBody}>
                 <div className={styles.tplFilter}>
                     <div className="mb-3 col-2">
-                        <select id="tpl-type" className="form-select" defaultValue="1" onChange={selectChanged}>
+                        <select id="tpl-type" className="form-select" defaultValue="0" onChange={selectChanged}>
                             <option value="">全部</option>
                             <option value="1">简历</option>
                             <option value="2">推荐信</option>

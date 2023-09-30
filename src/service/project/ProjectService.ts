@@ -8,6 +8,7 @@ import { CreateProjReq } from "@/model/request/proj/CreateProjReq";
 import { JoinProjReq } from "@/model/request/proj/JoinProjReq";
 import { QueryProjReq } from "@/model/request/proj/QueryProjReq";
 import { CreateTplProjReq } from "@/model/request/proj/create/CreateTplProjReq";
+import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 import { ProjectActionType } from "@/redux/action/project/ProjectAction";
 import store from "@/redux/store/store";
@@ -167,6 +168,20 @@ export function sendQueueCompileRequest(req: CompileQueueReq) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
+export function getPdfPosition(req: QueryPdfPos) {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(req)) {
+    params.append(key, value);
+  }
+  const config: AxiosRequestConfig = {
+    method: 'get',
+    url: '/tex/project/pos/pdf',
+    params: params
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.ADD_QUEUE_COMPILE];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
 export function doCompileLogPreCheck(params: CompileProjLog, onSseMessage: (msg: string, eventSource: EventSource) => void) {
   if (AuthHandler.isTokenNeedRefresh(60)) {
     RequestHandler.handleWebAccessTokenExpire()
@@ -179,6 +194,7 @@ export function doCompileLogPreCheck(params: CompileProjLog, onSseMessage: (msg:
 }
 
 export function doCompile(params: CompileProjLog, onSseMessage: (msg: string, eventSource: EventSource) => void) {
+  debugger
   var queryString = Object.keys(params).map(key => key + '=' + params[key as keyof CompileProjLog]).join('&');
   let eventNative = new EventSource('/tex/project/compile/log/stream?' + queryString);
   eventNative.onopen = () => {

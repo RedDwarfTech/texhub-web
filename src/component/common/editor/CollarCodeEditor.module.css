@@ -1,4 +1,21 @@
-
 .container {
     height: 96vh;   
+}
+
+.editorHeader{
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(33, 41, 53);
+    gap: 5px;
+    padding-left: 8px;
+}
+
+.menuButton {
+    background-color: rgb(40, 50, 70);
+    color: white;
+    border: none;
+}
+
+.editorContainer{
+    
 }

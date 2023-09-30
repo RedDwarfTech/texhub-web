@@ -25,7 +25,8 @@ export enum ProjectActionType {
     GET_COMPILE_LOG,
     SET_COMPILE_STATUS,
     UPLOAD_PROJ_FILE,
-    PROJ_ATTR
+    PROJ_ATTR,
+    GET_PDF_POSITION
 }
 
 export interface saveDocAction {
@@ -121,4 +122,9 @@ export interface uploadProjFileAction {
 export interface setProjAttrAction {
     type: ProjectActionType.PROJ_ATTR;
     data: ProjAttribute;
+}
+
+export interface getPdfPositionAction {
+    type: ProjectActionType.GET_PDF_POSITION;
+    data: any;
 }
