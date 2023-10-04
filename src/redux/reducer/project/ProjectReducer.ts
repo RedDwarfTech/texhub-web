@@ -6,6 +6,7 @@ import { CompileQueue } from "@/model/prj/CompileQueue";
 import { ProjInfo } from "@/model/prj/ProjInfo";
 import { CompileStatus } from "@/model/prj/compile/CompileStatus";
 import { ProjAttribute } from "@/model/prj/config/ProjAttribute";
+import { PdfPosition } from "@/model/prj/pdf/PdfPosition";
 
 const initState: AppState["proj"] = {
     projList: [],
@@ -22,7 +23,8 @@ const initState: AppState["proj"] = {
     compileStatus: {} as CompileStatus,
     projAttr: {
         pdfScale: 1
-    } as ProjAttribute
+    } as ProjAttribute,
+    pdfFocus: [] as PdfPosition[]
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -108,6 +110,11 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 projAttr: newObject
+            };
+        case "GET_PDF_POSITION":
+            return {
+                ...state,
+                pdfFocus: action.data
             };
         default:
             break;

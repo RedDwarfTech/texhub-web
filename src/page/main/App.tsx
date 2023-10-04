@@ -49,6 +49,7 @@ const App: React.FC = () => {
 
   React.useEffect(() => {
     if (endSignal && endSignal.length > 0) {
+      debugger
       let result = JSON.parse(endSignal);
       setLatestCompile(result.comp);
       setCompileQueue(result.queue);

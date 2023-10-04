@@ -1,4 +1,4 @@
-import { EditorView } from "@codemirror/view";
+import { EditorView, ViewPlugin } from "@codemirror/view";
 // @ts-ignore
 import { WebsocketProvider } from "y-websocket";
 import * as Y from 'yjs';
@@ -151,5 +151,7 @@ export function initEditor(
         state,
         parent: edContainer.current,
     });
+
+    view
     return view;
 }

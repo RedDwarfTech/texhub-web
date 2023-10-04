@@ -178,7 +178,7 @@ export function getPdfPosition(req: QueryPdfPos) {
     url: '/tex/project/pos/pdf',
     params: params
   };
-  const actionTypeString: string = ProjectActionType[ProjectActionType.ADD_QUEUE_COMPILE];
+  const actionTypeString: string = ProjectActionType[ProjectActionType.GET_PDF_POSITION];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
@@ -194,7 +194,6 @@ export function doCompileLogPreCheck(params: CompileProjLog, onSseMessage: (msg:
 }
 
 export function doCompile(params: CompileProjLog, onSseMessage: (msg: string, eventSource: EventSource) => void) {
-  debugger
   var queryString = Object.keys(params).map(key => key + '=' + params[key as keyof CompileProjLog]).join('&');
   let eventNative = new EventSource('/tex/project/compile/log/stream?' + queryString);
   eventNative.onopen = () => {

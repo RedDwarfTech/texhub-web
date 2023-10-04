@@ -15,12 +15,19 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, o
 
     const [numPages, setNumPages] = useState<number>();
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [projAttribute, setProjAttribute] = useState<ProjAttribute>({pdfScale: 1});
-    const { projAttr } = useSelector((state: AppState) => state.proj);
+    const [projAttribute, setProjAttribute] = useState<ProjAttribute>({ pdfScale: 1 });
+    const { projAttr, pdfFocus } = useSelector((state: AppState) => state.proj);
 
-    React.useEffect(()=>{
+    React.useEffect(() => {
         setProjAttribute(projAttr);
-    },[projAttr]);
+    }, [projAttr]);
+
+    React.useEffect(() => {
+        if (pdfFocus && pdfFocus.length > 0) {
+            let pageNum = pdfFocus[0].page;
+            goPage(pageNum);
+        }
+    }, [pdfFocus]);
 
     const handlePageChange = (page: any) => {
 
@@ -40,7 +47,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, o
     const goPage = (i: number) => {
         let element = document.querySelectorAll(`.${styles.pdfPage}`);
         if (element && element.length > 0) {
-            element[i-1]!.scrollIntoView({ behavior: 'smooth' });
+            element[i - 1]!.scrollIntoView({ behavior: 'smooth' });
         }
     }
 

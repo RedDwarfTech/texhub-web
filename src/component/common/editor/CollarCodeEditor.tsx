@@ -71,14 +71,25 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   const handlePdfLocate = () => {
     if (mainFileModel && mainFileModel.name) {
+      let { line, column } = getCursorPos(editorView);
       let req: QueryPdfPos = {
         project_id: props.projectId,
         file: mainFileModel.name,
-        line: 1,
-        column: 5
+        line: line,
+        column: column
       };
       getPdfPosition(req);
     }
+  }
+
+  const getCursorPos = (editor: EditorView): { line: number; column: number } => {
+    const cursor = editor.state.selection.main.head;
+    const line = editor.state.doc.lineAt(cursor).number;
+    const column = cursor - editor.state.doc.line(line).from;
+    return {
+      line: line + 1,
+      column: column + 1
+    };
   }
 
   return (

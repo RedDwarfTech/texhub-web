@@ -8,6 +8,7 @@ import { CompileQueue } from "@/model/prj/CompileQueue";
 import { ProjInfo } from "@/model/prj/ProjInfo";
 import { CompileStatus } from "@/model/prj/compile/CompileStatus";
 import { ProjAttribute } from "@/model/prj/config/ProjAttribute";
+import { PdfPosition } from "@/model/prj/pdf/PdfPosition";
 
 export interface AppState {
     proj: {
@@ -23,7 +24,8 @@ export interface AppState {
         streamLogText: string,
         projInfo: ProjInfo,
         compileStatus: CompileStatus,
-        projAttr: ProjAttribute
+        projAttr: ProjAttribute,
+        pdfFocus: PdfPosition[]
     },
     tpl: {
         tplList: TemplateModel[],
