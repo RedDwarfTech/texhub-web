@@ -12,8 +12,8 @@ const ProjSetting: React.FC = () => {
                 <div className={styles.configItem}>
                     <div>LaTeX编译器:</div>
                     <div>
-                        <select className="form-select" aria-label="Default select example">
-                            <option selected>XeLaTeX</option>
+                        <select className="form-select" defaultValue="XeLaTeX" aria-label="Default select example">
+                            <option>XeLaTeX</option>
                         </select>
                     </div>
                 </div>

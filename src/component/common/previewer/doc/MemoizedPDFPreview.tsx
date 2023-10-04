@@ -5,6 +5,7 @@ import { DocumentCallback, Options, PageCallback } from 'react-pdf/dist/cjs/shar
 import { AppState } from '@/redux/types/AppState';
 import { useSelector } from 'react-redux';
 import { ProjAttribute } from '@/model/prj/config/ProjAttribute';
+import { TexFileModel } from '@/model/file/TexFileModel';
 
 interface PDFPreviewProps {
     curPdfUrl: string;
@@ -46,7 +47,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, o
 
     const goPage = (i: number) => {
         let element = document.querySelectorAll(`.${styles.pdfPage}`);
-        if (element && element.length > 0) {
+        if (element && element.length > 0 && i) {
             element[i - 1]!.scrollIntoView({ behavior: 'smooth' });
         }
     }

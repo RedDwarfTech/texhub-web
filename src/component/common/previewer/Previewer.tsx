@@ -13,6 +13,7 @@ import { CompileQueue } from '@/model/prj/CompileQueue';
 import { Options } from 'react-pdf/dist/cjs/shared/types';
 import { getAccessToken } from '../cache/Cache';
 import { setProjAttr } from '@/service/project/ProjectService';
+import { ProjInfo } from '@/model/prj/ProjInfo';
 
 const Previewer: React.FC = () => {
 
@@ -22,13 +23,18 @@ const Previewer: React.FC = () => {
     const [curLogText, setCurLogText] = useState<string>('');
     const [curPreviewTab, setCurPreviewTab] = useState<string>('pdfview');
     const [curCompileQueue, setCurCompileQueue] = useState<CompileQueue>();
-    const { pdfUrl, streamLogText, logText, tabName, compileStatus, queue, projAttr } = useSelector((state: AppState) => state.proj);
+    const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
+    const { pdfUrl, streamLogText, logText, tabName, compileStatus, queue, projAttr, projInfo } = useSelector((state: AppState) => state.proj);
 
     React.useEffect(() => {
         if (pdfUrl && pdfUrl.length > 0) {
             setCurPdfUrl(pdfUrl);
         }
     }, [pdfUrl]);
+
+    React.useEffect(() => {
+        setCurProjInfo(projInfo);
+    }, [projInfo]);
 
     React.useEffect(() => {
         setCurCompileQueue(queue);
@@ -101,11 +107,11 @@ const Previewer: React.FC = () => {
     }
 
     const handleZoomIn = async () => {
-        setProjAttr({pdfScale: pdfScale + 0.1});
+        setProjAttr({ pdfScale: pdfScale + 0.1 });
     }
 
     const handleZoomOut = async () => {
-        setProjAttr({pdfScale: pdfScale - 0.1});
+        setProjAttr({ pdfScale: pdfScale - 0.1 });
     }
 
     const renderPreviewTab = () => {
@@ -145,7 +151,8 @@ const Previewer: React.FC = () => {
 
     const renderPdfView = () => {
         return (
-            <MemoizedPDFPreview curPdfUrl={pdfUrl}
+            <MemoizedPDFPreview
+                curPdfUrl={pdfUrl}
                 options={options}></MemoizedPDFPreview>
         );
     }

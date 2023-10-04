@@ -10,6 +10,7 @@ import { updateFileInit } from "@/service/file/FileService";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { getPdfPosition } from "@/service/project/ProjectService";
 import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
+import { toast } from "react-toastify";
 
 export type EditorProps = {
   projectId: string;
@@ -70,11 +71,17 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }
 
   const handlePdfLocate = () => {
-    if (mainFileModel && mainFileModel.name) {
-      let { line, column } = getCursorPos(editorView);
+    if (mainFileModel && mainFileModel.name && activeEditorView) {
+      let { line, column } = getCursorPos(activeEditorView);
+      const selected = localStorage.getItem("proj-select-file:" + props.projectId);
+      if(!selected) {
+        toast.info("请选择文件");
+        return;
+      }
+      const selectFile: TexFileModel = JSON.parse(selected);
       let req: QueryPdfPos = {
         project_id: props.projectId,
-        file: mainFileModel.name,
+        file: selectFile.name,
         line: line,
         column: column
       };
@@ -83,13 +90,20 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }
 
   const getCursorPos = (editor: EditorView): { line: number; column: number } => {
-    const cursor = editor.state.selection.main.head;
-    const line = editor.state.doc.lineAt(cursor).number;
-    const column = cursor - editor.state.doc.line(line).from;
-    return {
-      line: line + 1,
-      column: column + 1
-    };
+    if(editor && editor.state){
+      const cursor = editor.state.selection.main.head;
+      const line = editor.state.doc.lineAt(cursor).number;
+      const column = cursor - editor.state.doc.line(line).from;
+      return {
+        line: line + 1,
+        column: column + 1
+      };
+    }else{
+      return {
+        line: 1,
+        column: 1
+      };
+    }
   }
 
   return (
