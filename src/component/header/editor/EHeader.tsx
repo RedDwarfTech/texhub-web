@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import {
     clearCompLogText,
     compileProjectLog,
-    doCompileLogPreCheck,
+    doCompileLogPreCheck as getStreamLog,
     getCompQueueStatus,
     sendQueueCompileRequest, setCompileStatus, showPreviewTab, updateLogText
 } from "@/service/project/ProjectService";
@@ -42,13 +42,16 @@ const EHeader: React.FC = () => {
     React.useEffect(() => {
         let interval: NodeJS.Timeout | null = null;
         if (queue && Object.keys(queue).length > 0) {
-            if (queue.comp_status === CompileStatus.COMPILING) {
-                interval = setInterval(() => {
-                    getCompQueueStatus(queue.id);
-                }, 5000);
+            if (queue.comp_status === CompileStatus.WAITING) {
+                if(interval === null) {
+                    interval = setInterval(() => {
+                        getCompQueueStatus(queue.id);
+                    }, 5000);
+                }
             }
             if (queue.comp_status !== 0 && interval) {
                 clearInterval(interval);
+                return;
             }
             if (!mainFile) {
                 return;
@@ -60,19 +63,25 @@ const EHeader: React.FC = () => {
                 qid: queue.id,
                 access_token: getAccessToken()
             };
-            if (queue.comp_status === CompileStatus.WAITING) {
-                doCompileLogPreCheck(req, onSseMessage);
+            if (queue.comp_status == CompileStatus.COMPILING) {
+                clearCompileCheck(interval);
+                getStreamLog(req, onSseMessage);
             }
             if (queue.comp_status === CompileStatus.COMPLETE) {
+                clearCompileCheck(interval);
                 compileProjectLog(req);
             }
             return () => {
-                if (interval) {
-                    clearInterval(interval);
-                }
+                clearCompileCheck(interval);
             };
         }
     }, [queue]);
+
+    const clearCompileCheck = (interval: NodeJS.Timeout | null) => {
+        if (interval) {
+            clearInterval(interval);
+        }
+    }
 
     const handleQueueCompile = (mainFile: TexFileModel) => {
         if (!mainFile) {

@@ -107,7 +107,6 @@ const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
                 wsProvider.connect();
             }, 2000);
         } else {
-            debugger
             wsProvider.destroy();
             toast.error("无法建立实时协作连接");
             return;
