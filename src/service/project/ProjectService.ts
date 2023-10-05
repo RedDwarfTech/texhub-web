@@ -197,7 +197,7 @@ export function getSrcPosition(req: QuerySrcPos) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function doCompileLogPreCheck(params: CompileProjLog, onSseMessage: (msg: string, eventSource: EventSource) => void) {
+export function getStreamLog(params: CompileProjLog, onSseMessage: (msg: string, eventSource: EventSource) => void) {
   if (AuthHandler.isTokenNeedRefresh(60)) {
     RequestHandler.handleWebAccessTokenExpire()
       .then((data) => {

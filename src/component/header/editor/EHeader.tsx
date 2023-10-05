@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import {
     clearCompLogText,
     compileProjectLog,
-    doCompileLogPreCheck as getStreamLog,
+    getStreamLog,
     getCompQueueStatus,
     sendQueueCompileRequest, setCompileStatus, showPreviewTab, updateLogText
 } from "@/service/project/ProjectService";

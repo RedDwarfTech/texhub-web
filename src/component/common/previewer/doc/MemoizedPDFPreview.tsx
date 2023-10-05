@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Document, Page } from 'react-pdf';
+import { Document, Page, pdfjs } from 'react-pdf';
 import styles from "./MemoizedPDFPreview.module.css";
 import { DocumentCallback, Options, PageCallback } from 'react-pdf/dist/cjs/shared/types';
 import { AppState } from '@/redux/types/AppState';
 import { useSelector } from 'react-redux';
 import { ProjAttribute } from '@/model/prj/config/ProjAttribute';
-import { TexFileModel } from '@/model/file/TexFileModel';
+import { PdfPosition } from '@/model/prj/pdf/PdfPosition';
 
 interface PDFPreviewProps {
     curPdfUrl: string;
@@ -18,6 +18,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, o
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [projAttribute, setProjAttribute] = useState<ProjAttribute>({ pdfScale: 1 });
     const { projAttr, pdfFocus } = useSelector((state: AppState) => state.proj);
+    const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
 
     React.useEffect(() => {
         setProjAttribute(projAttr);
@@ -26,6 +27,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, o
     React.useEffect(() => {
         if (pdfFocus && pdfFocus.length > 0) {
             let pageNum = pdfFocus[0].page;
+            setCurPdfPosition(pdfFocus);
             goPage(pageNum);
         }
     }, [pdfFocus]);
