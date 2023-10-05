@@ -10,6 +10,7 @@ import { QueryProjReq } from "@/model/request/proj/QueryProjReq";
 import { CreateTplProjReq } from "@/model/request/proj/create/CreateTplProjReq";
 import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
+import { QuerySrcPos } from "@/model/request/proj/query/QuerySrcPos";
 import { ProjectActionType } from "@/redux/action/project/ProjectAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
@@ -179,6 +180,20 @@ export function getPdfPosition(req: QueryPdfPos) {
     params: params
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.GET_PDF_POSITION];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
+export function getSrcPosition(req: QuerySrcPos) {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(req)) {
+    params.append(key, value);
+  }
+  const config: AxiosRequestConfig = {
+    method: 'get',
+    url: '/tex/project/pos/src',
+    params: params
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.GET_SRC_POSITION];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 

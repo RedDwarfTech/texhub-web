@@ -12,8 +12,10 @@ import { CompileStatus } from '@/model/prj/compile/CompileStatus';
 import { CompileQueue } from '@/model/prj/CompileQueue';
 import { Options } from 'react-pdf/dist/cjs/shared/types';
 import { getAccessToken } from '../cache/Cache';
-import { setProjAttr } from '@/service/project/ProjectService';
+import { getSrcPosition, setProjAttr } from '@/service/project/ProjectService';
 import { ProjInfo } from '@/model/prj/ProjInfo';
+import { QuerySrcPos } from '@/model/request/proj/query/QuerySrcPos';
+import { TexFileModel } from '@/model/file/TexFileModel';
 
 const Previewer: React.FC = () => {
 
@@ -106,6 +108,29 @@ const Previewer: React.FC = () => {
         }
     }
 
+    const handleSrcLocate = () => {
+        if(!curProjInfo){
+            toast.info("项目信息为空");
+            return;
+        }
+        const selected = localStorage.getItem("proj-select-file:" + curProjInfo.main.project_id);
+        if(!selected) {
+            toast.info("请选择文件");
+            return;
+        }
+        const selectFile: TexFileModel = JSON.parse(selected);
+        let req: QuerySrcPos = {
+            project_id: curProjInfo?.main.project_id,
+            path: selectFile.file_path,
+            file: selectFile.name,
+            main_file: "main.tex",
+            page: 2,
+            h: 3.565,
+            v: 4.563
+        };
+        getSrcPosition(req);
+    }
+
     const handleZoomIn = async () => {
         setProjAttr({ pdfScale: pdfScale + 0.1 });
     }
@@ -161,13 +186,28 @@ const Previewer: React.FC = () => {
         if (curPreviewTab === "pdfview") {
             return (
                 <div className={styles.rightAction}>
-                    <button className={styles.previewIconButton} onClick={() => { handleDownloadPdf(curPdfUrl) }}>
+                    <button className={styles.previewIconButton}
+                        data-bs-toggle="tooltip"
+                        title="导航到源码"
+                        onClick={() => { handleSrcLocate() }}>
+                        <i className="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <button className={styles.previewIconButton}
+                        data-bs-toggle="tooltip"
+                        title="下载PDF"
+                        onClick={() => { handleDownloadPdf(curPdfUrl) }}>
                         <i className="fa-solid fa-download"></i>
                     </button>
-                    <button className={styles.previewIconButton} id="zoominbutton" onClick={() => { handleZoomIn() }}>
+                    <button className={styles.previewIconButton}
+                        data-bs-toggle="tooltip"
+                        title="放大"
+                        id="zoominbutton" onClick={() => { handleZoomIn() }}>
                         <i className="fa fa-search-plus"></i>
                     </button>
-                    <button className={styles.previewIconButton} id="zoomoutbutton" onClick={() => { handleZoomOut() }}>
+                    <button className={styles.previewIconButton}
+                        data-bs-toggle="tooltip"
+                        title="缩小"
+                        id="zoomoutbutton" onClick={() => { handleZoomOut() }}>
                         <i className="fa fa-search-minus"></i>
                     </button>
                 </div>

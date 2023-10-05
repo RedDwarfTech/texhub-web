@@ -81,7 +81,9 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       const selectFile: TexFileModel = JSON.parse(selected);
       let req: QueryPdfPos = {
         project_id: props.projectId,
+        path: selectFile.file_path,
         file: selectFile.name,
+        main_file: mainFileModel.name,
         line: line,
         column: column
       };

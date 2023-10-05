@@ -4,6 +4,7 @@ export interface TexFileModel {
     template_id: number;
     created_time: string;
     updated_time: string;
+    file_path: string;
     project_id: string;
     file_id: string;
     main_flag: number;

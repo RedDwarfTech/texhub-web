@@ -26,7 +26,8 @@ export enum ProjectActionType {
     SET_COMPILE_STATUS,
     UPLOAD_PROJ_FILE,
     PROJ_ATTR,
-    GET_PDF_POSITION
+    GET_PDF_POSITION,
+    GET_SRC_POSITION
 }
 
 export interface saveDocAction {

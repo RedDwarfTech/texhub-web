@@ -1,5 +1,5 @@
 .container {
-    height: 96vh;   
+    height: 91vh;   
 }
 
 .editorHeader{
@@ -17,5 +17,5 @@
 }
 
 .editorContainer{
-    
+    height: 100%;
 }
