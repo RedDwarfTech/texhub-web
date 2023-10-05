@@ -175,9 +175,11 @@ const Previewer: React.FC = () => {
     }
 
     const renderPdfView = () => {
+        if(!curProjInfo || !curProjInfo.main) return <div></div>;
         return (
             <MemoizedPDFPreview
                 curPdfUrl={pdfUrl}
+                projId={curProjInfo.main.project_id}
                 options={options}></MemoizedPDFPreview>
         );
     }
