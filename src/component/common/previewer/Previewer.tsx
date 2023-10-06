@@ -175,7 +175,8 @@ const Previewer: React.FC = () => {
     }
 
     const renderPdfView = () => {
-        if(!curProjInfo || !curProjInfo.main) return <div></div>;
+        if(!curProjInfo || !curProjInfo.main) return <div>Loading...</div>;
+        if(!pdfUrl) return <div>Loading...</div>;
         return (
             <MemoizedPDFPreview
                 curPdfUrl={pdfUrl}

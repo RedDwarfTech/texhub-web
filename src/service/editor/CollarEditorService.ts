@@ -64,7 +64,7 @@ const handleWsAuth = (event: any, wsProvider: WebsocketProvider, ydoc: Y.Doc, do
 }
 
 const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
-    const wsProvider = new WebsocketProvider(readConfig("wssUrl"), docId, ydoc, {
+    const wsProvider: WebsocketProvider = new WebsocketProvider(readConfig("wssUrl"), docId, ydoc, {
         maxBackoffTime: 1000000,
         params: {
             // https://self-issued.info/docs/draft-ietf-oauth-v2-bearer.html#query-param
@@ -108,7 +108,6 @@ const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
             }, 2000);
         } else {
             wsProvider.destroy();
-            toast.error("无法建立实时协作连接");
             return;
         }
     });

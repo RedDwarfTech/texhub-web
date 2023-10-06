@@ -25,10 +25,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
     const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
     const canvasArray = useRef<Array<React.MutableRefObject<HTMLCanvasElement | null>>>([]);
 
-    React.useEffect(()=>{
-        restorePdfScroll();
-    },[]);
-
     React.useEffect(() => {
         setCurProjInfo(projInfo);
     }, [projInfo]);
@@ -42,6 +38,8 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
             let pageNum = pdfFocus[0].page;
             setCurPdfPosition(pdfFocus);
             localStorage.setItem("pdf:" + curProjInfo?.main.project_id, pageNum.toString());
+            const pdfLocationKey = "pdf:location:" + projId;
+            localStorage.removeItem(pdfLocationKey);
             goPage(pageNum);
             renderHighlight(pdfFocus);
         }
@@ -102,7 +100,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
         if (elements && elements.length > 0) {
             elements.forEach(box => io.observe(box));
         }
-        console.log("page rend success");
     };
 
     const onDocumentLoadSuccess = (pdf: DocumentCallback) => {
@@ -143,20 +140,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
         const scrollTop = e.currentTarget.scrollTop;
         const key = "pdf:location:" + projId;
         localStorage.setItem(key, scrollTop.toString());
-    }
-
-    const restorePdfScroll = () => {
-        const key = "pdf:location:" + projId;
-        const scrollPosition = localStorage.getItem(key);
-        if (scrollPosition) {
-            const pdfContainerDiv = document.getElementById('pdfContainer');
-            if(pdfContainerDiv){
-                pdfContainerDiv.scrollTop = parseInt(scrollPosition);
-            }
-        }
-    }
-    if(curPdfUrl){
-        console.log(curPdfUrl);
     }
     
     return (
