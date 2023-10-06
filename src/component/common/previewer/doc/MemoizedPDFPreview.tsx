@@ -80,15 +80,9 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
         if(!canvas || !canvas.current) return;
         var context = canvas.current.getContext('2d');
         if(!context) return;
-        var { width, height } = canvas.current;
         context.save();
-        context.translate(width / 2, height / 2);
-        context.globalCompositeOperation = 'multiply';
-        context.textAlign = 'center';
-        context.font = '100px sans-serif';
         context.fillStyle = 'rgba(22, 123, 140, 125)';
-        debugger
-        context.fillRect(item.h,item.v, item.width, item.height);
+        context.fillRect(item.h ,item.v, item.width, item.height);
         context.restore();
     }
 
@@ -131,8 +125,12 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
         return tagList;
     }
 
+    const handlePdfScroll = (e:React.UIEvent<HTMLDivElement>) => {
+        
+    }
+
     return (
-        <div className={styles.previewBody}>
+        <div className={styles.previewBody} onScroll={()=>handlePdfScroll}>
             <Document options={options}
                 file={curPdfUrl}
                 onLoadSuccess={onDocumentLoadSuccess}>

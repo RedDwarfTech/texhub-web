@@ -25,6 +25,7 @@
     color: white;
     flex-grow: 1;
     overflow: auto;
+    max-height: 91.4vh;
 }
 
 .menuIcons {
