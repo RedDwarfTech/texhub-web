@@ -87,6 +87,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
         context.textAlign = 'center';
         context.font = '100px sans-serif';
         context.fillStyle = 'rgba(22, 123, 140, 125)';
+        debugger
         context.fillRect(item.h,item.v, item.width, item.height);
         context.restore();
     }
