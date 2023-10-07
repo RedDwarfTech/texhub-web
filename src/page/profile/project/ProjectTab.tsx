@@ -19,7 +19,6 @@ const ProjectTab: React.FC = () => {
     const [currProject, setCurrProject] = useState<TexProjectModel>();
     const [projName, setProjName] = useState<string>();
     const [activeTab, setActiveTab] = useState<number>(1);
-    const [projReq, setProjReq] = useState<QueryProjReq>();
     const { projList } = useSelector((state: AppState) => state.proj);
     const createDocCancelRef = useRef<HTMLButtonElement>(null);
     const delProjCancelRef = useRef<HTMLButtonElement>(null);
@@ -73,8 +72,8 @@ const ProjectTab: React.FC = () => {
     }
 
     const getProjFilter = (): QueryProjReq => {
-        let query:QueryProjReq = {
-            
+        let query: QueryProjReq = {
+
         };
         if (activeTab === 1) {
             return query;
@@ -83,6 +82,11 @@ const ProjectTab: React.FC = () => {
             return query;
         }
         return query;
+    }
+
+    const handleOperClick = (e: React.MouseEvent<HTMLButtonElement>, docItem: TexProjectModel) => {
+        e.stopPropagation();
+        setCurrProject(docItem);
     }
 
     const renderProj = () => {
@@ -94,7 +98,7 @@ const ProjectTab: React.FC = () => {
             const formattedTime = dayjs(docItem.updated_time).format('YYYY-MM-DD HH:mm:ss');
             const projCreatedTime = dayjs(docItem.created_time).format('YYYY-MM-DD HH:mm:ss');
             tagList.push(
-                <label key={docItem.project_id} className="list-group-item">
+                <div key={docItem.project_id} className="list-group-item">
                     <div className={styles.docHeader}>
                         <div className={styles.projTiltle}>
                             <a onClick={() => { navigate("/editor?pid=" + docItem.project_id) }}>
@@ -107,7 +111,7 @@ const ProjectTab: React.FC = () => {
                                     type="button"
                                     id="dropdownMenuButton1"
                                     data-bs-toggle="dropdown"
-                                    onClick={() => { setCurrProject(docItem) }}
+                                    onClick={(e) => { handleOperClick(e, docItem) }}
                                     aria-expanded="false">
                                     操作
                                 </button>
@@ -124,7 +128,7 @@ const ProjectTab: React.FC = () => {
                         <div><span>创建时间：</span>{projCreatedTime}</div>
                         <div><span>更新时间：</span>{formattedTime}</div>
                     </div>
-                </label>
+                </div>
             );
         });
         return tagList;
@@ -170,12 +174,12 @@ const ProjectTab: React.FC = () => {
 
     const handleTabClick = (clickTab: number) => {
         setActiveTab(clickTab);
-        if(clickTab === 1){
+        if (clickTab === 1) {
             let projReq = {
             };
             getProjectList(projReq);
         }
-        if(clickTab === 2){
+        if (clickTab === 2) {
             let projReq = {
                 role_id: 2
             };
@@ -213,9 +217,9 @@ const ProjectTab: React.FC = () => {
                             </div>
                         </div>
                         <div className={styles.helpTip}>
-                            <p>如果您在使用过程中遇到问题，可发邮件到： 
+                            <p>如果您在使用过程中遇到问题，可发邮件到：
                                 <a href="mailto:jiangxiaoqiang@poemhub.top">jiangxiaoqiang@poemhub.top</a>
-                            ,我们会第一时间处理
+                                ,我们会第一时间处理
                             </p>
                         </div>
                     </div>
