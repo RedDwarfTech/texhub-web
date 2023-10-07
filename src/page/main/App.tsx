@@ -213,7 +213,7 @@ const App: React.FC = () => {
         <div>
           <HiddenContent id="hiddenContentRight" className={styles.hiddenContent} />
         </div>
-        <Previewer></Previewer>
+        <Previewer projectId={pid as string}></Previewer>
       </div>
       <ToastContainer />
     </div>

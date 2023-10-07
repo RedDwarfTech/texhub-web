@@ -17,16 +17,29 @@ import { ProjInfo } from '@/model/prj/ProjInfo';
 import { QuerySrcPos } from '@/model/request/proj/query/QuerySrcPos';
 import { TexFileModel } from '@/model/file/TexFileModel';
 
-const Previewer: React.FC = () => {
+export type PreviwerProps = {
+    projectId: string;
+};
 
-    const [pdfScale, setPdfScale] = useState<number>(1);
+const Previewer: React.FC<PreviwerProps> = ({projectId}) => {
+
+    let cachedScale = localStorage.getItem("pdf:scale:" +projectId);
+    const [pdfScale, setPdfScale] = useState<number>(Number(cachedScale)??1);
     const [curPdfUrl, setCurPdfUrl] = useState<string>();
     const [compStatus, setCompStatus] = useState<CompileStatus>(CompileStatus.COMPLETE);
     const [curLogText, setCurLogText] = useState<string>('');
     const [curPreviewTab, setCurPreviewTab] = useState<string>('pdfview');
     const [curCompileQueue, setCurCompileQueue] = useState<CompileQueue>();
     const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
-    const { pdfUrl, streamLogText, logText, tabName, compileStatus, queue, projAttr, projInfo } = useSelector((state: AppState) => state.proj);
+    const {
+        pdfUrl,
+        streamLogText,
+        logText, tabName,
+        compileStatus,
+        queue,
+        projAttr,
+        projInfo
+    } = useSelector((state: AppState) => state.proj);
 
     React.useEffect(() => {
         if (pdfUrl && pdfUrl.length > 0) {
@@ -109,12 +122,12 @@ const Previewer: React.FC = () => {
     }
 
     const handleSrcLocate = () => {
-        if(!curProjInfo){
+        if (!curProjInfo) {
             toast.info("项目信息为空");
             return;
         }
         const selected = localStorage.getItem("proj-select-file:" + curProjInfo.main.project_id);
-        if(!selected) {
+        if (!selected) {
             toast.info("请选择文件");
             return;
         }
@@ -132,11 +145,23 @@ const Previewer: React.FC = () => {
     }
 
     const handleZoomIn = async () => {
-        setProjAttr({ pdfScale: pdfScale + 0.1 });
+        if (!curProjInfo || !curProjInfo.main || !curProjInfo.main.project_id) {
+            toast.warn("未找到当前项目信息");
+            return;
+        }
+        let curScale = pdfScale + 0.1;
+        setProjAttr({ pdfScale: curScale });
+        localStorage.setItem("pdf:scale:" + curProjInfo.main.project_id, curScale.toString());
     }
 
     const handleZoomOut = async () => {
-        setProjAttr({ pdfScale: pdfScale - 0.1 });
+        if (!curProjInfo || !curProjInfo.main || !curProjInfo.main.project_id) {
+            toast.warn("未找到当前项目信息");
+            return;
+        }
+        let curScale = pdfScale - 0.1;
+        setProjAttr({ pdfScale: curScale });
+        localStorage.setItem("pdf:scale:" + curProjInfo.main.project_id, curScale.toString());
     }
 
     const renderPreviewTab = () => {
@@ -175,8 +200,8 @@ const Previewer: React.FC = () => {
     }
 
     const renderPdfView = () => {
-        if(!curProjInfo || !curProjInfo.main) return <div>Loading...</div>;
-        if(!pdfUrl) return <div>Loading...</div>;
+        if (!curProjInfo || !curProjInfo.main) return <div>Loading...</div>;
+        if (!pdfUrl) return <div>Loading...</div>;
         return (
             <MemoizedPDFPreview
                 curPdfUrl={pdfUrl}
