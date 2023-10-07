@@ -1,7 +1,7 @@
 import store from "@/redux/store/store";
 import { UserService } from "rd-component";
 import { useState } from "react";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 const PwdReset: React.FC = () => {
 
@@ -26,16 +26,24 @@ const PwdReset: React.FC = () => {
 
     const handlePwdReset = () => {
         if (!oldPwd) {
-            toast.error("请输入旧密码");
+            toast.warn("请输入旧密码");
+            return;
         }
         if (!newPwd) {
-            toast.error("请输入新密码");
+            toast.warn("请输入新密码");
+            return;
         }
         if (!repeatNewPwd) {
-            toast.error("请输入重复的新密码");
+            toast.warn("请输入重复的新密码");
+            return;
         }
         if(repeatNewPwd !== newPwd) {
-            toast.error("新密码不匹配")
+            toast.warn("新密码不匹配");
+            return;
+        }
+        if(oldPwd === newPwd){
+            toast.warn("新旧密码不能相同");
+            return;
         }
         let params = {
             oldPassword:oldPwd,
@@ -56,7 +64,7 @@ const PwdReset: React.FC = () => {
                         <div>
                             <input className="form-control"
                                 onChange={handleOldPwdChange}
-                                type="text"
+                                type="password"
                                 placeholder="输入旧密码"></input>
                         </div>
                     </div>
@@ -65,7 +73,7 @@ const PwdReset: React.FC = () => {
                         <div >
                             <input className="form-control"
                                 onChange={handleNewPwdChange}
-                                type="text"
+                                type="password"
                                 placeholder="输入新密码"></input>
                         </div>
                     </div>
@@ -74,7 +82,7 @@ const PwdReset: React.FC = () => {
                         <div >
                             <input className="form-control"
                                 onChange={handleRepeatNewPwdChange}
-                                type="text"
+                                type="password"
                                 placeholder="再次输入新密码"></input>
                         </div>
                     </div>
@@ -83,6 +91,7 @@ const PwdReset: React.FC = () => {
                     </div>
                 </div>
             </div>
+            <ToastContainer />
         </div>
     );
 }
