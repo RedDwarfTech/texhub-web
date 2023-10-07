@@ -24,7 +24,8 @@ export type PreviwerProps = {
 const Previewer: React.FC<PreviwerProps> = ({projectId}) => {
 
     let cachedScale = localStorage.getItem("pdf:scale:" +projectId);
-    const [pdfScale, setPdfScale] = useState<number>(Number(cachedScale)??1);
+    let scaleNum = Number(cachedScale);
+    const [pdfScale, setPdfScale] = useState<number>(scaleNum??1);
     const [curPdfUrl, setCurPdfUrl] = useState<string>();
     const [compStatus, setCompStatus] = useState<CompileStatus>(CompileStatus.COMPLETE);
     const [curLogText, setCurLogText] = useState<string>('');
@@ -56,6 +57,9 @@ const Previewer: React.FC<PreviwerProps> = ({projectId}) => {
     }, [queue]);
 
     React.useEffect(() => {
+        if(projAttr.pdfScale == 1 && pdfScale !== 1) {
+            return;
+        }
         setPdfScale(projAttr.pdfScale);
     }, [projAttr]);
 
