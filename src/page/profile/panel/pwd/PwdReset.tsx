@@ -1,5 +1,6 @@
 import store from "@/redux/store/store";
 import { UserService } from "rd-component";
+import { ResponseHandler } from "rdjs-wheel";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -49,7 +50,11 @@ const PwdReset: React.FC = () => {
             oldPassword:oldPwd,
             newPassword:newPwd
         };
-        UserService.doResetPwd(params, "/texpub/user/change/pwd", store);
+        UserService.doResetPwd(params, "/texpub/user/change/pwd", store).then((resp)=>{
+            if(ResponseHandler.responseSuccess(resp)) {
+                toast.success("密码修改成功");
+            }
+        });
     }
 
     return (
