@@ -9,6 +9,7 @@ import * as bootstrap from 'bootstrap';
 import store from "@/redux/store/store";
 import React from "react";
 import { AppState } from "@/redux/types/AppState";
+import PwdReset from "./pwd/PwdReset";
 
 const Settings: React.FC = () => {
 
@@ -80,7 +81,9 @@ const Settings: React.FC = () => {
         if (currentPanel && currentPanel === 'feedback') {
             return <div></div>
         }
-
+        if (currentPanel && currentPanel === 'resetpwd') {
+            return <PwdReset></PwdReset>
+        }
         if (currentPanel && currentPanel === 'userinfo') {
             return (
                 <div id="userinfo">
@@ -154,6 +157,9 @@ const Settings: React.FC = () => {
             <div className={styles.panelMenu}>
                 <div className={styles.menuItem} data-target="userinfo" id="userinfo-menu" onClick={handlePanelSwitch}>
                     <span>我的信息</span>
+                </div>
+                <div className={styles.menuItem} data-target="resetpwd" id="userinfo-menu" onClick={handlePanelSwitch}>
+                    <span>重置密码</span>
                 </div>
                 {/**
                 * <div className={styles.menuItem} data-target="feedback" id="feedback-menu" onClick={handlePanelSwitch}>
