@@ -60,7 +60,6 @@ const App: React.FC = () => {
 
   React.useEffect(() => {
     if (projInfo && Object.keys(projInfo).length > 0) {
-      console.log(projInfo);
       setMainFile(projInfo.main_file);
     }
   }, [projInfo]);

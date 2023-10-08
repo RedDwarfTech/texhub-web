@@ -105,8 +105,23 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
         let elements = document.querySelectorAll(`.${styles.pdfPage}`);
         if (elements && elements.length > 0) {
             elements.forEach(box => io.observe(box));
+            restorePdfPosition();
         }
     };
+
+    const restorePdfPosition = () => {
+        const key = "pdf:location:" + projId;
+        const scrollPosition = localStorage.getItem(key);
+        if (scrollPosition) {
+            setTimeout(() => {
+                const pdfContainerDiv = document.getElementById('pdfContainer');
+                if (pdfContainerDiv) {
+                    let scroll = parseInt(scrollPosition);
+                    pdfContainerDiv.scrollTop = scroll;
+                }
+            }, 0);
+        }
+    }
 
     const onDocumentLoadSuccess = (pdf: DocumentCallback) => {
         const { numPages } = pdf;
@@ -114,16 +129,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
     }
 
     const renderPages = (totalPageNum: number | undefined) => {
-        const key = "pdf:location:" + projId;
-        const scrollPosition = localStorage.getItem(key);
-        if (scrollPosition) {
-            setTimeout(() => {
-                const pdfContainerDiv = document.getElementById('pdfContainer');
-                if (pdfContainerDiv) {
-                    pdfContainerDiv.scrollTop = parseInt(scrollPosition);
-                }
-            }, 0);
-        }
         if (!totalPageNum || totalPageNum < 1) return;
         const tagList: JSX.Element[] = [];
         for (let i = 1; i <= totalPageNum; i++) {
