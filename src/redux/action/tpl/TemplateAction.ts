@@ -3,6 +3,7 @@ export type docAction = saveTplAction | getTplListAction;
 export enum TemplateActionType {
     CREATE_DOC,
     GET_TPL_LIST,
+    GET_TPL_PAGE,
     GET_TPL_DETAIL,
     CLEAR_CURRENT_EDU
 }
@@ -19,5 +20,10 @@ export interface getTplListAction {
 
 export interface getTplDetailAction {
     type: TemplateActionType.GET_TPL_DETAIL;
+    data: any;
+}
+
+export interface getTplPageAction {
+    type: TemplateActionType.GET_TPL_PAGE;
     data: any;
 }

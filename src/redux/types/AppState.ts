@@ -9,6 +9,7 @@ import { ProjInfo } from "@/model/prj/ProjInfo";
 import { CompileStatus } from "@/model/prj/compile/CompileStatus";
 import { ProjAttribute } from "@/model/prj/config/ProjAttribute";
 import { PdfPosition } from "@/model/prj/pdf/PdfPosition";
+import { EntityList, Pagination } from "rdjs-wheel";
 
 export interface AppState {
     proj: {
@@ -29,6 +30,7 @@ export interface AppState {
     },
     tpl: {
         tplList: TemplateModel[],
+        tplPage: EntityList<TemplateModel>,
         tplDetail: TemplateModel
     },
     file: {

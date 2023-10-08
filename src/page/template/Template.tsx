@@ -1,7 +1,7 @@
 import TexHeader from "@/component/header/TexHeader";
 import styles from "./Template.module.css";
 import React, { useState } from "react";
-import { getTplList } from "@/service/tpl/TemplateService";
+import { getTplList, getTplPage } from "@/service/tpl/TemplateService";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { TemplateModel } from "@/model/tpl/TemplateModel";
@@ -11,18 +11,25 @@ const Template: React.FC = () => {
 
     const [userTplList, setUserTplList] = useState<TemplateModel[]>([]);
     const [tplType, setTplType] = useState<number>(1);
-    const { tplList } = useSelector((state: AppState) => state.tpl);
+    const [curPage, setCurPage] = useState<number>(1);
+    const [totalPage, setTotalPage] = useState<number>(1);
+    const { tplPage } = useSelector((state: AppState) => state.tpl);
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        getTplList("");
+        getTplPage(1, "");
     }, []);
 
     React.useEffect(() => {
-        setUserTplList(tplList);
-    }, [tplList])
+        if (tplPage && Object.keys(tplPage).length > 0) {
+            setUserTplList(tplPage.data ?? []);
+            setCurPage(tplPage.pagination.page);
+            let totalPage = tplPage.pagination.total / tplPage.pagination.per_page;
+            setTotalPage(Math.ceil(totalPage));
+        }
+    }, [tplPage]);
 
-    const renderTplList = () => {
+    const renderTplPage = () => {
         if (!userTplList || userTplList.length === 0) {
             return (<div></div>);
         }
@@ -45,12 +52,31 @@ const Template: React.FC = () => {
         const selectedValue = selectElement.value;
         const searchElement = document.getElementById('stext') as HTMLInputElement;
         const searchValue = searchElement.value;
-        getTplList(searchValue, selectedValue);
+        getTplPage(curPage, searchValue, selectedValue);
     }
 
     const selectChanged = (e: any) => {
         let val = e.target.value;
         setTplType(Number(val));
+    }
+
+    const handlePageUp = (e: any) => {
+        debugger
+        if (!curPage || curPage < 2) return;
+        const searchElement = document.getElementById('stext') as HTMLInputElement;
+        const searchValue = searchElement.value;
+        const selectElement = document.getElementById('tpl-type') as HTMLSelectElement;
+        const selectedValue = selectElement.value;
+        getTplPage(curPage - 1, searchValue, selectedValue);
+    }
+
+    const handlePageDown = (e: any) => {
+        if (!curPage || curPage >= totalPage) return;
+        const searchElement = document.getElementById('stext') as HTMLInputElement;
+        const searchValue = searchElement.value;
+        const selectElement = document.getElementById('tpl-type') as HTMLSelectElement;
+        const selectedValue = selectElement.value;
+        getTplPage(curPage + 1, searchValue, selectedValue);
     }
 
     return (
@@ -74,8 +100,12 @@ const Template: React.FC = () => {
                     </div>
                 </div>
                 <div className={styles.container}>
-                    {renderTplList()}
+                    {renderTplPage()}
                 </div>
+            </div>
+            <div className={styles.pageAction}>
+                <div onClick={(e) => handlePageUp(e)}>上一页</div>
+                <div onClick={(e) => handlePageDown(e)}>下一页</div>
             </div>
         </div>
     );
