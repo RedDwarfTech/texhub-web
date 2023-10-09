@@ -52,7 +52,7 @@ const Template: React.FC = () => {
         const selectedValue = selectElement.value;
         const searchElement = document.getElementById('stext') as HTMLInputElement;
         const searchValue = searchElement.value;
-        getTplPage(curPage, searchValue, selectedValue);
+        getTplPage(1, searchValue, selectedValue);
     }
 
     const selectChanged = (e: any) => {
@@ -61,7 +61,6 @@ const Template: React.FC = () => {
     }
 
     const handlePageUp = (e: any) => {
-        debugger
         if (!curPage || curPage < 2) return;
         const searchElement = document.getElementById('stext') as HTMLInputElement;
         const searchValue = searchElement.value;
