@@ -87,6 +87,7 @@ const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
     wsProvider.awareness.setLocalStateField('user', ydocUser);
     wsProvider.on('auth', (event: any) => {
         debugger
+        // https://discuss.yjs.dev/t/how-to-refresh-the-wsprovider-params-when-token-expire/2131
         handleWsAuth(event, wsProvider, ydoc, docId);
     });
     wsProvider.on('connection-error', (event: any) => {
