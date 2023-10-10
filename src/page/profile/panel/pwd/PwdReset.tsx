@@ -1,3 +1,4 @@
+import { readConfig } from "@/config/app/config-reader";
 import store from "@/redux/store/store";
 import { UserService } from "rd-component";
 import { ResponseHandler } from "rdjs-wheel";
@@ -53,6 +54,7 @@ const PwdReset: React.FC = () => {
         UserService.doResetPwd(params, "/texpub/user/change/pwd", store).then((resp)=>{
             if(ResponseHandler.responseSuccess(resp)) {
                 toast.success("密码修改成功");
+                UserService.doLoginOut(readConfig("logoutUrl"));
             }
         });
     }
