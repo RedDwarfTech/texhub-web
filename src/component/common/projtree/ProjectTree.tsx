@@ -30,6 +30,9 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const [selectedFile, setSelectedFile] = useState<TexFileModel>(selected ? JSON.parse(selected) : null);
     const [delFile, setDelFile] = useState<TexFileModel>();
     const [renameFile, setRenameFile] = useState<TexFileModel>();
+    const [draggedNode, setDraggedNode] = useState<TexFileModel | null>(null);
+    const [draggedOverNode, setDraggedOverNode] = useState<TexFileModel | null>(null);
+    const [expandedNodes, setExpandedNodes] = useState<string[]>([]);
 
     React.useEffect(() => {
         if (projInfo && Object.keys(projInfo).length > 0) {
@@ -191,20 +194,33 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         return false;
     }
 
-    const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
-
+    const handleDragStart = (e: React.DragEvent<HTMLDivElement>, node: TexFileModel) => {
+        e.dataTransfer?.setData('text/plain', node.id.toString());
+        setDraggedNode(node);
     }
 
-    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-        if (e.preventDefault) {
-            e.preventDefault();
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>, node: TexFileModel) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setDraggedOverNode(node);
+    }
+
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>, targetNode: TexFileModel) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (draggedNode) {
+          // 这里可以根据业务逻辑处理节点的位置或层级关系
+          console.log(`Move node ${draggedNode.id} to ${targetNode.id}`);
         }
-        return false;
+        setDraggedNode(null);
+        setDraggedOverNode(null);
     }
 
-    const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-
-    }
+    const handleDragLeave = (e: React.DragEvent<HTMLDivElement>, targetNode: TexFileModel) => {
+        if(draggedOverNode && targetNode.file_id == draggedOverNode?.file_id){
+            setDraggedOverNode(null);
+        }
+    };
 
     const renderDirectoryTree = (fileTree: TexFileModel[], level: number) => {
         if (!fileTree) {
@@ -224,14 +240,17 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             let expandStatus: boolean = getExpandStatus(item);
             let marginText = (level === 0) ? "6px" : "20px";
             tagList.push(
-                <div id={item.file_id} 
-                key={item.file_id}
-                draggable={true} 
-                onDragStart={handleDragStart}
-                style={{ marginLeft: marginText }} >
+                <div id={item.file_id}
+                    key={item.file_id}
+                    draggable={true}
+                    onDragStart={(e) => handleDragStart(e, item)}
+                    onDragOver={(e) => handleDragOver(e, item)}
+                    onDrop={(e) => handleDrop(e, item)}
+                    onDragLeave={(e) => handleDragLeave(e, item)}
+                    style={{ marginLeft: marginText }} >
                     <div key={item.file_id}
                         onClick={(e: React.MouseEvent<HTMLDivElement>) => handleTreeItemClick(e, item)}
-                        className={(selectedFile && item.file_id == selectedFile.file_id) ? styles.fileItemSelected : styles.fileItem} >
+                        className={(selectedFile && item.file_id == selectedFile.file_id)||(draggedOverNode && draggedOverNode.file_id == item.file_id) ? styles.fileItemSelected : styles.fileItem} >
                         {renderIcon(item)}
                         <div className={styles.fileName}>{item.name}</div>
                         <div className={styles.actions}>
@@ -296,7 +315,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     };
 
     const handleRenameFile = () => {
-        if (!renameFile || renameFile.name.length ===0) {
+        if (!renameFile || renameFile.name.length === 0) {
             toast.warn("请输入文件新名称");
             return;
         }
@@ -350,10 +369,10 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     };
 
     const handleRenameFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if(!renameFile){
+        if (!renameFile) {
             return;
         }
-        let newFile: TexFileModel = { 
+        let newFile: TexFileModel = {
             ...renameFile,
             name: event.target.value
         };
@@ -449,7 +468,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                                     className="form-control"
                                     placeholder="新名称"
                                     aria-label="Username"
-                                    value={renameFile?renameFile.name:""}
+                                    value={renameFile ? renameFile.name : ""}
                                     aria-describedby="addon-wrapping" />
                             </div>
                         </div>
