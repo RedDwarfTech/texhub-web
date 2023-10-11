@@ -21,7 +21,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
     const [currentPage, setCurrentPage] = useState<number>(Number(cp));
     let pdfScaleKey = "pdf:scale:" + projId;
     let cachedScale = Number(localStorage.getItem(pdfScaleKey));
-    console.log("scale:" + cachedScale);
     const [projAttribute, setProjAttribute] = useState<ProjAttribute>({ pdfScale: cachedScale });
     const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
     const { projAttr, pdfFocus, projInfo } = useSelector((state: AppState) => state.proj);

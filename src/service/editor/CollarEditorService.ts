@@ -54,7 +54,7 @@ const handleWsAuth = (event: any, wsProvider: WebsocketProvider, ydoc: Y.Doc, do
         RequestHandler.handleWebAccessTokenExpire().then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
                 wsProvider.ws?.close();
-                wsProvider = doWsConn(ydoc,docId);
+                wsProvider = doWsConn(ydoc, docId);
             } else {
                 wsProvider.shouldConnect = false;
                 wsProvider.ws?.close();
@@ -131,8 +131,13 @@ export function initEditor(
     const ytext = ydoc.getText(docId);
     const undoManager = new Y.UndoManager(ytext);
     let wsProvider = doWsConn(ydoc, docId);
-    ydoc.on('update', () => {
-        // console.log("update");
+    ydoc.on('update', (update, origin) => {
+        try{
+            let parsed = Y.decodeUpdate(update);
+            console.log("update content", parsed);
+        } catch (e){
+            console.log(e);
+        } 
     });
     const state = EditorState.create({
         doc: ytext.toString(),

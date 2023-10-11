@@ -9,6 +9,7 @@ import React from "react";
 import * as bootstrap from 'bootstrap';
 import { toast } from "react-toastify";
 import TreeUpload from "./upload/TreeUpload";
+import TreeFileEdit from "./edit/TreeFileEdit";
 
 export type TreeProps = {
     projectId: string;
@@ -190,6 +191,21 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         return false;
     }
 
+    const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
+
+    }
+
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+        if (e.preventDefault) {
+            e.preventDefault();
+        }
+        return false;
+    }
+
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+
+    }
+
     const renderDirectoryTree = (fileTree: TexFileModel[], level: number) => {
         if (!fileTree) {
             return (<div></div>);
@@ -208,7 +224,11 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             let expandStatus: boolean = getExpandStatus(item);
             let marginText = (level === 0) ? "6px" : "20px";
             tagList.push(
-                <div id={item.file_id} key={item.file_id} style={{ marginLeft: marginText }} >
+                <div id={item.file_id} 
+                key={item.file_id}
+                draggable={true} 
+                onDragStart={handleDragStart}
+                style={{ marginLeft: marginText }} >
                     <div key={item.file_id}
                         onClick={(e: React.MouseEvent<HTMLDivElement>) => handleTreeItemClick(e, item)}
                         className={(selectedFile && item.file_id == selectedFile.file_id) ? styles.fileItemSelected : styles.fileItem} >
@@ -228,7 +248,9 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                                     <li><a className="dropdown-item" onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { handleModal(e, true, "deleteFileModal", item) }}>删除</a></li>
                                     <li><a className="dropdown-item" onClick={(e) => { handleModal(e, true, "renameFileModal", item) }}>重命名</a></li>
                                     <li><a className="dropdown-item" onClick={(e) => { handleModal(e, true, "downloadFileModal", item) }}>下载文件</a></li>
-                                    <li><a className="dropdown-item" onClick={(e) => { handleModal(e, true, "moveFileModal", item) }}>移动到文件夹</a></li>
+                                    {
+                                        /**<li><a className="dropdown-item" onClick={(e) => { handleModal(e, true, "moveFileModal", item) }}>移动到文件夹</a></li>**/
+                                    }
                                 </ul>
                             </div>
                         </div>
@@ -458,6 +480,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                 </div>
             </div>
             <TreeUpload projectId={pid}></TreeUpload>
+            <TreeFileEdit projectId={pid}></TreeFileEdit>
         </div>
     );
 }
