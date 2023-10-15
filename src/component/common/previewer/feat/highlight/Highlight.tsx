@@ -14,7 +14,7 @@ const Highlight: React.FC<HighlightProps> = ({ position, pageNumber, viewport })
         return (<div></div>);
     }
 
-    const pdfToViewport = (pdf: PdfPosition, viewport: any) => {
+    const pdfToViewport = (pdf: PdfPosition, viewport: PageViewport) => {
         const [x1, y1, x2, y2] = viewport.convertToViewportRectangle([
             pdf.h,
             pdf.v,
@@ -30,27 +30,27 @@ const Highlight: React.FC<HighlightProps> = ({ position, pageNumber, viewport })
         };
     };
 
-    const renderArea = (position: PdfPosition[]) => {
-        const tagList: JSX.Element[] = [];
-        position.forEach((item) => {
-            if (item.page !== pageNumber || !viewport) {
-                return;
-            }
-            let p = pdfToViewport(item, viewport);
-            tagList.push(
-                <div key={uuid()} style={{
-                    position: 'absolute',
-                    top: viewport.height - p.top,
-                    left: p.left,
-                    width: item.width * viewport.scale,
-                    height: item.height * viewport.scale,
-                    backgroundColor: 'yellow',
-                    opacity: 0.5,
-                }} className={styles.texHighlight}></div>
-            );
-        });
-        return tagList;
-    }
+const renderArea = (position: PdfPosition[]) => {
+    const highlightList: JSX.Element[] = [];
+    position.forEach((item) => {
+        if (item.page !== pageNumber || !viewport) {
+            return;
+        }
+        let p = pdfToViewport(item, viewport);
+        highlightList.push(
+            <div key={uuid()} style={{
+                position: 'absolute',
+                top: viewport.height - p.top,
+                left: p.left,
+                width: item.width * viewport.scale,
+                height: item.height * viewport.scale,
+                backgroundColor: 'yellow',
+                opacity: 0.5,
+            }}></div>
+        );
+    });
+    return highlightList;
+}
 
     return (
         <div>
