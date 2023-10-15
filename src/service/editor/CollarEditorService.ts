@@ -134,7 +134,6 @@ export function initEditor(
     ydoc.on('update', (update, origin) => {
         try{
             let parsed = Y.decodeUpdate(update);
-            console.log("update content", parsed);
         } catch (e){
             console.log(e);
         } 

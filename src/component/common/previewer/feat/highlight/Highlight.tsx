@@ -1,0 +1,61 @@
+import { PdfPosition } from "@/model/prj/pdf/PdfPosition";
+import styles from "./Highlight.module.css";
+import { v4 as uuid } from 'uuid';
+
+interface HighlightProps {
+    position: PdfPosition[];
+    pageNumber: number;
+    viewport: any
+}
+
+const Highlight: React.FC<HighlightProps> = ({ position, pageNumber, viewport }) => {
+    if (!position || position.length == 0) {
+        return (<div></div>);
+    }
+
+    const pdfToViewport = (pdf: PdfPosition, viewport: any) => {
+        const [x1, y1, x2, y2] = viewport.convertToViewportRectangle([
+            pdf.h,
+            pdf.v,
+            pdf.x,
+            pdf.y,
+        ]);
+        return {
+            left: Math.min(x1, x2),
+            top: Math.min(y1, y2),
+            width: Math.abs(x2 - x1),
+            height: Math.abs(y1 - y2),
+            pageNumber: pdf.page,
+        };
+    };
+
+    const renderArea = (position: PdfPosition[]) => {
+        const tagList: JSX.Element[] = [];
+        position.forEach((item) => {
+            if (item.page !== pageNumber || !viewport) {
+                return;
+            }
+            let p = pdfToViewport(item, viewport);
+            tagList.push(
+                <div key={uuid()} style={{
+                    position: 'absolute',
+                    top: viewport.height - p.top,
+                    left: p.left,
+                    width: item.width * 1.5,
+                    height: item.height * 1.5,
+                    backgroundColor: 'yellow',
+                    opacity: 0.5,
+                }} className={styles.texHighlight}></div>
+            );
+        });
+        return tagList;
+    }
+
+    return (
+        <div>
+            {renderArea(position)}
+        </div>
+    );
+}
+
+export default Highlight;
