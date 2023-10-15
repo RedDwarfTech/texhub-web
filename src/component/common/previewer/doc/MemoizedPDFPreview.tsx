@@ -8,6 +8,7 @@ import { ProjAttribute } from '@/model/prj/config/ProjAttribute';
 import { PdfPosition } from '@/model/prj/pdf/PdfPosition';
 import { ProjInfo } from '@/model/prj/ProjInfo';
 import Highlight from '../feat/highlight/Highlight';
+import { PageViewport } from 'pdfjs-dist';
 
 interface PDFPreviewProps {
     curPdfUrl: string;
@@ -24,7 +25,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
     let cachedScale = Number(localStorage.getItem(pdfScaleKey));
     const [projAttribute, setProjAttribute] = useState<ProjAttribute>({ pdfScale: cachedScale });
     const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
-    const [viewport, setViewport] = useState<any>();
+    const [viewport, setViewport] = useState<PageViewport>();
     const { projAttr, pdfFocus, projInfo } = useSelector((state: AppState) => state.proj);
     const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
     const canvasArray = useRef<Array<React.MutableRefObject<HTMLCanvasElement | null>>>([]);
@@ -87,7 +88,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
             elements.forEach(box => io.observe(box));
             restorePdfPosition();
         }
-        let viewport = page.getViewport({ scale: cachedScale });
+        let viewport: PageViewport = page.getViewport({ scale: cachedScale });
         setViewport(viewport);
     };
 
@@ -123,7 +124,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
                     onChange={handlePageChange}
                     onRenderSuccess={handlePageRenderSuccess}
                     pageNumber={i} >
-                    {curPdfPosition ? <Highlight position={curPdfPosition}
+                    {curPdfPosition && viewport ? <Highlight position={curPdfPosition}
                         pageNumber={i}
                         viewport={viewport}></Highlight> : <div></div>}
                 </Page>

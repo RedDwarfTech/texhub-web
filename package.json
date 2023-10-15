@@ -29,6 +29,7 @@
     "dayjs": "^1.11.10",
     "i18next": "^23.5.1",
     "lib0": "^0.2.86",
+    "pdfjs-dist": "^3.11.174",
     "query-string": "^8.1.0",
     "rd-component": "^0.1.136",
     "rdjs-wheel": "0.0.25",

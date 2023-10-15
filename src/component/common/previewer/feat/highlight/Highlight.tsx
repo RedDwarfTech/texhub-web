@@ -1,11 +1,12 @@
 import { PdfPosition } from "@/model/prj/pdf/PdfPosition";
 import styles from "./Highlight.module.css";
 import { v4 as uuid } from 'uuid';
+import { PageViewport } from 'pdfjs-dist';
 
 interface HighlightProps {
     position: PdfPosition[];
     pageNumber: number;
-    viewport: any
+    viewport: PageViewport
 }
 
 const Highlight: React.FC<HighlightProps> = ({ position, pageNumber, viewport }) => {
@@ -41,8 +42,8 @@ const Highlight: React.FC<HighlightProps> = ({ position, pageNumber, viewport })
                     position: 'absolute',
                     top: viewport.height - p.top,
                     left: p.left,
-                    width: item.width * 1.5,
-                    height: item.height * 1.5,
+                    width: item.width * viewport.scale,
+                    height: item.height * viewport.scale,
                     backgroundColor: 'yellow',
                     opacity: 0.5,
                 }} className={styles.texHighlight}></div>

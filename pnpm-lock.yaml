@@ -44,6 +44,9 @@ dependencies:
   '@types/node':
     specifier: ^16.18.58
     version: 16.18.58
+  '@types/pdfjs-dist':
+    specifier: ^2.10.378
+    version: 2.10.378
   '@types/react':
     specifier: ^18.2.25
     version: 18.2.25
@@ -83,6 +86,9 @@ dependencies:
   lib0:
     specifier: ^0.2.86
     version: 0.2.86
+  pdfjs-dist:
+    specifier: ^3.11.174
+    version: 3.11.174
   query-string:
     specifier: ^8.1.0
     version: 8.1.0
@@ -4090,6 +4096,16 @@ packages:
 
   /@types/parse-json@4.0.0:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
+    dev: false
+
+  /@types/pdfjs-dist@2.10.378:
+    resolution: {integrity: sha512-TRdIPqdsvKmPla44kVy4jv5Nt5vjMfVjbIEke1CRULIrwKNRC4lIiZvNYDJvbUMNCFPNIUcOKhXTyMJrX18IMA==}
+    deprecated: This is a stub types definition. pdfjs-dist provides its own type definitions, so you do not need this installed.
+    dependencies:
+      pdfjs-dist: 3.11.174
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
     dev: false
 
   /@types/prettier@2.7.3:
