@@ -60,15 +60,15 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     }, [fileTree]);
 
     const handleExpandFolderCallback = (name_paths: string[]) => {
-        for (let i = 0; i < name_paths.length - 1; i++) {
+        for (let i = 0; i < name_paths.length; i++) {
             // get the newest tree content to avoid the legacy override the newest update
             let legacyTree = localStorage.getItem('projTree');
             if (legacyTree == null) {
                 return;
             }
             let treeNode: TexFileModel[] = JSON.parse(legacyTree);
-            
-            let fPath = name_paths.slice(0, i + 1).join('/');
+            let end_idx = (i + 1) == name_paths.length ? i : i + 1;
+            let fPath = name_paths.slice(0, end_idx).join('/');
             let pathNode = TexFileUtil.searchTreeNodeByName(treeNode, name_paths[i], fPath);
             if (!pathNode) {
                 continue;
@@ -76,7 +76,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             if (pathNode.file_type == TreeFileType.Folder) {
                 handleAutoExpandFolder(pathNode, treeNode);
             } else {
-                debugger
                 handleFileSelected(pathNode);
             }
         }
