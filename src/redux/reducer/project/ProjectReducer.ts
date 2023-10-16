@@ -7,6 +7,7 @@ import { ProjInfo } from "@/model/prj/ProjInfo";
 import { CompileStatus } from "@/model/prj/compile/CompileStatus";
 import { ProjAttribute } from "@/model/prj/config/ProjAttribute";
 import { PdfPosition } from "@/model/prj/pdf/PdfPosition";
+import { SrcPosition } from "@/model/prj/pdf/SrcPosition";
 
 const initState: AppState["proj"] = {
     projList: [],
@@ -24,7 +25,8 @@ const initState: AppState["proj"] = {
     projAttr: {
         pdfScale: 1
     } as ProjAttribute,
-    pdfFocus: [] as PdfPosition[]
+    pdfFocus: [] as PdfPosition[],
+    srcFocus: [] as SrcPosition[]
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -115,6 +117,11 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 pdfFocus: action.data
+            };
+        case "GET_SRC_POSITION":
+            return {
+                ...state,
+                srcFocus: action.data
             };
         default:
             break;

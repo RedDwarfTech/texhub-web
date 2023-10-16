@@ -155,6 +155,5 @@ export function initEditor(
         parent: edContainer.current,
     });
 
-    view
     return view;
 }

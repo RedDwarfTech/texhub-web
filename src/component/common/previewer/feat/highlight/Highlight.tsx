@@ -1,5 +1,4 @@
 import { PdfPosition } from "@/model/prj/pdf/PdfPosition";
-import styles from "./Highlight.module.css";
 import { v4 as uuid } from 'uuid';
 import { PageViewport } from 'pdfjs-dist';
 
@@ -30,27 +29,27 @@ const Highlight: React.FC<HighlightProps> = ({ position, pageNumber, viewport })
         };
     };
 
-const renderArea = (position: PdfPosition[]) => {
-    const highlightList: JSX.Element[] = [];
-    position.forEach((item) => {
-        if (item.page !== pageNumber || !viewport) {
-            return;
-        }
-        let p = pdfToViewport(item, viewport);
-        highlightList.push(
-            <div key={uuid()} style={{
-                position: 'absolute',
-                top: viewport.height - p.top,
-                left: p.left,
-                width: item.width * viewport.scale,
-                height: item.height * viewport.scale,
-                backgroundColor: 'yellow',
-                opacity: 0.5,
-            }}></div>
-        );
-    });
-    return highlightList;
-}
+    const renderArea = (position: PdfPosition[]) => {
+        const highlightList: JSX.Element[] = [];
+        position.forEach((item) => {
+            if (item.page !== pageNumber || !viewport) {
+                return;
+            }
+            let p = pdfToViewport(item, viewport);
+            highlightList.push(
+                <div key={uuid()} style={{
+                    position: 'absolute',
+                    top: viewport.height - p.top,
+                    left: p.left,
+                    width: item.width * viewport.scale,
+                    height: item.height * viewport.scale,
+                    backgroundColor: 'yellow',
+                    opacity: 0.5,
+                }}></div>
+            );
+        });
+        return highlightList;
+    }
 
     return (
         <div>
