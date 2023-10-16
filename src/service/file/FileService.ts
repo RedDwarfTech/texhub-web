@@ -1,4 +1,5 @@
 import { TexFileModel } from "@/model/file/TexFileModel";
+import { RenameFile } from "@/model/request/file/edit/RenameFile";
 import { FileActionType } from "@/redux/action/file/FileAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
@@ -46,7 +47,7 @@ export function updateFileInit(fileId: string) {
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function renameFileImpl(fileInfo: any) {    
+export function renameFileImpl(fileInfo: RenameFile) {    
     const config: AxiosRequestConfig = {
         method: 'patch',
         url: '/tex/file/rename',

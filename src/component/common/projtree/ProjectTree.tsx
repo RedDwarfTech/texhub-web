@@ -1,7 +1,7 @@
 import { RefObject, useState } from "react";
 import styles from './ProjectTree.module.css';
 import { addFile, chooseFile, delTreeItem, getFileList, renameFileImpl, switchFile } from "@/service/file/FileService";
-import { RdFile, ResponseHandler } from "rdjs-wheel";
+import { ResponseHandler } from "rdjs-wheel";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
@@ -13,6 +13,7 @@ import TreeFileEdit from "./edit/TreeFileEdit";
 import { SrcPosition } from "@/model/prj/pdf/SrcPosition";
 import TexFileUtil from "@/common/TexFileUtil";
 import { TreeFileType } from "@/model/file/TreeFileType";
+import { RenameFile } from "@/model/request/file/edit/RenameFile";
 
 export type TreeProps = {
     projectId: string;
@@ -31,7 +32,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const pid = props.projectId;
     const selected = localStorage.getItem("proj-select-file:" + pid);
     const [selectedFile, setSelectedFile] = useState<TexFileModel>(selected ? JSON.parse(selected) : null);
-    const [delFile, setDelFile] = useState<TexFileModel>();
+    const [operFile, setOperFile] = useState<TexFileModel>();
     const [renameFile, setRenameFile] = useState<TexFileModel>();
     const [draggedNode, setDraggedNode] = useState<TexFileModel | null>(null);
     const [draggedOverNode, setDraggedOverNode] = useState<TexFileModel | null>(null);
@@ -302,12 +303,12 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     }
 
     const handleFileDelete = () => {
-        if (!delFile) {
+        if (!operFile) {
             toast.error("请先选择要删除的文件");
             return;
         }
         let params = {
-            file_id: delFile?.file_id
+            file_id: operFile?.file_id
         };
         delTreeItem(params).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
@@ -319,7 +320,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const handleDropdownClick = (e: React.MouseEvent<HTMLButtonElement>, file: TexFileModel) => {
         e.preventDefault();
         e.stopPropagation();
-        setDelFile(file);
+        setOperFile(file);
     };
 
     const handleTreeItemClick = (e: React.MouseEvent<HTMLDivElement>, fileItem: TexFileModel) => {
@@ -339,13 +340,14 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     }
 
     const handleRenameFile = () => {
-        if (!renameFile || renameFile.name.length === 0) {
+        if (!renameFile || renameFile.name.length === 0 || !operFile) {
             toast.warn("请输入文件新名称");
             return;
         }
-        let req = {
+        let req: RenameFile = {
             file_id: renameFile.file_id,
-            name: renameFile.name
+            name: renameFile.name,
+            legacy_name: operFile.name
         };
         renameFileImpl(req).then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
