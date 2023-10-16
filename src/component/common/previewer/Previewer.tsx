@@ -24,7 +24,7 @@ export type PreviwerProps = {
 const Previewer: React.FC<PreviwerProps> = ({projectId}) => {
 
     let cachedScale = localStorage.getItem("pdf:scale:" +projectId);
-    let scaleNum = Number(cachedScale);
+    let scaleNum = Number(cachedScale??1);
     const [pdfScale, setPdfScale] = useState<number>(scaleNum??1);
     const [curPdfUrl, setCurPdfUrl] = useState<string>();
     const [compStatus, setCompStatus] = useState<CompileStatus>(CompileStatus.COMPLETE);
