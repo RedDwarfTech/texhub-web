@@ -47,9 +47,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
             let pageNum = pdfFocus[0].page;
             setCurPdfPosition(pdfFocus);
             localStorage.setItem("pdf:" + curProjInfo?.main.project_id, pageNum.toString());
-            const pdfLocationKey = readConfig("pdfScrollKey") + projId;
-            debugger
-            localStorage.removeItem(pdfLocationKey);
             goPage(pageNum);
         }
     }, [pdfFocus]);
