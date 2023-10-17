@@ -8,14 +8,15 @@ import 'react-pdf/dist/Page/AnnotationLayer.css';
 import { AppState } from '@/redux/types/AppState';
 import { useSelector } from 'react-redux';
 import MemoizedPDFPreview from './doc/MemoizedPDFPreview';
-import { CompileStatus } from '@/model/prj/compile/CompileStatus';
-import { CompileQueue } from '@/model/prj/CompileQueue';
+import { CompileStatus } from '@/model/proj/compile/CompileStatus';
+import { CompileQueue } from '@/model/proj/CompileQueue';
 import { Options } from 'react-pdf/dist/cjs/shared/types';
 import { getAccessToken } from '../cache/Cache';
 import { getSrcPosition, setProjAttr } from '@/service/project/ProjectService';
-import { ProjInfo } from '@/model/prj/ProjInfo';
+import { ProjInfo } from '@/model/proj/ProjInfo';
 import { QuerySrcPos } from '@/model/request/proj/query/QuerySrcPos';
 import { TexFileModel } from '@/model/file/TexFileModel';
+import { CompileResultType } from '@/model/proj/compile/CompileResultType';
 
 export type PreviwerProps = {
     projectId: string;
@@ -253,9 +254,9 @@ const Previewer: React.FC<PreviwerProps> = ({projectId}) => {
 
     const renderCompiled = () => {
         if (curCompileQueue && Object.keys(curCompileQueue).length > 0) {
-            if (curCompileQueue.comp_result === 1) {
+            if (curCompileQueue.comp_result === CompileResultType.FAILED) {
                 return (<i className="fa-solid fa-bug text-danger"></i>);
-            } else if (curCompileQueue.comp_result === 0) {
+            } else if (curCompileQueue.comp_result === CompileResultType.SUCCESS) {
                 return (<i className="fa-solid fa-square-check text-success"></i>);
             } else {
                 console.log("current compile queue", curCompileQueue);

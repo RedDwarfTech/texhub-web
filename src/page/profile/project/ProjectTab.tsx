@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import { createProject, deleteProject, getProjectList } from "@/service/project/ProjectService";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
-import { TexProjectModel } from "@/model/prj/TexProjectModel";
+import { TexProjectModel } from "@/model/proj/TexProjectModel";
 import { ResponseHandler } from "rdjs-wheel";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';

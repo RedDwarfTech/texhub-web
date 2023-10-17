@@ -1,4 +1,4 @@
-import { PdfPosition } from "@/model/prj/pdf/PdfPosition";
+import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { v4 as uuid } from 'uuid';
 import { PageViewport } from 'pdfjs-dist';
 

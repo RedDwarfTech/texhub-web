@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
 import { CompileProjLog } from "@/model/request/proj/CompileProjLog";
 import { ResponseHandler } from "rdjs-wheel";
-import { CompileStatus } from "@/model/prj/compile/CompileStatus";
+import { CompileStatus } from "@/model/proj/compile/CompileStatus";
 import { getAccessToken } from "@/component/common/cache/Cache";
 import ProjSetting from "@/page/main/setting/ProjSetting";
 

@@ -16,6 +16,7 @@ import { getLatestCompile, getProjectInfo, getTempAuthCode, sendQueueCompileRequ
 import ProjectTree from '@/component/common/projtree/ProjectTree';
 import { TexFileModel } from '@/model/file/TexFileModel';
 import { QueryProjInfo } from '@/model/request/proj/query/QueryProjInfo';
+import { CompileResultType } from '@/model/proj/compile/CompileResultType';
 
 const App: React.FC = () => {
 
@@ -52,7 +53,7 @@ const App: React.FC = () => {
       let result = JSON.parse(endSignal);
       setLatestCompile(result.comp);
       setCompileQueue(result.queue);
-      if(result && result.queue && result.queue.comp_result === 0) {
+      if(result && result.queue && result.queue.comp_result === CompileResultType.SUCCESS) {
         showPreviewTab("pdfview");
       }
     }

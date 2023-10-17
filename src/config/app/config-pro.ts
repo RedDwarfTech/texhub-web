@@ -11,7 +11,9 @@ let proConfigMap = new Map([
   ["compileBaseUrl","https://tex.poemhub.top/tex/static/proj"],
   ["tplBaseUrl","https://tex.poemhub.top/tex/static/tpl"],
   ["wssUrl","wss://ws.poemhub.top"],
-  ["shareBaseUrl","https://tex.poemhub.top/proj/share"]
+  ["shareBaseUrl","https://tex.poemhub.top/proj/share"],
+  ["pdfScaleKey",""],
+  ["pdfScrollKey","pdf:scroll:"]
 ]); 
 
 export default proConfigMap;

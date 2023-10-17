@@ -1,5 +1,5 @@
-import { CompileStatus } from "@/model/prj/compile/CompileStatus";
-import { ProjAttribute } from "@/model/prj/config/ProjAttribute";
+import { CompileStatus } from "@/model/proj/compile/CompileStatus";
+import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
 
 export type projectAction = saveDocAction | getDocListAction | compileProjAction | getLatestCompileAction | renderLogAction | clearCompLogAction | addQueueCompileAction | getCompQueueStatusAction | texCompEndAction | getProjInfoAction | delProjInfoAction | uploadProjFileAction;
 

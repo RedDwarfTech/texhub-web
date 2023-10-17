@@ -1,16 +1,16 @@
-import { CompileResult } from "@/model/prj/CompileResult";
-import { LatestCompile } from "@/model/prj/LatestCompile";
-import { TexProjectModel } from "@/model/prj/TexProjectModel";
+import { CompileResult } from "@/model/proj/CompileResult";
+import { LatestCompile } from "@/model/proj/LatestCompile";
+import { TexProjectModel } from "@/model/proj/TexProjectModel";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { TemplateModel } from "@/model/tpl/TemplateModel";
-import { JoinResult } from "@/model/prj/JoinResult";
-import { CompileQueue } from "@/model/prj/CompileQueue";
-import { ProjInfo } from "@/model/prj/ProjInfo";
-import { CompileStatus } from "@/model/prj/compile/CompileStatus";
-import { ProjAttribute } from "@/model/prj/config/ProjAttribute";
-import { PdfPosition } from "@/model/prj/pdf/PdfPosition";
+import { JoinResult } from "@/model/proj/JoinResult";
+import { CompileQueue } from "@/model/proj/CompileQueue";
+import { ProjInfo } from "@/model/proj/ProjInfo";
+import { CompileStatus } from "@/model/proj/compile/CompileStatus";
+import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
+import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { EntityList, Pagination } from "rdjs-wheel";
-import { SrcPosition } from "@/model/prj/pdf/SrcPosition";
+import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 
 export interface AppState {
     proj: {

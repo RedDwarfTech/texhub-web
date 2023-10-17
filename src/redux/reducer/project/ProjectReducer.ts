@@ -1,13 +1,13 @@
-import { CompileResult } from "@/model/prj/CompileResult";
-import { LatestCompile } from "@/model/prj/LatestCompile";
+import { CompileResult } from "@/model/proj/CompileResult";
+import { LatestCompile } from "@/model/proj/LatestCompile";
 import { AppState } from "@/redux/types/AppState";
-import { JoinResult } from "@/model/prj/JoinResult";
-import { CompileQueue } from "@/model/prj/CompileQueue";
-import { ProjInfo } from "@/model/prj/ProjInfo";
-import { CompileStatus } from "@/model/prj/compile/CompileStatus";
-import { ProjAttribute } from "@/model/prj/config/ProjAttribute";
-import { PdfPosition } from "@/model/prj/pdf/PdfPosition";
-import { SrcPosition } from "@/model/prj/pdf/SrcPosition";
+import { JoinResult } from "@/model/proj/JoinResult";
+import { CompileQueue } from "@/model/proj/CompileQueue";
+import { ProjInfo } from "@/model/proj/ProjInfo";
+import { CompileStatus } from "@/model/proj/compile/CompileStatus";
+import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
+import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
+import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 
 const initState: AppState["proj"] = {
     projList: [],

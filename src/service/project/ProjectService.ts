@@ -1,7 +1,7 @@
-import { CompileQueue } from "@/model/prj/CompileQueue";
-import { LatestCompile } from "@/model/prj/LatestCompile";
-import { CompileStatus } from "@/model/prj/compile/CompileStatus";
-import { ProjAttribute } from "@/model/prj/config/ProjAttribute";
+import { CompileQueue } from "@/model/proj/CompileQueue";
+import { LatestCompile } from "@/model/proj/LatestCompile";
+import { CompileStatus } from "@/model/proj/compile/CompileStatus";
+import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
 import { CompileProjLog } from "@/model/request/proj/CompileProjLog";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
 import { CreateProjReq } from "@/model/request/proj/CreateProjReq";

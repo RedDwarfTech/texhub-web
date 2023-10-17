@@ -4,11 +4,12 @@ import styles from "./MemoizedPDFPreview.module.css";
 import { DocumentCallback, Options, PageCallback } from 'react-pdf/dist/cjs/shared/types';
 import { AppState } from '@/redux/types/AppState';
 import { useSelector } from 'react-redux';
-import { ProjAttribute } from '@/model/prj/config/ProjAttribute';
-import { PdfPosition } from '@/model/prj/pdf/PdfPosition';
-import { ProjInfo } from '@/model/prj/ProjInfo';
+import { ProjAttribute } from '@/model/proj/config/ProjAttribute';
+import { PdfPosition } from '@/model/proj/pdf/PdfPosition';
+import { ProjInfo } from '@/model/proj/ProjInfo';
 import Highlight from '../feat/highlight/Highlight';
 import { PageViewport } from 'pdfjs-dist';
+import { readConfig } from '@/config/app/config-reader';
 
 interface PDFPreviewProps {
     curPdfUrl: string;
@@ -46,7 +47,8 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
             let pageNum = pdfFocus[0].page;
             setCurPdfPosition(pdfFocus);
             localStorage.setItem("pdf:" + curProjInfo?.main.project_id, pageNum.toString());
-            const pdfLocationKey = "pdf:location:" + projId;
+            const pdfLocationKey = readConfig("pdfScrollKey") + projId;
+            debugger
             localStorage.removeItem(pdfLocationKey);
             goPage(pageNum);
         }
@@ -93,7 +95,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
     };
 
     const restorePdfPosition = () => {
-        const key = "pdf:location:" + projId;
+        const key = readConfig("pdfScrollKey") + projId;
         const scrollPosition = localStorage.getItem(key);
         if (scrollPosition) {
             setTimeout(() => {
@@ -135,7 +137,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
 
     const handlePdfScroll = (e: React.UIEvent<HTMLDivElement>) => {
         const scrollTop = e.currentTarget.scrollTop;
-        const key = "pdf:location:" + projId;
+        const key = readConfig("pdfScrollKey") + projId;
         localStorage.setItem(key, scrollTop.toString());
     }
 

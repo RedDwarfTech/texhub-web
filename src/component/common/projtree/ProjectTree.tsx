@@ -10,7 +10,7 @@ import * as bootstrap from 'bootstrap';
 import { toast } from "react-toastify";
 import TreeUpload from "./upload/TreeUpload";
 import TreeFileEdit from "./edit/TreeFileEdit";
-import { SrcPosition } from "@/model/prj/pdf/SrcPosition";
+import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 import TexFileUtil from "@/common/TexFileUtil";
 import { TreeFileType } from "@/model/file/TreeFileType";
 import { RenameFile } from "@/model/request/file/edit/RenameFile";
