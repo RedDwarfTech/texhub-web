@@ -1,4 +1,4 @@
-import { EditorView, ViewPlugin } from "@codemirror/view";
+import { EditorView } from "@codemirror/view";
 // @ts-ignore
 import { WebsocketProvider } from "y-websocket";
 import * as Y from 'yjs';
@@ -6,6 +6,7 @@ import * as random from 'lib0/random';
 import { EditorState } from "@codemirror/state";
 import { basicSetup } from "codemirror";
 import { yCollab } from "y-codemirror.next";
+import { autocompletion } from "@codemirror/autocomplete";
 import { StreamLanguage, defaultHighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { stex } from "@codemirror/legacy-modes/mode/stex";
 import { solarizedLight } from 'cm6-theme-solarized-light';
@@ -144,7 +145,8 @@ export function initEditor(
             basicSetup,
             yCollab(ytext, wsProvider.awareness, { undoManager }),
             extensions,
-            solarizedLight
+            solarizedLight,
+            autocompletion(),
         ]
     });
     if (edContainer.current && edContainer.current.children && edContainer.current.children.length > 0) {

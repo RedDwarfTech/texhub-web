@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
+    "@codemirror/autocomplete": "^6.10.2",
     "@codemirror/lang-javascript": "^6.2.1",
     "@codemirror/language": "^6.9.1",
     "@codemirror/legacy-modes": "^6.3.3",
