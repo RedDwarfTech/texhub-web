@@ -1,3 +1,4 @@
+import store from "@/redux/store/store";
 import { OrderService, Order } from "rd-component";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -8,7 +9,7 @@ const MyOrder: React.FC = () => {
     const [curOrders, setCurOrders] = useState<Order[]>();
 
     React.useEffect(() => {
-        OrderService.getUserOrderList();
+        OrderService.getUserOrderList(store);
     }, []);
 
     React.useEffect(() => {
