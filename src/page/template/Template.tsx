@@ -90,7 +90,8 @@ const Template: React.FC = () => {
                             <option value="2">推荐信</option>
                             <option value="3">论文</option>
                             <option value="4">毕业设计</option>
-                            <option value="5">其他</option>
+                            <option value="5">书籍</option>
+                            <option value="6">其他</option>
                         </select>
                     </div>
                     <div className="input-group mb-3">
