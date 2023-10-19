@@ -1,23 +1,40 @@
-import { OrderService } from "rd-component";
-import React from "react";
+import { OrderService, Order } from "rd-component";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
-const Order: React.FC = () => {
+const MyOrder: React.FC = () => {
 
     const { orderList } = useSelector((state: any) => state.rdRootReducer.order);
+    const [curOrders, setCurOrders] = useState<Order[]>();
 
-    React.useEffect(()=>{
+    React.useEffect(() => {
         OrderService.getUserOrderList();
-    },[]);
+    }, []);
 
-    React.useEffect(()=>{
-        if(orderList && orderList.length > 0) {
-            console.log("order list:" + orderList);
+    React.useEffect(() => {
+        if (orderList && orderList.length > 0) {
+            setCurOrders(orderList);
         }
-    },[orderList]);
+    }, [orderList]);
 
     const renderOrders = () => {
-        return (<div></div>);
+        if (!curOrders || curOrders.length === 0) {
+            return <div></div>;
+        }
+        const tagList: JSX.Element[] = [];
+        for (let i = 1; i <= curOrders.length; i++) {
+            let ord = curOrders[i];
+            tagList.push(
+                <tr>
+                    <th scope="row">{ord.orderId}</th>
+                    <td>{ord.subject}</td>
+                    <td>{ord.totalPrice}</td>
+                    <td>{ord.createTime}</td>
+                    <td>{ord.orderStatus}</td>
+                </tr>
+            );
+        }
+        return tagList;
     }
 
     return (
@@ -40,4 +57,4 @@ const Order: React.FC = () => {
     );
 }
 
-export default Order;
+export default MyOrder;
