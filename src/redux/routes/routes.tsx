@@ -11,6 +11,7 @@ import Price from "@/component/common/price/Price";
 import App from "@/page/main/App";
 import TeXShareRecieved from "@/page/profile/project/share/TexShareRecieved";
 import Settings from "@/page/profile/panel/Settings";
+import FullScreen from "@/component/common/previewer/feat/fullscreen/FullScreen";
 
 const routes = createBrowserRouter([
     {
@@ -36,6 +37,10 @@ const routes = createBrowserRouter([
     {
         path: "/editor",
         element: <App />
+    },
+    {
+        path: "/preview/fullscreen",
+        element: <FullScreen />
     },
     {
         path: "/user/login",

@@ -169,6 +169,15 @@ const Previewer: React.FC<PreviwerProps> = ({projectId}) => {
         localStorage.setItem("pdf:scale:" + curProjInfo.main.project_id, curScale.toString());
     }
 
+    const handleFullScreen = async () => {
+        if (!curProjInfo || !curProjInfo.main || !curProjInfo.main.project_id) {
+            toast.warn("未找到当前项目信息");
+            return;
+        }
+        let url = "/preview/fullscreen?projId=" + curProjInfo.main.project_id;
+        window.open(url, '_blank', 'noopener,noreferrer');
+    }
+
     const renderPreviewTab = () => {
         switch (curPreviewTab) {
             case "pdfview":
@@ -242,6 +251,12 @@ const Previewer: React.FC<PreviwerProps> = ({projectId}) => {
                         title="缩小"
                         id="zoomoutbutton" onClick={() => { handleZoomOut() }}>
                         <i className="fa fa-search-minus"></i>
+                    </button>
+                    <button className={styles.previewIconButton}
+                        data-bs-toggle="tooltip"
+                        title="全屏"
+                        id="fullscreenbutton" onClick={() => { handleFullScreen() }}>
+                        <i className="fa fa-expand"></i>
                     </button>
                 </div>
             );
