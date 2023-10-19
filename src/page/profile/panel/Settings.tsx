@@ -8,8 +8,8 @@ import { toast } from "react-toastify";
 import * as bootstrap from 'bootstrap';
 import store from "@/redux/store/store";
 import React from "react";
-import { AppState } from "@/redux/types/AppState";
 import PwdReset from "./pwd/PwdReset";
+import MyOrder from "./order/MyOrder";
 
 const Settings: React.FC = () => {
 
@@ -83,6 +83,9 @@ const Settings: React.FC = () => {
         }
         if (currentPanel && currentPanel === 'resetpwd') {
             return <PwdReset></PwdReset>
+        }
+        if (currentPanel && currentPanel === 'order') {
+            return <MyOrder></MyOrder>
         }
         if (currentPanel && currentPanel === 'userinfo') {
             return (
@@ -160,6 +163,9 @@ const Settings: React.FC = () => {
                 </div>
                 <div className={styles.menuItem} data-target="resetpwd" id="userinfo-menu" onClick={handlePanelSwitch}>
                     <span>重置密码</span>
+                </div>
+                <div className={styles.menuItem} data-target="order" id="userinfo-menu" onClick={handlePanelSwitch}>
+                    <span>我的订单</span>
                 </div>
                 {/**
                 * <div className={styles.menuItem} data-target="feedback" id="feedback-menu" onClick={handlePanelSwitch}>
