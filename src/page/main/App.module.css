@@ -26,7 +26,7 @@
 .editor {
   resize: horizontal;
   flex: 0 0 60%;
-  overflow: scroll;
+  overflow: hidden;
   height: 96vh;
 }
 
