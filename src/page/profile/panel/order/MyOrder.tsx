@@ -29,7 +29,7 @@ const MyOrder: React.FC = () => {
                     <th scope="row">{ord.orderId}</th>
                     <td>{ord.subject}</td>
                     <td>{ord.totalPrice}</td>
-                    <td>{ord.createTime}</td>
+                    <td>{ord.createdTime}</td>
                     <td>{ord.orderStatus}</td>
                 </tr>
             );
