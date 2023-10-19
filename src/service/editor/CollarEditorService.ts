@@ -3,7 +3,7 @@ import { EditorView } from "@codemirror/view";
 import { WebsocketProvider } from "y-websocket";
 import * as Y from 'yjs';
 import * as random from 'lib0/random';
-import { EditorState } from "@codemirror/state";
+import { EditorState, Extension } from "@codemirror/state";
 import { basicSetup } from "codemirror";
 import { yCollab } from "y-codemirror.next";
 import { autocompletion } from "@codemirror/autocomplete";
@@ -13,6 +13,8 @@ import { solarizedLight } from 'cm6-theme-solarized-light';
 import { readConfig } from "@/config/app/config-reader";
 import { RequestHandler, ResponseHandler, UserModel, WheelGlobal } from "rdjs-wheel";
 import { toast } from "react-toastify";
+import { texSyntax } from "lang-tex";
+import mathjaxCompletion  from "lang-tex/lib/index";
 
 export const usercolors = [
     { color: '#30bced', light: '#30bced33' },
@@ -25,6 +27,8 @@ export const usercolors = [
     { color: '#1be7ff', light: '#1be7ff33' }
 ];
 export const userColor = usercolors[random.uint32() % usercolors.length];
+// const syntax = texSyntax();
+// const texSupport = [syntax, syntax.languageData.of({ autocomplete: mathjaxCompletion })];
 const wsMaxRetries = 3;
 let wsRetryCount = 0;
 const extensions = [
@@ -139,6 +143,7 @@ export function initEditor(
             console.log(e);
         } 
     });
+
     const state = EditorState.create({
         doc: ytext.toString(),
         extensions: [
@@ -147,6 +152,7 @@ export function initEditor(
             extensions,
             solarizedLight,
             autocompletion(),
+            // texSupport as Extension
         ]
     });
     if (edContainer.current && edContainer.current.children && edContainer.current.children.length > 0) {

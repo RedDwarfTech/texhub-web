@@ -29,6 +29,7 @@
     "codemirror": "^6.0.1",
     "dayjs": "^1.11.10",
     "i18next": "^23.5.1",
+    "lang-tex": "^0.0.3",
     "lib0": "^0.2.86",
     "pdfjs-dist": "^3.11.174",
     "query-string": "^8.1.0",
@@ -57,7 +58,8 @@
     "web-vitals": "^2.1.4",
     "y-codemirror.next": "^0.3.2",
     "y-websocket": "github:RedDwarfTech/y-websocket#5b09f02a4c0152e5e3b4d68a4d7de39dad9299d7",
-    "yjs": "^13.6.8"
+    "yjs": "^13.6.8",
+    "lezer-tex": "0.0.0-9"
   },
   "scripts": {
     "start": "react-scripts start",
