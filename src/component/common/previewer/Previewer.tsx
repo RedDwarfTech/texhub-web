@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './Previewer.module.css';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import { pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 import 'react-pdf/dist/Page/TextLayer.css';
@@ -12,27 +12,27 @@ import { CompileStatus } from '@/model/proj/compile/CompileStatus';
 import { CompileQueue } from '@/model/proj/CompileQueue';
 import { Options } from 'react-pdf/dist/cjs/shared/types';
 import { getAccessToken } from '../cache/Cache';
-import { getSrcPosition, setProjAttr } from '@/service/project/ProjectService';
-import { ProjInfo } from '@/model/proj/ProjInfo';
+import { getLatestCompile, getSrcPosition, setProjAttr } from '@/service/project/ProjectService';
 import { QuerySrcPos } from '@/model/request/proj/query/QuerySrcPos';
 import { TexFileModel } from '@/model/file/TexFileModel';
 import { CompileResultType } from '@/model/proj/compile/CompileResultType';
+import { readConfig } from '@/config/app/config-reader';
+import { BaseMethods } from 'rdjs-wheel';
 
 export type PreviwerProps = {
     projectId: string;
 };
 
-const Previewer: React.FC<PreviwerProps> = ({projectId}) => {
+const Previewer: React.FC<PreviwerProps> = ({ projectId }) => {
 
-    let cachedScale = localStorage.getItem("pdf:scale:" +projectId);
-    let scaleNum = Number(cachedScale??1);
-    const [pdfScale, setPdfScale] = useState<number>(scaleNum??1);
+    let cachedScale = localStorage.getItem("pdf:scale:" + projectId);
+    let scaleNum = Number(cachedScale ?? 1);
+    const [pdfScale, setPdfScale] = useState<number>(scaleNum ?? 1);
     const [curPdfUrl, setCurPdfUrl] = useState<string>();
     const [compStatus, setCompStatus] = useState<CompileStatus>(CompileStatus.COMPLETE);
     const [curLogText, setCurLogText] = useState<string>('');
     const [curPreviewTab, setCurPreviewTab] = useState<string>('pdfview');
     const [curCompileQueue, setCurCompileQueue] = useState<CompileQueue>();
-    const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
     const {
         pdfUrl,
         streamLogText,
@@ -40,8 +40,21 @@ const Previewer: React.FC<PreviwerProps> = ({projectId}) => {
         compileStatus,
         queue,
         projAttr,
-        projInfo
+        latestComp
     } = useSelector((state: AppState) => state.proj);
+
+    React.useEffect(() => {
+        getLatestCompile(projectId);
+    },[]);
+
+    React.useEffect(() => {
+        if (latestComp && Object.keys(latestComp).length > 0) {
+          if (latestComp.path && latestComp.path.length > 0) {
+            let combinedPdfUrl = BaseMethods.joinUrl(readConfig("compileBaseUrl"), latestComp.path);
+            setCurPdfUrl(combinedPdfUrl);
+          }
+        }
+      }, [latestComp]);
 
     React.useEffect(() => {
         if (pdfUrl && pdfUrl.length > 0) {
@@ -50,15 +63,11 @@ const Previewer: React.FC<PreviwerProps> = ({projectId}) => {
     }, [pdfUrl]);
 
     React.useEffect(() => {
-        setCurProjInfo(projInfo);
-    }, [projInfo]);
-
-    React.useEffect(() => {
         setCurCompileQueue(queue);
     }, [queue]);
 
     React.useEffect(() => {
-        if(projAttr.pdfScale == 1 && pdfScale !== 1) {
+        if (projAttr.pdfScale == 1 && pdfScale !== 1) {
             return;
         }
         setPdfScale(projAttr.pdfScale);
@@ -127,18 +136,18 @@ const Previewer: React.FC<PreviwerProps> = ({projectId}) => {
     }
 
     const handleSrcLocate = () => {
-        if (!curProjInfo) {
+        if (!projectId) {
             toast.info("项目信息为空");
             return;
         }
-        const selected = localStorage.getItem("proj-select-file:" + curProjInfo.main.project_id);
+        const selected = localStorage.getItem("proj-select-file:" + projectId);
         if (!selected) {
             toast.info("请选择文件");
             return;
         }
         const selectFile: TexFileModel = JSON.parse(selected);
         let req: QuerySrcPos = {
-            project_id: curProjInfo?.main.project_id,
+            project_id: projectId,
             path: selectFile.file_path,
             file: selectFile.name,
             main_file: "main.tex",
@@ -150,31 +159,31 @@ const Previewer: React.FC<PreviwerProps> = ({projectId}) => {
     }
 
     const handleZoomIn = async () => {
-        if (!curProjInfo || !curProjInfo.main || !curProjInfo.main.project_id) {
+        if (!projectId) {
             toast.warn("未找到当前项目信息");
             return;
         }
         let curScale = pdfScale + 0.1;
         setProjAttr({ pdfScale: curScale });
-        localStorage.setItem("pdf:scale:" + curProjInfo.main.project_id, curScale.toString());
+        localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
     }
 
     const handleZoomOut = async () => {
-        if (!curProjInfo || !curProjInfo.main || !curProjInfo.main.project_id) {
+        if (!projectId) {
             toast.warn("未找到当前项目信息");
             return;
         }
         let curScale = pdfScale - 0.1;
         setProjAttr({ pdfScale: curScale });
-        localStorage.setItem("pdf:scale:" + curProjInfo.main.project_id, curScale.toString());
+        localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
     }
 
     const handleFullScreen = async () => {
-        if (!curProjInfo || !curProjInfo.main || !curProjInfo.main.project_id) {
+        if (!projectId) {
             toast.warn("未找到当前项目信息");
             return;
         }
-        let url = "/preview/fullscreen?projId=" + curProjInfo.main.project_id;
+        let url = "/preview/fullscreen?projId=" + projectId;
         window.open(url, '_blank', 'noopener,noreferrer');
     }
 
@@ -214,12 +223,11 @@ const Previewer: React.FC<PreviwerProps> = ({projectId}) => {
     }
 
     const renderPdfView = () => {
-        if (!curProjInfo || !curProjInfo.main) return <div>Loading...</div>;
-        if (!pdfUrl) return <div>Loading...</div>;
+        if (!curPdfUrl || !projectId) return (<div>Loading...</div>);
         return (
             <MemoizedPDFPreview
-                curPdfUrl={pdfUrl}
-                projId={curProjInfo.main.project_id}
+                curPdfUrl={curPdfUrl}
+                projId={projectId}
                 options={options}></MemoizedPDFPreview>
         );
     }
@@ -293,6 +301,7 @@ const Previewer: React.FC<PreviwerProps> = ({projectId}) => {
                 {renderPreviewHeaderAction()}
             </div>
             {renderPreviewTab()}
+            <ToastContainer></ToastContainer>
         </div>
     );
 }

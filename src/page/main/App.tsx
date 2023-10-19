@@ -12,11 +12,20 @@ import EHeader from '@/component/header/editor/EHeader';
 import { readConfig } from '@/config/app/config-reader';
 import queryString from 'query-string';
 import Previewer from '@/component/common/previewer/Previewer';
-import { getLatestCompile, getProjectInfo, getTempAuthCode, sendQueueCompileRequest, setCompileQueue, setLatestCompile, showPreviewTab, updatePdfUrl } from '@/service/project/ProjectService';
+import {
+  getProjectInfo,
+  getTempAuthCode,
+  sendQueueCompileRequest,
+  setCompileQueue,
+  setLatestCompile,
+  showPreviewTab,
+  updatePdfUrl
+} from '@/service/project/ProjectService';
 import ProjectTree from '@/component/common/projtree/ProjectTree';
 import { TexFileModel } from '@/model/file/TexFileModel';
 import { QueryProjInfo } from '@/model/request/proj/query/QueryProjInfo';
 import { CompileResultType } from '@/model/proj/compile/CompileResultType';
+import { BaseMethods } from 'rdjs-wheel';
 
 const App: React.FC = () => {
 
@@ -38,11 +47,7 @@ const App: React.FC = () => {
       let query: QueryProjInfo = {
         project_id: pid.toString()
       };
-      getProjectInfo(query).then((res) => {
-        if (ResponseHandler.responseSuccess(res)) {
-          getLatestCompile(pid.toString());
-        }
-      });
+      getProjectInfo(query);
     }
     return () => {
     };
@@ -53,7 +58,7 @@ const App: React.FC = () => {
       let result = JSON.parse(endSignal);
       setLatestCompile(result.comp);
       setCompileQueue(result.queue);
-      if(result && result.queue && result.queue.comp_result === CompileResultType.SUCCESS) {
+      if (result && result.queue && result.queue.comp_result === CompileResultType.SUCCESS) {
         showPreviewTab("pdfview");
       }
     }
@@ -76,7 +81,7 @@ const App: React.FC = () => {
   React.useEffect(() => {
     if (latestComp && Object.keys(latestComp).length > 0) {
       if (latestComp.path && latestComp.path.length > 0) {
-        let pdfUrl = joinUrl(readConfig("compileBaseUrl"), latestComp.path);
+        let pdfUrl = BaseMethods.joinUrl(readConfig("compileBaseUrl"), latestComp.path);
         updatePdfUrl(pdfUrl);
       } else {
         compile(pid.toString());
@@ -96,12 +101,6 @@ const App: React.FC = () => {
       updatePdfUrl(pdfUrl);
     }
   }, [compileResult]);
-
-
-  const joinUrl = (...paths: string[]) => {
-    const normalizedPaths = paths.map(path => path.replace(/^\/|\/$/g, ''));
-    return normalizedPaths.join('/');
-  }
 
   const compile = (prj_id: string) => {
     getTempAuthCode().then((resp) => {

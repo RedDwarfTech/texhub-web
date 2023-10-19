@@ -114,7 +114,6 @@ const ProjectReducer = (state = initState, action: any) => {
                 projAttr: newObject
             };
         case "GET_PDF_POSITION":
-            debugger
             return {
                 ...state,
                 pdfFocus: action.data
