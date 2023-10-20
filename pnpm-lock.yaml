@@ -83,12 +83,6 @@ dependencies:
   i18next:
     specifier: ^23.6.0
     version: 23.6.0
-  lang-tex:
-    specifier: ^0.0.3
-    version: 0.0.3(lezer@0.13.5)
-  lezer-tex:
-    specifier: 0.0.0-9
-    version: 0.0.0-9
   lib0:
     specifier: ^0.2.87
     version: 0.2.87
@@ -101,6 +95,12 @@ dependencies:
   rd-component:
     specifier: ^0.1.141
     version: 0.1.141(@fingerprintjs/fingerprintjs@4.1.0)(@reduxjs/toolkit@1.9.7)(@types/node@16.18.59)(esbuild@0.18.20)(react-dom@18.2.0)(react-redux@8.1.3)(react-router-dom@6.17.0)(react@18.2.0)(redux@4.2.1)(rollup@2.79.1)(typescript@4.9.5)(uuid@9.0.1)(vite@4.5.0)
+  rd-lang-tex:
+    specifier: ^0.0.2
+    version: 0.0.2
+  rd-lezer-tex:
+    specifier: 0.0.1
+    version: 0.0.1
   rdjs-wheel:
     specifier: 0.0.26
     version: 0.0.26(@types/node@16.18.59)(esbuild@0.18.20)(rollup@2.79.1)(typescript@4.9.5)(vite@4.5.0)
@@ -1612,7 +1612,7 @@ packages:
       babel-plugin-polyfill-corejs2: 0.4.6(@babel/core@7.23.2)
       babel-plugin-polyfill-corejs3: 0.8.5(@babel/core@7.23.2)
       babel-plugin-polyfill-regenerator: 0.5.3(@babel/core@7.23.2)
-      core-js-compat: 3.33.0
+      core-js-compat: 3.33.1
       semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
@@ -1734,6 +1734,17 @@ packages:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: false
 
+  /@codemirror/autocomplete@0.18.8:
+    resolution: {integrity: sha512-Va1Q763Vu/rVmIazru/ZnO2kkWVq6SlmMEjeD0qmxLAypyP6j/QNdpmaPDI1qb/+Mb9VFZBbac6a0aLTTi8qxQ==}
+    dependencies:
+      '@codemirror/language': 0.18.2
+      '@codemirror/state': 0.18.7
+      '@codemirror/text': 0.18.1
+      '@codemirror/tooltip': 0.18.4
+      '@codemirror/view': 0.18.19
+      lezer-tree: 0.13.2
+    dev: false
+
   /@codemirror/autocomplete@6.10.2(@codemirror/language@6.9.1)(@codemirror/state@6.3.1)(@codemirror/view@6.21.3)(@lezer/common@1.1.0):
     resolution: {integrity: sha512-3dCL7b0j2GdtZzWN5j7HDpRAJ26ip07R4NGYz7QYthIYMiX8I4E4TNrYcdTayPJGeVQtd/xe7lWU4XL7THFb/w==}
     peerDependencies:
@@ -1748,6 +1759,17 @@ packages:
       '@lezer/common': 1.1.0
     dev: false
 
+  /@codemirror/closebrackets@0.18.0:
+    resolution: {integrity: sha512-O1RAgUkzF4nq/B8IyXenZKZ1rJi2Mc7I6y4IhWhELiTnjyQy7YdAthTsJ40mNr8kZ6gRbasYe3K7TraITElZJA==}
+    deprecated: As of 0.20.0, this package has been merged into @codemirror/autocomplete
+    dependencies:
+      '@codemirror/language': 0.18.2
+      '@codemirror/rangeset': 0.18.5
+      '@codemirror/state': 0.18.7
+      '@codemirror/text': 0.18.1
+      '@codemirror/view': 0.18.19
+    dev: false
+
   /@codemirror/commands@6.3.0:
     resolution: {integrity: sha512-tFfcxRIlOWiQDFhjBSWJ10MxcvbCIsRr6V64SgrcaY0MwNk32cUOcCuNlWo8VjV4qRQCgNgUAnIeo0svkk4R5Q==}
     dependencies:
@@ -1755,6 +1777,18 @@ packages:
       '@codemirror/state': 6.3.1
       '@codemirror/view': 6.21.3
       '@lezer/common': 1.1.0
+    dev: false
+
+  /@codemirror/highlight@0.18.4:
+    resolution: {integrity: sha512-3azJntqWrShOIq/0kVcdMc9k7ACL0LQErgK+A6aWXmCj5Mx0gShq+Iajy8AMQ2zB0v3nhCBgFaniL1LLD5m5hQ==}
+    deprecated: As of 0.20.0, this package has been split between @lezer/highlight and @codemirror/language
+    dependencies:
+      '@codemirror/language': 0.18.2
+      '@codemirror/rangeset': 0.18.5
+      '@codemirror/state': 0.18.7
+      '@codemirror/view': 0.18.19
+      lezer-tree: 0.13.2
+      style-mod: 4.1.0
     dev: false
 
   /@codemirror/lang-javascript@6.2.1:
@@ -1767,6 +1801,16 @@ packages:
       '@codemirror/view': 6.21.3
       '@lezer/common': 1.1.0
       '@lezer/javascript': 1.4.8
+    dev: false
+
+  /@codemirror/language@0.18.2:
+    resolution: {integrity: sha512-2Kz0Xyfvt1Ex2KfTUcYZ3IBxpnFCqHaJijwZknGBT7JXv9dwbOPs9SfPfL4oxVuDIHZx8JTPfoV3LTTJrm8M3Q==}
+    dependencies:
+      '@codemirror/state': 0.18.7
+      '@codemirror/text': 0.18.1
+      '@codemirror/view': 0.18.19
+      lezer: 0.13.5
+      lezer-tree: 0.13.2
     dev: false
 
   /@codemirror/language@6.9.1:
@@ -1794,23 +1838,11 @@ packages:
       crelt: 1.0.6
     dev: false
 
-  /@codemirror/next@0.13.1:
-    resolution: {integrity: sha512-J/P0bxqkGwzhbnsqGT0mQFVWTtmKoJvMvAOv/DAlgcXDGfVU2seIF2s2ikZZ6Q6Ryb71MfMyE7nLMicT1oQeIQ==}
-    deprecated: The mono-package is no longer being upgraded. Use the package names without /next (i.e. @codemirror/view) instead.
+  /@codemirror/rangeset@0.18.5:
+    resolution: {integrity: sha512-gvYniNeEbGRp74MM8EQ+0tylK85pVody4r4N5bs94msPwHQSKFkEmosl8tVmS0Z4e8gRtlB37m8/cWoRiuSz5Q==}
+    deprecated: As of 0.20.0, this package has been merged into @codemirror/state
     dependencies:
-      lezer: 0.11.2
-      lezer-cpp: 0.11.1
-      lezer-css: 0.11.1
-      lezer-html: 0.11.1
-      lezer-java: 0.11.1
-      lezer-javascript: 0.11.1
-      lezer-json: 0.11.1
-      lezer-python: 0.11.1
-      lezer-rust: 0.11.1
-      lezer-tree: 0.11.1
-      lezer-xml: 0.11.1
-      style-mod: 3.2.2
-      w3c-keyname: 2.2.8
+      '@codemirror/state': 0.18.7
     dev: false
 
   /@codemirror/search@6.5.4:
@@ -1821,8 +1853,37 @@ packages:
       crelt: 1.0.6
     dev: false
 
+  /@codemirror/state@0.18.7:
+    resolution: {integrity: sha512-cVyTiAC9vv90NKmGOfNtBjyIem3BqKui1L5Hfcxurp8K9votQj2oH9COcgWPnQ2Xs64yC70tEuTt9DF1pj5PFQ==}
+    dependencies:
+      '@codemirror/text': 0.18.1
+    dev: false
+
   /@codemirror/state@6.3.1:
     resolution: {integrity: sha512-88e4HhMtKJyw6fKprGaN/yZfiaoGYOi2nM45YCUC6R/kex9sxFWBDGatS1vk4lMgnWmdIIB9tk8Gj1LmL8YfvA==}
+    dev: false
+
+  /@codemirror/text@0.18.1:
+    resolution: {integrity: sha512-vjXs6mi1F418kucTPlFvnCt9glKnjtYssdXb8mm1oaY/F5O+tgGVepm9Z8F7AKWCQvW8Bns1D3uLz/DOIEywIw==}
+    deprecated: As of 0.20.0, this package has been merged into @codemirror/state
+    dev: false
+
+  /@codemirror/tooltip@0.18.4:
+    resolution: {integrity: sha512-LDlDOSEfjoG24uapLN7exK3Z3JchYFKUwWqo1x/9YdlAkmD1ik7cMSQZboCquP1uJVcXhtbpKmaO6vENGVaarg==}
+    deprecated: As of 0.20.0, this package has been merged into @codemirror/view
+    dependencies:
+      '@codemirror/state': 0.18.7
+      '@codemirror/view': 0.18.19
+    dev: false
+
+  /@codemirror/view@0.18.19:
+    resolution: {integrity: sha512-TmazVl8H3L+aYwlNb8xk6qADRb8KiYOO047pz51R4mGCg4Ja2siSjXktZgUvklsyWbUY7h9q+oAf4piH+mQZTw==}
+    dependencies:
+      '@codemirror/rangeset': 0.18.5
+      '@codemirror/state': 0.18.7
+      '@codemirror/text': 0.18.1
+      style-mod: 4.1.0
+      w3c-keyname: 2.2.8
     dev: false
 
   /@codemirror/view@6.21.3:
@@ -2943,7 +3004,7 @@ packages:
     dependencies:
       ansi-html-community: 0.0.8
       common-path-prefix: 3.0.0
-      core-js-pure: 3.33.0
+      core-js-pure: 3.33.1
       error-stack-parser: 2.1.4
       find-up: 5.0.0
       html-entities: 2.4.0
@@ -5160,7 +5221,7 @@ packages:
     dependencies:
       '@babel/core': 7.23.2
       '@babel/helper-define-polyfill-provider': 0.4.3(@babel/core@7.23.2)
-      core-js-compat: 3.33.0
+      core-js-compat: 3.33.1
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -5924,19 +5985,19 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
-  /core-js-compat@3.33.0:
-    resolution: {integrity: sha512-0w4LcLXsVEuNkIqwjjf9rjCoPhK8uqA4tMRh4Ge26vfLtUutshn+aRJU21I9LCJlh2QQHfisNToLjw1XEJLTWw==}
+  /core-js-compat@3.33.1:
+    resolution: {integrity: sha512-6pYKNOgD/j/bkC5xS5IIg6bncid3rfrI42oBH1SQJbsmYPKF7rhzcFzYCcxYMmNQQ0rCEB8WqpW7QHndOggaeQ==}
     dependencies:
       browserslist: 4.22.1
     dev: false
 
-  /core-js-pure@3.33.0:
-    resolution: {integrity: sha512-FKSIDtJnds/YFIEaZ4HszRX7hkxGpNKM7FC9aJ9WLJbSd3lD4vOltFuVIBLR8asSx9frkTSqL0dw90SKQxgKrg==}
+  /core-js-pure@3.33.1:
+    resolution: {integrity: sha512-wCXGbLjnsP10PlK/thHSQlOLlLKNEkaWbTzVvHHZ79fZNeN1gUmw2gBlpItxPv/pvqldevEXFh/d5stdNvl6EQ==}
     requiresBuild: true
     dev: false
 
-  /core-js@3.33.0:
-    resolution: {integrity: sha512-HoZr92+ZjFEKar5HS6MC776gYslNOKHt75mEBKWKnPeFDpZ6nH5OeF3S6HFT1mUAUZKrzkez05VboaX8myjSuw==}
+  /core-js@3.33.1:
+    resolution: {integrity: sha512-qVSq3s+d4+GsqN0teRCJtM6tdEEXyWxjzbhVrCHmBS5ZTM0FS2MOS0D13dUXAWDUN6a+lHI/N1hF9Ytz6iLl9Q==}
     requiresBuild: true
     dev: false
 
@@ -10014,16 +10075,6 @@ packages:
     resolution: {integrity: sha512-Y+60/zizpJ3HRH8DCss+q95yr6145JXZo46OTpFvDZWLfRCE4qChOyk1b26nMaNpfHHgxagk9dXT5OP0Tfe+dQ==}
     dev: false
 
-  /lang-tex@0.0.3(lezer@0.13.5):
-    resolution: {integrity: sha512-WU6IhXWashGAdqt/R7eZcckpovuPdY1fCQYlwkVnqtmJjx7GCnJfEZY9YVuGsimCjvkzddkPz2hL+j8JkmRfXA==}
-    peerDependencies:
-      lezer: ^0.13.1
-    dependencies:
-      '@codemirror/next': 0.13.1
-      lezer: 0.13.5
-      lezer-tex: 0.0.0-6(lezer@0.13.5)
-    dev: false
-
   /language-subtag-registry@0.3.22:
     resolution: {integrity: sha512-tN0MCzyWnoz/4nHS6uxdlFWoUZT7ABptwKPQ52Ea7URk6vll88bWBVhodtnlfEuCcKWNGoc+uGbw1cwa9IKh/w==}
     dev: false
@@ -10172,98 +10223,9 @@ packages:
       type-check: 0.4.0
     dev: false
 
-  /lezer-cpp@0.11.1:
-    resolution: {integrity: sha512-+hPUqZSJd+iUaxP2nNqZxMfGrwyRtGCsGLnxHJf0e9pjVxMQ96+nGDyKPArcAkT5n12OQwMi5g4IxidEpJ1JXw==}
-    deprecated: This package has been replaced by @lezer/cpp
-    dependencies:
-      lezer: 0.11.2
-    dev: false
-
-  /lezer-css@0.11.1:
-    resolution: {integrity: sha512-uspAxtw56H200p1MKQyozY6vy/uooNBJP3zPhMuOjE+Q5qNgiLDAK9G6eW9/qGNLifRD2DhqTX0uAPiOaiXDtg==}
-    deprecated: This package has been replaced by @lezer/css
-    dependencies:
-      lezer: 0.11.2
-    dev: false
-
-  /lezer-html@0.11.1:
-    resolution: {integrity: sha512-ub9oRgTrCQzgO3coLZlKbmODquIuR6VouBVzprxo17yeuhHbuq7c94pY7xQd6k+ied/dw7kMEROo6ekjDNtS6A==}
-    deprecated: This package has been replaced by @lezer/html
-    dependencies:
-      lezer: 0.11.2
-    dev: false
-
-  /lezer-java@0.11.1:
-    resolution: {integrity: sha512-g319H9R+gh/epYat2ajn67wbL72BuyrAJMNIh2qWnmwPHLPsFZNmYyUXuCcqqOuhrQwvc7HwN7ZXK03oCHH5DA==}
-    deprecated: This package has been replaced by @lezer/java
-    dependencies:
-      lezer: 0.11.2
-    dev: false
-
-  /lezer-javascript@0.11.1:
-    resolution: {integrity: sha512-XAlZe8BirVBPB7SHTg975W4HQfuV/ZRgqVry+iklCqVR9cqRZYQMd98EHpf/j0J1NyvOFw6FJL3kPrq1Zglidw==}
-    deprecated: This package has been replaced by @lezer/javascript
-    dependencies:
-      lezer: 0.11.2
-    dev: false
-
-  /lezer-json@0.11.1:
-    resolution: {integrity: sha512-ziT9OzwqlLskEIAVBVxq25tJEhDphOKoYk42cfZfzlm8sL12jBugHdkEVuO9BiVfGIh1aj1wJYFxpP9UMf8WKw==}
-    deprecated: This package has been replaced by @lezer/json
-    dependencies:
-      lezer: 0.11.2
-    dev: false
-
-  /lezer-python@0.11.1:
-    resolution: {integrity: sha512-cfopeLETQiKzBmjsENUmz0a8jCIqQkAeCeakypdX3lvMffEK6EIi0y8S8+Zb4TQbdwuzz3jB9nd8dmof1LGPxw==}
-    deprecated: This package has been replaced by @lezer/python
-    dependencies:
-      lezer: 0.11.2
-    dev: false
-
-  /lezer-rust@0.11.1:
-    resolution: {integrity: sha512-Nac9eu9HSuop854qhE2EKPye7qbUtIlQTwWMwwm6hL60Mm6xwzwvaLxnQkQljl2OyQQ6xMoBTUemLIGMFztdCw==}
-    deprecated: This package has been replaced by @lezer/rust
-    dependencies:
-      lezer: 0.11.2
-    dev: false
-
-  /lezer-tex@0.0.0-6(lezer@0.13.5):
-    resolution: {integrity: sha512-nDS2zZ/Eo92gsjomSfqsvs0M15ugYZzJPWgKP0+K0ivzACRu8DP+b8wKj03uC20GB+bR7ZuMq3SLADric7g/LA==}
-    peerDependencies:
-      lezer: ^0.13.1
-    dependencies:
-      lezer: 0.13.5
-    dev: false
-
-  /lezer-tex@0.0.0-9:
-    resolution: {integrity: sha512-8U5IeAiceiUu3MMBvBVXUFMn/P3BRx1qmw0TZRuPPZuhmTiZW5/7IgwLSZG8vbarrJclLgKM/xPPd8mCbUPAww==}
-    dependencies:
-      lezer: 0.13.5
-    dev: false
-
-  /lezer-tree@0.11.1:
-    resolution: {integrity: sha512-AC1FmSzxL/cxV8LrbPMW6+8P/CaG8AxRql1XjzIfLkTQHY3LUan6tG8aieB/OvZmz0NuQpgfw6yDegXFNzVK4A==}
-    deprecated: This package has been replaced by @lezer/common
-    dev: false
-
   /lezer-tree@0.13.2:
     resolution: {integrity: sha512-15ZxW8TxVNAOkHIo43Iouv4zbSkQQ5chQHBpwXcD2bBFz46RB4jYLEEww5l1V0xyIx9U2clSyyrLes+hAUFrGQ==}
     deprecated: This package has been replaced by @lezer/common
-    dev: false
-
-  /lezer-xml@0.11.1:
-    resolution: {integrity: sha512-FoJX8xvF80zunwWGYyPsDSmEJTKuOvipIQ5BSrn7tBaC6LTEvZ/q9mkew/3/dqpjdQfDhW8DCSoDvb/rFvqdnA==}
-    deprecated: This package has been replaced by @lezer/xml
-    dependencies:
-      lezer: 0.11.2
-    dev: false
-
-  /lezer@0.11.2:
-    resolution: {integrity: sha512-ktbo5G+sMY6qOXaeCbC4Z5Cs0vUTx5H4KkjnjTCi/LHay8taBp88dcUXjLS5XV7E/I3+y1zZGgIXhua82Z0Ljw==}
-    deprecated: This package has been replaced by @lezer/lr
-    dependencies:
-      lezer-tree: 0.11.1
     dev: false
 
   /lezer@0.13.5:
@@ -12377,6 +12339,25 @@ packages:
       - vite
     dev: false
 
+  /rd-lang-tex@0.0.2:
+    resolution: {integrity: sha512-Eo7VUINUV2WClH2Z1n5flSZD9Bd1L4FNPfQwEupd1+3mpgUtowDGal49bYiF9KF4oB38txmEhHVSSadR5x2teg==}
+    dependencies:
+      '@codemirror/autocomplete': 0.18.8
+      '@codemirror/closebrackets': 0.18.0
+      '@codemirror/highlight': 0.18.4
+      '@codemirror/language': 0.18.2
+      '@codemirror/state': 6.3.1
+      '@lezer/lr': 1.3.13
+      rd-lezer-tex: 0.0.1
+    dev: false
+
+  /rd-lezer-tex@0.0.1:
+    resolution: {integrity: sha512-2hKDRDqvkAdbnHSmKg8vnwXENhkPOFHuWk5FU2+dFRoUMrBeNIlPWnmKO7V/b99fGgTwWdyfFr7rCDPWIqHo5g==}
+    dependencies:
+      '@lezer/lr': 1.3.13
+      lz-string: 1.5.0
+    dev: false
+
   /rdjs-wheel@0.0.26(@types/node@16.18.59)(esbuild@0.18.20)(rollup@2.79.1)(typescript@4.9.5)(vite@4.5.0):
     resolution: {integrity: sha512-Q+n0zkrwwrgw6imTdFl8ggofjrG8gbMpr00qVaCRyNVIf1cKjIBnmChhl1Hum3XZRC9NEf3lphwS/Do8dm1jMg==}
     dependencies:
@@ -12417,7 +12398,7 @@ packages:
     resolution: {integrity: sha512-sZ41cxiU5llIB003yxxQBYrARBqe0repqPTTYBTmMqTz9szeBbE37BehCE891NZsmdZqqP+xWKdT3eo3vOzN8w==}
     engines: {node: '>=14'}
     dependencies:
-      core-js: 3.33.0
+      core-js: 3.33.1
       object-assign: 4.1.1
       promise: 8.3.0
       raf: 3.4.1
@@ -13817,10 +13798,6 @@ packages:
       webpack: ^5.0.0
     dependencies:
       webpack: 5.89.0(esbuild@0.18.20)
-    dev: false
-
-  /style-mod@3.2.2:
-    resolution: {integrity: sha512-7X3zF+GjUSQ/opNrzuEOqM+lF+4SOkG5aWxrNw/5rwBrHytsH1Ly8/o9e6Wnqoul2lLT1Pmue63LgiE6mEZAGw==}
     dev: false
 
   /style-mod@4.1.0:
