@@ -1,5 +1,5 @@
 import store from "@/redux/store/store";
-import { OrderService, Order } from "rd-component";
+import { OrderService, Order, orderStatus } from "rd-component";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -31,7 +31,7 @@ const MyOrder: React.FC = () => {
                     <td>{ord.subject}</td>
                     <td>{ord.totalPrice}</td>
                     <td>{ord.createdTime}</td>
-                    <td>{ord.orderStatus}</td>
+                    <td>{orderStatus[ord.orderStatus]}</td>
                 </tr>
             );
         }
