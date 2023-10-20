@@ -23,7 +23,7 @@ const MyOrder: React.FC = () => {
             return <div></div>;
         }
         const tagList: JSX.Element[] = [];
-        for (let i = 1; i <= curOrders.length; i++) {
+        for (let i = 1; i <= curOrders.length - 1; i++) {
             let ord = curOrders[i];
             tagList.push(
                 <tr>
