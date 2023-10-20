@@ -1,5 +1,6 @@
 import store from "@/redux/store/store";
 import { OrderService, Order, orderStatus } from "rd-component";
+import { TimeUtils } from "rdjs-wheel";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -30,7 +31,7 @@ const MyOrder: React.FC = () => {
                     <th scope="row">{ord.orderId}</th>
                     <td>{ord.subject}</td>
                     <td>{ord.totalPrice}</td>
-                    <td>{ord.createdTime}</td>
+                    <td>{TimeUtils.getFormattedTime(ord.createdTime)}</td>
                     <td>{orderStatus[ord.orderStatus]}</td>
                 </tr>
             );
