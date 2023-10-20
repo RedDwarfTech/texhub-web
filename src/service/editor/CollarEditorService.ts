@@ -13,8 +13,7 @@ import { solarizedLight } from 'cm6-theme-solarized-light';
 import { readConfig } from "@/config/app/config-reader";
 import { RequestHandler, ResponseHandler, UserModel, WheelGlobal } from "rdjs-wheel";
 import { toast } from "react-toastify";
-import { texSyntax } from "lang-tex";
-import mathjaxCompletion  from "lang-tex/lib/index";
+import mathjaxCompletion  from "rd-lang-tex/lib/index";
 
 export const usercolors = [
     { color: '#30bced', light: '#30bced33' },
@@ -27,7 +26,6 @@ export const usercolors = [
     { color: '#1be7ff', light: '#1be7ff33' }
 ];
 export const userColor = usercolors[random.uint32() % usercolors.length];
-// const syntax = texSyntax();
 // const texSupport = [syntax, syntax.languageData.of({ autocomplete: mathjaxCompletion })];
 const wsMaxRetries = 3;
 let wsRetryCount = 0;
