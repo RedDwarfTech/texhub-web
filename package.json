@@ -29,7 +29,7 @@
     "codemirror": "^6.0.1",
     "dayjs": "^1.11.10",
     "i18next": "^23.6.0",
-    "lang-tex": "^0.0.3",
+    "rd-lang-tex": "^0.0.3",
     "lezer-tex": "0.0.0-9",
     "lib0": "^0.2.87",
     "pdfjs-dist": "^3.11.174",

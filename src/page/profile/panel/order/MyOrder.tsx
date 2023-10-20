@@ -31,7 +31,7 @@ const MyOrder: React.FC = () => {
                     <th scope="row">{ord.orderId}</th>
                     <td>{ord.subject}</td>
                     <td>{ord.totalPrice}</td>
-                    <td>{TimeUtils.getFormattedTime(ord.createdTime)}</td>
+                    <td>{TimeUtils.getFormattedTime(Number(ord.createdTime))}</td>
                     <td>{orderStatus[ord.orderStatus]}</td>
                 </tr>
             );
