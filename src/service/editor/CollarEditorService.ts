@@ -13,7 +13,7 @@ import { solarizedLight } from 'cm6-theme-solarized-light';
 import { readConfig } from "@/config/app/config-reader";
 import { RequestHandler, ResponseHandler, UserModel, WheelGlobal } from "rdjs-wheel";
 import { toast } from "react-toastify";
-import { tex } from "rd-lang-tex";
+// import { tex } from "rd-lang-tex";
 // import mathjaxCompletion  from "rd-lang-tex/lib/index";
 // import parser from 'rd-lezer-tex';
 
@@ -150,7 +150,7 @@ export function initEditor(
             extensions,
             solarizedLight,
             autocompletion(),
-            tex()
+            //tex()
             // texSupport as Extension
         ]
     });
