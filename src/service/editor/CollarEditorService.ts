@@ -122,7 +122,7 @@ const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
 }
 
 function myCompletions(context: CompletionContext) {
-    let word = context.matchBefore(/\w*/)
+    let word = context.matchBefore(/[\\w\\]+/);
     if (!word) return null;
     if (word.from === word.to && !context.explicit)
         return null
@@ -132,7 +132,7 @@ function myCompletions(context: CompletionContext) {
             { label: "match", type: "keyword" },
             { label: "hello", type: "variable", info: "(World)" },
             { label: "magic", type: "text", apply: "⠁⭒*.✩.*⭒⠁", detail: "macro" },
-            { label: "begin", type: "text",apply: "\begin" },
+            { label: "\\begin", type: "text",apply: "\begin" },
         ]
     }
 }
