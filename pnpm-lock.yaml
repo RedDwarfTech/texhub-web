@@ -96,11 +96,11 @@ dependencies:
     specifier: ^0.1.141
     version: 0.1.141(@fingerprintjs/fingerprintjs@4.1.0)(@reduxjs/toolkit@1.9.7)(@types/node@16.18.59)(esbuild@0.18.20)(react-dom@18.2.0)(react-redux@8.1.3)(react-router-dom@6.17.0)(react@18.2.0)(redux@4.2.1)(rollup@2.79.1)(typescript@4.9.5)(uuid@9.0.1)(vite@4.5.0)
   rd-lang-tex:
-    specifier: ^0.0.5
-    version: 0.0.5
+    specifier: ^0.0.6
+    version: 0.0.6
   rd-lezer-tex:
-    specifier: 0.0.2
-    version: 0.0.2
+    specifier: 0.0.3
+    version: 0.0.3
   rdjs-wheel:
     specifier: 0.0.26
     version: 0.0.26(@types/node@16.18.59)(esbuild@0.18.20)(rollup@2.79.1)(typescript@4.9.5)(vite@4.5.0)
@@ -12351,8 +12351,8 @@ packages:
       - vite
     dev: false
 
-  /rd-lang-tex@0.0.5:
-    resolution: {integrity: sha512-m5MWC6axM0D0pv0fqkaw8Ofg7DkygbOrSEuNz+pFGDm360cb/JtQpUXg0tNMR+tEkyjxmwfwslVawIk1eGeQhg==}
+  /rd-lang-tex@0.0.6:
+    resolution: {integrity: sha512-wrdRzYy/4H5Veg0JzQlKu5MDBP9wLR9YlJpXakHqih/EBxCCjmjRTG+vP441cYSRvOr669Z7IlwO6LDd5papWw==}
     dependencies:
       '@codemirror/autocomplete': 0.18.8
       '@codemirror/closebrackets': 0.18.0
@@ -12360,11 +12360,11 @@ packages:
       '@codemirror/language': 0.18.2
       '@codemirror/state': 6.3.1
       '@lezer/lr': 1.3.13
-      rd-lezer-tex: 0.0.2
+      rd-lezer-tex: 0.0.3
     dev: false
 
-  /rd-lezer-tex@0.0.2:
-    resolution: {integrity: sha512-AlO65VmXTY3B2/uoQmfljAoccm0Yoi+eZLyWzQHzjOp5BfoTszv5stOkyvi1z2sO2PXgksBoJPX/Qt6/e7b+Kg==}
+  /rd-lezer-tex@0.0.3:
+    resolution: {integrity: sha512-xzAIhM43UdO1ZB92+Nrdu8cofQb+Kymd7TKMf6Rd7PplpQcx4C6a9qeVL4EK5nPi/YYotzqWZMGcbVb6GVLkiA==}
     dependencies:
       '@lezer/lr': 1.3.13
       lz-string: 1.5.0

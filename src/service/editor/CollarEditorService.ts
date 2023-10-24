@@ -6,14 +6,15 @@ import * as random from 'lib0/random';
 import { EditorState } from "@codemirror/state";
 import { basicSetup } from "codemirror";
 import { yCollab } from "y-codemirror.next";
-import { autocompletion } from "@codemirror/autocomplete";
+import { CompletionContext, autocompletion } from "@codemirror/autocomplete";
 import { StreamLanguage, defaultHighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { stex } from "@codemirror/legacy-modes/mode/stex";
 import { solarizedLight } from 'cm6-theme-solarized-light';
 import { readConfig } from "@/config/app/config-reader";
 import { RequestHandler, ResponseHandler, UserModel, WheelGlobal } from "rdjs-wheel";
 import { toast } from "react-toastify";
-// import { tex } from "rd-lang-tex";
+import { javascriptLanguage } from '@codemirror/lang-javascript'
+
 // import mathjaxCompletion  from "rd-lang-tex/lib/index";
 // import parser from 'rd-lezer-tex';
 
@@ -45,6 +46,8 @@ const extensions = [
     StreamLanguage.define(stex),
     syntaxHighlighting(defaultHighlightStyle),
 ];
+
+
 
 const handleWsAuth = (event: any, wsProvider: WebsocketProvider, ydoc: Y.Doc, docId: string) => {
     if (event.status === 'failed') {
@@ -118,6 +121,22 @@ const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
     return wsProvider;
 }
 
+function myCompletions(context: CompletionContext) {
+    let word = context.matchBefore(/\w*/)
+    if (!word) return null;
+    if (word.from === word.to && !context.explicit)
+        return null
+    return {
+        from: word.from,
+        options: [
+            { label: "match", type: "keyword" },
+            { label: "hello", type: "variable", info: "(World)" },
+            { label: "magic", type: "text", apply: "⠁⭒*.✩.*⭒⠁", detail: "macro" },
+            { label: "begin", type: "text",apply: "\begin" },
+        ]
+    }
+}
+
 export function initEditor(
     projectId: string,
     docId: string,
@@ -135,11 +154,11 @@ export function initEditor(
     const undoManager = new Y.UndoManager(ytext);
     let wsProvider = doWsConn(ydoc, docId);
     ydoc.on('update', (update, origin) => {
-        try{
+        try {
             let parsed = Y.decodeUpdate(update);
-        } catch (e){
+        } catch (e) {
             console.log(e);
-        } 
+        }
     });
 
     const state = EditorState.create({
@@ -149,8 +168,8 @@ export function initEditor(
             yCollab(ytext, wsProvider.awareness, { undoManager }),
             extensions,
             solarizedLight,
-            autocompletion(),
-            //tex()
+            autocompletion({ override: [myCompletions] })
+            // tex()
             // texSupport as Extension
         ]
     });
