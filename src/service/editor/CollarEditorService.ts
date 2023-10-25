@@ -163,18 +163,16 @@ export function initEditor(
         }
     });
 
-    const state = EditorState.create({
-        doc: ytext.toString(),
-        extensions: [
-            basicSetup,
-            yCollab(ytext, wsProvider.awareness, { undoManager }),
-            extensions,
-            solarizedLight,
-            autocompletion({ override: [myCompletions] })
-            // tex()
-            // texSupport as Extension
-        ]
-    });
+const state = EditorState.create({
+    doc: ytext.toString(),
+    extensions: [
+        basicSetup,
+        yCollab(ytext, wsProvider.awareness, { undoManager }),
+        extensions,
+        solarizedLight,
+        autocompletion({ override: [myCompletions] })
+    ]
+});
     if (edContainer.current && edContainer.current.children && edContainer.current.children.length > 0) {
         return;
     }
