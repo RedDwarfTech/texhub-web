@@ -132,7 +132,9 @@ function myCompletions(context: CompletionContext) {
             { label: "match", type: "keyword" },
             { label: "hello", type: "variable", info: "(World)" },
             { label: "magic", type: "text", apply: "⠁⭒*.✩.*⭒⠁", detail: "macro" },
-            { label: "\\begin", type: "text",apply: "\begin" },
+            { label: "\\begin{document}", type: "text",apply: "\begin{document}" },
+            { label: "\\section", type: "text",apply: "\section" },
+            { label: "\\subsection", type: "text",apply: "\subsection" },
         ]
     }
 }
