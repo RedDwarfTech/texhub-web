@@ -43,7 +43,8 @@ const Highlight: React.FC<HighlightProps> = ({ position, pageNumber, viewport })
                     left: p.left,
                     width: item.width * viewport.scale,
                     height: item.height * viewport.scale,
-                    backgroundColor: 'yellow',
+                    backgroundColor: 'rgba(255, 226, 143, 1)',
+                    transition: 'background 0.3s',
                     opacity: 0.5,
                 }}></div>
             );
