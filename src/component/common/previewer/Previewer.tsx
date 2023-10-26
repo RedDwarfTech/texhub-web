@@ -45,16 +45,16 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId }) => {
 
     React.useEffect(() => {
         getLatestCompile(projectId);
-    },[]);
+    }, []);
 
     React.useEffect(() => {
         if (latestComp && Object.keys(latestComp).length > 0) {
-          if (latestComp.path && latestComp.path.length > 0) {
-            let combinedPdfUrl = BaseMethods.joinUrl(readConfig("compileBaseUrl"), latestComp.path);
-            setCurPdfUrl(combinedPdfUrl);
-          }
+            if (latestComp.path && latestComp.path.length > 0) {
+                let combinedPdfUrl = BaseMethods.joinUrl(readConfig("compileBaseUrl"), latestComp.path);
+                setCurPdfUrl(combinedPdfUrl);
+            }
         }
-      }, [latestComp]);
+    }, [latestComp]);
 
     React.useEffect(() => {
         if (pdfUrl && pdfUrl.length > 0) {
@@ -146,12 +146,13 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId }) => {
             return;
         }
         const selectFile: TexFileModel = JSON.parse(selected);
+        let curPage = localStorage.getItem(readConfig("pdfCurPage") + projectId);
         let req: QuerySrcPos = {
             project_id: projectId,
             path: selectFile.file_path,
             file: selectFile.name,
             main_file: "main.tex",
-            page: 2,
+            page: Number(curPage) || 1,
             h: 3.565,
             v: 4.563
         };
