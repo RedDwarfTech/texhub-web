@@ -20,8 +20,8 @@ interface PDFPreviewProps {
 const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, projId, options }) => {
 
     const [numPages, setNumPages] = useState<number>();
-    let cp = localStorage.getItem("pdf:" + projId);
-    const [currentPage, setCurrentPage] = useState<number>(Number(cp));
+    let curPage = localStorage.getItem(readConfig("pdfCurPage") + projId);
+    const [currentPage, setCurrentPage] = useState<number>(Number(curPage));
     let pdfScaleKey = "pdf:scale:" + projId;
     let cachedScale = Number(localStorage.getItem(pdfScaleKey));
     const [projAttribute, setProjAttribute] = useState<ProjAttribute>({ pdfScale: cachedScale });
@@ -46,7 +46,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
         if (pdfFocus && pdfFocus.length > 0) {
             let pageNum = pdfFocus[0].page;
             setCurPdfPosition(pdfFocus);
-            localStorage.setItem("pdf:" + curProjInfo?.main.project_id, pageNum.toString());
+            localStorage.setItem(readConfig("pdfCurPage") + curProjInfo?.main.project_id, pageNum.toString());
             goPage(pageNum);
             setTimeout(() => {
                 setCurPdfPosition([]);
@@ -70,7 +70,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
                 let dataPage = item.target.getAttribute('data-page-number');
                 setCurrentPage(Number(dataPage));
                 if (!dataPage) return;
-                localStorage.setItem("pdf:" + projId, dataPage.toString())
+                localStorage.setItem(readConfig("pdfCurPage") + projId, dataPage.toString())
             }
         })
     }, {
