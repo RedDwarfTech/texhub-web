@@ -67,6 +67,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
     var io = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
         entries.forEach((item: IntersectionObserverEntry) => {
             if (item.intersectionRatio > 0.5) {
+                
                 let dataPage = item.target.getAttribute('data-page-number');
                 setCurrentPage(Number(dataPage));
                 if (!dataPage) return;

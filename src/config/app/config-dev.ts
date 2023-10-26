@@ -14,7 +14,10 @@ let devConfigMap = new Map([
     ["compileBaseUrl","http://dev-tex.poemhub.top/tex/static/proj"],
     ["tplBaseUrl","http://dev-tex.poemhub.top/tex/static/tpl"],
     ["wssUrl","wss://ws.poemhub.top"],
-    ["shareBaseUrl","http://dev-tex.poemhub.top/proj/share"]
+    ["shareBaseUrl","http://dev-tex.poemhub.top/proj/share"],
+    ["pdfScaleKey",""],
+    ["pdfScrollKey","pdf:scroll:"],
+    ["pdfCurPage","pdf:page:"]
 ]); 
 
 export default devConfigMap;
