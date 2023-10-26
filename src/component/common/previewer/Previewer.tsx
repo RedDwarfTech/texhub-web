@@ -18,6 +18,7 @@ import { TexFileModel } from '@/model/file/TexFileModel';
 import { CompileResultType } from '@/model/proj/compile/CompileResultType';
 import { readConfig } from '@/config/app/config-reader';
 import { BaseMethods } from 'rdjs-wheel';
+import { ProjInfo } from '@/model/proj/ProjInfo';
 
 export type PreviwerProps = {
     projectId: string;
@@ -32,6 +33,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId }) => {
     const [compStatus, setCompStatus] = useState<CompileStatus>(CompileStatus.COMPLETE);
     const [curLogText, setCurLogText] = useState<string>('');
     const [curPreviewTab, setCurPreviewTab] = useState<string>('pdfview');
+    const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
     const [curCompileQueue, setCurCompileQueue] = useState<CompileQueue>();
     const {
         pdfUrl,
@@ -40,12 +42,19 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId }) => {
         compileStatus,
         queue,
         projAttr,
-        latestComp
+        latestComp,
+        projInfo
     } = useSelector((state: AppState) => state.proj);
 
     React.useEffect(() => {
         getLatestCompile(projectId);
     }, []);
+
+    React.useEffect(() => {
+        if (projInfo && Object.keys(projInfo).length > 0) {
+            setCurProjInfo(projInfo);
+        }
+    }, [projInfo]);
 
     React.useEffect(() => {
         if (latestComp && Object.keys(latestComp).length > 0) {
@@ -151,7 +160,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId }) => {
             project_id: projectId,
             path: selectFile.file_path,
             file: selectFile.name,
-            main_file: "main.tex",
+            main_file: curProjInfo?.main_file.name || "main.tex",
             page: Number(curPage) || 1,
             h: 3.565,
             v: 4.563
