@@ -12,7 +12,6 @@ const Highlight: React.FC<HighlightProps> = ({ position, pageNumber, viewport })
     if (!position || position.length == 0) {
         return (<div></div>);
     }
-
     const pdfToViewport = (pdf: PdfPosition, viewport: PageViewport) => {
         const [x1, y1, x2, y2] = viewport.convertToViewportRectangle([
             pdf.h,
@@ -20,11 +19,12 @@ const Highlight: React.FC<HighlightProps> = ({ position, pageNumber, viewport })
             pdf.x,
             pdf.y,
         ]);
+        const height = Math.abs(y1 - y2);
         return {
             left: Math.min(x1, x2),
-            top: Math.min(y1, y2),
+            top: Math.min(y1, y2) - height,
             width: Math.abs(x2 - x1),
-            height: Math.abs(y1 - y2),
+            height: height,
             pageNumber: pdf.page,
         };
     };
