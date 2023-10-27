@@ -19,12 +19,11 @@ const Highlight: React.FC<HighlightProps> = ({ position, pageNumber, viewport })
             pdf.x,
             pdf.y,
         ]);
-        const height = Math.abs(y1 - y2);
         return {
             left: Math.min(x1, x2),
-            top: Math.min(y1, y2) - height,
+            top: Math.min(y1, y2),
             width: Math.abs(x2 - x1),
-            height: height,
+            height: Math.abs(y1 - y2),
             pageNumber: pdf.page,
         };
     };
@@ -36,13 +35,14 @@ const Highlight: React.FC<HighlightProps> = ({ position, pageNumber, viewport })
                 return;
             }
             let p = pdfToViewport(item, viewport);
+            let lineHeight = item.height * viewport.scale;
             highlightList.push(
                 <div key={uuid()} style={{
                     position: 'absolute',
-                    top: viewport.height - p.top,
+                    top: viewport.height - p.top - lineHeight,
                     left: p.left,
                     width: item.width * viewport.scale,
-                    height: item.height * viewport.scale,
+                    height: lineHeight,
                     backgroundColor: 'rgba(255, 226, 143, 1)',
                     transition: 'background 0.3s',
                     opacity: 0.5,
