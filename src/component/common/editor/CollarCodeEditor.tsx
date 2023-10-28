@@ -41,9 +41,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       if (projConf.confYype == ProjConfType.Theme) {
         const currentTheme = themeMap.get(projConf.confValue);
         if (currentTheme) {
-          debugger
           if (!activeEditorView) return;
-          debugger
           activeEditorView.dispatch({
             effects: themeConfig.reconfigure(currentTheme)
           });
