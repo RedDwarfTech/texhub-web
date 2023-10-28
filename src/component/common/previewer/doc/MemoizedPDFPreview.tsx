@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Document, Page } from 'react-pdf';
+import { Document, Page, pdfjs } from 'react-pdf';
 import styles from "./MemoizedPDFPreview.module.css";
 import { DocumentCallback, Options, PageCallback } from 'react-pdf/dist/cjs/shared/types';
 import { AppState } from '@/redux/types/AppState';
@@ -50,7 +50,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
             goPage(pageNum);
             setTimeout(() => {
                 setCurPdfPosition([]);
-            },5000);
+            }, 5000);
         }
     }, [pdfFocus]);
 
@@ -64,10 +64,9 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
 
     };
 
-    var io = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
+    var pageObserve = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
         entries.forEach((item: IntersectionObserverEntry) => {
-            if (item.intersectionRatio > 0.5) {
-                
+            if (item.intersectionRatio >= 0.4) {
                 let dataPage = item.target.getAttribute('data-page-number');
                 setCurrentPage(Number(dataPage));
                 if (!dataPage) return;
@@ -75,7 +74,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
             }
         })
     }, {
-        threshold: 0.5,
+        threshold: 0.4,
     });
 
     const goPage = (i: number) => {
@@ -88,7 +87,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
     const handlePageRenderSuccess = (page: PageCallback) => {
         let elements = document.querySelectorAll(`.${styles.pdfPage}`);
         if (elements && elements.length > 0) {
-            elements.forEach(box => io.observe(box));
+            elements.forEach(box => pageObserve.observe(box));
             restorePdfPosition();
         }
         let viewport: PageViewport = page.getViewport({ scale: cachedScale });
@@ -107,6 +106,12 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
                 }
             }, 0);
         }
+    }
+
+    const getPdfTotalPages = async (pdfUrl: string) => {
+        const loadingTask = pdfjs.getDocument(pdfUrl);
+        const pdf = await loadingTask.promise;
+        return pdf.numPages;
     }
 
     const onDocumentLoadSuccess = (pdf: DocumentCallback) => {
