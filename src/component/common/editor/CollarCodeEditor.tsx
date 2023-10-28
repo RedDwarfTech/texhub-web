@@ -5,14 +5,13 @@ import React from "react";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import 'react-toastify/dist/ReactToastify.css';
-import { initEditor, themeMap } from "@/service/editor/CollarEditorService";
+import { initEditor, themeConfig, themeMap } from "@/service/editor/CollarEditorService";
 import { updateFileInit } from "@/service/file/FileService";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { getPdfPosition } from "@/service/project/ProjectService";
 import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
 import { toast } from "react-toastify";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
-import { Compartment } from "@codemirror/state";
 import { ProjConfType } from "@/model/proj/config/ProjConfType";
 
 export type EditorProps = {
@@ -44,10 +43,9 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         if (currentTheme) {
           debugger
           if (!activeEditorView) return;
-          var theme = new Compartment;
           debugger
           activeEditorView.dispatch({
-            effects: theme.reconfigure(currentTheme)
+            effects: themeConfig.reconfigure(currentTheme)
           });
         }
       }
