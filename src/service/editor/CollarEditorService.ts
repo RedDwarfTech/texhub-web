@@ -106,6 +106,10 @@ const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
     wsProvider.on('message', (event: MessageEvent) => {
         console.log(event.data);
     });
+    wsProvider.on('ping', (event: MessageEvent) => {
+        console.warn("recived ping message");
+        wsProvider.ws.pong();
+    });
     wsProvider.on('status', (event: any) => {
         if (event.status === 'connected') {
             if (wsProvider.ws) {
