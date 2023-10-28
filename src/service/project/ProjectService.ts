@@ -2,6 +2,7 @@ import { CompileQueue } from "@/model/proj/CompileQueue";
 import { LatestCompile } from "@/model/proj/LatestCompile";
 import { CompileStatus } from "@/model/proj/compile/CompileStatus";
 import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
+import { ProjConf } from "@/model/proj/config/ProjConf";
 import { CompileProjLog } from "@/model/request/proj/CompileProjLog";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
 import { CreateProjReq } from "@/model/request/proj/CreateProjReq";
@@ -236,6 +237,11 @@ export function doCompile(params: CompileProjLog, onSseMessage: (msg: string, ev
 export function updateLogText(logContent: string) {
   const actionTypeString: string = ProjectActionType[ProjectActionType.APPEND_LOG];
   return XHRClient.dispathAction(logContent, actionTypeString, store);
+}
+
+export function changeProjConf(projConf: ProjConf) {
+  const actionTypeString: string = ProjectActionType[ProjectActionType.CHANGE_PROJ_CONF];
+  return XHRClient.dispathAction(projConf, actionTypeString, store);
 }
 
 export function clearCompLogText(logContent: string) {

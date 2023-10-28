@@ -3,8 +3,14 @@
     flex-direction: row;
     gap: 5px;
     align-items: center;
+    justify-content: left;
+    margin-bottom: 15px;
 }
 
 .configItem select{
     width: 180px;
+}
+
+.configItemKey {
+    flex:0.6;
 }

@@ -5,12 +5,15 @@ import React from "react";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import 'react-toastify/dist/ReactToastify.css';
-import { initEditor } from "@/service/editor/CollarEditorService";
+import { initEditor, themeMap } from "@/service/editor/CollarEditorService";
 import { updateFileInit } from "@/service/file/FileService";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { getPdfPosition } from "@/service/project/ProjectService";
 import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
 import { toast } from "react-toastify";
+import { EditorAttr } from "@/model/proj/config/EditorAttr";
+import { Compartment } from "@codemirror/state";
+import { ProjConfType } from "@/model/proj/config/ProjConfType";
 
 export type EditorProps = {
   projectId: string;
@@ -19,10 +22,10 @@ export type EditorProps = {
 const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<any>();
   const { activeFile, mainFile, fileCode } = useSelector((state: AppState) => state.file);
-  const { projInfo } = useSelector((state: AppState) => state.proj);
+  const { projInfo, projConf } = useSelector((state: AppState) => state.proj);
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
-  let editorView: any = null;
+  let editorView: EditorView | undefined;
 
   React.useEffect(() => {
     if (projInfo && Object.keys(projInfo).length > 0) {
@@ -33,6 +36,23 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       destroy();
     };
   }, [projInfo]);
+
+  React.useEffect(() => {
+    if (projConf && Object.keys(projConf).length > 0) {
+      if (projConf.confYype == ProjConfType.Theme) {
+        const currentTheme = themeMap.get(projConf.confValue);
+        if (currentTheme) {
+          debugger
+          if (!activeEditorView) return;
+          var theme = new Compartment;
+          debugger
+          activeEditorView.dispatch({
+            effects: theme.reconfigure(currentTheme)
+          });
+        }
+      }
+    }
+  }, [projConf]);
 
   React.useEffect(() => {
     if (fileCode && fileCode.length > 0) {
@@ -57,7 +77,12 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }, [activeFile]);
 
   const init = (file_id: string) => {
-    editorView = initEditor(props.projectId, file_id, activeEditorView, edContainer);
+    const editorAttr: EditorAttr = {
+      projectId: props.projectId,
+      docId: file_id,
+      theme: themeMap.get("Solarized Light")!
+    };
+    editorView = initEditor(editorAttr, activeEditorView, edContainer);
     setActiveEditorView(editorView);
   };
 
@@ -74,7 +99,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     if (mainFileModel && mainFileModel.name && activeEditorView) {
       let { line, column } = getCursorPos(activeEditorView);
       const selected = localStorage.getItem("proj-select-file:" + props.projectId);
-      if(!selected) {
+      if (!selected) {
         toast.info("请选择文件");
         return;
       }
@@ -92,7 +117,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }
 
   const getCursorPos = (editor: EditorView): { line: number; column: number } => {
-    if(editor && editor.state){
+    if (editor && editor.state) {
       const cursor = editor.state.selection.main.head;
       const line = editor.state.doc.lineAt(cursor).number;
       const column = cursor - editor.state.doc.line(line).from;
@@ -100,7 +125,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         line: line + 1,
         column: column + 1
       };
-    }else{
+    } else {
       return {
         line: 1,
         column: 1

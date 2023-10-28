@@ -3,7 +3,7 @@ import { EditorView } from "@codemirror/view";
 import { WebsocketProvider } from "y-websocket";
 import * as Y from 'yjs';
 import * as random from 'lib0/random';
-import { EditorState } from "@codemirror/state";
+import { Compartment, EditorState, Extension } from "@codemirror/state";
 import { basicSetup } from "codemirror";
 import { yCollab } from "y-codemirror.next";
 import { CompletionContext, autocompletion } from "@codemirror/autocomplete";
@@ -13,7 +13,11 @@ import { solarizedLight } from 'cm6-theme-solarized-light';
 import { readConfig } from "@/config/app/config-reader";
 import { RequestHandler, ResponseHandler, UserModel, WheelGlobal } from "rdjs-wheel";
 import { toast } from "react-toastify";
-import { javascriptLanguage } from '@codemirror/lang-javascript'
+import { EditorAttr } from "@/model/proj/config/EditorAttr";
+import { basicLight } from 'cm6-theme-basic-light';
+export const themeMap: Map<string, Extension> = new Map<string, Extension>();
+themeMap.set('Solarized Light', solarizedLight);
+themeMap.set('Basic Light', basicLight);
 
 // import mathjaxCompletion  from "rd-lang-tex/lib/index";
 // import parser from 'rd-lezer-tex';
@@ -28,6 +32,7 @@ export const usercolors = [
     { color: '#8acb88', light: '#8acb8833' },
     { color: '#1be7ff', light: '#1be7ff33' }
 ];
+export const themeConfig = new Compartment()
 export const userColor = usercolors[random.uint32() % usercolors.length];
 const wsMaxRetries = 3;
 let wsRetryCount = 0;
@@ -46,8 +51,6 @@ const extensions = [
     StreamLanguage.define(stex),
     syntaxHighlighting(defaultHighlightStyle),
 ];
-
-
 
 const handleWsAuth = (event: any, wsProvider: WebsocketProvider, ydoc: Y.Doc, docId: string) => {
     if (event.status === 'failed') {
@@ -132,29 +135,25 @@ function myCompletions(context: CompletionContext) {
             { label: "match", type: "keyword" },
             { label: "hello", type: "variable", info: "(World)" },
             { label: "magic", type: "text", apply: "⠁⭒*.✩.*⭒⠁", detail: "macro" },
-            { label: "\\begin{document}", type: "text",apply: "\begin{document}" },
-            { label: "\\section", type: "text",apply: "\section" },
-            { label: "\\subsection", type: "text",apply: "\subsection" },
+            { label: "\\begin{document}", type: "text", apply: "\begin{document}" },
+            { label: "\\section", type: "text", apply: "\section" },
+            { label: "\\subsection", type: "text", apply: "\subsection" },
         ]
     }
 }
 
-export function initEditor(
-    projectId: string,
-    docId: string,
-    activeEditorView: EditorView | undefined,
-    edContainer: any) {
+export function initEditor(editorAttr: EditorAttr, activeEditorView: EditorView | undefined, edContainer: any) {
     if (activeEditorView) {
         activeEditorView.destroy();
     }
     let docOpt = {
-        guid: docId,
-        collectionid: projectId
+        guid: editorAttr.docId,
+        collectionid: editorAttr.projectId
     };
     const ydoc = new Y.Doc(docOpt);
-    const ytext = ydoc.getText(docId);
+    const ytext = ydoc.getText(editorAttr.docId);
     const undoManager = new Y.UndoManager(ytext);
-    let wsProvider = doWsConn(ydoc, docId);
+    let wsProvider = doWsConn(ydoc, editorAttr.docId);
     ydoc.on('update', (update, origin) => {
         try {
             let parsed = Y.decodeUpdate(update);
@@ -163,16 +162,16 @@ export function initEditor(
         }
     });
 
-const state = EditorState.create({
-    doc: ytext.toString(),
-    extensions: [
-        basicSetup,
-        yCollab(ytext, wsProvider.awareness, { undoManager }),
-        extensions,
-        solarizedLight,
-        autocompletion({ override: [myCompletions] })
-    ]
-});
+    const state = EditorState.create({
+        doc: ytext.toString(),
+        extensions: [
+            basicSetup,
+            yCollab(ytext, wsProvider.awareness, { undoManager }),
+            extensions,
+            themeConfig.of(themeMap.get("Solarized Light")!),
+            autocompletion({ override: [myCompletions] })
+        ]
+    });
     if (edContainer.current && edContainer.current.children && edContainer.current.children.length > 0) {
         return;
     }

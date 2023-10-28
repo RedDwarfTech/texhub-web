@@ -9,8 +9,9 @@ import { ProjInfo } from "@/model/proj/ProjInfo";
 import { CompileStatus } from "@/model/proj/compile/CompileStatus";
 import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
-import { EntityList, Pagination } from "rdjs-wheel";
+import { EntityList } from "rdjs-wheel";
 import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
+import { ProjConf } from "@/model/proj/config/ProjConf";
 
 export interface AppState {
     proj: {
@@ -28,7 +29,8 @@ export interface AppState {
         compileStatus: CompileStatus,
         projAttr: ProjAttribute,
         pdfFocus: PdfPosition[],
-        srcFocus: SrcPosition[]
+        srcFocus: SrcPosition[],
+        projConf: ProjConf
     },
     tpl: {
         tplList: TemplateModel[],

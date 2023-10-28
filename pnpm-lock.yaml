@@ -68,6 +68,9 @@ dependencies:
   clipboard-polyfill:
     specifier: ^4.0.1
     version: 4.0.1
+  cm6-theme-basic-light:
+    specifier: ^0.2.0
+    version: 0.2.0(@codemirror/language@6.9.1)(@codemirror/state@6.3.1)(@codemirror/view@6.21.3)(@lezer/highlight@1.1.6)
   cm6-theme-solarized-dark:
     specifier: ^0.2.0
     version: 0.2.0(@codemirror/language@6.9.1)(@codemirror/state@6.3.1)(@codemirror/view@6.21.3)(@lezer/highlight@1.1.6)
@@ -5751,6 +5754,20 @@ packages:
   /clsx@2.0.0:
     resolution: {integrity: sha512-rQ1+kcj+ttHG0MKVGBUXwayCCF1oh39BF5COIpRzuCEv8Mwjv0XucrI2ExNTOn9IlLifGClWQcU9BrZORvtw6Q==}
     engines: {node: '>=6'}
+    dev: false
+
+  /cm6-theme-basic-light@0.2.0(@codemirror/language@6.9.1)(@codemirror/state@6.3.1)(@codemirror/view@6.21.3)(@lezer/highlight@1.1.6):
+    resolution: {integrity: sha512-1prg2gv44sYfpHscP26uLT/ePrh0mlmVwMSoSd3zYKQ92Ab3jPRLzyCnpyOCQLJbK+YdNs4HvMRqMNYdy4pMhA==}
+    peerDependencies:
+      '@codemirror/language': ^6.0.0
+      '@codemirror/state': ^6.0.0
+      '@codemirror/view': ^6.0.0
+      '@lezer/highlight': ^1.0.0
+    dependencies:
+      '@codemirror/language': 6.9.1
+      '@codemirror/state': 6.3.1
+      '@codemirror/view': 6.21.3
+      '@lezer/highlight': 1.1.6
     dev: false
 
   /cm6-theme-solarized-dark@0.2.0(@codemirror/language@6.9.1)(@codemirror/state@6.3.1)(@codemirror/view@6.21.3)(@lezer/highlight@1.1.6):
