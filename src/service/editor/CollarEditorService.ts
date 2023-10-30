@@ -16,6 +16,7 @@ import { RequestHandler, ResponseHandler, UserModel, WheelGlobal } from "rdjs-wh
 import { toast } from "react-toastify";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { basicLight } from 'cm6-theme-basic-light';
+import { RefObject } from "react";
 export const themeMap: Map<string, Extension> = new Map<string, Extension>();
 themeMap.set('Solarized Light', solarizedLight);
 themeMap.set('Basic Light', basicLight);
@@ -162,7 +163,7 @@ function myCompletions(context: CompletionContext) {
     }
 }
 
-export function initEditor(editorAttr: EditorAttr, activeEditorView: EditorView | undefined, edContainer: any) {
+export function initEditor(editorAttr: EditorAttr, activeEditorView: EditorView | undefined, edContainer: RefObject<HTMLDivElement>) {
     if (activeEditorView) {
         activeEditorView.destroy();
     }
@@ -197,7 +198,7 @@ export function initEditor(editorAttr: EditorAttr, activeEditorView: EditorView 
     }
     const view = new EditorView({
         state,
-        parent: edContainer.current,
+        parent: edContainer.current!,
     });
 
     return view;
