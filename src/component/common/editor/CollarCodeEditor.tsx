@@ -25,16 +25,17 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const { activeFile, mainFile, fileCode } = useSelector((state: AppState) => state.file);
   const { projInfo, projConf } = useSelector((state: AppState) => state.proj);
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
-  const [curWsProvider, setCurWsProvider] = useState<WebsocketProvider>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   let editorView: [EditorView | undefined, WebsocketProvider | undefined];
+  let ws: WebsocketProvider;
 
   React.useEffect(() => {
     return () => {
       // try to delete the last state project info to avoid websocket connect to previous project through main file id
       delProjInfo();
-      if (curWsProvider) {
-        curWsProvider.destroy();
+      if (ws) {
+        ws.destroy();
+        ws == null;
       }
     }
   }, []);
@@ -93,7 +94,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     };
     editorView = initEditor(editorAttr, activeEditorView, edContainer);
     setActiveEditorView(editorView[0]);
-    setCurWsProvider(editorView[1]);
+    ws = editorView[1];
   };
 
   const destroy = () => {

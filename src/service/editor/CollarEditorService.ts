@@ -33,7 +33,7 @@ export const usercolors = [
 ];
 export const themeConfig = new Compartment()
 export const userColor = usercolors[random.uint32() % usercolors.length];
-const wsMaxRetries = 3;
+const wsMaxRetries = 1;
 let wsRetryCount = 0;
 const extensions = [
     EditorView.contentAttributes.of({ spellcheck: 'true' }),
@@ -106,7 +106,6 @@ const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
         const data: Uint8Array = new Uint8Array(event.data);
         const decoder = decoding.createDecoder(data)
         const messageType = decoding.readVarUint(decoder)
-        console.log("message type:" + messageType);
     });
     wsProvider.on('status', (event: any) => {
         if (event.status === 'connected') {
