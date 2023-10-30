@@ -3,6 +3,7 @@ import { EditorView } from "@codemirror/view";
 import { WebsocketProvider } from "y-websocket";
 import * as Y from 'yjs';
 import * as random from 'lib0/random';
+import * as decoding from 'lib0/decoding'
 import { Compartment, EditorState, Extension } from "@codemirror/state";
 import { basicSetup } from "codemirror";
 import { yCollab } from "y-codemirror.next";
@@ -104,7 +105,21 @@ const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
         wsProvider.ws?.close()
     });
     wsProvider.on('message', (event: MessageEvent) => {
+        const data: Uint8Array = new Uint8Array(event.data);
         console.log(event.data);
+        const decoder = decoding.createDecoder(data)
+        const messageType = decoding.readVarUint(decoder)
+        console.log("message type:"  + messageType);
+        if (data[0] === 0) {
+            const snapshot = Y.decodeSnapshot(data);
+            console.log('snapshot:' + JSON.stringify(snapshot));
+        }
+        else if (data[0] === 1) {
+            //const update = Y.decodeUpdate(data);
+            //console.log('update:' + JSON.stringify(update));
+        }else{
+            console.log('dddddddd')
+        }
     });
     wsProvider.on('ping', (event: MessageEvent) => {
         console.warn("recived ping message");
@@ -115,6 +130,7 @@ const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
             if (wsProvider.ws) {
 
             }
+
         } else if (event.status === 'disconnected' && wsRetryCount < wsMaxRetries) {
             wsRetryCount++;
             setTimeout(() => {

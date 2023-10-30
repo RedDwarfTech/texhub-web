@@ -174,8 +174,8 @@ dependencies:
     specifier: ^0.3.2
     version: 0.3.2(@codemirror/state@6.3.1)(@codemirror/view@6.21.4)(yjs@13.6.8)
   y-websocket:
-    specifier: github:RedDwarfTech/y-websocket#694572793d0ca074ff0718e8c3eef0ddc026d51f
-    version: github.com/RedDwarfTech/y-websocket/694572793d0ca074ff0718e8c3eef0ddc026d51f(yjs@13.6.8)
+    specifier: github:RedDwarfTech/y-websocket#baf7fecd350398b32e523f14bc4f4536f9bc6f82
+    version: github.com/RedDwarfTech/y-websocket/baf7fecd350398b32e523f14bc4f4536f9bc6f82(yjs@13.6.8)
   yjs:
     specifier: ^13.6.8
     version: 13.6.8
@@ -17029,9 +17029,9 @@ packages:
       commander: 9.5.0
     dev: false
 
-  github.com/RedDwarfTech/y-websocket/694572793d0ca074ff0718e8c3eef0ddc026d51f(yjs@13.6.8):
-    resolution: {tarball: https://codeload.github.com/RedDwarfTech/y-websocket/tar.gz/694572793d0ca074ff0718e8c3eef0ddc026d51f}
-    id: github.com/RedDwarfTech/y-websocket/694572793d0ca074ff0718e8c3eef0ddc026d51f
+  github.com/RedDwarfTech/y-websocket/baf7fecd350398b32e523f14bc4f4536f9bc6f82(yjs@13.6.8):
+    resolution: {tarball: https://codeload.github.com/RedDwarfTech/y-websocket/tar.gz/baf7fecd350398b32e523f14bc4f4536f9bc6f82}
+    id: github.com/RedDwarfTech/y-websocket/baf7fecd350398b32e523f14bc4f4536f9bc6f82
     name: y-websocket
     version: 1.5.0
     hasBin: true

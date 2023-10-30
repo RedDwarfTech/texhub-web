@@ -59,7 +59,7 @@
     "vite-plugin-wasm": "^3.2.2",
     "web-vitals": "^2.1.4",
     "y-codemirror.next": "^0.3.2",
-    "y-websocket": "github:RedDwarfTech/y-websocket#694572793d0ca074ff0718e8c3eef0ddc026d51f",
+    "y-websocket": "github:RedDwarfTech/y-websocket#baf7fecd350398b32e523f14bc4f4536f9bc6f82",
     "yjs": "^13.6.8"
   },
   "scripts": {

@@ -6,9 +6,9 @@ import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import 'react-toastify/dist/ReactToastify.css';
 import { initEditor, themeConfig, themeMap } from "@/service/editor/CollarEditorService";
-import { updateFileInit } from "@/service/file/FileService";
+import { delTreeItem, updateFileInit } from "@/service/file/FileService";
 import { TexFileModel } from "@/model/file/TexFileModel";
-import { getPdfPosition } from "@/service/project/ProjectService";
+import { delProjInfo, getPdfPosition } from "@/service/project/ProjectService";
 import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
 import { toast } from "react-toastify";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
@@ -25,6 +25,13 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   let editorView: EditorView | undefined;
+
+  React.useEffect(()=>{
+    return () => {
+      // try to delete the last state project info to avoid websocket connect to previous project through main file id
+      delProjInfo();
+    }
+  },[]);
 
   React.useEffect(() => {
     if (projInfo && Object.keys(projInfo).length > 0) {
