@@ -21,9 +21,6 @@ export const themeMap: Map<string, Extension> = new Map<string, Extension>();
 themeMap.set('Solarized Light', solarizedLight);
 themeMap.set('Basic Light', basicLight);
 
-// import mathjaxCompletion  from "rd-lang-tex/lib/index";
-// import parser from 'rd-lezer-tex';
-
 export const usercolors = [
     { color: '#30bced', light: '#30bced33' },
     { color: '#6eeb83', light: '#6eeb8333' },
@@ -107,31 +104,15 @@ const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
     });
     wsProvider.on('message', (event: MessageEvent) => {
         const data: Uint8Array = new Uint8Array(event.data);
-        console.log(event.data);
         const decoder = decoding.createDecoder(data)
         const messageType = decoding.readVarUint(decoder)
-        console.log("message type:"  + messageType);
-        if (data[0] === 0) {
-            const snapshot = Y.decodeSnapshot(data);
-            console.log('snapshot:' + JSON.stringify(snapshot));
-        }
-        else if (data[0] === 1) {
-            //const update = Y.decodeUpdate(data);
-            //console.log('update:' + JSON.stringify(update));
-        }else{
-            console.log('dddddddd')
-        }
-    });
-    wsProvider.on('ping', (event: MessageEvent) => {
-        console.warn("recived ping message");
-        wsProvider.ws.pong();
+        console.log("message type:" + messageType);
     });
     wsProvider.on('status', (event: any) => {
         if (event.status === 'connected') {
             if (wsProvider.ws) {
 
             }
-
         } else if (event.status === 'disconnected' && wsRetryCount < wsMaxRetries) {
             wsRetryCount++;
             setTimeout(() => {
@@ -163,7 +144,9 @@ function myCompletions(context: CompletionContext) {
     }
 }
 
-export function initEditor(editorAttr: EditorAttr, activeEditorView: EditorView | undefined, edContainer: RefObject<HTMLDivElement>) {
+export function initEditor(editorAttr: EditorAttr,
+    activeEditorView: EditorView | undefined,
+    edContainer: RefObject<HTMLDivElement>): [EditorView | undefined, WebsocketProvider] {
     if (activeEditorView) {
         activeEditorView.destroy();
     }
@@ -174,7 +157,7 @@ export function initEditor(editorAttr: EditorAttr, activeEditorView: EditorView 
     const ydoc = new Y.Doc(docOpt);
     const ytext = ydoc.getText(editorAttr.docId);
     const undoManager = new Y.UndoManager(ytext);
-    let wsProvider = doWsConn(ydoc, editorAttr.docId);
+    let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr.docId);
     ydoc.on('update', (update, origin) => {
         try {
             let parsed = Y.decodeUpdate(update);
@@ -182,7 +165,6 @@ export function initEditor(editorAttr: EditorAttr, activeEditorView: EditorView 
             console.log(e);
         }
     });
-
     const state = EditorState.create({
         doc: ytext.toString(),
         extensions: [
@@ -194,12 +176,11 @@ export function initEditor(editorAttr: EditorAttr, activeEditorView: EditorView 
         ]
     });
     if (edContainer.current && edContainer.current.children && edContainer.current.children.length > 0) {
-        return;
+        return [undefined, undefined];
     }
     const view = new EditorView({
         state,
         parent: edContainer.current!,
     });
-
-    return view;
+    return [view, wsProvider];
 }

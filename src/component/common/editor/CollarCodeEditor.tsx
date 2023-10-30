@@ -2,6 +2,8 @@ import { useRef, useState } from "react";
 import { EditorView } from "@codemirror/view";
 import styles from "./CollarCodeEditor.module.css";
 import React from "react";
+// @ts-ignore
+import { WebsocketProvider } from "y-websocket";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import 'react-toastify/dist/ReactToastify.css';
@@ -23,13 +25,17 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const { activeFile, mainFile, fileCode } = useSelector((state: AppState) => state.file);
   const { projInfo, projConf } = useSelector((state: AppState) => state.proj);
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
+  const [curWsProvider, setCurWsProvider] = useState<WebsocketProvider>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
-  let editorView: EditorView | undefined;
+  let editorView: [EditorView | undefined, WebsocketProvider | undefined];
 
   React.useEffect(() => {
     return () => {
       // try to delete the last state project info to avoid websocket connect to previous project through main file id
       delProjInfo();
+      if (curWsProvider) {
+        curWsProvider.destroy();
+      }
     }
   }, []);
 
@@ -86,13 +92,11 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       theme: themeMap.get("Solarized Light")!
     };
     editorView = initEditor(editorAttr, activeEditorView, edContainer);
-    setActiveEditorView(editorView);
+    setActiveEditorView(editorView[0]);
+    setCurWsProvider(editorView[1]);
   };
 
   const destroy = () => {
-    if (editorView) {
-      editorView.destroy();
-    }
     if (activeEditorView) {
       setActiveEditorView(undefined);
     }
