@@ -14,6 +14,7 @@ import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 import TexFileUtil from "@/common/TexFileUtil";
 import { TreeFileType } from "@/model/file/TreeFileType";
 import { RenameFile } from "@/model/request/file/edit/RenameFile";
+import ProjFileSearch from "./search/ProjFileSearch";
 
 export type TreeProps = {
     projectId: string;
@@ -24,6 +25,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
 
     const divRef = props.divRef;
     const [folderName, setFolderName] = useState('');
+    const [curTabName, setCurTabName] = useState('tree');
     const [createFileName, setCreateFileName] = useState('');
     const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
     const { fileTree } = useSelector((state: AppState) => state.file);
@@ -88,6 +90,10 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             var myModal = new bootstrap.Modal(modal);
             myModal.show();
         }
+    }
+
+    const handleProjSearch = () => {
+        curTabName !== "search" ? setCurTabName("search") : setCurTabName("tree");
     }
 
     const handleFileTreeUpdate = (tree: TexFileModel[]) => {
@@ -242,6 +248,16 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             setDraggedOverNode(null);
         }
     };
+
+    const renderBody = () => {
+        if (curTabName === "tree") {
+            return renderDirectoryTree(texFileTree, 0)
+        } else if (curTabName === "search") {
+            return <ProjFileSearch closeSearch={() => { setCurTabName("tree"); } } projectId={props.projectId}></ProjFileSearch>
+        } else {
+            return <div>not support</div>
+        }
+    }
 
     const renderDirectoryTree = (fileTree: TexFileModel[], level: number) => {
         if (!fileTree) {
@@ -416,18 +432,25 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     return (
         <div id="prjTree" ref={divRef} className={styles.prjTree}>
             <div className={styles.treeMenus}>
-                <button className={styles.menuButton} onClick={() => { handleFileAdd() }}>
-                    <i className="fa-solid fa-file-circle-plus"></i>
-                </button>
-                <button className={styles.menuButton} onClick={() => { handleHeaderAction("createFolderModal") }}>
-                    <i className="fa-solid fa-folder-plus"></i>
-                </button>
-                <button className={styles.menuButton} onClick={() => { handleHeaderAction("uploadFileModal") }}>
-                    <i className="fa-solid fa-upload"></i>
-                </button>
+                <div>
+                    <button className={styles.menuButton} onClick={() => { handleFileAdd() }}>
+                        <i className="fa-solid fa-file-circle-plus"></i>
+                    </button>
+                    <button className={styles.menuButton} onClick={() => { handleHeaderAction("createFolderModal") }}>
+                        <i className="fa-solid fa-folder-plus"></i>
+                    </button>
+                    <button className={styles.menuButton} onClick={() => { handleHeaderAction("uploadFileModal") }}>
+                        <i className="fa-solid fa-upload"></i>
+                    </button>
+                </div>
+                <div>
+                    <button className={styles.menuButton} onClick={() => { handleProjSearch() }}>
+                        <i className="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
             </div>
             <div className={styles.treeBody}>
-                {renderDirectoryTree(texFileTree, 0)}
+                {renderBody()}
             </div>
             <div className="modal fade" id="createFileModal" aria-labelledby="createModalLabel" aria-hidden="true">
                 <div className="modal-dialog">

@@ -12,6 +12,7 @@ import { CreateTplProjReq } from "@/model/request/proj/create/CreateTplProjReq";
 import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 import { QuerySrcPos } from "@/model/request/proj/query/QuerySrcPos";
+import { QueryFile } from "@/model/request/proj/search/QueryFile";
 import { ProjectActionType } from "@/redux/action/project/ProjectAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
@@ -60,10 +61,10 @@ export function uploadProjectFile(doc: File, project_id: string, parent: string)
   const formData = new FormData();
   formData.append('file', doc);
   formData.append('project_id', project_id);
-  formData.append('parent',parent);
+  formData.append('parent', parent);
   const config: AxiosRequestConfig = {
     method: 'post',
-    headers: { 'Content-Type': 'multipart/form-data'},
+    headers: { 'Content-Type': 'multipart/form-data' },
     url: '/tex/project/file/upload',
     data: formData
   };
@@ -277,4 +278,18 @@ export function setCompileQueue(data: CompileQueue) {
 export function setProjAttr(data: ProjAttribute) {
   const actionTypeString: string = ProjectActionType[ProjectActionType.PROJ_ATTR];
   return XHRClient.dispathAction(data, actionTypeString, store);
+}
+
+export function projSerach(req: QueryFile) {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(req)) {
+    params.append(key, value);
+  }
+  const config: AxiosRequestConfig = {
+    method: 'get',
+    url: '/tex/project/search',
+    params: params
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.PROJ_SEARCH];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
 }

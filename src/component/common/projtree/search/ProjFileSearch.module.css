@@ -1,0 +1,37 @@
+.searchHeader {
+    background-color: rgb(57,70,109);
+    height: 28px;
+    font-size: 14px;
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.searchHeader button{
+    background-color: rgb(57,70,109);
+    border: none;
+    color: white;
+    margin-right: 4px;
+}
+
+.search {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 4px;
+}
+
+.search input {
+    flex-grow: 1;
+    border-radius: 2px;
+    font-size: 14px;
+}
+
+.search button {
+    background-color: rgb(57,70,109);
+    border: none;
+    color: white;
+    margin-right: 4px;
+    flex-grow: 0;
+}
