@@ -127,8 +127,8 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       const line = editor.state.doc.lineAt(cursor).number;
       const column = cursor - editor.state.doc.line(line).from;
       return {
-        line: line + 1,
-        column: column + 1
+        line: line,
+        column: column
       };
     } else {
       return {
