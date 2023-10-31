@@ -15,6 +15,7 @@ import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
 import { toast } from "react-toastify";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { ProjConfType } from "@/model/proj/config/ProjConfType";
+import { readConfig } from "@/config/app/config-reader";
 
 export type EditorProps = {
   projectId: string;
@@ -22,11 +23,12 @@ export type EditorProps = {
 
 const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<HTMLDivElement>(null)
-  const { activeFile, mainFile, fileCode } = useSelector((state: AppState) => state.file);
+  const { activeFile } = useSelector((state: AppState) => state.file);
   const { projInfo, projConf } = useSelector((state: AppState) => state.proj);
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   let editorView: [EditorView | undefined, WebsocketProvider | undefined];
+  const activeKey = readConfig("projActiveFile") + props.projectId;
   let ws: WebsocketProvider;
 
   React.useEffect(() => {
@@ -43,7 +45,13 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   React.useEffect(() => {
     if (projInfo && Object.keys(projInfo).length > 0) {
       setMainFileModel(projInfo.main_file);
-      init(projInfo.main_file.file_id);
+      const activeFileJson = localStorage.getItem(activeKey);
+      if (activeFileJson) {
+        const curActiveFile = JSON.parse(activeFileJson);
+        init(curActiveFile.file_id);
+      } else {
+        init(projInfo.main_file.file_id);
+      }
     }
     return () => {
       destroy();
@@ -65,21 +73,10 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }, [projConf]);
 
   React.useEffect(() => {
-    if (fileCode && fileCode.length > 0) {
-      if (mainFileModel && mainFileModel.yjs_initial === 0) {
-        init(mainFile.file_id);
-        updateFileInit(mainFile.file_id);
-      }
-    }
-    return () => {
-      destroy()
-    };
-  }, [fileCode]);
-
-  React.useEffect(() => {
     if (!activeFile || !activeFile.file_id) return;
     if (activeFile && activeFile.file_type !== 0) {
       init(activeFile.file_id);
+      localStorage.setItem(activeKey, JSON.stringify(activeFile));
     }
     return () => {
       destroy();

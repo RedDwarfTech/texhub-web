@@ -6,8 +6,7 @@ const initState: AppState["file"] = {
     fileTree: [],
     activeFile: {} as TexFileModel,
     selectItem: {} as TexFileModel,
-    mainFile: {} as TexFileModel,
-    fileCode: ''
+    mainFile: {} as TexFileModel
 };
 
 const FileReducer = (state = initState, action: any) => {
@@ -36,11 +35,6 @@ const FileReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 mainFile: action.data
-            };
-        case "GET_FILE_CODE":
-            return {
-                ...state,
-                fileCode: action.data
             };
         case "UPDATE_FILE_INITIAL":
             return {

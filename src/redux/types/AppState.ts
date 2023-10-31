@@ -42,7 +42,6 @@ export interface AppState {
         fileTree: TexFileModel[],
         activeFile: TexFileModel,
         selectItem: TexFileModel,
-        mainFile: TexFileModel,
-        fileCode: String
+        mainFile: TexFileModel
     }
 }
