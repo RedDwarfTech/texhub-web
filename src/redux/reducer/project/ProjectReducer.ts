@@ -9,6 +9,7 @@ import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 import { ProjConf } from "@/model/proj/config/ProjConf";
+import { SearchResult } from "@/model/proj/search/SearchResult";
 
 const initState: AppState["proj"] = {
     projList: [],
@@ -29,6 +30,7 @@ const initState: AppState["proj"] = {
     pdfFocus: [] as PdfPosition[],
     srcFocus: [] as SrcPosition[],
     projConf: {} as ProjConf,
+    hits: [] as SearchResult[]
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -129,6 +131,11 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 projConf: action.data
+            };
+        case "PROJ_SEARCH":
+            return {
+                ...state,
+                hits: action.data
             };
         default:
             break;

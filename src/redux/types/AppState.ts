@@ -12,6 +12,7 @@ import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { EntityList } from "rdjs-wheel";
 import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 import { ProjConf } from "@/model/proj/config/ProjConf";
+import { SearchResult } from "@/model/proj/search/SearchResult";
 
 export interface AppState {
     proj: {
@@ -30,7 +31,8 @@ export interface AppState {
         projAttr: ProjAttribute,
         pdfFocus: PdfPosition[],
         srcFocus: SrcPosition[],
-        projConf: ProjConf
+        projConf: ProjConf,
+        hits: SearchResult[],
     },
     tpl: {
         tplList: TemplateModel[],

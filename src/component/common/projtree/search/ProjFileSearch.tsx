@@ -3,6 +3,10 @@ import styles from './ProjFileSearch.module.css';
 import { QueryFile } from '@/model/request/proj/search/QueryFile';
 import { ChangeEvent, useState } from 'react';
 import { toast } from 'react-toastify';
+import { SearchResult } from '@/model/proj/search/SearchResult';
+import { AppState } from '@/redux/types/AppState';
+import { useSelector } from 'react-redux';
+import React from 'react';
 
 export type ProjSearchProps = {
     closeSearch: () => void;
@@ -12,6 +16,14 @@ export type ProjSearchProps = {
 const ProjFileSearch: React.FC<ProjSearchProps> = (props: ProjSearchProps) => {
 
     const [searchWord, setSearchWord] = useState<string>('');
+    const [hitItem, setHitItem] = useState<SearchResult[]>();
+    const { hits } = useSelector((state: AppState) => state.proj);
+
+    React.useEffect(() => {
+        if (hits && hits.length > 0) {
+            setHitItem(hits);
+        }
+    }, [hits]);
 
     const handleProjSearch = () => {
         if (!searchWord || searchWord.length === 0) {
@@ -30,6 +42,27 @@ const ProjFileSearch: React.FC<ProjSearchProps> = (props: ProjSearchProps) => {
         setSearchWord(word);
     }
 
+    const renderSearches = () => {
+        if (!hitItem || hitItem.length == 0) return;
+        const tagList: JSX.Element[] = [];
+        for (let i = 0; i < hitItem.length; i++) {
+            debugger
+            tagList.push(
+                <div>
+                    <div className={styles.hitFile}>
+                        {hitItem[i].name}
+                    </div>
+                    <div>
+                        <i>- 匹配项1</i>
+                        <i>- 匹配项2</i>
+                        <i>- 匹配项3</i>
+                    </div>
+                </div>
+            );
+        }
+        return tagList;
+    }
+
     return (
         <div>
             <div className={styles.searchHeader}>
@@ -46,7 +79,7 @@ const ProjFileSearch: React.FC<ProjSearchProps> = (props: ProjSearchProps) => {
                     <i className="fa-solid fa-magnifying-glass"></i>
                 </button>
             </div>
-            <div></div>
+            {renderSearches()}
         </div>
     );
 }
