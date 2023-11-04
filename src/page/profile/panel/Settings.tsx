@@ -62,7 +62,13 @@ const Settings: React.FC = () => {
         };
         UserService.doSetNickname(newNick, "/texpub/user/nickname", store).then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
-                UserService.loadCurrUser(true, readConfig("refreshUserUrl"));
+                UserService.loadCurrUser(true, readConfig("refreshUserUrl")).then((res)=>{
+                    const userInfoJson = localStorage.getItem("userInfo");
+                    if (userInfoJson) {
+                        const uInfo: UserModel = JSON.parse(userInfoJson);
+                        setUserInfo(uInfo);
+                    }
+                });
             }
         });
     }
