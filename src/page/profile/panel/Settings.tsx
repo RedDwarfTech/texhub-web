@@ -10,12 +10,13 @@ import store from "@/redux/store/store";
 import React from "react";
 import PwdReset from "./pwd/PwdReset";
 import MyOrder from "./order/MyOrder";
+import { readConfig } from "@/config/app/config-reader";
 
 const Settings: React.FC = () => {
 
     const [currentPanel, setCurrentPanel] = useState('userinfo');
     const [userInfo, setUserInfo] = useState<UserModel>();
-    const [folderName, setFolderName] = useState('');
+    const [curNickname, setCurNickname] = useState('');
     const { user } = useSelector((state: any) => state.rdRootReducer.user);
 
     React.useEffect(() => {
@@ -48,29 +49,29 @@ const Settings: React.FC = () => {
     }
 
     const handleInputChange = (event: any) => {
-        setFolderName(event.target.value);
+        setCurNickname(event.target.value);
     };
 
-    const handleFolderAddConfirm = () => {
-        if (!folderName || folderName.length === 0) {
+    const handleNicknameConfirm = () => {
+        if (!curNickname || curNickname.length === 0) {
             toast.warn("请输入文件夹名称");
             return;
         }
         let newNick = {
-            nickname: folderName
+            nickname: curNickname
         };
         UserService.doSetNickname(newNick, "/texpub/user/nickname", store).then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
-                setUserInfo(res.result);
+                UserService.getCurrUser(readConfig("refreshUserUrl"));
             }
         });
     }
 
-    const handleFolderAdd = () => {
+    const handleNicknameEdit = () => {
         let modal = document.getElementById('renameModal');
         if (modal) {
-            var addFolderModal = new bootstrap.Modal(modal);
-            addFolderModal.show();
+            var nicknameEditModal = new bootstrap.Modal(modal);
+            nicknameEditModal.show();
         }
     }
 
@@ -98,7 +99,7 @@ const Settings: React.FC = () => {
                             <div className="col">
                                 <div><span className="user-info">用户昵称:</span></div>
                                 <div ><span className="user-info">{userInfo ? userInfo!.nickname : ""}</span></div>
-                                <div ><button onClick={() => { handleFolderAdd() }} className="btn btn-primary">设置昵称</button></div>
+                                <div ><button onClick={() => { handleNicknameEdit() }} className="btn btn-primary">设置昵称</button></div>
                             </div>
                             <div className="col">
                                 <div ><span className="user-info">会员到期日:</span></div>
@@ -144,7 +145,7 @@ const Settings: React.FC = () => {
                                 </div>
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                                    <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={() => { handleFolderAddConfirm() }}>确定</button>
+                                    <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={() => { handleNicknameConfirm() }}>确定</button>
                                 </div>
                             </div>
                         </div>
