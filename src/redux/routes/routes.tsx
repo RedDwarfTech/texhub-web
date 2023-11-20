@@ -14,54 +14,67 @@ import Settings from "@/page/profile/panel/Settings";
 import FullScreen from "@/component/common/previewer/feat/fullscreen/FullScreen";
 
 const routes = createBrowserRouter([
-    {
-        path: "/product/pay/success",
-        element: <PaySuccess />
-    },
-    {
-        path: "/",
-        element: <Home />
-    },
-    {
-        path: "/doc/tab",
-        element: <DocTab />
-    },
-    {
-        path: "/tpl",
-        element: <Template />
-    },
-    {
-        path: "/tpl/detail",
-        element: <TemplateDetail />
-    },
-    {
-        path: "/editor",
-        element: <App />
-    },
-    {
-        path: "/preview/fullscreen",
-        element: <FullScreen />
-    },
-    {
-        path: "/user/login",
-        element: <RdLogin appId={readConfig("appId")} store={store} loginUrl={readConfig("loginUrl")} />
-    },
-    {
-        path: "/user/reg",
-        element: <RdReg appId={readConfig("appId")} store={store} regUrl={readConfig("regUrl")} />
-    },
-    {
-        path: "/user/panel",
-        element: <Settings/>
-    },
-    {
-        path: "/goods",
-        element: <Price/>
-    },
-    {
-        path: "/proj/share",
-        element: <TeXShareRecieved/>
-    }
+  {
+    path: "/product/pay/success",
+    element: <PaySuccess />,
+  },
+  {
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "/doc/tab",
+    element: <DocTab />,
+  },
+  {
+    path: "/tpl",
+    element: <Template />,
+  },
+  {
+    path: "/tpl/detail",
+    element: <TemplateDetail />,
+  },
+  {
+    path: "/editor",
+    element: <App />,
+  },
+  {
+    path: "/preview/fullscreen",
+    element: <FullScreen />,
+  },
+  {
+    path: "/user/login",
+    element: (
+      <RdLogin
+        appId={readConfig("appId")}
+        cfSiteKey={readConfig("cfSiteKey")}
+        store={store}
+        loginUrl={readConfig("loginUrl")}
+      />
+    ),
+  },
+  {
+    path: "/user/reg",
+    element: (
+      <RdReg
+        appId={readConfig("appId")}
+        store={store}
+        regUrl={readConfig("regUrl")}
+      />
+    ),
+  },
+  {
+    path: "/user/panel",
+    element: <Settings />,
+  },
+  {
+    path: "/goods",
+    element: <Price />,
+  },
+  {
+    path: "/proj/share",
+    element: <TeXShareRecieved />,
+  },
 ]);
 
 export default routes;
