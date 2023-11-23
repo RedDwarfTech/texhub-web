@@ -35,3 +35,12 @@
     margin-right: 4px;
     flex-grow: 0;
 }
+
+.matchedContent{
+    margin-left: 5px;
+
+}
+
+.matchedContent:hover {
+    background-color: rgb(192, 198, 216)
+}
