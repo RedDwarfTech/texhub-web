@@ -53,7 +53,7 @@ const ProjFileSearch: React.FC<ProjSearchProps> = (props: ProjSearchProps) => {
                         {hitItem[i].name}
                     </div>
                     <div>
-                        <i>{hitItem[i].cotent}</i>
+                        <i>{hitItem[i].content}</i>
                     </div>
                 </div>
             );
