@@ -45,7 +45,8 @@ const ProjFileSearch: React.FC<ProjSearchProps> = (props: ProjSearchProps) => {
 
     const handleMatchedClick = (item: SearchResult) => {
         if(item && item.file_path && item.file_path.length > 0) {
-            let paths = item.file_path.split('/')
+            let paths: string[] = item.file_path.split('/').filter(str => str !== "");
+            paths.push(item.name);
             props.searchComplete(paths)
         }
     }
