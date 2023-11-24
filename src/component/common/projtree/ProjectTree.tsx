@@ -249,11 +249,17 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         }
     };
 
+    const handleSearchComplete = (paths: string[]) => {
+        handleExpandFolderCallback(paths);
+    }
+
     const renderBody = () => {
         if (curTabName === "tree") {
             return renderDirectoryTree(texFileTree, 0)
         } else if (curTabName === "search") {
-            return <ProjFileSearch closeSearch={() => { setCurTabName("tree"); } } projectId={props.projectId}></ProjFileSearch>
+            return <ProjFileSearch closeSearch={() => { setCurTabName("tree"); }}
+                searchComplete={handleSearchComplete}
+                projectId={props.projectId}></ProjFileSearch>
         } else {
             return <div>not support</div>
         }

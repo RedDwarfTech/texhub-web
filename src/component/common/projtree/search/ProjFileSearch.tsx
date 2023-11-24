@@ -11,6 +11,7 @@ import React from 'react';
 export type ProjSearchProps = {
     closeSearch: () => void;
     projectId: string;
+    searchComplete: (path: string[]) => void;
 };
 
 const ProjFileSearch: React.FC<ProjSearchProps> = (props: ProjSearchProps) => {
@@ -42,20 +43,26 @@ const ProjFileSearch: React.FC<ProjSearchProps> = (props: ProjSearchProps) => {
         setSearchWord(word);
     }
 
+    const handleMatchedClick = (item: SearchResult) => {
+        if(item && item.file_path && item.file_path.length > 0) {
+            let paths: string[] = item.file_path.split('/').filter(str => str !== "");
+            paths.push(item.name);
+            props.searchComplete(paths)
+        }
+    }
+
     const renderSearches = () => {
         if (!hitItem || hitItem.length == 0) return;
         const tagList: JSX.Element[] = [];
         for (let i = 0; i < hitItem.length; i++) {
-            debugger
             tagList.push(
                 <div>
                     <div className={styles.hitFile}>
                         {hitItem[i].name}
                     </div>
                     <div>
-                        <i>- 匹配项1</i>
-                        <i>- 匹配项2</i>
-                        <i>- 匹配项3</i>
+                        <i className={styles.matchedContent} 
+                        onClick={() => { handleMatchedClick(hitItem[i]) }}>{hitItem[i].content}</i>
                     </div>
                 </div>
             );

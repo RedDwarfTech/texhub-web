@@ -1,4 +1,5 @@
 export interface SearchResult { 
     name: string; 
-    cotent: string;
+    content: string;
+    file_path: string;
 }
