@@ -43,7 +43,7 @@ const extensions = [
         '.cm-content': {
             fontSize: '16px'
         },
-        '.cm-selectionMatch .cm-snippetField': {
+        '.cm-selectionMatch': {
             backgroundColor: "#A3BE8C"
         },
         '.cm-scroller': {
