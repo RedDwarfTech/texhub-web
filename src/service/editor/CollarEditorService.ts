@@ -43,6 +43,9 @@ const extensions = [
         '.cm-content': {
             fontSize: '16px'
         },
+        '.cm-selectionMatch': {
+            backgroundColor: "#A3BE8C"
+        },
         '.cm-scroller': {
 
         },
