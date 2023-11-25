@@ -70,6 +70,20 @@ const extensions = [
     })
 ];
 
+const hightlightWord = (word: string) => {
+    if (!curEditorView) {
+        return;
+    }
+    const highlight_decoration = Decoration.mark({
+        attributes: { style: "background-color: yellow" }
+    });
+    let cursor = new SearchCursor(curEditorView.state.doc, word);
+    cursor.next();
+    curEditorView.dispatch({
+        effects: highlight_effect.of([highlight_decoration.range(cursor.value.from, cursor.value.to)])
+    });
+}
+
 const hightlightSelection = (from: number, to: number) => {
     if (!curEditorView) {
         return;
@@ -80,6 +94,18 @@ const hightlightSelection = (from: number, to: number) => {
     curEditorView.dispatch({
         effects: highlight_effect.of([highlight_decoration.range(from, to)])
     });
+}
+
+const highlightUnselection = (f: number, t: number) => {
+    if (!curEditorView) {
+        return;
+    }
+    const filterMarks = StateEffect.define()
+    if(f&&t){
+        curEditorView.dispatch({
+            effects: filterMarks.of((from: number, to: number) => to <= f || from >= t)
+        })
+    }
 }
 
 const handleWsAuth = (event: any, wsProvider: WebsocketProvider, ydoc: Y.Doc, docId: string) => {
