@@ -1,11 +1,12 @@
-import { EditorView } from "@codemirror/view";
+import { EditorView, Decoration, ViewUpdate } from "@codemirror/view";
 // @ts-ignore
 import { WebsocketProvider } from "y-websocket";
 import * as Y from 'yjs';
 import * as random from 'lib0/random';
 import * as decoding from 'lib0/decoding'
-import { Compartment, EditorState, Extension } from "@codemirror/state";
+import { Compartment, EditorState, Extension, StateEffect, StateField, Range } from "@codemirror/state";
 import { basicSetup } from "codemirror";
+import { SearchCursor } from "@codemirror/search"
 import { yCollab } from "y-codemirror.next";
 import { CompletionContext, autocompletion } from "@codemirror/autocomplete";
 import { StreamLanguage, defaultHighlightStyle, syntaxHighlighting } from "@codemirror/language";
@@ -35,6 +36,10 @@ export const themeConfig = new Compartment()
 export const userColor = usercolors[random.uint32() % usercolors.length];
 const wsMaxRetries = 1;
 let wsRetryCount = 0;
+let curEditorView: EditorView|null= null;
+let curStart: number = 0;
+let curEnd: number = 0;
+const highlight_effect = StateEffect.define<Range<Decoration>[]>();
 const extensions = [
     EditorView.contentAttributes.of({ spellcheck: 'true' }),
     EditorView.lineWrapping,
@@ -52,7 +57,30 @@ const extensions = [
     }),
     StreamLanguage.define(stex),
     syntaxHighlighting(defaultHighlightStyle),
+    EditorView.updateListener.of(function (e) {
+        //  input/update/change event
+        let selection = e.state.selection;
+        let start = selection.ranges[0].from;
+        let end = selection.ranges[0].to;
+        if (start < end && (curStart !== start || curEnd !== end)) {
+            curStart = start;
+            curEnd = end;
+            hightlightSelection(start, end)
+        }
+    })
 ];
+
+const hightlightSelection = (from: number, to: number) => {
+    if (!curEditorView) {
+        return;
+    }
+    const highlight_decoration = Decoration.mark({
+        attributes: { style: "background-color: yellow" }
+    });
+    curEditorView.dispatch({
+        effects: highlight_effect.of([highlight_decoration.range(from, to)])
+    });
+}
 
 const handleWsAuth = (event: any, wsProvider: WebsocketProvider, ydoc: Y.Doc, docId: string) => {
     if (event.status === 'failed') {
@@ -167,6 +195,19 @@ export function initEditor(editorAttr: EditorAttr,
             console.log(e);
         }
     });
+    const highlight_extension = StateField.define({
+        create() { return Decoration.none },
+        update(value, transaction) {
+            value = value.map(transaction.changes)
+            for (let effect of transaction.effects) {
+                if (effect.is(highlight_effect) && effect.value) {
+                    value = value.update({ add: effect.value, sort: true })
+                }
+            }
+            return value
+        },
+        provide: f => EditorView.decorations.from(f)
+    });
     const state = EditorState.create({
         doc: ytext.toString(),
         extensions: [
@@ -174,15 +215,25 @@ export function initEditor(editorAttr: EditorAttr,
             yCollab(ytext, wsProvider.awareness, { undoManager }),
             extensions,
             themeConfig.of(themeMap.get("Solarized Light")!),
-            autocompletion({ override: [myCompletions] })
-        ]
+            autocompletion({ override: [myCompletions] }),
+            highlight_extension
+        ],
     });
     if (edContainer.current && edContainer.current.children && edContainer.current.children.length > 0) {
         return [undefined, undefined];
     }
-    const view = new EditorView({
+    const editorView: EditorView = new EditorView({
         state,
         parent: edContainer.current!,
     });
-    return [view, wsProvider];
+    if (editorView) {
+        editorView.dom.addEventListener("selectionchange", () => {
+            debugger
+            const selection = editorView.state.selection;
+            // handle selection change
+            console.log("selection text:" + selection);
+        });
+    }
+    curEditorView = editorView;
+    return [editorView, wsProvider];
 }

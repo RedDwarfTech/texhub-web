@@ -20,6 +20,9 @@ dependencies:
   '@codemirror/legacy-modes':
     specifier: ^6.3.3
     version: 6.3.3
+  '@codemirror/search':
+    specifier: ^6.5.4
+    version: 6.5.4
   '@codemirror/state':
     specifier: ^6.3.1
     version: 6.3.1
