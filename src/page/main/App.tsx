@@ -124,7 +124,7 @@ const App: React.FC = () => {
     setTimeout(() => {
       let prevCursorOffset = -1;
       let resizing = false;
-      const menu: any = document.getElementById(resizeArea);
+      const resizeElement: any = document.getElementById(resizeArea);
       const resizeBar: any = document.getElementById(resizeBarName);
       if (resizeBar != null) {
         resizeBar.addEventListener("mousedown", () => {
@@ -136,7 +136,7 @@ const App: React.FC = () => {
         resizing = false
       });
 
-      function handleResizeMenu(e: any) {
+      function handleResizeMenu(e: MouseEvent) {
         if (!resizing) {
           return
         }
@@ -146,8 +146,8 @@ const App: React.FC = () => {
         if (prevCursorOffset === -1) {
           prevCursorOffset = screenX
         } else if (Math.abs(prevCursorOffset - screenX) >= 5) {
-          menu.style.flex = `0 0 ${screenX}px`;
-          menu.style.maxWidth = "100vw";
+          resizeElement.style.flex = `0 0 ${screenX}px`;
+          resizeElement.style.maxWidth = "100vw";
           prevCursorOffset = screenX;
         }
       }
@@ -158,7 +158,7 @@ const App: React.FC = () => {
     setTimeout(() => {
       let prevCursorOffset = -1;
       let resizing = false;
-      const menu: HTMLElement | null = document.getElementById(resizeArea);
+      const resizeElement: HTMLElement | null = document.getElementById(resizeArea);
       const resizeBar: any = document.getElementById(resizeBarName);
       if (resizeBar !== null) {
         resizeBar.addEventListener("mousedown", () => {
@@ -170,8 +170,8 @@ const App: React.FC = () => {
         resizing = false
       });
 
-      function handleResizeMenu(e: any) {
-        if (!resizing || menu == null) {
+      function handleResizeMenu(e: MouseEvent) {
+        if (!resizing || resizeElement == null) {
           return
         }
         if (!divRef.current) {
@@ -184,8 +184,8 @@ const App: React.FC = () => {
         if (prevCursorOffset === -1) {
           prevCursorOffset = screenX
         } else if (Math.abs(prevCursorOffset - screenX) >= 5) {
-          menu.style.flex = `0 0 ${screenX - prjTreeWidth}px`;
-          menu.style.maxWidth = "100vw";
+          resizeElement.style.flex = `0 0 ${screenX - prjTreeWidth - 18}px`;
+          resizeElement.style.maxWidth = "100vw";
           prevCursorOffset = screenX;
         }
       }

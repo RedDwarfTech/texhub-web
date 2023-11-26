@@ -2,6 +2,14 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/*https://stackoverflow.com/questions/16670931/hide-scroll-bar-but-while-still-being-able-to-scroll*/
+.container::-webkit-scrollbar {
+  display: none;
 }
 
 .header {
@@ -19,6 +27,7 @@
 .leftDraggable {
   height: 100%;
   width: 4px;
+  min-width: 4px;
   background-color: rgb(33, 41, 53);
 }
 
@@ -28,7 +37,8 @@
 
 .rightDraggable {
   height: 100%;
-  width: 4px;
+  width: 2px;
+  min-width: 2px;
   background-color: rgb(33, 41, 53);
 }
 
@@ -48,6 +58,12 @@
   flex: 0 0 60%;
   overflow: hidden;
   height: 96vh;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.editor::-webkit-scrollbar {
+  display: none;
 }
 
 .treeItem {

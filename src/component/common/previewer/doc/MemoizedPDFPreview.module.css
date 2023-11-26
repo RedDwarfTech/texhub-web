@@ -4,9 +4,11 @@
     display: flex;
     overflow: scroll;
     justify-content: center;
+    max-width: 100%;
 }
 
 .pdfPage {
     width: auto;
     margin-bottom: 5px;
+    max-width: 100%;
 }
