@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import styles from './App.module.css';
-import { ReactComponent as HiddenContent } from "@/assets/expert/hidden-content.svg";
 const CollarCodeEditor = React.lazy(() => import('@/component/common/editor/CollarCodeEditor'));
 import { useLocation } from 'react-router-dom';
 import { AppState } from '@/redux/types/AppState';
@@ -41,8 +40,8 @@ const App: React.FC = () => {
   const divRef = useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    resizeLeft("hiddenContentLeft", "prjTree");
-    resizeRight("hiddenContentRight", "editor");
+    resizeLeft("leftDraggable", "prjTree");
+    resizeRight("rightDraggable", "editor");
     if (pid) {
       let query: QueryProjInfo = {
         project_id: pid.toString()
@@ -198,8 +197,7 @@ const App: React.FC = () => {
       <EHeader></EHeader>
       <div className={styles.editorBody}>
         {pid ? <ProjectTree projectId={pid as string} divRef={divRef}></ProjectTree> : <div>Loading...</div>}
-        <div>
-          <HiddenContent id="hiddenContentLeft" className={styles.hiddenContent} />
+        <div className={styles.leftDraggable} id="leftDraggable">
         </div>
         <div id="editor" className={styles.editor}>
           <React.Suspense fallback={<div>Loading...</div>}>
@@ -209,8 +207,7 @@ const App: React.FC = () => {
             {activeFileModel ? activeFileModel.name : "ddd"}
           </div>
         </div>
-        <div>
-          <HiddenContent id="hiddenContentRight" className={styles.hiddenContent} />
+        <div className={styles.rightDraggable} id="rightDraggable">
         </div>
         <Previewer projectId={pid as string}></Previewer>
       </div>

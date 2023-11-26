@@ -16,6 +16,24 @@
   flex-grow: 1;
 }
 
+.leftDraggable {
+  height: 100%;
+  width: 4px;
+}
+
+.leftDraggable:hover {
+  cursor: ew-resize;
+}
+
+.rightDraggable {
+  height: 100%;
+  width: 4px;
+}
+
+.rightDraggable:hover {
+  cursor: ew-resize;
+}
+
 .editorFooter {
   height: 3vh;
   background-color: rgb(29, 35, 47);
