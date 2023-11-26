@@ -39,6 +39,7 @@ let wsRetryCount = 0;
 let curEditorView: EditorView|null= null;
 let curStart: number = 0;
 let curEnd: number = 0;
+let clearCount: number = 0;
 const highlight_effect = StateEffect.define<Range<Decoration>[]>();
 const extensions = [
     EditorView.contentAttributes.of({ spellcheck: 'true' }),
@@ -63,9 +64,14 @@ const extensions = [
         let start = selection.ranges[0].from;
         let end = selection.ranges[0].to;
         if (start < end && (curStart !== start || curEnd !== end)) {
+            clearCount = 0;
             curStart = start;
             curEnd = end;
             hightlightSelection(start, end)
+        }
+        if(start === end && clearCount<2) {
+            clearCount = clearCount + 1;
+            highlightUnselection();
         }
     })
 ];
@@ -96,16 +102,14 @@ const hightlightSelection = (from: number, to: number) => {
     });
 }
 
-const highlightUnselection = (f: number, t: number) => {
+const highlightUnselection = () => {
     if (!curEditorView) {
         return;
     }
-    const filterMarks = StateEffect.define()
-    if(f&&t){
-        curEditorView.dispatch({
-            effects: filterMarks.of((from: number, to: number) => to <= f || from >= t)
-        })
-    }
+    const filterMarks = StateEffect.define();
+    curEditorView.dispatch({
+        effects: filterMarks.of(null)
+    })
 }
 
 const handleWsAuth = (event: any, wsProvider: WebsocketProvider, ydoc: Y.Doc, docId: string) => {
@@ -252,14 +256,6 @@ export function initEditor(editorAttr: EditorAttr,
         state,
         parent: edContainer.current!,
     });
-    if (editorView) {
-        editorView.dom.addEventListener("selectionchange", () => {
-            debugger
-            const selection = editorView.state.selection;
-            // handle selection change
-            console.log("selection text:" + selection);
-        });
-    }
     curEditorView = editorView;
     return [editorView, wsProvider];
 }

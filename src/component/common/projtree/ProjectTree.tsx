@@ -15,6 +15,7 @@ import TexFileUtil from "@/common/TexFileUtil";
 import { TreeFileType } from "@/model/file/TreeFileType";
 import { RenameFile } from "@/model/request/file/edit/RenameFile";
 import ProjFileSearch from "./search/ProjFileSearch";
+import TeXSymbol from "./symbol/TeXSymbol";
 
 export type TreeProps = {
     projectId: string;
@@ -94,6 +95,10 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
 
     const handleProjSearch = () => {
         curTabName !== "search" ? setCurTabName("search") : setCurTabName("tree");
+    }
+
+    const handleProjSymbol = () => {
+        curTabName !== "symbol" ? setCurTabName("symbol") : setCurTabName("tree");
     }
 
     const handleFileTreeUpdate = (tree: TexFileModel[]) => {
@@ -260,6 +265,8 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             return <ProjFileSearch closeSearch={() => { setCurTabName("tree"); }}
                 searchComplete={handleSearchComplete}
                 projectId={props.projectId}></ProjFileSearch>
+        } else if (curTabName === "symbol"){
+            return <TeXSymbol></TeXSymbol>
         } else {
             return <div>not support</div>
         }
@@ -450,6 +457,9 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                     </button>
                 </div>
                 <div>
+                    <button className={styles.menuButton} onClick={() => { handleProjSymbol() }}>
+                        <i className="fa-solid fa-infinity"></i>
+                    </button>
                     <button className={styles.menuButton} onClick={() => { handleProjSearch() }}>
                         <i className="fa-solid fa-magnifying-glass"></i>
                     </button>

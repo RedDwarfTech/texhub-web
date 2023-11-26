@@ -1,0 +1,17 @@
+
+.symbolContainer {
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    text-align: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.symbol {
+    font-size: 20px;
+    height: 35px;
+    width: 35px;
+    background-color: #262f3e;
+}
