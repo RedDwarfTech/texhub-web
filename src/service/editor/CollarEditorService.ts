@@ -1,4 +1,4 @@
-import { EditorView, Decoration, ViewUpdate } from "@codemirror/view";
+import { EditorView, Decoration } from "@codemirror/view";
 // @ts-ignore
 import { WebsocketProvider } from "y-websocket";
 import * as Y from 'yjs';
@@ -6,7 +6,6 @@ import * as random from 'lib0/random';
 import * as decoding from 'lib0/decoding'
 import { Compartment, EditorState, Extension, StateEffect, StateField, Range } from "@codemirror/state";
 import { basicSetup } from "codemirror";
-import { SearchCursor } from "@codemirror/search"
 import { yCollab } from "y-codemirror.next";
 import { CompletionContext, autocompletion } from "@codemirror/autocomplete";
 import { StreamLanguage, defaultHighlightStyle, syntaxHighlighting } from "@codemirror/language";
@@ -75,20 +74,6 @@ const extensions = [
         }
     })
 ];
-
-const hightlightWord = (word: string) => {
-    if (!curEditorView) {
-        return;
-    }
-    const highlight_decoration = Decoration.mark({
-        attributes: { style: "background-color: yellow" }
-    });
-    let cursor = new SearchCursor(curEditorView.state.doc, word);
-    cursor.next();
-    curEditorView.dispatch({
-        effects: highlight_effect.of([highlight_decoration.range(cursor.value.from, cursor.value.to)])
-    });
-}
 
 const hightlightSelection = (from: number, to: number) => {
     if (!curEditorView) {
@@ -174,12 +159,14 @@ const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
 
             }
         } else if (event.status === 'disconnected' && wsRetryCount < wsMaxRetries) {
+            console.error("wsProvider disconnected");
             wsRetryCount++;
             setTimeout(() => {
                 wsProvider.connect();
             }, 2000);
         } else {
             wsProvider.destroy();
+            console.error("wsProvider destory");
             return;
         }
     });

@@ -41,6 +41,12 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const [draggedOverNode, setDraggedOverNode] = useState<TexFileModel | null>(null);
 
     React.useEffect(() => {
+        resizeLeft("leftDraggable", "prjTree");        
+        return () => {
+        };
+      }, []);
+
+    React.useEffect(() => {
         if (projInfo && Object.keys(projInfo).length > 0) {
             handleFileTreeUpdate(projInfo.tree);
             setMainFile(projInfo.main_file);
@@ -62,6 +68,43 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             setMainFile(defaultFile[0]);
         }
     }, [fileTree]);
+
+    const resizeLeft = (resizeBarName: string, resizeArea: string) => {
+        setTimeout(() => {
+          let prevCursorOffset = -1;
+          let resizing = false;
+          const resizeElement: any = document.getElementById(resizeArea);
+          if(!resizeElement){
+            return;
+          }
+          const resizeBar: any = document.getElementById(resizeBarName);
+          if (resizeBar != null) {
+            resizeBar.addEventListener("mousedown", () => {
+              resizing = true
+            });
+          };
+          window.addEventListener("mousemove", handleResizeMenu);
+          window.addEventListener("mouseup", () => {
+            resizing = false
+          });
+    
+          function handleResizeMenu(e: MouseEvent) {
+            if (!resizing) {
+              return
+            }
+            const { screenX } = e
+            e.preventDefault()
+            e.stopPropagation()
+            if (prevCursorOffset === -1) {
+              prevCursorOffset = screenX
+            } else if (Math.abs(prevCursorOffset - screenX) >= 5) {
+              resizeElement.style.flex = `0 0 ${screenX}px`;
+              resizeElement.style.maxWidth = "100vw";
+              prevCursorOffset = screenX;
+            }
+          }
+        }, 1500);
+      }
 
     const handleExpandFolderCallback = (name_paths: string[]) => {
         for (let i = 0; i < name_paths.length; i++) {
@@ -241,7 +284,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         e.preventDefault();
         e.stopPropagation();
         if (draggedNode) {
-            // 这里可以根据业务逻辑处理节点的位置或层级关系
             console.log(`Move node ${draggedNode.id} to ${targetNode.id}`);
         }
         setDraggedNode(null);

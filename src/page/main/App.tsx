@@ -40,7 +40,6 @@ const App: React.FC = () => {
   const divRef = useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    resizeLeft("leftDraggable", "prjTree");
     resizeRight("rightDraggable", "editor");
     if (pid) {
       let query: QueryProjInfo = {
@@ -118,40 +117,6 @@ const App: React.FC = () => {
         toast.error(resp.msg);
       }
     });
-  }
-
-  const resizeLeft = (resizeBarName: string, resizeArea: string) => {
-    setTimeout(() => {
-      let prevCursorOffset = -1;
-      let resizing = false;
-      const resizeElement: any = document.getElementById(resizeArea);
-      const resizeBar: any = document.getElementById(resizeBarName);
-      if (resizeBar != null) {
-        resizeBar.addEventListener("mousedown", () => {
-          resizing = true
-        });
-      };
-      window.addEventListener("mousemove", handleResizeMenu);
-      window.addEventListener("mouseup", () => {
-        resizing = false
-      });
-
-      function handleResizeMenu(e: MouseEvent) {
-        if (!resizing) {
-          return
-        }
-        const { screenX } = e
-        e.preventDefault()
-        e.stopPropagation()
-        if (prevCursorOffset === -1) {
-          prevCursorOffset = screenX
-        } else if (Math.abs(prevCursorOffset - screenX) >= 5) {
-          resizeElement.style.flex = `0 0 ${screenX}px`;
-          resizeElement.style.maxWidth = "100vw";
-          prevCursorOffset = screenX;
-        }
-      }
-    }, 1500);
   }
 
   const resizeRight = (resizeBarName: string, resizeArea: string) => {
