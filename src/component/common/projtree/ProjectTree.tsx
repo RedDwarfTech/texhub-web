@@ -41,10 +41,10 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const [draggedOverNode, setDraggedOverNode] = useState<TexFileModel | null>(null);
 
     React.useEffect(() => {
-        resizeLeft("leftDraggable", "prjTree");        
+        resizeLeft("leftDraggable", "prjTree");
         return () => {
         };
-      }, []);
+    }, []);
 
     React.useEffect(() => {
         if (projInfo && Object.keys(projInfo).length > 0) {
@@ -71,40 +71,40 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
 
     const resizeLeft = (resizeBarName: string, resizeArea: string) => {
         setTimeout(() => {
-          let prevCursorOffset = -1;
-          let resizing = false;
-          const resizeElement: any = document.getElementById(resizeArea);
-          if(!resizeElement){
-            return;
-          }
-          const resizeBar: any = document.getElementById(resizeBarName);
-          if (resizeBar != null) {
-            resizeBar.addEventListener("mousedown", () => {
-              resizing = true
+            let prevCursorOffset = -1;
+            let resizing = false;
+            const resizeElement: any = document.getElementById(resizeArea);
+            if (!resizeElement) {
+                return;
+            }
+            const resizeBar: any = document.getElementById(resizeBarName);
+            if (resizeBar != null) {
+                resizeBar.addEventListener("mousedown", () => {
+                    resizing = true
+                });
+            };
+            window.addEventListener("mousemove", handleResizeMenu);
+            window.addEventListener("mouseup", () => {
+                resizing = false
             });
-          };
-          window.addEventListener("mousemove", handleResizeMenu);
-          window.addEventListener("mouseup", () => {
-            resizing = false
-          });
-    
-          function handleResizeMenu(e: MouseEvent) {
-            if (!resizing) {
-              return
+
+            function handleResizeMenu(e: MouseEvent) {
+                if (!resizing) {
+                    return
+                }
+                const { screenX } = e
+                e.preventDefault()
+                e.stopPropagation()
+                if (prevCursorOffset === -1) {
+                    prevCursorOffset = screenX
+                } else if (Math.abs(prevCursorOffset - screenX) >= 5) {
+                    resizeElement.style.flex = `0 0 ${screenX}px`;
+                    resizeElement.style.maxWidth = "100vw";
+                    prevCursorOffset = screenX;
+                }
             }
-            const { screenX } = e
-            e.preventDefault()
-            e.stopPropagation()
-            if (prevCursorOffset === -1) {
-              prevCursorOffset = screenX
-            } else if (Math.abs(prevCursorOffset - screenX) >= 5) {
-              resizeElement.style.flex = `0 0 ${screenX}px`;
-              resizeElement.style.maxWidth = "100vw";
-              prevCursorOffset = screenX;
-            }
-          }
         }, 1500);
-      }
+    }
 
     const handleExpandFolderCallback = (name_paths: string[]) => {
         for (let i = 0; i < name_paths.length; i++) {
@@ -121,9 +121,29 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                 continue;
             }
             if (pathNode.file_type == TreeFileType.Folder) {
-                handleAutoExpandFolder(pathNode, treeNode);
+                handleAutoExpandFolder(pathNode, treeNode, true);
             } else {
                 handleFileSelected(pathNode);
+            }
+        }
+    }
+
+    const handleCollapseAll = () => {
+        let legacyTree = localStorage.getItem('projTree');
+        if (legacyTree == null) {
+            return;
+        }
+        let treeNode: TexFileModel[] = JSON.parse(legacyTree);
+        collapseRecursive(treeNode, treeNode);
+    }
+
+    const collapseRecursive = (fullTree: TexFileModel[], treeNode: TexFileModel[]) => {
+        for (let i = 0; i < treeNode.length; i++) {
+            if (treeNode[i].file_type == TreeFileType.Folder && treeNode[i].expand && treeNode[i].expand == true) {
+                let newTree = handleAutoExpandFolder(treeNode[i], fullTree, false);
+                if (newTree && treeNode[i].children && treeNode[i].children.length > 0) {
+                    collapseRecursive(newTree, treeNode[i].children);
+                }
             }
         }
     }
@@ -245,11 +265,12 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         return updatedItems;
     };
 
-    const handleAutoExpandFolder = (item: TexFileModel, treeNode: TexFileModel[]) => {
+    const handleAutoExpandFolder = (item: TexFileModel, treeNode: TexFileModel[], expandFolder?: boolean) => {
         if (!treeNode || treeNode.length === 0) return;
-        const updatedItems = handleExpandClick(item.file_id, treeNode, true);
+        const updatedItems = handleExpandClick(item.file_id, treeNode, expandFolder);
         localStorage.setItem("projTree", JSON.stringify(updatedItems));
         setTexFileTree(updatedItems);
+        return updatedItems;
     }
 
     const handleExpandFolder = (e: React.MouseEvent<HTMLElement>, item: TexFileModel) => {
@@ -304,10 +325,10 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         if (curTabName === "tree") {
             return renderDirectoryTree(texFileTree, 0)
         } else if (curTabName === "search") {
-            return <ProjFileSearch closeSearch={() => { setCurTabName("tree"); }}
+            return (<ProjFileSearch closeSearch={() => { setCurTabName("tree"); }}
                 searchComplete={handleSearchComplete}
-                projectId={props.projectId}></ProjFileSearch>
-        } else if (curTabName === "symbol"){
+                projectId={props.projectId}></ProjFileSearch>)
+        } else if (curTabName === "symbol") {
             return <TeXSymbol></TeXSymbol>
         } else {
             return <div>not support</div>
@@ -499,6 +520,9 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                     </button>
                 </div>
                 <div>
+                    <button className={styles.menuButton} onClick={() => { handleCollapseAll() }}>
+                        <i className="fa-solid fa-minus"></i>
+                    </button>
                     <button className={styles.menuButton} onClick={() => { handleProjSymbol() }}>
                         <i className="fa-solid fa-infinity"></i>
                     </button>
