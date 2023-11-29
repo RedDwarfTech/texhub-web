@@ -15,9 +15,15 @@ interface PDFPreviewProps {
     curPdfUrl: string;
     projId: string;
     options: Options;
+    viewModel: string;
 }
 
-const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, projId, options }) => {
+const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ 
+    curPdfUrl, 
+    projId, 
+    options,
+    viewModel='default' 
+}) => {
 
     const [numPages, setNumPages] = useState<number>();
     let curPage = localStorage.getItem(readConfig("pdfCurPage") + projId);
@@ -108,15 +114,20 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
         }
     }
 
-    const getPdfTotalPages = async (pdfUrl: string) => {
-        const loadingTask = pdfjs.getDocument(pdfUrl);
-        const pdf = await loadingTask.promise;
-        return pdf.numPages;
-    }
-
     const onDocumentLoadSuccess = (pdf: DocumentCallback) => {
         const { numPages } = pdf;
         setNumPages(numPages);
+    }
+
+    const getDynStyles = (viewModel: string) => {
+        switch (viewModel) {
+            case "default":
+                return styles.previewBody;
+            case "fullscreen":
+                return styles.previewFsBody
+            default:
+                return styles.previewBody;
+        }
     }
 
     const renderPages = (totalPageNum: number | undefined) => {
@@ -148,7 +159,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({ curPdfUrl, p
     }
 
     return (
-        <div id="pdfContainer" className={styles.previewBody} onScroll={(e) => handlePdfScroll(e)}>
+        <div id="pdfContainer" className={getDynStyles(viewModel)} onScroll={(e) => handlePdfScroll(e)}>
             <Document options={options}
                 file={curPdfUrl}
                 onLoadSuccess={onDocumentLoadSuccess}>

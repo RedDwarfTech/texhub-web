@@ -11,6 +11,15 @@
     max-width: 100%;
 }
 
+.previewFsBody {
+    flex-grow: 1;
+    background-color: rgb(233, 233, 233);
+    display: flex;
+    overflow: scroll;
+    justify-content: center;
+    max-width: 100%;
+}
+
 .pdfPage {
     margin-bottom: 5px;
     max-width: 100%;

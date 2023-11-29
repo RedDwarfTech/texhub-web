@@ -174,7 +174,7 @@ const App: React.FC = () => {
         </div>
         <div className={styles.rightDraggable} id="rightDraggable">
         </div>
-        <Previewer projectId={pid as string}></Previewer>
+        <Previewer projectId={pid as string} viewModel={'default'}></Previewer>
       </div>
       <ToastContainer />
     </div>

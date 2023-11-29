@@ -13,7 +13,7 @@ let devConfigMap = new Map([
     ["refreshUserUrl","/texpub/user/current-user"],
     ["compileBaseUrl","http://dev-tex.poemhub.top/tex/static/proj"],
     ["tplBaseUrl","http://dev-tex.poemhub.top/tex/static/tpl"],
-    ["wssUrl","wss://ws.poemhub.top"],
+    ["wssUrl","ws://127.0.0.1:1234"],
     ["shareBaseUrl","http://dev-tex.poemhub.top/proj/share"],
     ["pdfScaleKey",""],
     ["pdfScrollKey","pdf:scroll:"],
