@@ -1,5 +1,4 @@
 let proConfigMap = new Map([
-  ["wssUrl", "wss://tex.poemhub.top/post/websocket"],
   ["logoutUrl", "https://tex.poemhub.top"],
   ["loginUrl", "/texpub/user/login"],
   ["regUrl", "/texpub/user/reg"],

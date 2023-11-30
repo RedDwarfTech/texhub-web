@@ -155,9 +155,7 @@ const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
     });
     wsProvider.on('status', (event: any) => {
         if (event.status === 'connected') {
-            if (wsProvider.ws) {
-
-            }
+            
         } else if (event.status === 'disconnected' && wsRetryCount < wsMaxRetries) {
             console.error("wsProvider disconnected");
             wsRetryCount++;
@@ -207,7 +205,10 @@ export function initEditor(editorAttr: EditorAttr,
     let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr.docId);
     ydoc.on('update', (update, origin) => {
         try {
-            let parsed = Y.decodeUpdate(update);
+            let current_connection_status = wsProvider.bcconnected;
+            if(!current_connection_status){
+                debugger
+            }
         } catch (e) {
             console.log(e);
         }
