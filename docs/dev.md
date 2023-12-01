@@ -18,3 +18,14 @@ docker push registry.cn-hangzhou.aliyuncs.com/reddwarf-public/mysql:8.0.26-debia
 docker tag registry.cn-hangzhou.aliyuncs.com/reddwarf-pro/dolphin-post:a56aeb198d9d4dc5548aa6d7ce6ede8890035e00 registry.cn-shanghai.aliyuncs.com/reddwarf-pro/dolphin-post:a56aeb198d9d4dc5548aa6d7ce6ede8890035e00
 docker push registry.cn-shanghai.aliyuncs.com/reddwarf-pro/dolphin-post:a56aeb198d9d4dc5548aa6d7ce6ede8890035e00
 ```
+
+从宿主机上查看Traefik转发是否生效：
+
+```bash
+curl http://127.0.0.1:8000 --header "Host:tex.poemhub.top"
+curl http://172.29.217.209:8000 --header "Host:tex.poemhub.top"
+```
+
+
+
+

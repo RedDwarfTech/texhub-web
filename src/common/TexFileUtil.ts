@@ -46,6 +46,15 @@ export const TexFileUtil = {
             }
         }
         return false;
+    },
+    searchTreeNode: <T extends { expand: boolean, file_id: string, children?: T[] }>(cachedItems: T[], fid: string): boolean => {
+        for (const item of cachedItems) {
+            let nodes = TexFileUtil.searchNodeByFileId(item, fid);
+            if (nodes != null) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

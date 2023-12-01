@@ -57,7 +57,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         if (srcFocus && srcFocus.length > 0) {
             let pos: SrcPosition = srcFocus[0];
             let name_paths = pos.file.split("/");
-            handleExpandFolderCallback(name_paths);
+            handleExpandFolderCallback(name_paths, props.projectId);
         }
     }, [srcFocus]);
 
@@ -106,10 +106,10 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         }, 1500);
     }
 
-    const handleExpandFolderCallback = (name_paths: string[]) => {
+    const handleExpandFolderCallback = (name_paths: string[], projId: string) => {
         for (let i = 0; i < name_paths.length; i++) {
             // get the newest tree content to avoid the legacy override the newest update
-            let legacyTree = localStorage.getItem('projTree');
+            let legacyTree = localStorage.getItem('projTree:' + projId);
             if (legacyTree == null) {
                 return;
             }
@@ -129,7 +129,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     }
 
     const handleCollapseAll = () => {
-        let legacyTree = localStorage.getItem('projTree');
+        let legacyTree = localStorage.getItem('projTree:' + props.projectId);
         if (legacyTree == null) {
             return;
         }
@@ -165,13 +165,14 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     }
 
     const handleFileTreeUpdate = (tree: TexFileModel[]) => {
-        let legacyTree = localStorage.getItem('projTree');
+        let legacyTree = localStorage.getItem('projTree:' + props.projectId);
         if (legacyTree) {
             // do the tree expand field merge
             let cacheTree = JSON.parse(legacyTree);
             mergeTreeExpand(tree, cacheTree);
             setTexFileTree(tree);
         } else {
+            localStorage.setItem('projTree:' + props.projectId, JSON.stringify(tree));
             setTexFileTree(tree);
         }
     }
@@ -268,7 +269,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const handleAutoExpandFolder = (item: TexFileModel, treeNode: TexFileModel[], expandFolder?: boolean) => {
         if (!treeNode || treeNode.length === 0) return;
         const updatedItems = handleExpandClick(item.file_id, treeNode, expandFolder);
-        localStorage.setItem("projTree", JSON.stringify(updatedItems));
+        localStorage.setItem("projTree:" + item.project_id, JSON.stringify(updatedItems));
         setTexFileTree(updatedItems);
         return updatedItems;
     }
@@ -278,12 +279,12 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         e.stopPropagation();
         if (!texFileTree || texFileTree.length === 0) return;
         const updatedItems = handleExpandClick(item.file_id, texFileTree);
-        localStorage.setItem("projTree", JSON.stringify(updatedItems));
+        localStorage.setItem("projTree:" + item.project_id, JSON.stringify(updatedItems));
         setTexFileTree(updatedItems);
     }
 
     const getExpandStatus = (item: TexFileModel): boolean => {
-        let cachedStatus = localStorage.getItem("projTree");
+        let cachedStatus = localStorage.getItem("projTree:" + item.project_id);
         if (!cachedStatus) return false;
         let cachedItems: TexFileModel[] = JSON.parse(cachedStatus);
         const result = TexFileUtil.searchTreeSingleNode(cachedItems, item.file_id);
@@ -317,8 +318,8 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         }
     };
 
-    const handleSearchComplete = (paths: string[]) => {
-        handleExpandFolderCallback(paths);
+    const handleSearchComplete = (paths: string[], projId: string) => {
+        handleExpandFolderCallback(paths, projId);
     }
 
     const renderBody = () => {

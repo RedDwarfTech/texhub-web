@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import 'react-toastify/dist/ReactToastify.css';
 import { initEditor, themeConfig, themeMap } from "@/service/editor/CollarEditorService";
 import { TexFileModel } from "@/model/file/TexFileModel";
-import { delProjInfo, getPdfPosition } from "@/service/project/ProjectService";
+import { delProjInfo, getPdfPosition, projHasFile } from "@/service/project/ProjectService";
 import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
 import { toast } from "react-toastify";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
@@ -47,7 +47,12 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       const activeFileJson = localStorage.getItem(activeKey);
       if (activeFileJson) {
         const curActiveFile = JSON.parse(activeFileJson);
-        init(curActiveFile.file_id);
+        let contains = projHasFile(curActiveFile.file_id, projInfo.main.project_id);
+        if(contains){
+          init(curActiveFile.file_id);
+        }else{
+          init(projInfo.main_file.file_id);
+        }
       } else {
         init(projInfo.main_file.file_id);
       }

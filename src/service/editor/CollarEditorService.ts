@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { basicLight } from 'cm6-theme-basic-light';
 import { RefObject } from "react";
+import { projHasFile } from "../project/ProjectService";
 export const themeMap: Map<string, Extension> = new Map<string, Extension>();
 themeMap.set('Solarized Light', solarizedLight);
 themeMap.set('Basic Light', basicLight);
@@ -97,8 +98,9 @@ const highlightUnselection = () => {
     })
 }
 
-const handleWsAuth = (event: any, wsProvider: WebsocketProvider, ydoc: Y.Doc, docId: string) => {
+const handleWsAuth = (event: any, wsProvider: WebsocketProvider, editorAttr: EditorAttr, ydoc: Y.Doc) => {
     if (event.status === 'failed') {
+        debugger
         toast.error("access token授权失败");
         wsProvider.shouldConnect = false;
         wsProvider.ws?.close()
@@ -109,7 +111,7 @@ const handleWsAuth = (event: any, wsProvider: WebsocketProvider, ydoc: Y.Doc, do
         RequestHandler.handleWebAccessTokenExpire().then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
                 wsProvider.ws?.close();
-                wsProvider = doWsConn(ydoc, docId);
+                wsProvider = doWsConn(ydoc, editorAttr);
             } else {
                 wsProvider.shouldConnect = false;
                 wsProvider.ws?.close();
@@ -118,8 +120,12 @@ const handleWsAuth = (event: any, wsProvider: WebsocketProvider, ydoc: Y.Doc, do
     }
 }
 
-const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
-    const wsProvider: WebsocketProvider = new WebsocketProvider(readConfig("wssUrl"), docId, ydoc, {
+const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): WebsocketProvider => {
+    let contains = projHasFile(editorAttr.docId, editorAttr.projectId);
+    if(!contains) {
+        debugger
+    }
+    const wsProvider: WebsocketProvider = new WebsocketProvider(readConfig("wssUrl"), editorAttr.docId, ydoc, {
         maxBackoffTime: 1000000,
         params: {
             // https://self-issued.info/docs/draft-ietf-oauth-v2-bearer.html#query-param
@@ -142,11 +148,12 @@ const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
     wsProvider.awareness.setLocalStateField('user', ydocUser);
     wsProvider.on('auth', (event: any) => {
         // https://discuss.yjs.dev/t/how-to-refresh-the-wsprovider-params-when-token-expire/2131
-        handleWsAuth(event, wsProvider, ydoc, docId);
+        handleWsAuth(event, wsProvider, editorAttr, ydoc);
     });
     wsProvider.on('connection-error', (event: any) => {
+        debugger
         wsProvider.shouldConnect = false;
-        wsProvider.ws?.close()
+        wsProvider.ws?.close(4001)
     });
     wsProvider.on('message', (event: MessageEvent) => {
         const data: Uint8Array = new Uint8Array(event.data);
@@ -163,6 +170,8 @@ const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
                 wsProvider.connect();
             }, 2000);
         } else {
+            console.error(event.status)
+            wsProvider.ws?.close(4002)
             wsProvider.destroy();
             console.error("wsProvider destory");
             return;
@@ -202,13 +211,14 @@ export function initEditor(editorAttr: EditorAttr,
     const ydoc = new Y.Doc(docOpt);
     const ytext = ydoc.getText(editorAttr.docId);
     const undoManager = new Y.UndoManager(ytext);
-    let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr.docId);
+    let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr);
     ydoc.on('update', (update, origin) => {
         try {
             let current_connection_status = wsProvider.bcconnected;
             if(!current_connection_status){
-                debugger
+                //debugger
             }
+            Y.logUpdate(update);
         } catch (e) {
             console.log(e);
         }
