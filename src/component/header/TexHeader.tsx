@@ -7,12 +7,14 @@ import { readConfig } from "@/config/app/config-reader";
 import { AuthHandler, ResponseHandler } from "rdjs-wheel";
 import { useSelector } from "react-redux";
 import React, { useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 const TexHeader: React.FC = () => {
 
     const { loginUser } = useSelector((state: any) => state.rdRootReducer.user);
     const [isLoggedIn, setIsLoggedIn] = useState(UserService.isLoggedIn() || false);
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     React.useEffect(() => {
         document.addEventListener("click", handleMenuClose);
@@ -126,7 +128,7 @@ const TexHeader: React.FC = () => {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item">
-                                <a className="nav-link active text-light" aria-current="page" href="/">主页</a>
+                                <a className="nav-link active text-light" aria-current="page" href="/">{t("home")}</a>
                             </li>
                             <li className="nav-item">
                                 <a className="nav-link text-light" href="/tpl">模版中心</a>

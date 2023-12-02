@@ -4,7 +4,7 @@
 
 This project is the frontend of TeXHub.
 
-## Develop
+## Develope
 
 develop this project：
 
@@ -14,11 +14,8 @@ git clone https://github.com/RedDwarfTech/texhub-web.git
 pnpm install
 # start develop server
 pnpm run dev
-pnpm run build
 # start the nginx in local machine(macOS 13.4)
 /opt/homebrew/opt/nginx/bin/nginx -c /System/Volumes/Data/opt/homebrew/etc/nginx/nginx.conf
 # reload the configuration
 /opt/homebrew/opt/nginx/bin/nginx -s reload -c /System/Volumes/Data/opt/homebrew/etc/nginx/nginx.conf
 ```
-
-
