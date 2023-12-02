@@ -123,7 +123,9 @@ const handleWsAuth = (event: any, wsProvider: WebsocketProvider, editorAttr: Edi
 const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): WebsocketProvider => {
     let contains = projHasFile(editorAttr.docId, editorAttr.projectId);
     if(!contains) {
+        console.error("initial the file do not belong the project");
         debugger
+        return;
     }
     const wsProvider: WebsocketProvider = new WebsocketProvider(readConfig("wssUrl"), editorAttr.docId, ydoc, {
         maxBackoffTime: 1000000,

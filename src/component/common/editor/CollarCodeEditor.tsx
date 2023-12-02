@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { ProjConfType } from "@/model/proj/config/ProjConfType";
 import { readConfig } from "@/config/app/config-reader";
+import { TreeFileType } from "@/model/file/TreeFileType";
 
 export type EditorProps = {
   projectId: string;
@@ -78,7 +79,12 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   React.useEffect(() => {
     if (!activeFile || !activeFile.file_id) return;
-    if (activeFile && activeFile.file_type !== 0) {
+    if (activeFile && activeFile.file_type !== TreeFileType.Folder) {
+      let contains = projHasFile(activeFile.file_id, props.projectId);
+      if(!contains) {
+        debugger
+        return;
+      }
       init(activeFile.file_id);
       localStorage.setItem(activeKey, JSON.stringify(activeFile));
     }
