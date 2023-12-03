@@ -166,14 +166,14 @@ const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): WebsocketProvider => {
         if (event.status === 'connected') {
             
         } else if (event.status === 'disconnected' && wsRetryCount < wsMaxRetries) {
-            console.error("wsProvider disconnected");
+            console.error("wsProvider disconnected: doc:" + editorAttr.docId);
             wsRetryCount++;
             setTimeout(() => {
                 wsProvider.connect();
             }, 2000);
         } else {
             debugger
-            console.error(event.status)
+            console.error(event.status + ",doc:" + editorAttr.docId)
         }
     });
     return wsProvider;
