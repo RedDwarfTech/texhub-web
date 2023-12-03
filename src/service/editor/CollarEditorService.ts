@@ -172,8 +172,7 @@ const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): WebsocketProvider => {
                 wsProvider.connect();
             }, 2000);
         } else {
-            debugger
-            console.error(event.status + ",doc:" + editorAttr.docId)
+            console.error(event.status + ", doc:" + editorAttr.docId)
         }
     });
     return wsProvider;
@@ -211,6 +210,11 @@ export function initEditor(editorAttr: EditorAttr,
     const ytext = ydoc.getText(editorAttr.docId);
     const undoManager = new Y.UndoManager(ytext);
     let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr);
+    ydoc.whenSynced.then(()=>{
+        console.log("Yjs document is loaded and synced.");
+        const len = Y.encodeStateAsUpdate(ydoc).length;
+        console.log("the file length is: " + len);
+    });
     ydoc.on('update', (update, origin) => {
         try {
             let current_connection_status = wsProvider.bcconnected;

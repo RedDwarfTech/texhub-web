@@ -9,5 +9,6 @@
     "price": "订阅",
     "console": "控制台",
     "logout": "登出",
-    "document": "文档中心"
+    "document": "文档中心",
+    "delete_main_forbidden": "不能删除项目主文件"
 }

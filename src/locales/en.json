@@ -9,5 +9,6 @@
     "price": "Price",
     "console": "Settings",
     "logout": "Logout",
-    "document": "Document"
+    "document": "Document",
+    "delete_main_forbidden": "delete main file is not allowed"
 }
