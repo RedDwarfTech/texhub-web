@@ -172,11 +172,8 @@ const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): WebsocketProvider => {
                 wsProvider.connect();
             }, 2000);
         } else {
+            debugger
             console.error(event.status)
-            wsProvider.ws?.close(4002)
-            wsProvider.destroy();
-            console.error("wsProvider destory");
-            return;
         }
     });
     return wsProvider;
