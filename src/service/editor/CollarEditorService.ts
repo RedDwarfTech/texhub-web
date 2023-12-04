@@ -154,8 +154,7 @@ const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): WebsocketProvider => {
     });
     wsProvider.on('connection-error', (event: any) => {
         debugger
-        wsProvider.shouldConnect = false;
-        wsProvider.ws?.close(4001)
+        console.error("connection error:" + editorAttr.docId, event);
     });
     wsProvider.on('message', (event: MessageEvent) => {
         const data: Uint8Array = new Uint8Array(event.data);
@@ -167,10 +166,6 @@ const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): WebsocketProvider => {
             
         } else if (event.status === 'disconnected' && wsRetryCount < wsMaxRetries) {
             console.error("wsProvider disconnected: doc:" + editorAttr.docId);
-            wsRetryCount++;
-            setTimeout(() => {
-                wsProvider.connect();
-            }, 2000);
         } else {
             console.error(event.status + ", doc:" + editorAttr.docId)
         }
@@ -210,11 +205,6 @@ export function initEditor(editorAttr: EditorAttr,
     const ytext = ydoc.getText(editorAttr.docId);
     const undoManager = new Y.UndoManager(ytext);
     let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr);
-    ydoc.whenSynced.then(()=>{
-        console.log("Yjs document is loaded and synced.");
-        const len = Y.encodeStateAsUpdate(ydoc).length;
-        console.log("the file length is: " + len);
-    });
     ydoc.on('update', (update, origin) => {
         try {
             let current_connection_status = wsProvider.bcconnected;
