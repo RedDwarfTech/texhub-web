@@ -153,7 +153,6 @@ const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): WebsocketProvider => {
         handleWsAuth(event, wsProvider, editorAttr, ydoc);
     });
     wsProvider.on('connection-error', (event: any) => {
-        debugger
         console.error("connection error:" + editorAttr.docId, event);
     });
     wsProvider.on('message', (event: MessageEvent) => {
