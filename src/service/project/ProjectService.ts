@@ -1,3 +1,5 @@
+import TexFileUtil from "@/common/TexFileUtil";
+import { TexFileModel } from "@/model/file/TexFileModel";
 import { CompileQueue } from "@/model/proj/CompileQueue";
 import { LatestCompile } from "@/model/proj/LatestCompile";
 import { CompileStatus } from "@/model/proj/compile/CompileStatus";
@@ -292,4 +294,20 @@ export function projSerach(req: QueryFile) {
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.PROJ_SEARCH];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
+export function getCachedProjInfo(projId: string){
+  let legacyTree = localStorage.getItem('projTree:' + projId);
+  if (legacyTree == null) {
+      return;
+  }
+  let treeNode: TexFileModel[] = JSON.parse(legacyTree);
+  return treeNode;
+}
+
+export function projHasFile(fileId: string, projId: string){
+  let cachedItems = getCachedProjInfo(projId);
+  if(cachedItems == null) return false;
+  const result = TexFileUtil.searchTreeNode(cachedItems, fileId);
+  return result;
 }

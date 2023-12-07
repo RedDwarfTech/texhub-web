@@ -1,0 +1,15 @@
+.docBody{
+    width: 100%;
+}
+
+.docContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 80%;
+}
+
+.docItem {
+    margin-top: 20px;
+}

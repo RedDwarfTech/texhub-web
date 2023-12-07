@@ -7,12 +7,15 @@ import { readConfig } from "@/config/app/config-reader";
 import { AuthHandler, ResponseHandler } from "rdjs-wheel";
 import { useSelector } from "react-redux";
 import React, { useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 const TexHeader: React.FC = () => {
 
     const { loginUser } = useSelector((state: any) => state.rdRootReducer.user);
     const [isLoggedIn, setIsLoggedIn] = useState(UserService.isLoggedIn() || false);
     const navigate = useNavigate();
+    const { t } = useTranslation();
+    const { i18n } = useTranslation();
 
     React.useEffect(() => {
         document.addEventListener("click", handleMenuClose);
@@ -118,6 +121,11 @@ const TexHeader: React.FC = () => {
         menuClose();
     };
 
+    const langChoose = (name: string) => {
+        i18n.changeLanguage(name);
+        localStorage.setItem("userLanguage", name);
+    }
+
     return (
         <div className={styles.headerLayout}>
             <nav className="navbar navbar-expand-sm navbar-dark">
@@ -126,13 +134,16 @@ const TexHeader: React.FC = () => {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item">
-                                <a className="nav-link active text-light" aria-current="page" href="/">主页</a>
+                                <a className="nav-link active text-light" aria-current="page" href="/">{t("home")}</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link text-light" href="/tpl">模版中心</a>
+                                <a className="nav-link text-light" href="/tpl">{t("template")}</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link text-light" href="/doc/tab">个人中心</a>
+                                <a className="nav-link text-light" href="/doc/tab">{t("projects")}</a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link text-light" href="/doc/help">{t("document")}</a>
                             </li>
                         </ul>
                     </div>
@@ -145,8 +156,12 @@ const TexHeader: React.FC = () => {
                         语言
                     </button>
                     <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><a className="dropdown-item" href="#">简体中文</a></li>
-                        <li><a className="dropdown-item" href="#">English</a></li>
+                        <li onClick={()=>langChoose("zh")}>
+                            <a className="dropdown-item" href="#">简体中文</a>
+                        </li>
+                        <li onClick={()=>langChoose("en")}>
+                            <a className="dropdown-item" href="#">English</a>
+                        </li>
                     </ul>
                 </div>
             </div>

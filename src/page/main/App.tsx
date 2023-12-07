@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import styles from './App.module.css';
-import { ReactComponent as HiddenContent } from "@/assets/expert/hidden-content.svg";
 const CollarCodeEditor = React.lazy(() => import('@/component/common/editor/CollarCodeEditor'));
 import { useLocation } from 'react-router-dom';
 import { AppState } from '@/redux/types/AppState';
@@ -41,8 +40,7 @@ const App: React.FC = () => {
   const divRef = useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    resizeLeft("hiddenContentLeft", "prjTree");
-    resizeRight("hiddenContentRight", "editor");
+    resizeRight("rightDraggable", "editor");
     if (pid) {
       let query: QueryProjInfo = {
         project_id: pid.toString()
@@ -121,45 +119,11 @@ const App: React.FC = () => {
     });
   }
 
-  const resizeLeft = (resizeBarName: string, resizeArea: string) => {
-    setTimeout(() => {
-      let prevCursorOffset = -1;
-      let resizing = false;
-      const menu: any = document.getElementById(resizeArea);
-      const resizeBar: any = document.getElementById(resizeBarName);
-      if (resizeBar != null) {
-        resizeBar.addEventListener("mousedown", () => {
-          resizing = true
-        });
-      };
-      window.addEventListener("mousemove", handleResizeMenu);
-      window.addEventListener("mouseup", () => {
-        resizing = false
-      });
-
-      function handleResizeMenu(e: any) {
-        if (!resizing) {
-          return
-        }
-        const { screenX } = e
-        e.preventDefault()
-        e.stopPropagation()
-        if (prevCursorOffset === -1) {
-          prevCursorOffset = screenX
-        } else if (Math.abs(prevCursorOffset - screenX) >= 5) {
-          menu.style.flex = `0 0 ${screenX}px`;
-          menu.style.maxWidth = "100vw";
-          prevCursorOffset = screenX;
-        }
-      }
-    }, 1500);
-  }
-
   const resizeRight = (resizeBarName: string, resizeArea: string) => {
     setTimeout(() => {
       let prevCursorOffset = -1;
       let resizing = false;
-      const menu: HTMLElement | null = document.getElementById(resizeArea);
+      const resizeElement: HTMLElement | null = document.getElementById(resizeArea);
       const resizeBar: any = document.getElementById(resizeBarName);
       if (resizeBar !== null) {
         resizeBar.addEventListener("mousedown", () => {
@@ -171,8 +135,8 @@ const App: React.FC = () => {
         resizing = false
       });
 
-      function handleResizeMenu(e: any) {
-        if (!resizing || menu == null) {
+      function handleResizeMenu(e: MouseEvent) {
+        if (!resizing || resizeElement == null) {
           return
         }
         if (!divRef.current) {
@@ -185,8 +149,8 @@ const App: React.FC = () => {
         if (prevCursorOffset === -1) {
           prevCursorOffset = screenX
         } else if (Math.abs(prevCursorOffset - screenX) >= 5) {
-          menu.style.flex = `0 0 ${screenX - prjTreeWidth}px`;
-          menu.style.maxWidth = "100vw";
+          resizeElement.style.flex = `0 0 ${screenX - prjTreeWidth - 18}px`;
+          resizeElement.style.maxWidth = "100vw";
           prevCursorOffset = screenX;
         }
       }
@@ -198,8 +162,7 @@ const App: React.FC = () => {
       <EHeader></EHeader>
       <div className={styles.editorBody}>
         {pid ? <ProjectTree projectId={pid as string} divRef={divRef}></ProjectTree> : <div>Loading...</div>}
-        <div>
-          <HiddenContent id="hiddenContentLeft" className={styles.hiddenContent} />
+        <div className={styles.leftDraggable} id="leftDraggable">
         </div>
         <div id="editor" className={styles.editor}>
           <React.Suspense fallback={<div>Loading...</div>}>
@@ -209,10 +172,9 @@ const App: React.FC = () => {
             {activeFileModel ? activeFileModel.name : "ddd"}
           </div>
         </div>
-        <div>
-          <HiddenContent id="hiddenContentRight" className={styles.hiddenContent} />
+        <div className={styles.rightDraggable} id="rightDraggable">
         </div>
-        <Previewer projectId={pid as string}></Previewer>
+        <Previewer projectId={pid as string} viewModel={'default'}></Previewer>
       </div>
       <ToastContainer />
     </div>

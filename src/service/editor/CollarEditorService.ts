@@ -1,10 +1,10 @@
-import { EditorView } from "@codemirror/view";
+import { EditorView, Decoration } from "@codemirror/view";
 // @ts-ignore
 import { WebsocketProvider } from "y-websocket";
 import * as Y from 'yjs';
 import * as random from 'lib0/random';
 import * as decoding from 'lib0/decoding'
-import { Compartment, EditorState, Extension } from "@codemirror/state";
+import { Compartment, EditorState, Extension, StateEffect, StateField, Range } from "@codemirror/state";
 import { basicSetup } from "codemirror";
 import { yCollab } from "y-codemirror.next";
 import { CompletionContext, autocompletion } from "@codemirror/autocomplete";
@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { basicLight } from 'cm6-theme-basic-light';
 import { RefObject } from "react";
+import { projHasFile } from "../project/ProjectService";
 export const themeMap: Map<string, Extension> = new Map<string, Extension>();
 themeMap.set('Solarized Light', solarizedLight);
 themeMap.set('Basic Light', basicLight);
@@ -35,6 +36,11 @@ export const themeConfig = new Compartment()
 export const userColor = usercolors[random.uint32() % usercolors.length];
 const wsMaxRetries = 1;
 let wsRetryCount = 0;
+let curEditorView: EditorView|null= null;
+let curStart: number = 0;
+let curEnd: number = 0;
+let clearCount: number = 0;
+const highlight_effect = StateEffect.define<Range<Decoration>[]>();
 const extensions = [
     EditorView.contentAttributes.of({ spellcheck: 'true' }),
     EditorView.lineWrapping,
@@ -52,10 +58,49 @@ const extensions = [
     }),
     StreamLanguage.define(stex),
     syntaxHighlighting(defaultHighlightStyle),
+    EditorView.updateListener.of(function (e) {
+        //  input/update/change event
+        let selection = e.state.selection;
+        let start = selection.ranges[0].from;
+        let end = selection.ranges[0].to;
+        if (start < end && (curStart !== start || curEnd !== end)) {
+            clearCount = 0;
+            curStart = start;
+            curEnd = end;
+            hightlightSelection(start, end)
+        }
+        if(start === end && clearCount<2) {
+            clearCount = clearCount + 1;
+            highlightUnselection();
+        }
+    })
 ];
 
-const handleWsAuth = (event: any, wsProvider: WebsocketProvider, ydoc: Y.Doc, docId: string) => {
+const hightlightSelection = (from: number, to: number) => {
+    if (!curEditorView) {
+        return;
+    }
+    const highlight_decoration = Decoration.mark({
+        attributes: { style: "background-color: yellow" }
+    });
+    curEditorView.dispatch({
+        effects: highlight_effect.of([highlight_decoration.range(from, to)])
+    });
+}
+
+const highlightUnselection = () => {
+    if (!curEditorView) {
+        return;
+    }
+    const filterMarks = StateEffect.define();
+    curEditorView.dispatch({
+        effects: filterMarks.of(null)
+    })
+}
+
+const handleWsAuth = (event: any, wsProvider: WebsocketProvider, editorAttr: EditorAttr, ydoc: Y.Doc) => {
     if (event.status === 'failed') {
+        debugger
         toast.error("access token授权失败");
         wsProvider.shouldConnect = false;
         wsProvider.ws?.close()
@@ -66,7 +111,7 @@ const handleWsAuth = (event: any, wsProvider: WebsocketProvider, ydoc: Y.Doc, do
         RequestHandler.handleWebAccessTokenExpire().then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
                 wsProvider.ws?.close();
-                wsProvider = doWsConn(ydoc, docId);
+                wsProvider = doWsConn(ydoc, editorAttr);
             } else {
                 wsProvider.shouldConnect = false;
                 wsProvider.ws?.close();
@@ -75,8 +120,14 @@ const handleWsAuth = (event: any, wsProvider: WebsocketProvider, ydoc: Y.Doc, do
     }
 }
 
-const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
-    const wsProvider: WebsocketProvider = new WebsocketProvider(readConfig("wssUrl"), docId, ydoc, {
+const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): WebsocketProvider => {
+    let contains = projHasFile(editorAttr.docId, editorAttr.projectId);
+    if(!contains) {
+        console.error("initial the file do not belong the project");
+        debugger
+        return;
+    }
+    const wsProvider: WebsocketProvider = new WebsocketProvider(readConfig("wssUrl"), editorAttr.docId, ydoc, {
         maxBackoffTime: 1000000,
         params: {
             // https://self-issued.info/docs/draft-ietf-oauth-v2-bearer.html#query-param
@@ -99,11 +150,10 @@ const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
     wsProvider.awareness.setLocalStateField('user', ydocUser);
     wsProvider.on('auth', (event: any) => {
         // https://discuss.yjs.dev/t/how-to-refresh-the-wsprovider-params-when-token-expire/2131
-        handleWsAuth(event, wsProvider, ydoc, docId);
+        handleWsAuth(event, wsProvider, editorAttr, ydoc);
     });
     wsProvider.on('connection-error', (event: any) => {
-        wsProvider.shouldConnect = false;
-        wsProvider.ws?.close()
+        console.error("connection error:" + editorAttr.docId, event);
     });
     wsProvider.on('message', (event: MessageEvent) => {
         const data: Uint8Array = new Uint8Array(event.data);
@@ -112,17 +162,11 @@ const doWsConn = (ydoc: Y.Doc, docId: string): WebsocketProvider => {
     });
     wsProvider.on('status', (event: any) => {
         if (event.status === 'connected') {
-            if (wsProvider.ws) {
-
-            }
+            
         } else if (event.status === 'disconnected' && wsRetryCount < wsMaxRetries) {
-            wsRetryCount++;
-            setTimeout(() => {
-                wsProvider.connect();
-            }, 2000);
+            console.error("wsProvider disconnected: doc:" + editorAttr.docId);
         } else {
-            wsProvider.destroy();
-            return;
+            console.error(event.status + ", doc:" + editorAttr.docId)
         }
     });
     return wsProvider;
@@ -159,13 +203,30 @@ export function initEditor(editorAttr: EditorAttr,
     const ydoc = new Y.Doc(docOpt);
     const ytext = ydoc.getText(editorAttr.docId);
     const undoManager = new Y.UndoManager(ytext);
-    let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr.docId);
+    let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr);
     ydoc.on('update', (update, origin) => {
         try {
-            let parsed = Y.decodeUpdate(update);
+            let current_connection_status = wsProvider.bcconnected;
+            if(!current_connection_status){
+                //debugger
+            }
+            Y.logUpdate(update);
         } catch (e) {
             console.log(e);
         }
+    });
+    const highlight_extension = StateField.define({
+        create() { return Decoration.none },
+        update(value, transaction) {
+            value = value.map(transaction.changes)
+            for (let effect of transaction.effects) {
+                if (effect.is(highlight_effect) && effect.value) {
+                    value = value.update({ add: effect.value, sort: true })
+                }
+            }
+            return value
+        },
+        provide: f => EditorView.decorations.from(f)
     });
     const state = EditorState.create({
         doc: ytext.toString(),
@@ -174,15 +235,17 @@ export function initEditor(editorAttr: EditorAttr,
             yCollab(ytext, wsProvider.awareness, { undoManager }),
             extensions,
             themeConfig.of(themeMap.get("Solarized Light")!),
-            autocompletion({ override: [myCompletions] })
-        ]
+            autocompletion({ override: [myCompletions] }),
+            highlight_extension
+        ],
     });
     if (edContainer.current && edContainer.current.children && edContainer.current.children.length > 0) {
         return [undefined, undefined];
     }
-    const view = new EditorView({
+    const editorView: EditorView = new EditorView({
         state,
         parent: edContainer.current!,
     });
-    return [view, wsProvider];
+    curEditorView = editorView;
+    return [editorView, wsProvider];
 }

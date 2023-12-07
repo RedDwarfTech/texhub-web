@@ -1,5 +1,6 @@
 let devConfigMap = new Map([
-    ["wssUrl", "ws://192.168.10.93:58080/post/websocket"],
+    //["wssUrl", "ws://127.0.0.1:1234"],
+    ["wssUrl","wss://ws.poemhub.top"],
     ["logoutUrl", "http://dev-tex.poemhub.top"],
     ["baseAuthUrl","http://192.168.10.93:11014"],
     ["loginUrl", "/texpub/user/login"],
@@ -13,7 +14,6 @@ let devConfigMap = new Map([
     ["refreshUserUrl","/texpub/user/current-user"],
     ["compileBaseUrl","http://dev-tex.poemhub.top/tex/static/proj"],
     ["tplBaseUrl","http://dev-tex.poemhub.top/tex/static/tpl"],
-    ["wssUrl","wss://ws.poemhub.top"],
     ["shareBaseUrl","http://dev-tex.poemhub.top/proj/share"],
     ["pdfScaleKey",""],
     ["pdfScrollKey","pdf:scroll:"],

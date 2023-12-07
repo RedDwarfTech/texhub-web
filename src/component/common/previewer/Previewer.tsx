@@ -22,14 +22,15 @@ import { ProjInfo } from '@/model/proj/ProjInfo';
 
 export type PreviwerProps = {
     projectId: string;
+    viewModel: string;
 };
 
-const Previewer: React.FC<PreviwerProps> = ({ projectId }) => {
+const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
 
     let cachedScale = localStorage.getItem("pdf:scale:" + projectId);
     let scaleNum = Number(cachedScale ?? 1);
     const [pdfScale, setPdfScale] = useState<number>(scaleNum ?? 1);
-    const [curPdfUrl, setCurPdfUrl] = useState<string>();
+    const [curPdfUrl, setCurPdfUrl] = useState<string>('');
     const [compStatus, setCompStatus] = useState<CompileStatus>(CompileStatus.COMPLETE);
     const [curLogText, setCurLogText] = useState<string>('');
     const [curPreviewTab, setCurPreviewTab] = useState<string>('pdfview');
@@ -124,7 +125,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId }) => {
         }
     };
 
-    const handleDownloadPdf = async (pdfUrl: any) => {
+    const handleDownloadPdf = async (pdfUrl: string) => {
         if (!pdfUrl) {
             toast.error("PDF文件Url为空");
             return;
@@ -238,6 +239,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId }) => {
             <MemoizedPDFPreview
                 curPdfUrl={curPdfUrl}
                 projId={projectId}
+                viewModel={viewModel}
                 options={options}></MemoizedPDFPreview>
         );
     }

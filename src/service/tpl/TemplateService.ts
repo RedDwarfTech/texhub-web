@@ -33,7 +33,7 @@ export function getTplPage(pageNum: number, name: string, tplType?: string) {
     params.append("page_num", pageNum.toString());
     const config: AxiosRequestConfig = {
         method: 'get',
-        url: '/tex/tpl/page',
+        url: '/tex/tpl/partial/page',
         params: params
     };
     const actionTypeString: string = TemplateActionType[TemplateActionType.GET_TPL_PAGE];

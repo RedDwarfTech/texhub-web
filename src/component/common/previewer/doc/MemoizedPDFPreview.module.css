@@ -3,10 +3,24 @@
     background-color: rgb(233, 233, 233);
     display: flex;
     overflow: scroll;
+    /**
+    * why need to remove the justify content? 
+    * https://stackoverflow.com/questions/77550806/is-it-possible-to-make-the-html-children-div-element-width-not-greater-than-than
+    **/
+    /*justify-content: center;*/
+    max-width: 100%;
+}
+
+.previewFsBody {
+    flex-grow: 1;
+    background-color: rgb(233, 233, 233);
+    display: flex;
+    overflow: scroll;
     justify-content: center;
+    max-width: 100%;
 }
 
 .pdfPage {
-    width: auto;
     margin-bottom: 5px;
+    max-width: 100%;
 }

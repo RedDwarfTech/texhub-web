@@ -12,6 +12,7 @@ import App from "@/page/main/App";
 import TeXShareRecieved from "@/page/profile/project/share/TexShareRecieved";
 import Settings from "@/page/profile/panel/Settings";
 import FullScreen from "@/component/common/previewer/feat/fullscreen/FullScreen";
+import DocCenter from "@/page/document/DocCenter";
 
 const routes = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const routes = createBrowserRouter([
   {
     path: "/doc/tab",
     element: <DocTab />,
+  },
+  {
+    path: "/doc/help",
+    element: <DocCenter />,
   },
   {
     path: "/tpl",

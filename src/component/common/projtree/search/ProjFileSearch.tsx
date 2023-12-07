@@ -11,7 +11,7 @@ import React from 'react';
 export type ProjSearchProps = {
     closeSearch: () => void;
     projectId: string;
-    searchComplete: (path: string[]) => void;
+    searchComplete: (path: string[], projId: string) => void;
 };
 
 const ProjFileSearch: React.FC<ProjSearchProps> = (props: ProjSearchProps) => {
@@ -47,7 +47,7 @@ const ProjFileSearch: React.FC<ProjSearchProps> = (props: ProjSearchProps) => {
         if(item && item.file_path && item.file_path.length > 0) {
             let paths: string[] = item.file_path.split('/').filter(str => str !== "");
             paths.push(item.name);
-            props.searchComplete(paths)
+            props.searchComplete(paths, props.projectId)
         }
     }
 

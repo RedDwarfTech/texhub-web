@@ -1,13 +1,14 @@
 {
     "home": "Home",
-    "resume": "Resume",
     "template": "Template",
     "about": "About",
-    "resumeInfo": "Resume",
+    "projects": "Projects",
     "setting": "Setting",
     "login": "Login",
     "signup": "Signup",
     "price": "Price",
     "console": "Settings",
-    "logout": "Logout"
+    "logout": "Logout",
+    "document": "Document",
+    "delete_main_forbidden": "delete main file is not allowed"
 }

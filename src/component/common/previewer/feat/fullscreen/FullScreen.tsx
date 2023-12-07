@@ -7,7 +7,7 @@ const FullScreen: React.FC = ({}) => {
         return (<div>Loading...</div>);
     }
 
-    return (<div><Previewer projectId={projId}></Previewer></div>);
+    return (<div><Previewer projectId={projId} viewModel={"fullscreen"}></Previewer></div>);
 }
 
 export default FullScreen;
