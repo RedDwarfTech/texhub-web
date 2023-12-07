@@ -145,6 +145,13 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         }
     }
 
+    const handleScrollTop = () => {
+        const pdfContainerDiv = document.getElementById('pdfContainer');
+        if (pdfContainerDiv) {
+            pdfContainerDiv.scrollTop = 0;
+        }
+    }
+
     const handleSrcLocate = () => {
         if (!projectId) {
             toast.info("项目信息为空");
@@ -248,6 +255,12 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         if (curPreviewTab === "pdfview") {
             return (
                 <div className={styles.rightAction}>
+                    <button className={styles.previewIconButton}
+                        data-bs-toggle="tooltip"
+                        title="滚动到顶部"
+                        onClick={() => { handleScrollTop() }}>
+                        <i className="fa-solid fa-arrow-up"></i>
+                    </button>
                     <button className={styles.previewIconButton}
                         data-bs-toggle="tooltip"
                         title="导航到源码"
