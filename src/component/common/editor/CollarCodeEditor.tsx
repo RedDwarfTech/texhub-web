@@ -112,7 +112,12 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   const handleImageAdd = () => {
     if(activeEditorView){
-      const code = "baegege";
+      const code = `\begin{figure}
+      \centering
+      \includegraphics[width=\textwidth]{}
+      \caption{Caption}
+      \label{fig:my_label}
+    \end{figure}`;
       const cursorPos = activeEditorView.state.selection.main.head;
       const transaction = activeEditorView.state.update({
         changes: { from: cursorPos, to: cursorPos, insert: code },
