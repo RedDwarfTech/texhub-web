@@ -110,6 +110,17 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     }
   }
 
+  const handleImageAdd = () => {
+    if(activeEditorView){
+      const code = "baegege";
+      const cursorPos = activeEditorView.state.selection.main.head;
+      const transaction = activeEditorView.state.update({
+        changes: { from: cursorPos, to: cursorPos, insert: code },
+      });
+      activeEditorView.dispatch(transaction);
+    }
+  }
+
   const handlePdfLocate = () => {
     if (mainFileModel && mainFileModel.name && activeEditorView) {
       let { line, column } = getCursorPos(activeEditorView);
@@ -153,6 +164,9 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       <div className={styles.editorHeader}>
         <button className={styles.menuButton} onClick={() => { handlePdfLocate() }}>
           <i className="fa-solid fa-arrow-right"></i>
+        </button>
+        <button className={styles.menuButton} onClick={() => { handleImageAdd() }}>
+          <i className="fa-solid fa-image"></i>
         </button>
       </div>
       <div ref={edContainer} className={styles.editorContainer}>
