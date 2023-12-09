@@ -167,6 +167,9 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     }
 
     const handleFileTreeUpdate = (tree: TexFileModel[]) => {
+        if(!tree || tree.length === 0){
+            return;
+        }
         let legacyTree = localStorage.getItem('projTree:' + props.projectId);
         if (legacyTree) {
             // do the tree expand field merge
@@ -174,9 +177,9 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             mergeTreeExpand(tree, cacheTree);
             setTexFileTree(tree);
         } else {
-            localStorage.setItem('projTree:' + props.projectId, JSON.stringify(tree));
             setTexFileTree(tree);
         }
+        localStorage.setItem('projTree:' + props.projectId, JSON.stringify(tree));
     }
 
     const mergeTreeExpand = (newTree: TexFileModel[], cacheTree: TexFileModel[]) => {
