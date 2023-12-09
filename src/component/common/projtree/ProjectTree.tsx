@@ -16,6 +16,8 @@ import { TreeFileType } from "@/model/file/TreeFileType";
 import { RenameFile } from "@/model/request/file/edit/RenameFile";
 import ProjFileSearch from "./search/ProjFileSearch";
 import TeXSymbol from "./symbol/TeXSymbol";
+import { getProjectInfo } from "@/service/project/ProjectService";
+import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 
 export type TreeProps = {
     projectId: string;
@@ -222,7 +224,10 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         };
         addFile(params).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                getFileTree(pid?.toString());
+                let req:QueryProjInfo = {
+                    project_id: pid?.toString()
+                };
+                getProjectInfo(req);
             }
         });
     };
