@@ -11,7 +11,7 @@ import { initEditor, themeConfig, themeMap } from "@/service/editor/CollarEditor
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { delProjInfo, getPdfPosition, projHasFile } from "@/service/project/ProjectService";
 import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { ProjConfType } from "@/model/proj/config/ProjConfType";
 import { readConfig } from "@/config/app/config-reader";
@@ -66,6 +66,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }, [projInfo]);
 
   React.useEffect(()=>{
+    debugger
     setShareProj(activeShare);
   },[activeShare]);
 
@@ -185,7 +186,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       </div>
       <div ref={edContainer} className={styles.editorContainer}>
       </div>
-      { shareProj?<TeXShare projectId={props.projectId}></TeXShare>:<div></div>}
     </div>
   );
 }

@@ -18,6 +18,7 @@ import { ResponseHandler } from "rdjs-wheel";
 import { CompileStatus } from "@/model/proj/compile/CompileStatus";
 import { getAccessToken } from "@/component/common/cache/Cache";
 import ProjSetting from "@/page/main/setting/ProjSetting";
+import TeXShare from "@/page/profile/project/share/TeXShare";
 
 const EHeader: React.FC = () => {
 
@@ -83,10 +84,6 @@ const EHeader: React.FC = () => {
         }
     }
 
-    const handleShareProj = () => {
-        shareProj();
-    }
-
     const handleQueueCompile = (mainFile: TexFileModel) => {
         if (!mainFile) {
             toast.error("file is null");
@@ -121,7 +118,9 @@ const EHeader: React.FC = () => {
 
     return (
         <div className={styles.container}>
-            <div></div>
+            <div>
+                <TeXShare projectId={mainFile.project_id}></TeXShare>
+            </div>
             <div className={styles.actions}>
                 <button type="button" 
                     className="btn btn-primary btn-sm" 
@@ -130,7 +129,9 @@ const EHeader: React.FC = () => {
                 </button>
                 <button type="button" 
                     className="btn btn-primary btn-sm" 
-                    onClick={() => { handleShareProj() }}>
+                    data-bs-toggle="modal"
+                    data-bs-target="#sharePrj"
+                    onClick={() => {}}>
                     <i className="fa-solid fa-share-nodes"></i> 分享
                 </button>
                 <button type="button"
