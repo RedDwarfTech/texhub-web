@@ -1,6 +1,6 @@
 import { RefObject, useState } from "react";
 import styles from './ProjectTree.module.css';
-import { addFile, chooseFile, delTreeItem, getFileList, renameFileImpl, switchFile } from "@/service/file/FileService";
+import { addFile, chooseFile, delTreeItem, getFileTree, renameFileImpl, switchFile } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { AppState } from "@/redux/types/AppState";
@@ -222,7 +222,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         };
         addFile(params).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                getFileList(pid?.toString());
+                getFileTree(pid?.toString());
             }
         });
     };
@@ -405,7 +405,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         };
         delTreeItem(params).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                getFileList(pid.toString());
+                getFileTree(pid.toString());
             }
         });
     };
@@ -444,7 +444,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         };
         renameFileImpl(req).then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
-                getFileList(pid?.toString());
+                getFileTree(pid?.toString());
             }
         });
     }
@@ -466,7 +466,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         };
         addFile(params).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                getFileList(pid?.toString());
+                getFileTree(pid?.toString());
             }
         });
     }

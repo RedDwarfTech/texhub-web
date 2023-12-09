@@ -5,7 +5,7 @@ import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
 import { XHRClient } from "rd-component";
 
-export function getFileList(parent: string) {
+export function getFileTree(parent: string) {
     const config: AxiosRequestConfig = {
         method: 'get',
         url: '/tex/file/tree?parent=' + parent,
