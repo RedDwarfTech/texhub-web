@@ -112,15 +112,18 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   const handleImageAdd = () => {
     if(activeEditorView){
-      const code = `\begin{figure}
-      \centering
-      \includegraphics[width=\textwidth]{}
-      \caption{Caption}
-      \label{fig:my_label}
-    \end{figure}`;
+      var figureCodeArray : Array<string> = [ 
+        '\begin{figure}', 
+        '\t\centering', 
+        '\t\includegraphics[width=\textwidth]{}' , 
+        '\t\caption{Caption}', 
+        '\t\label{fig:my_label}',
+        '\end{figure}'
+      ];
+      const figureCode: string = figureCodeArray.join('\n');
       const cursorPos = activeEditorView.state.selection.main.head;
       const transaction = activeEditorView.state.update({
-        changes: { from: cursorPos, to: cursorPos, insert: code },
+        changes: { from: cursorPos, to: cursorPos, insert: figureCode },
       });
       activeEditorView.dispatch(transaction);
     }
