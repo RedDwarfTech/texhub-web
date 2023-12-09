@@ -33,6 +33,7 @@ export interface AppState {
         srcFocus: SrcPosition[],
         projConf: ProjConf,
         hits: SearchResult[],
+        activeShare: false
     },
     tpl: {
         tplList: TemplateModel[],

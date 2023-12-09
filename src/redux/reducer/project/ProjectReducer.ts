@@ -30,7 +30,8 @@ const initState: AppState["proj"] = {
     pdfFocus: [] as PdfPosition[],
     srcFocus: [] as SrcPosition[],
     projConf: {} as ProjConf,
-    hits: [] as SearchResult[]
+    hits: [] as SearchResult[],
+    activeShare: false
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -136,6 +137,12 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 hits: action.data
+            };
+        case "SHARE_PROJ":
+            let newActiveShare = !state.activeShare;
+            return {
+                ...state,
+                activeShare: newActiveShare
             };
         default:
             break;

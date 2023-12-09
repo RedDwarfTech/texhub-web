@@ -277,6 +277,11 @@ export function setCompileQueue(data: CompileQueue) {
   return XHRClient.dispathAction(data, actionTypeString, store);
 }
 
+export function shareProj() {
+  const actionTypeString: string = ProjectActionType[ProjectActionType.SHARE_PROJ];
+  return XHRClient.dispathAction("", actionTypeString, store);
+}
+
 export function setProjAttr(data: ProjAttribute) {
   const actionTypeString: string = ProjectActionType[ProjectActionType.PROJ_ATTR];
   return XHRClient.dispathAction(data, actionTypeString, store);

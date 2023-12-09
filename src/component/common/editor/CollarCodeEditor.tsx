@@ -16,6 +16,7 @@ import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { ProjConfType } from "@/model/proj/config/ProjConfType";
 import { readConfig } from "@/config/app/config-reader";
 import { TreeFileType } from "@/model/file/TreeFileType";
+import TeXShare from "@/page/profile/project/share/TeXShare";
 
 export type EditorProps = {
   projectId: string;
@@ -24,9 +25,10 @@ export type EditorProps = {
 const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<HTMLDivElement>(null)
   const { activeFile } = useSelector((state: AppState) => state.file);
-  const { projInfo, projConf } = useSelector((state: AppState) => state.proj);
+  const { projInfo, projConf, activeShare } = useSelector((state: AppState) => state.proj);
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
+  const [shareProj, setShareProj] = useState<boolean>();
   let editorView: [EditorView | undefined, WebsocketProvider | undefined];
   const activeKey = readConfig("projActiveFile") + props.projectId;
   let ws: WebsocketProvider;
@@ -62,6 +64,10 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       destroy();
     };
   }, [projInfo]);
+
+  React.useEffect(()=>{
+    setShareProj(activeShare);
+  },[activeShare]);
 
   React.useEffect(() => {
     if (projConf && Object.keys(projConf).length > 0) {
@@ -179,6 +185,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       </div>
       <div ref={edContainer} className={styles.editorContainer}>
       </div>
+      { shareProj?<TeXShare projectId={props.projectId}></TeXShare>:<div></div>}
     </div>
   );
 }

@@ -9,7 +9,7 @@ import {
     compileProjectLog,
     getStreamLog,
     getCompQueueStatus,
-    sendQueueCompileRequest, setCompileStatus, showPreviewTab, updateLogText
+    sendQueueCompileRequest, setCompileStatus, showPreviewTab, updateLogText, shareProj
 } from "@/service/project/ProjectService";
 import { useNavigate } from "react-router-dom";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
@@ -83,6 +83,10 @@ const EHeader: React.FC = () => {
         }
     }
 
+    const handleShareProj = () => {
+        shareProj();
+    }
+
     const handleQueueCompile = (mainFile: TexFileModel) => {
         if (!mainFile) {
             toast.error("file is null");
@@ -119,8 +123,15 @@ const EHeader: React.FC = () => {
         <div className={styles.container}>
             <div></div>
             <div className={styles.actions}>
-                <button type="button" className="btn btn-primary btn-sm" onClick={() => { handleQueueCompile(mainFile) }}>
+                <button type="button" 
+                    className="btn btn-primary btn-sm" 
+                    onClick={() => { handleQueueCompile(mainFile) }}>
                     <i className="fa-solid fa-play"></i> 编译
+                </button>
+                <button type="button" 
+                    className="btn btn-primary btn-sm" 
+                    onClick={() => { handleQueueCompile(mainFile) }}>
+                    <i className="fa-solid fa-play"></i> 分享
                 </button>
                 <button type="button"
                     className="btn btn-primary btn-sm"
