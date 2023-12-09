@@ -130,8 +130,8 @@ const EHeader: React.FC = () => {
                 </button>
                 <button type="button" 
                     className="btn btn-primary btn-sm" 
-                    onClick={() => { handleQueueCompile(mainFile) }}>
-                    <i className="fa-solid fa-play"></i> 分享
+                    onClick={() => { handleShareProj() }}>
+                    <i className="fa-solid fa-share-nodes"></i> 分享
                 </button>
                 <button type="button"
                     className="btn btn-primary btn-sm"
