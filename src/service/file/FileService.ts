@@ -67,7 +67,7 @@ export function addFileHistory(params: any) {
         url: '/tex/file/ver/add',
         data: JSON.stringify(params)
     };
-    const actionTypeString: string = FileActionType[FileActionType.ADD_FILE];
+    const actionTypeString: string = FileActionType[FileActionType.ADD_FILE_HISTORY];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
