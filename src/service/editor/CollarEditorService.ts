@@ -18,6 +18,7 @@ import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { basicLight } from 'cm6-theme-basic-light';
 import { RefObject } from "react";
 import { projHasFile } from "../project/ProjectService";
+import { addFileHistory } from "../file/FileService";
 export const themeMap: Map<string, Extension> = new Map<string, Extension>();
 themeMap.set('Solarized Light', solarizedLight);
 themeMap.set('Basic Light', basicLight);
@@ -190,6 +191,24 @@ function myCompletions(context: CompletionContext) {
     }
 }
 
+let history: Uint8Array[] = [];
+var ydoc:Y.Doc;
+export function saveHistory(docId: string){
+    const snapshot = Y.encodeStateAsUpdate(ydoc);
+    history.push(snapshot);
+    const text = ydoc.getText(docId);
+    console.log(text.toString());
+}
+
+export function restoreFromHistory(version:number, docId: string) {
+    if(ydoc){
+        const snapshot = history[version];
+        Y.applyUpdate(ydoc,snapshot);
+        const txt = ydoc.getText(docId);
+        console.log(txt.toString());
+    }
+}
+
 export function initEditor(editorAttr: EditorAttr,
     activeEditorView: EditorView | undefined,
     edContainer: RefObject<HTMLDivElement>): [EditorView | undefined, WebsocketProvider] {
@@ -200,7 +219,7 @@ export function initEditor(editorAttr: EditorAttr,
         guid: editorAttr.docId,
         collectionid: editorAttr.projectId
     };
-    const ydoc = new Y.Doc(docOpt);
+    ydoc = new Y.Doc(docOpt);
     const ytext = ydoc.getText(editorAttr.docId);
     const undoManager = new Y.UndoManager(ytext);
     let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr);
@@ -209,8 +228,14 @@ export function initEditor(editorAttr: EditorAttr,
             let current_connection_status = wsProvider.bcconnected;
             if(!current_connection_status){
                 //debugger
-            }
-            Y.logUpdate(update);
+            } 
+            let params = {
+                doc_id: editorAttr.docId,
+                name: editorAttr.name,
+                project_id: editorAttr.projectId,
+                content: ytext.toString()
+            };
+            addFileHistory(params);
         } catch (e) {
             console.log(e);
         }

@@ -7,16 +7,15 @@ import { WebsocketProvider } from "y-websocket";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import 'react-toastify/dist/ReactToastify.css';
-import { initEditor, themeConfig, themeMap } from "@/service/editor/CollarEditorService";
+import { initEditor, restoreFromHistory, themeConfig, themeMap } from "@/service/editor/CollarEditorService";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { delProjInfo, getPdfPosition, projHasFile } from "@/service/project/ProjectService";
 import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { ProjConfType } from "@/model/proj/config/ProjConfType";
 import { readConfig } from "@/config/app/config-reader";
 import { TreeFileType } from "@/model/file/TreeFileType";
-import TeXShare from "@/page/profile/project/share/TeXShare";
 
 export type EditorProps = {
   projectId: string;
@@ -49,7 +48,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       setMainFileModel(projInfo.main_file);
       const activeFileJson = localStorage.getItem(activeKey);
       if (activeFileJson) {
-        const curActiveFile = JSON.parse(activeFileJson);
+        const curActiveFile:TexFileModel = JSON.parse(activeFileJson);
         let contains = projHasFile(curActiveFile.file_id, projInfo.main.project_id);
         if(contains){
           init(curActiveFile.file_id);
@@ -66,7 +65,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }, [projInfo]);
 
   React.useEffect(()=>{
-    debugger
     setShareProj(activeShare);
   },[activeShare]);
 
@@ -89,7 +87,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     if (activeFile && activeFile.file_type !== TreeFileType.Folder) {
       let contains = projHasFile(activeFile.file_id, props.projectId);
       if(!contains) {
-        debugger
         return;
       }
       init(activeFile.file_id);
@@ -100,10 +97,11 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     };
   }, [activeFile]);
 
-  const init = (file_id: string) => {
+  const init = (file: TexFileModel) => {
     const editorAttr: EditorAttr = {
       projectId: props.projectId,
-      docId: file_id,
+      docId: file.file_id,
+      name: file.name,
       theme: themeMap.get("Solarized Light")!
     };
     editorView = initEditor(editorAttr, activeEditorView, edContainer);
@@ -133,6 +131,14 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         changes: { from: cursorPos, to: cursorPos, insert: figureCode },
       });
       activeEditorView.dispatch(transaction);
+    }
+  }
+
+  const handleVerRestore = () => {
+    const activeFileJson = localStorage.getItem(activeKey);
+    if(activeFileJson){
+      const af = JSON.parse(activeFileJson);
+      restoreFromHistory(0, af.file_id);
     }
   }
 
@@ -181,6 +187,9 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
           <i className="fa-solid fa-arrow-right"></i>
         </button>
         <button className={styles.menuButton} onClick={() => { handleImageAdd() }}>
+          <i className="fa-solid fa-image"></i>
+        </button>
+        <button className={styles.menuButton} onClick={() => { handleVerRestore() }}>
           <i className="fa-solid fa-image"></i>
         </button>
       </div>

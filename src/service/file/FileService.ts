@@ -61,6 +61,16 @@ export function addFile(params: any) {
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
+export function addFileHistory(params: any) {
+    const config: AxiosRequestConfig = {
+        method: 'post',
+        url: '/tex/file/ver/add',
+        data: JSON.stringify(params)
+    };
+    const actionTypeString: string = FileActionType[FileActionType.ADD_FILE];
+    return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
 export function delTreeItem(params: any) {
     const config: AxiosRequestConfig = {
         method: 'delete',
