@@ -51,12 +51,12 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         const curActiveFile:TexFileModel = JSON.parse(activeFileJson);
         let contains = projHasFile(curActiveFile.file_id, projInfo.main.project_id);
         if(contains){
-          init(curActiveFile.file_id);
+          init(curActiveFile);
         }else{
-          init(projInfo.main_file.file_id);
+          init(projInfo.main_file);
         }
       } else {
-        init(projInfo.main_file.file_id);
+        init(projInfo.main_file);
       }
     }
     return () => {
@@ -89,7 +89,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       if(!contains) {
         return;
       }
-      init(activeFile.file_id);
+      init(activeFile);
       localStorage.setItem(activeKey, JSON.stringify(activeFile));
     }
     return () => {
