@@ -10,5 +10,9 @@
     "console": "Settings",
     "logout": "Logout",
     "document": "Document",
-    "delete_main_forbidden": "delete main file is not allowed"
+    "delete_main_forbidden": "delete main file is not allowed",
+    "btn_share": "Share",
+    "btn_compile": "Compile",
+    "btn_history": "History",
+    "btn_settings": "Setting"
 }

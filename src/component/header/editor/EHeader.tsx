@@ -19,6 +19,8 @@ import { CompileStatus } from "@/model/proj/compile/CompileStatus";
 import { getAccessToken } from "@/component/common/cache/Cache";
 import ProjSetting from "@/page/main/setting/ProjSetting";
 import TeXShare from "@/page/profile/project/share/TeXShare";
+import { useTranslation } from "react-i18next";
+import ProjHistory from "@/page/main/history/ProjHistory";
 
 const EHeader: React.FC = () => {
 
@@ -26,6 +28,8 @@ const EHeader: React.FC = () => {
     const { queue, projInfo } = useSelector((state: AppState) => state.proj);
     const [mainFile, setMainFile] = useState<TexFileModel>();
     const navigate = useNavigate();
+    const { t } = useTranslation();
+    const { i18n } = useTranslation();
 
     React.useEffect(() => {
         if (fileTree && fileTree.length > 0) {
@@ -125,14 +129,22 @@ const EHeader: React.FC = () => {
                 <button type="button" 
                     className="btn btn-primary btn-sm" 
                     onClick={() => { handleQueueCompile(mainFile) }}>
-                    <i className="fa-solid fa-play"></i> 编译
+                    <i className="fa-solid fa-play"></i> { t("btn_compile") }
                 </button>
                 <button type="button" 
                     className="btn btn-primary btn-sm" 
                     data-bs-toggle="modal"
                     data-bs-target="#sharePrj"
                     onClick={() => {}}>
-                    <i className="fa-solid fa-share-nodes"></i> 分享
+                    <i className="fa-solid fa-share-nodes"></i> { t("btn_share") }
+                </button>
+                <button type="button"
+                    className="btn btn-primary btn-sm"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#projHistory"
+                    aria-controls="offcanvasExample"
+                    onClick={() => { handleSettings(mainFile) }}>
+                    <i className="fa-solid fa-timeline"></i> { t("btn_history") }
                 </button>
                 <button type="button"
                     className="btn btn-primary btn-sm"
@@ -140,12 +152,13 @@ const EHeader: React.FC = () => {
                     data-bs-target="#offcanvasExample"
                     aria-controls="offcanvasExample"
                     onClick={() => { handleSettings(mainFile) }}>
-                    <i className="fa-solid fa-cog"></i> 设置
+                    <i className="fa-solid fa-cog"></i> { t("btn_settings") }
                 </button>
                 <button type="button" className="btn btn-primary btn-sm" onClick={() => { handleNavProfile() }}>
                     <i className="fa-solid fa-user"></i> 个人中心
                 </button>
             </div>
+            <ProjHistory></ProjHistory>
             <ProjSetting></ProjSetting>
         </div>
     );
