@@ -235,7 +235,7 @@ export function initEditor(editorAttr: EditorAttr,
                 //debugger
             } 
             let params = {
-                doc_id: editorAttr.docId,
+                file_id: editorAttr.docId,
                 name: editorAttr.name,
                 project_id: editorAttr.projectId,
                 content: ytext.toString()
