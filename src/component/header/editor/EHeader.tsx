@@ -155,7 +155,7 @@ const EHeader: React.FC = () => {
                     <i className="fa-solid fa-cog"></i> { t("btn_settings") }
                 </button>
                 <button type="button" className="btn btn-primary btn-sm" onClick={() => { handleNavProfile() }}>
-                    <i className="fa-solid fa-user"></i> 个人中心
+                    <i className="fa-solid fa-user"></i> { t("projects") }
                 </button>
             </div>
             <ProjHistory></ProjHistory>
