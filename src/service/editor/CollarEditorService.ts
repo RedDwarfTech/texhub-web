@@ -19,6 +19,7 @@ import { basicLight } from 'cm6-theme-basic-light';
 import { RefObject } from "react";
 import { projHasFile } from "../project/ProjectService";
 import { addFileHistory } from "../file/FileService";
+import lodash from 'lodash';
 export const themeMap: Map<string, Extension> = new Map<string, Extension>();
 themeMap.set('Solarized Light', solarizedLight);
 themeMap.set('Basic Light', basicLight);
@@ -209,6 +210,10 @@ export function restoreFromHistory(version:number, docId: string) {
     }
 }
 
+const throttledFn = lodash.throttle((params: any) => {
+    addFileHistory(params);
+  }, 10000)
+
 export function initEditor(editorAttr: EditorAttr,
     activeEditorView: EditorView | undefined,
     edContainer: RefObject<HTMLDivElement>): [EditorView | undefined, WebsocketProvider] {
@@ -235,7 +240,7 @@ export function initEditor(editorAttr: EditorAttr,
                 project_id: editorAttr.projectId,
                 content: ytext.toString()
             };
-            addFileHistory(params);
+            throttledFn(params);
         } catch (e) {
             console.log(e);
         }
