@@ -14,5 +14,7 @@
     "btn_share": "Share",
     "btn_compile": "Compile",
     "btn_history": "History",
-    "btn_settings": "Setting"
+    "btn_settings": "Setting",
+    "tab_all": "All",
+    "tab_shared": "Shared"
 }

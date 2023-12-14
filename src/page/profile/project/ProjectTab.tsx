@@ -12,6 +12,7 @@ import dayjs from 'dayjs';
 import { UserService } from "rd-component";
 import TeXShare from "./share/TeXShare";
 import { QueryProjReq } from "@/model/request/proj/QueryProjReq";
+import { useTranslation } from "react-i18next";
 
 const ProjectTab: React.FC = () => {
 
@@ -24,6 +25,8 @@ const ProjectTab: React.FC = () => {
     const delProjCancelRef = useRef<HTMLButtonElement>(null);
     const editProjCancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
+    const { t } = useTranslation();
+    const { i18n } = useTranslation();
 
     React.useEffect(() => {
         getProjectList(getProjFilter());
@@ -200,12 +203,12 @@ const ProjectTab: React.FC = () => {
                             <a className={activeTab === 1 ? "nav-link active" : "nav-link"}
                                 aria-current="page"
                                 onClick={() => { handleTabClick(1) }}
-                                href="#">全部</a>
+                                href="#">{ t("tab_all") }</a>
                         </li>
                         <li className="nav-item">
                             <a className={activeTab === 2 ? "nav-link active" : "nav-link"}
                                 href="#"
-                                onClick={() => { handleTabClick(2) }}>分享给我</a>
+                                onClick={() => { handleTabClick(2) }}>{ t("tab_shared") }</a>
                         </li>
                     </ul>
                     <div className={styles.docContainer}>
