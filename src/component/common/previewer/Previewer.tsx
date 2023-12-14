@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './Previewer.module.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { pdfjs } from 'react-pdf';
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist@${pdfjs.version}/pdf.worker.min.js`;
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import { AppState } from '@/redux/types/AppState';
