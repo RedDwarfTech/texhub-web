@@ -215,7 +215,7 @@ const ProjectTab: React.FC = () => {
                         <div className={styles.docList}>
                             <div className={styles.docListHeader}>
                                 <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPrj">
-                                    新建
+                                    { t("btn_new")}
                                 </button>
                             </div>
                             <div className="list-group">
