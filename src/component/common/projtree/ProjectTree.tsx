@@ -135,16 +135,16 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         if (legacyTree == null) {
             return;
         }
-        let treeNode: TexFileModel[] = JSON.parse(legacyTree);
-        collapseRecursive(treeNode, treeNode);
+        let treeNodes: TexFileModel[] = JSON.parse(legacyTree);
+        collapseRecursive(treeNodes, treeNodes);
     }
 
-    const collapseRecursive = (fullTree: TexFileModel[], treeNode: TexFileModel[]) => {
-        for (let i = 0; i < treeNode.length; i++) {
-            if (treeNode[i].file_type == TreeFileType.Folder && treeNode[i].expand && treeNode[i].expand == true) {
-                let newTree = handleAutoExpandFolder(treeNode[i], fullTree, false);
-                if (newTree && treeNode[i].children && treeNode[i].children.length > 0) {
-                    collapseRecursive(newTree, treeNode[i].children);
+    const collapseRecursive = (fullTree: TexFileModel[], treeNodes: TexFileModel[]) => {
+        for (let i = 0; i < treeNodes.length; i++) {
+            if (treeNodes[i].file_type == TreeFileType.Folder && treeNodes[i].expand && treeNodes[i].expand == true) {
+                let newTree = handleAutoExpandFolder(treeNodes[i], fullTree, false);
+                if (newTree && treeNodes[i].children && treeNodes[i].children.length > 0) {
+                    collapseRecursive(newTree, treeNodes[i].children);
                 }
             }
         }
@@ -277,6 +277,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const handleAutoExpandFolder = (item: TexFileModel, treeNode: TexFileModel[], expandFolder?: boolean) => {
         if (!treeNode || treeNode.length === 0) return;
         const updatedItems = handleExpandClick(item.file_id, treeNode, expandFolder);
+        debugger
         localStorage.setItem("projTree:" + item.project_id, JSON.stringify(updatedItems));
         setTexFileTree(updatedItems);
         return updatedItems;
