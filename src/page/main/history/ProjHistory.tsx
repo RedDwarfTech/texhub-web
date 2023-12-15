@@ -1,6 +1,44 @@
+import { useSelector } from "react-redux";
 import styles from "./ProjHistory.module.css";
+import { AppState } from "@/redux/types/AppState";
+import React, { useState } from "react";
+import { ProjHisotry } from "@/model/proj/history/ProjHistory";
+import { projHistory } from "@/service/project/ProjectService";
+import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
 
-const ProjHistory: React.FC = () => {
+export type HistoryProps = {
+    projectId: string;
+};
+
+const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
+    
+    const { projHistories } = useSelector((state: AppState) => state.proj);
+    const [histories, setHistories] = useState<ProjHisotry[]>([]);
+
+    React.useEffect(()=>{
+        const hist: QueryHistory = {
+            project_id: props.projectId
+        };
+        projHistory(hist);
+    },[]);
+
+    React.useEffect(()=>{
+        if(projHistories && projHistories.length > 0) {
+            setHistories(projHistories);
+        }
+    },[projHistories]);
+
+    const renderHistroy = () => {
+        if(!histories || histories.length === 0){
+            return;
+        }
+        const tagList: JSX.Element[] = [];
+        histories.forEach((item: ProjHisotry) => {
+            tagList.push(<div>{item.name}</div>);
+        });
+        return tagList;
+    }
+
     return (
         <div className="offcanvas offcanvas-end" tab-index="-1" id="projHistory" aria-labelledby="offcanvasExampleLabel">
             <div className="offcanvas-header">
@@ -8,7 +46,7 @@ const ProjHistory: React.FC = () => {
                 <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div className="offcanvas-body">
-                history list
+                {renderHistroy()}
             </div>
         </div>
     );

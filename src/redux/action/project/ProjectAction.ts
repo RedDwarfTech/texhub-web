@@ -30,6 +30,7 @@ export enum ProjectActionType {
     GET_SRC_POSITION,
     CHANGE_PROJ_CONF,
     PROJ_SEARCH,
+    PROJ_HISTORY,
     SHARE_PROJ
 }
 
@@ -145,5 +146,10 @@ export interface projSearchAction {
 
 export interface projShareAction {
     type: ProjectActionType.SHARE_PROJ;
+    data: any;
+}
+
+export interface projHistoryAction {
+    type: ProjectActionType.PROJ_HISTORY;
     data: any;
 }
