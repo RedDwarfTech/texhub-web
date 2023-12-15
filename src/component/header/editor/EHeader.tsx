@@ -9,7 +9,10 @@ import {
     compileProjectLog,
     getStreamLog,
     getCompQueueStatus,
-    sendQueueCompileRequest, setCompileStatus, showPreviewTab, updateLogText, shareProj
+    sendQueueCompileRequest, 
+    setCompileStatus, 
+    showPreviewTab, 
+    updateLogText
 } from "@/service/project/ProjectService";
 import { useNavigate } from "react-router-dom";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
@@ -29,7 +32,6 @@ const EHeader: React.FC = () => {
     const [mainFile, setMainFile] = useState<TexFileModel>();
     const navigate = useNavigate();
     const { t } = useTranslation();
-    const { i18n } = useTranslation();
 
     React.useEffect(() => {
         if (fileTree && fileTree.length > 0) {
@@ -158,7 +160,7 @@ const EHeader: React.FC = () => {
                     <i className="fa-solid fa-user"></i> { t("projects") }
                 </button>
             </div>
-            <ProjHistory></ProjHistory>
+            <ProjHistory projectId={mainFile.project_id}></ProjHistory>
             <ProjSetting></ProjSetting>
         </div>
     );
