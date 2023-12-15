@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { ProjHisotry } from "@/model/proj/history/ProjHistory";
 import { projHistory } from "@/service/project/ProjectService";
 import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
+import dayjs from "dayjs";
 
 export type HistoryProps = {
     projectId: string;
@@ -34,7 +35,16 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         }
         const tagList: JSX.Element[] = [];
         histories.forEach((item: ProjHisotry) => {
-            tagList.push(<div>{item.name}</div>);
+            tagList.push(
+                <div className={styles.hiscard}>
+                    <div>{item.name}</div>
+                    <div>时间：{dayjs(item.updated_time).format('YYYY-MM-DD HH:mm:ss')}</div>
+                    <div className={styles.footer}>
+                        <div><button>详情</button></div>
+                        <div><button>还原</button></div>
+                    </div>
+                </div>
+            );
         });
         return tagList;
     }
@@ -46,6 +56,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
                 <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div className="offcanvas-body">
+                <div className={styles.divline}></div>
                 {renderHistroy()}
             </div>
         </div>

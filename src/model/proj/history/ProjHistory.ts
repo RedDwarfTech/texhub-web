@@ -1,5 +1,5 @@
 export interface ProjHisotry { 
     name: string; 
     content: string;
-    update_time: number;
+    updated_time: number;
 }
