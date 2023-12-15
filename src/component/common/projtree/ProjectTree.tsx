@@ -140,9 +140,13 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     }
 
     const collapseRecursive = (fullTree: TexFileModel[], treeNodes: TexFileModel[]) => {
+        let tempTree = fullTree;
         for (let i = 0; i < treeNodes.length; i++) {
             if (treeNodes[i].file_type == TreeFileType.Folder && treeNodes[i].expand && treeNodes[i].expand == true) {
-                let newTree = handleAutoExpandFolder(treeNodes[i], fullTree, false);
+                let newTree = handleAutoExpandFolder(treeNodes[i], tempTree, false);
+                if(newTree){
+                    tempTree = newTree;
+                }
                 if (newTree && treeNodes[i].children && treeNodes[i].children.length > 0) {
                     collapseRecursive(newTree, treeNodes[i].children);
                 }
