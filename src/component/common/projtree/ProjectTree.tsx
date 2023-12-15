@@ -145,6 +145,9 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             if (treeNodes[i].file_type == TreeFileType.Folder && treeNodes[i].expand && treeNodes[i].expand == true) {
                 let newTree = handleAutoExpandFolder(treeNodes[i], tempTree, false);
                 if(newTree){
+                    /**
+                     * make the collapse works with the same levels if directory
+                     */
                     tempTree = newTree;
                 }
                 if (newTree && treeNodes[i].children && treeNodes[i].children.length > 0) {
