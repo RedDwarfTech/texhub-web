@@ -124,7 +124,7 @@ const App: React.FC = () => {
       let prevCursorOffset = -1;
       let resizing = false;
       const resizeElement: HTMLElement | null = document.getElementById(resizeArea);
-      const resizeBar: any = document.getElementById(resizeBarName);
+      const resizeBar: HTMLElement | null = document.getElementById(resizeBarName);
       if (resizeBar !== null) {
         resizeBar.addEventListener("mousedown", () => {
           resizing = true

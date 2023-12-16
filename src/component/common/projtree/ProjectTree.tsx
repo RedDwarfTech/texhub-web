@@ -75,28 +75,31 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         setTimeout(() => {
             let prevCursorOffset = -1;
             let resizing = false;
-            const resizeElement: any = document.getElementById(resizeArea);
-            if (!resizeElement) {
+            const resizeElement: HTMLElement | null = document.getElementById(resizeArea);
+            if (resizeElement == null || !resizeElement) {
+                console.error("resize element is null");
                 return;
             }
-            const resizeBar: any = document.getElementById(resizeBarName);
-            if (resizeBar != null) {
-                resizeBar.addEventListener("mousedown", () => {
-                    resizing = true
-                });
-            };
+            const resizeBar: HTMLElement | null = document.getElementById(resizeBarName);
+            if (resizeBar == null) {
+                console.error("resize bar is null");
+                return;
+            }
+            resizeBar.addEventListener("mousedown", () => {
+                resizing = true
+            });
             window.addEventListener("mousemove", handleResizeMenu);
             window.addEventListener("mouseup", () => {
                 resizing = false
             });
-
             function handleResizeMenu(e: MouseEvent) {
-                if (!resizing) {
-                    return
-                }
                 const { screenX } = e
                 e.preventDefault()
                 e.stopPropagation()
+                if (!resizing) {
+                    return
+                }
+                if(resizeElement==null) return;
                 if (prevCursorOffset === -1) {
                     prevCursorOffset = screenX
                 } else if (Math.abs(prevCursorOffset - screenX) >= 5) {
