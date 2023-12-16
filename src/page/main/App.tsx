@@ -37,11 +37,11 @@ const App: React.FC = () => {
   const [activeFileModel, setActiveFileModel] = useState<TexFileModel>();
   const [selectedItem, setSelectedItem] = useState<TexFileModel>();
   const [mainFile, setMainFile] = useState<TexFileModel>();
-  const divRef = useRef<HTMLDivElement>(null);
+  const projTreeRef = useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     resizeRight("rightDraggable", "editor");
-    resizeLeft("leftDraggable", "prjTree");
+    resizeLeft("leftDraggable");
     if (pid) {
       let query: QueryProjInfo = {
         project_id: pid.toString()
@@ -140,10 +140,10 @@ const App: React.FC = () => {
         if (!resizing || resizeElement == null) {
           return
         }
-        if (!divRef.current) {
+        if (!projTreeRef.current) {
           return;
         }
-        const prjTreeWidth = divRef.current.offsetWidth;
+        const prjTreeWidth = projTreeRef.current.offsetWidth;
         const { screenX } = e
         e.preventDefault()
         e.stopPropagation()
@@ -163,13 +163,13 @@ const App: React.FC = () => {
    * @param resizeBarName 
    * @param resizeArea 
    */
-  const resizeLeft = (resizeBarName: string, resizeArea: string) => {
+  const resizeLeft = (resizeBarName: string) => {
     setTimeout(() => {
         let prevCursorOffset = -1;
         let resizing = false;
-        const resizeElement: HTMLElement | null = document.getElementById(resizeArea);
+        const resizeElement: HTMLElement | null = projTreeRef.current;
         if (resizeElement == null || !resizeElement) {
-            console.error("resize element is null");
+            console.error("left resize element is null");
             return;
         }
         const resizeBar: HTMLElement | null = document.getElementById(resizeBarName);
@@ -207,7 +207,7 @@ const App: React.FC = () => {
     <div className={styles.container}>
       <EHeader></EHeader>
       <div className={styles.editorBody}>
-        {pid ? <ProjectTree projectId={pid as string} divRef={divRef}></ProjectTree> : <div>Loading...</div>}
+        {pid ? <ProjectTree projectId={pid as string} divRef={projTreeRef}></ProjectTree> : <div>Loading...</div>}
         <div className={styles.leftDraggable} id="leftDraggable">
         </div>
         <div id="editor" className={styles.editor}>
