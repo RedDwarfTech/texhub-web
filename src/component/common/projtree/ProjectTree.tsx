@@ -43,7 +43,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const [draggedOverNode, setDraggedOverNode] = useState<TexFileModel | null>(null);
 
     React.useEffect(() => {
-        resizeLeft("leftDraggable", "prjTree");
         return () => {
         };
     }, []);
@@ -70,46 +69,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             setMainFile(defaultFile[0]);
         }
     }, [fileTree]);
-
-    const resizeLeft = (resizeBarName: string, resizeArea: string) => {
-        setTimeout(() => {
-            let prevCursorOffset = -1;
-            let resizing = false;
-            const resizeElement: HTMLElement | null = document.getElementById(resizeArea);
-            if (resizeElement == null || !resizeElement) {
-                console.error("resize element is null");
-                return;
-            }
-            const resizeBar: HTMLElement | null = document.getElementById(resizeBarName);
-            if (resizeBar == null) {
-                console.error("resize bar is null");
-                return;
-            }
-            resizeBar.addEventListener("mousedown", () => {
-                resizing = true
-            });
-            window.addEventListener("mousemove", handleResizeMenu);
-            window.addEventListener("mouseup", () => {
-                resizing = false
-            });
-            function handleResizeMenu(e: MouseEvent) {
-                const { screenX } = e
-                e.preventDefault()
-                e.stopPropagation()
-                if (!resizing) {
-                    return
-                }
-                if(resizeElement==null) return;
-                if (prevCursorOffset === -1) {
-                    prevCursorOffset = screenX
-                } else if (Math.abs(prevCursorOffset - screenX) >= 5) {
-                    resizeElement.style.flex = `0 0 ${screenX}px`;
-                    resizeElement.style.maxWidth = "100vw";
-                    prevCursorOffset = screenX;
-                }
-            }
-        }, 1500);
-    }
 
     const handleExpandFolderCallback = (name_paths: string[], projId: string) => {
         for (let i = 0; i < name_paths.length; i++) {

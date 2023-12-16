@@ -41,6 +41,7 @@ const App: React.FC = () => {
 
   React.useEffect(() => {
     resizeRight("rightDraggable", "editor");
+    resizeLeft("leftDraggable", "prjTree");
     if (pid) {
       let query: QueryProjInfo = {
         project_id: pid.toString()
@@ -156,6 +157,51 @@ const App: React.FC = () => {
       }
     }, 1500);
   }
+
+  /**
+   * resize left should put to the app layer
+   * @param resizeBarName 
+   * @param resizeArea 
+   */
+  const resizeLeft = (resizeBarName: string, resizeArea: string) => {
+    setTimeout(() => {
+        let prevCursorOffset = -1;
+        let resizing = false;
+        const resizeElement: HTMLElement | null = document.getElementById(resizeArea);
+        if (resizeElement == null || !resizeElement) {
+            console.error("resize element is null");
+            return;
+        }
+        const resizeBar: HTMLElement | null = document.getElementById(resizeBarName);
+        if (resizeBar == null) {
+            console.error("resize bar is null");
+            return;
+        }
+        resizeBar.addEventListener("mousedown", () => {
+            resizing = true
+        });
+        window.addEventListener("mousemove", handleResizeMenu);
+        window.addEventListener("mouseup", () => {
+            resizing = false
+        });
+        function handleResizeMenu(e: MouseEvent) {
+            const { screenX } = e
+            e.preventDefault()
+            e.stopPropagation()
+            if (!resizing) {
+                return
+            }
+            if(resizeElement==null) return;
+            if (prevCursorOffset === -1) {
+                prevCursorOffset = screenX
+            } else if (Math.abs(prevCursorOffset - screenX) >= 5) {
+                resizeElement.style.flex = `0 0 ${screenX}px`;
+                resizeElement.style.maxWidth = "100vw";
+                prevCursorOffset = screenX;
+            }
+        }
+      }, 1500);
+    }
 
   return (
     <div className={styles.container}>
