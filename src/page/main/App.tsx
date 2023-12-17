@@ -51,17 +51,6 @@ const App: React.FC = () => {
     };
   }, []);
 
-  React.useEffect(()=>{
-    debugger
-    if (projTreeRef.current) {
-      debugger
-      resizeLeft("leftDraggable");
-    }
-
-    return () => {
-    };
-  },[projTreeRef]);
-
   React.useEffect(() => {
     if (endSignal && endSignal.length > 0) {
       let result = JSON.parse(endSignal);
@@ -167,51 +156,6 @@ const App: React.FC = () => {
       }
     }, 1500);
   }
-
-  /**
-   * resize left should put to the app layer
-   * @param resizeBarName 
-   * @param resizeArea 
-   */
-  const resizeLeft = (resizeBarName: string) => {
-    setTimeout(() => {
-        let prevCursorOffset = -1;
-        let resizing = false;
-        const resizeElement: HTMLElement | null = projTreeRef.current;
-        if (resizeElement == null || !resizeElement) {
-            console.error("left resize element is null");
-            return;
-        }
-        const resizeBar: HTMLElement | null = document.getElementById(resizeBarName);
-        if (resizeBar == null) {
-            console.error("resize bar is null");
-            return;
-        }
-        resizeBar.addEventListener("mousedown", () => {
-            resizing = true
-        });
-        window.addEventListener("mousemove", handleResizeMenu);
-        window.addEventListener("mouseup", () => {
-            resizing = false
-        });
-        function handleResizeMenu(e: MouseEvent) {
-            const { screenX } = e
-            e.preventDefault()
-            e.stopPropagation()
-            if (!resizing) {
-                return
-            }
-            if(resizeElement==null) return;
-            if (prevCursorOffset === -1) {
-                prevCursorOffset = screenX
-            } else if (Math.abs(prevCursorOffset - screenX) >= 5) {
-                resizeElement.style.flex = `0 0 ${screenX}px`;
-                resizeElement.style.maxWidth = "100vw";
-                prevCursorOffset = screenX;
-            }
-        }
-      }, 1500);
-    }
 
   return (
     <div className={styles.container}>
