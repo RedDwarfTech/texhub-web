@@ -52,7 +52,9 @@ const App: React.FC = () => {
   }, []);
 
   React.useEffect(()=>{
+    debugger
     if (projTreeRef.current) {
+      debugger
       resizeLeft("leftDraggable");
     }
 
