@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { EditorView } from "@codemirror/view";
 import styles from "./CollarCodeEditor.module.css";
 import React from "react";
+import * as Y from 'yjs';
 // @ts-ignore
 import { WebsocketProvider } from "y-websocket";
 import { AppState } from "@/redux/types/AppState";
@@ -16,6 +17,7 @@ import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { ProjConfType } from "@/model/proj/config/ProjConfType";
 import { readConfig } from "@/config/app/config-reader";
 import { TreeFileType } from "@/model/file/TreeFileType";
+import { toUint8Array } from "lib0/encoding";
 
 export type EditorProps = {
   projectId: string;

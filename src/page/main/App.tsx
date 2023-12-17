@@ -41,7 +41,6 @@ const App: React.FC = () => {
 
   React.useEffect(() => {
     resizeRight("rightDraggable", "editor");
-    resizeLeft("leftDraggable");
     if (pid) {
       let query: QueryProjInfo = {
         project_id: pid.toString()
@@ -51,6 +50,15 @@ const App: React.FC = () => {
     return () => {
     };
   }, []);
+
+  React.useEffect(()=>{
+    if (projTreeRef.current) {
+      resizeLeft("leftDraggable");
+    }
+
+    return () => {
+    };
+  },[projTreeRef]);
 
   React.useEffect(() => {
     if (endSignal && endSignal.length > 0) {
