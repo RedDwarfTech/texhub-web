@@ -235,7 +235,7 @@ export function initEditor(editorAttr: EditorAttr,
                 //debugger
             } 
             let snapshot = Y.snapshot(ydoc);
-            let snap: Y.Doc = Y.createDocFromSnapshot(ydoc, snapshot);
+            // let snap: Y.Doc = Y.createDocFromSnapshot(ydoc, snapshot);
             console.log("snapshot:" + JSON.stringify(snapshot));
             let params = {
                 file_id: editorAttr.docId,
