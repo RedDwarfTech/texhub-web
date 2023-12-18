@@ -195,8 +195,8 @@ function myCompletions(context: CompletionContext) {
 let history: Uint8Array[] = [];
 var ydoc:Y.Doc;
 export function saveHistory(docId: string){
-    const snapshot = Y.encodeStateAsUpdate(ydoc);
-    history.push(snapshot);
+    const update = Y.encodeStateAsUpdate(ydoc);
+    history.push(update);
     const text = ydoc.getText(docId);
     console.log(text.toString());
 }
@@ -234,6 +234,8 @@ export function initEditor(editorAttr: EditorAttr,
             if(!current_connection_status){
                 //debugger
             } 
+            let ss = Y.snapshot(ydoc);
+            console.log("snapshot:" + ss);
             let params = {
                 file_id: editorAttr.docId,
                 name: editorAttr.name,
