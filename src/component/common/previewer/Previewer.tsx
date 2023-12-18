@@ -306,8 +306,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
                 return (<i className="fa-solid fa-bug text-danger"></i>);
             } else if (curCompileQueue.comp_result === CompileResultType.SUCCESS) {
                 return (<i className="fa-solid fa-square-check text-success"></i>);
-            } else {
-                console.log("current compile queue", curCompileQueue);
             }
         }
     }

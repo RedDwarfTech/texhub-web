@@ -234,13 +234,15 @@ export function initEditor(editorAttr: EditorAttr,
             if(!current_connection_status){
                 //debugger
             } 
-            let ss = Y.snapshot(ydoc);
-            console.log("snapshot:" + ss);
+            let snapshot = Y.snapshot(ydoc);
+            let snap: Y.Doc = Y.createDocFromSnapshot(ydoc, snapshot);
+            console.log("snapshot:" + JSON.stringify(snapshot));
             let params = {
                 file_id: editorAttr.docId,
                 name: editorAttr.name,
                 project_id: editorAttr.projectId,
-                content: ytext.toString()
+                content: ytext.toString(),
+                snapshot: JSON.stringify(snapshot)
             };
             throttledFn(params);
         } catch (e) {
