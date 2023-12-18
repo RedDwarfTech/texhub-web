@@ -18,8 +18,9 @@ import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { basicLight } from 'cm6-theme-basic-light';
 import { RefObject } from "react";
 import { projHasFile } from "../project/ProjectService";
-import { addFileHistory } from "../file/FileService";
-import lodash, { template } from 'lodash';
+import { addFileVersion } from "../file/FileService";
+import lodash from 'lodash';
+import { TexFileVersion } from "@/model/file/TexFileVersion";
 export const themeMap: Map<string, Extension> = new Map<string, Extension>();
 themeMap.set('Solarized Light', solarizedLight);
 themeMap.set('Basic Light', basicLight);
@@ -197,6 +198,10 @@ var ydoc:Y.Doc;
 export function saveHistory(docId: string){
     const update = Y.encodeStateAsUpdate(ydoc);
     history.push(update);
+    const snapshot = Y.snapshot(ydoc);
+    let snap: Uint8Array = Y.encodeSnapshot(snapshot);
+    const decoder = new TextDecoder('utf-8');
+    const snapString = decoder.decode(snap);
     const text = ydoc.getText(docId);
     console.log(text.toString());
 }
@@ -211,7 +216,7 @@ export function restoreFromHistory(version:number, docId: string) {
 }
 
 const throttledFn = lodash.throttle((params: any) => {
-    addFileHistory(params);
+    addFileVersion(params);
   }, 10000)
 
 export function initEditor(editorAttr: EditorAttr,
@@ -222,7 +227,9 @@ export function initEditor(editorAttr: EditorAttr,
     }
     let docOpt = {
         guid: editorAttr.docId,
-        collectionid: editorAttr.projectId
+        collectionid: editorAttr.projectId,
+        // https://discuss.yjs.dev/t/error-garbage-collection-must-be-disabled-in-origindoc/2313
+        gc: false
     };
     ydoc = new Y.Doc(docOpt);
     const ytext = ydoc.getText(editorAttr.docId);
@@ -230,19 +237,16 @@ export function initEditor(editorAttr: EditorAttr,
     let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr);
     ydoc.on('update', (update, origin) => {
         try {
-            let current_connection_status = wsProvider.bcconnected;
-            if(!current_connection_status){
-                //debugger
-            } 
-            let snapshot = Y.snapshot(ydoc);
-            // let snap: Y.Doc = Y.createDocFromSnapshot(ydoc, snapshot);
-            console.log("snapshot:" + JSON.stringify(snapshot));
-            let params = {
+            let snapshot: Y.Snapshot = Y.snapshot(ydoc);
+            let snap: Uint8Array = Y.encodeSnapshot(snapshot);
+            const decoder = new TextDecoder('utf-8');
+            const snapString = decoder.decode(snap);
+            let params: TexFileVersion = {
                 file_id: editorAttr.docId,
                 name: editorAttr.name,
                 project_id: editorAttr.projectId,
                 content: ytext.toString(),
-                snapshot: JSON.stringify(snapshot)
+                snapshot: snapString
             };
             throttledFn(params);
         } catch (e) {

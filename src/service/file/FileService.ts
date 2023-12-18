@@ -1,4 +1,5 @@
 import { TexFileModel } from "@/model/file/TexFileModel";
+import { TexFileVersion } from "@/model/file/TexFileVersion";
 import { RenameFile } from "@/model/request/file/edit/RenameFile";
 import { FileActionType } from "@/redux/action/file/FileAction";
 import store from "@/redux/store/store";
@@ -61,7 +62,7 @@ export function addFile(params: any) {
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function addFileHistory(params: any) {
+export function addFileVersion(params: TexFileVersion) {
     const config: AxiosRequestConfig = {
         method: 'post',
         url: '/tex/file/ver/add',
