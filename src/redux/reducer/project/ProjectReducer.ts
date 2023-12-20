@@ -10,6 +10,7 @@ import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 import { ProjConf } from "@/model/proj/config/ProjConf";
 import { SearchResult } from "@/model/proj/search/SearchResult";
+import { ProjHisotry } from "@/model/proj/history/ProjHistory";
 
 const initState: AppState["proj"] = {
     projList: [],
@@ -30,7 +31,9 @@ const initState: AppState["proj"] = {
     pdfFocus: [] as PdfPosition[],
     srcFocus: [] as SrcPosition[],
     projConf: {} as ProjConf,
-    hits: [] as SearchResult[]
+    hits: [] as SearchResult[],
+    activeShare: false,
+    projHistories: [] as ProjHisotry[]
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -136,6 +139,17 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 hits: action.data
+            };
+        case "SHARE_PROJ":
+            let newActiveShare = !state.activeShare;
+            return {
+                ...state,
+                activeShare: newActiveShare
+            };
+        case "PROJ_HISTORY":
+            return {
+                ...state,
+                projHistories: action.data
             };
         default:
             break;

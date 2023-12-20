@@ -1,6 +1,6 @@
 import { RefObject, useState } from "react";
 import styles from './ProjectTree.module.css';
-import { addFile, chooseFile, delTreeItem, getFileList, renameFileImpl, switchFile } from "@/service/file/FileService";
+import { addFile, chooseFile, delTreeItem, getFileTree, renameFileImpl, switchFile } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { AppState } from "@/redux/types/AppState";
@@ -16,6 +16,8 @@ import { TreeFileType } from "@/model/file/TreeFileType";
 import { RenameFile } from "@/model/request/file/edit/RenameFile";
 import ProjFileSearch from "./search/ProjFileSearch";
 import TeXSymbol from "./symbol/TeXSymbol";
+import { getProjectInfo } from "@/service/project/ProjectService";
+import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 
 export type TreeProps = {
     projectId: string;
@@ -41,7 +43,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const [draggedOverNode, setDraggedOverNode] = useState<TexFileModel | null>(null);
 
     React.useEffect(() => {
-        resizeLeft("leftDraggable", "prjTree");
+        resizeLeft("leftDraggable");
         return () => {
         };
     }, []);
@@ -68,43 +70,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             setMainFile(defaultFile[0]);
         }
     }, [fileTree]);
-
-    const resizeLeft = (resizeBarName: string, resizeArea: string) => {
-        setTimeout(() => {
-            let prevCursorOffset = -1;
-            let resizing = false;
-            const resizeElement: any = document.getElementById(resizeArea);
-            if (!resizeElement) {
-                return;
-            }
-            const resizeBar: any = document.getElementById(resizeBarName);
-            if (resizeBar != null) {
-                resizeBar.addEventListener("mousedown", () => {
-                    resizing = true
-                });
-            };
-            window.addEventListener("mousemove", handleResizeMenu);
-            window.addEventListener("mouseup", () => {
-                resizing = false
-            });
-
-            function handleResizeMenu(e: MouseEvent) {
-                if (!resizing) {
-                    return
-                }
-                const { screenX } = e
-                e.preventDefault()
-                e.stopPropagation()
-                if (prevCursorOffset === -1) {
-                    prevCursorOffset = screenX
-                } else if (Math.abs(prevCursorOffset - screenX) >= 5) {
-                    resizeElement.style.flex = `0 0 ${screenX}px`;
-                    resizeElement.style.maxWidth = "100vw";
-                    prevCursorOffset = screenX;
-                }
-            }
-        }, 1500);
-    }
 
     const handleExpandFolderCallback = (name_paths: string[], projId: string) => {
         for (let i = 0; i < name_paths.length; i++) {
@@ -133,16 +98,23 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         if (legacyTree == null) {
             return;
         }
-        let treeNode: TexFileModel[] = JSON.parse(legacyTree);
-        collapseRecursive(treeNode, treeNode);
+        let treeNodes: TexFileModel[] = JSON.parse(legacyTree);
+        collapseRecursive(treeNodes, treeNodes);
     }
 
-    const collapseRecursive = (fullTree: TexFileModel[], treeNode: TexFileModel[]) => {
-        for (let i = 0; i < treeNode.length; i++) {
-            if (treeNode[i].file_type == TreeFileType.Folder && treeNode[i].expand && treeNode[i].expand == true) {
-                let newTree = handleAutoExpandFolder(treeNode[i], fullTree, false);
-                if (newTree && treeNode[i].children && treeNode[i].children.length > 0) {
-                    collapseRecursive(newTree, treeNode[i].children);
+    const collapseRecursive = (fullTree: TexFileModel[], treeNodes: TexFileModel[]) => {
+        let tempTree = fullTree;
+        for (let i = 0; i < treeNodes.length; i++) {
+            if (treeNodes[i].file_type == TreeFileType.Folder && treeNodes[i].expand && treeNodes[i].expand == true) {
+                let newTree = handleAutoExpandFolder(treeNodes[i], tempTree, false);
+                if(newTree){
+                    /**
+                     * make the collapse works with the same levels if directory
+                     */
+                    tempTree = newTree;
+                }
+                if (newTree && treeNodes[i].children && treeNodes[i].children.length > 0) {
+                    collapseRecursive(newTree, treeNodes[i].children);
                 }
             }
         }
@@ -165,6 +137,9 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     }
 
     const handleFileTreeUpdate = (tree: TexFileModel[]) => {
+        if(!tree || tree.length === 0){
+            return;
+        }
         let legacyTree = localStorage.getItem('projTree:' + props.projectId);
         if (legacyTree) {
             // do the tree expand field merge
@@ -172,9 +147,9 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             mergeTreeExpand(tree, cacheTree);
             setTexFileTree(tree);
         } else {
-            localStorage.setItem('projTree:' + props.projectId, JSON.stringify(tree));
             setTexFileTree(tree);
         }
+        localStorage.setItem('projTree:' + props.projectId, JSON.stringify(tree));
     }
 
     const mergeTreeExpand = (newTree: TexFileModel[], cacheTree: TexFileModel[]) => {
@@ -222,7 +197,10 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         };
         addFile(params).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                getFileList(pid?.toString());
+                let req:QueryProjInfo = {
+                    project_id: pid?.toString()
+                };
+                getProjectInfo(req);
             }
         });
     };
@@ -269,6 +247,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const handleAutoExpandFolder = (item: TexFileModel, treeNode: TexFileModel[], expandFolder?: boolean) => {
         if (!treeNode || treeNode.length === 0) return;
         const updatedItems = handleExpandClick(item.file_id, treeNode, expandFolder);
+        debugger
         localStorage.setItem("projTree:" + item.project_id, JSON.stringify(updatedItems));
         setTexFileTree(updatedItems);
         return updatedItems;
@@ -405,7 +384,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         };
         delTreeItem(params).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                getFileList(pid.toString());
+                getFileTree(pid.toString());
             }
         });
     };
@@ -444,9 +423,54 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         };
         renameFileImpl(req).then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
-                getFileList(pid?.toString());
+                getFileTree(pid?.toString());
             }
         });
+    }
+
+    /**
+   * resize left should put to the app layer
+   * @param resizeBarName 
+   * @param resizeArea 
+   */
+  const resizeLeft = (resizeBarName: string) => {
+    setTimeout(() => {
+        let prevCursorOffset = -1;
+        let resizing = false;
+        const resizeElement: HTMLElement | null = props.divRef.current;
+        if (resizeElement == null || !resizeElement) {
+            console.error("left resize element is null");
+            return;
+        }
+        const resizeBar: HTMLElement | null = document.getElementById(resizeBarName);
+        if (resizeBar == null) {
+            console.error("resize bar is null");
+            return;
+        }
+        resizeBar.addEventListener("mousedown", () => {
+            resizing = true
+        });
+        window.addEventListener("mousemove", handleResizeMenu);
+        window.addEventListener("mouseup", () => {
+            resizing = false
+        });
+        function handleResizeMenu(e: MouseEvent) {
+            const { screenX } = e
+            e.preventDefault()
+            e.stopPropagation()
+            if (!resizing) {
+                return
+            }
+            if(resizeElement==null) return;
+            if (prevCursorOffset === -1) {
+                prevCursorOffset = screenX
+            } else if (Math.abs(prevCursorOffset - screenX) >= 5) {
+                resizeElement.style.flex = `0 0 ${screenX}px`;
+                resizeElement.style.maxWidth = "100vw";
+                prevCursorOffset = screenX;
+            }
+        }
+      }, 1500);
     }
 
     const handleFolderAddConfirm = () => {
@@ -466,7 +490,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         };
         addFile(params).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                getFileList(pid?.toString());
+                getFileTree(pid?.toString());
             }
         });
     }

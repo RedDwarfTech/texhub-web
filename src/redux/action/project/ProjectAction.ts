@@ -29,7 +29,9 @@ export enum ProjectActionType {
     GET_PDF_POSITION,
     GET_SRC_POSITION,
     CHANGE_PROJ_CONF,
-    PROJ_SEARCH
+    PROJ_SEARCH,
+    PROJ_HISTORY,
+    SHARE_PROJ
 }
 
 export interface saveDocAction {
@@ -139,5 +141,15 @@ export interface changeProjConfAction {
 
 export interface projSearchAction {
     type: ProjectActionType.PROJ_SEARCH;
+    data: any;
+}
+
+export interface projShareAction {
+    type: ProjectActionType.SHARE_PROJ;
+    data: any;
+}
+
+export interface projHistoryAction {
+    type: ProjectActionType.PROJ_HISTORY;
     data: any;
 }

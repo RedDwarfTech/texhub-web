@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './Previewer.module.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { pdfjs } from 'react-pdf';
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.js`;
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import { AppState } from '@/redux/types/AppState';
@@ -145,6 +145,13 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         }
     }
 
+    const handleScrollTop = () => {
+        const pdfContainerDiv = document.getElementById('pdfContainer');
+        if (pdfContainerDiv) {
+            pdfContainerDiv.scrollTop = 0;
+        }
+    }
+
     const handleSrcLocate = () => {
         if (!projectId) {
             toast.info("项目信息为空");
@@ -250,6 +257,12 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
                 <div className={styles.rightAction}>
                     <button className={styles.previewIconButton}
                         data-bs-toggle="tooltip"
+                        title="滚动到顶部"
+                        onClick={() => { handleScrollTop() }}>
+                        <i className="fa-solid fa-arrow-up"></i>
+                    </button>
+                    <button className={styles.previewIconButton}
+                        data-bs-toggle="tooltip"
                         title="导航到源码"
                         onClick={() => { handleSrcLocate() }}>
                         <i className="fa-solid fa-arrow-left"></i>
@@ -293,8 +306,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
                 return (<i className="fa-solid fa-bug text-danger"></i>);
             } else if (curCompileQueue.comp_result === CompileResultType.SUCCESS) {
                 return (<i className="fa-solid fa-square-check text-success"></i>);
-            } else {
-                console.log("current compile queue", curCompileQueue);
             }
         }
     }

@@ -2,12 +2,13 @@ import { useRef, useState } from "react";
 import { EditorView } from "@codemirror/view";
 import styles from "./CollarCodeEditor.module.css";
 import React from "react";
+import * as Y from 'yjs';
 // @ts-ignore
 import { WebsocketProvider } from "y-websocket";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import 'react-toastify/dist/ReactToastify.css';
-import { initEditor, themeConfig, themeMap } from "@/service/editor/CollarEditorService";
+import { initEditor, restoreFromHistory, themeConfig, themeMap } from "@/service/editor/CollarEditorService";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { delProjInfo, getPdfPosition, projHasFile } from "@/service/project/ProjectService";
 import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
@@ -16,6 +17,7 @@ import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { ProjConfType } from "@/model/proj/config/ProjConfType";
 import { readConfig } from "@/config/app/config-reader";
 import { TreeFileType } from "@/model/file/TreeFileType";
+import { toUint8Array } from "lib0/encoding";
 
 export type EditorProps = {
   projectId: string;
@@ -24,9 +26,10 @@ export type EditorProps = {
 const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<HTMLDivElement>(null)
   const { activeFile } = useSelector((state: AppState) => state.file);
-  const { projInfo, projConf } = useSelector((state: AppState) => state.proj);
+  const { projInfo, projConf, activeShare } = useSelector((state: AppState) => state.proj);
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
+  const [shareProj, setShareProj] = useState<boolean>();
   let editorView: [EditorView | undefined, WebsocketProvider | undefined];
   const activeKey = readConfig("projActiveFile") + props.projectId;
   let ws: WebsocketProvider;
@@ -47,21 +50,25 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       setMainFileModel(projInfo.main_file);
       const activeFileJson = localStorage.getItem(activeKey);
       if (activeFileJson) {
-        const curActiveFile = JSON.parse(activeFileJson);
+        const curActiveFile:TexFileModel = JSON.parse(activeFileJson);
         let contains = projHasFile(curActiveFile.file_id, projInfo.main.project_id);
         if(contains){
-          init(curActiveFile.file_id);
+          init(curActiveFile);
         }else{
-          init(projInfo.main_file.file_id);
+          init(projInfo.main_file);
         }
       } else {
-        init(projInfo.main_file.file_id);
+        init(projInfo.main_file);
       }
     }
     return () => {
       destroy();
     };
   }, [projInfo]);
+
+  React.useEffect(()=>{
+    setShareProj(activeShare);
+  },[activeShare]);
 
   React.useEffect(() => {
     if (projConf && Object.keys(projConf).length > 0) {
@@ -82,10 +89,9 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     if (activeFile && activeFile.file_type !== TreeFileType.Folder) {
       let contains = projHasFile(activeFile.file_id, props.projectId);
       if(!contains) {
-        debugger
         return;
       }
-      init(activeFile.file_id);
+      init(activeFile);
       localStorage.setItem(activeKey, JSON.stringify(activeFile));
     }
     return () => {
@@ -93,10 +99,11 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     };
   }, [activeFile]);
 
-  const init = (file_id: string) => {
+  const init = (file: TexFileModel) => {
     const editorAttr: EditorAttr = {
       projectId: props.projectId,
-      docId: file_id,
+      docId: file.file_id,
+      name: file.name,
       theme: themeMap.get("Solarized Light")!
     };
     editorView = initEditor(editorAttr, activeEditorView, edContainer);
@@ -107,6 +114,33 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const destroy = () => {
     if (activeEditorView) {
       setActiveEditorView(undefined);
+    }
+  }
+
+  const handleImageAdd = () => {
+    if(activeEditorView){
+      var figureCodeArray : Array<string> = [ 
+        '\\begin{figure}', 
+        '\t\\centering', 
+        '\t\\includegraphics[width=\\textwidth]{}' , 
+        '\t\\caption{Caption}', 
+        '\t\\label{fig:my_label}',
+        '\\end{figure}'
+      ];
+      const figureCode: string = figureCodeArray.join('\n');
+      const cursorPos = activeEditorView.state.selection.main.head;
+      const transaction = activeEditorView.state.update({
+        changes: { from: cursorPos, to: cursorPos, insert: figureCode },
+      });
+      activeEditorView.dispatch(transaction);
+    }
+  }
+
+  const handleVerRestore = () => {
+    const activeFileJson = localStorage.getItem(activeKey);
+    if(activeFileJson){
+      const af = JSON.parse(activeFileJson);
+      restoreFromHistory(0, af.file_id);
     }
   }
 
@@ -153,6 +187,12 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       <div className={styles.editorHeader}>
         <button className={styles.menuButton} onClick={() => { handlePdfLocate() }}>
           <i className="fa-solid fa-arrow-right"></i>
+        </button>
+        <button className={styles.menuButton} onClick={() => { handleImageAdd() }}>
+          <i className="fa-solid fa-image"></i>
+        </button>
+        <button className={styles.menuButton} onClick={() => { handleVerRestore() }}>
+          <i className="fa-solid fa-image"></i>
         </button>
       </div>
       <div ref={edContainer} className={styles.editorContainer}>

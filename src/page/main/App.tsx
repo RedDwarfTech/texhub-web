@@ -37,7 +37,7 @@ const App: React.FC = () => {
   const [activeFileModel, setActiveFileModel] = useState<TexFileModel>();
   const [selectedItem, setSelectedItem] = useState<TexFileModel>();
   const [mainFile, setMainFile] = useState<TexFileModel>();
-  const divRef = useRef<HTMLDivElement>(null);
+  const projTreeRef = useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     resizeRight("rightDraggable", "editor");
@@ -124,7 +124,7 @@ const App: React.FC = () => {
       let prevCursorOffset = -1;
       let resizing = false;
       const resizeElement: HTMLElement | null = document.getElementById(resizeArea);
-      const resizeBar: any = document.getElementById(resizeBarName);
+      const resizeBar: HTMLElement | null = document.getElementById(resizeBarName);
       if (resizeBar !== null) {
         resizeBar.addEventListener("mousedown", () => {
           resizing = true
@@ -139,10 +139,10 @@ const App: React.FC = () => {
         if (!resizing || resizeElement == null) {
           return
         }
-        if (!divRef.current) {
+        if (!projTreeRef.current) {
           return;
         }
-        const prjTreeWidth = divRef.current.offsetWidth;
+        const prjTreeWidth = projTreeRef.current.offsetWidth;
         const { screenX } = e
         e.preventDefault()
         e.stopPropagation()
@@ -161,7 +161,7 @@ const App: React.FC = () => {
     <div className={styles.container}>
       <EHeader></EHeader>
       <div className={styles.editorBody}>
-        {pid ? <ProjectTree projectId={pid as string} divRef={divRef}></ProjectTree> : <div>Loading...</div>}
+        {pid ? <ProjectTree projectId={pid as string} divRef={projTreeRef}></ProjectTree> : <div>Loading...</div>}
         <div className={styles.leftDraggable} id="leftDraggable">
         </div>
         <div id="editor" className={styles.editor}>

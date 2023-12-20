@@ -13,6 +13,7 @@ import { EntityList } from "rdjs-wheel";
 import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 import { ProjConf } from "@/model/proj/config/ProjConf";
 import { SearchResult } from "@/model/proj/search/SearchResult";
+import { ProjHisotry } from "@/model/proj/history/ProjHistory";
 
 export interface AppState {
     proj: {
@@ -33,6 +34,8 @@ export interface AppState {
         srcFocus: SrcPosition[],
         projConf: ProjConf,
         hits: SearchResult[],
+        activeShare: false,
+        projHistories: ProjHisotry[]
     },
     tpl: {
         tplList: TemplateModel[],

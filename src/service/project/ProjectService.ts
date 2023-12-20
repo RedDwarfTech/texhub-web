@@ -11,6 +11,7 @@ import { CreateProjReq } from "@/model/request/proj/CreateProjReq";
 import { JoinProjReq } from "@/model/request/proj/JoinProjReq";
 import { QueryProjReq } from "@/model/request/proj/QueryProjReq";
 import { CreateTplProjReq } from "@/model/request/proj/create/CreateTplProjReq";
+import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
 import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 import { QuerySrcPos } from "@/model/request/proj/query/QuerySrcPos";
@@ -277,6 +278,11 @@ export function setCompileQueue(data: CompileQueue) {
   return XHRClient.dispathAction(data, actionTypeString, store);
 }
 
+export function shareProj() {
+  const actionTypeString: string = ProjectActionType[ProjectActionType.SHARE_PROJ];
+  return XHRClient.dispathAction("", actionTypeString, store);
+}
+
 export function setProjAttr(data: ProjAttribute) {
   const actionTypeString: string = ProjectActionType[ProjectActionType.PROJ_ATTR];
   return XHRClient.dispathAction(data, actionTypeString, store);
@@ -293,6 +299,20 @@ export function projSerach(req: QueryFile) {
     params: params
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.PROJ_SEARCH];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
+export function projHistory(history: QueryHistory) {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(history)) {
+    params.append(key, value);
+  }
+  const config: AxiosRequestConfig = {
+    method: 'get',
+    url: '/tex/project/history',
+    params: params
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.PROJ_HISTORY];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 

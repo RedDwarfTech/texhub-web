@@ -1,11 +1,12 @@
 import { TexFileModel } from "@/model/file/TexFileModel";
+import { TexFileVersion } from "@/model/file/TexFileVersion";
 import { RenameFile } from "@/model/request/file/edit/RenameFile";
 import { FileActionType } from "@/redux/action/file/FileAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
 import { XHRClient } from "rd-component";
 
-export function getFileList(parent: string) {
+export function getFileTree(parent: string) {
     const config: AxiosRequestConfig = {
         method: 'get',
         url: '/tex/file/tree?parent=' + parent,
@@ -58,6 +59,16 @@ export function addFile(params: any) {
         data: JSON.stringify(params)
     };
     const actionTypeString: string = FileActionType[FileActionType.ADD_FILE];
+    return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
+export function addFileVersion(params: TexFileVersion) {
+    const config: AxiosRequestConfig = {
+        method: 'post',
+        url: '/tex/file/ver/add',
+        data: JSON.stringify(params)
+    };
+    const actionTypeString: string = FileActionType[FileActionType.ADD_FILE_HISTORY];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 

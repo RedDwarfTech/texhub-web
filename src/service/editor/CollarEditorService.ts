@@ -18,6 +18,9 @@ import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { basicLight } from 'cm6-theme-basic-light';
 import { RefObject } from "react";
 import { projHasFile } from "../project/ProjectService";
+import { addFileVersion } from "../file/FileService";
+import lodash from 'lodash';
+import { TexFileVersion } from "@/model/file/TexFileVersion";
 export const themeMap: Map<string, Extension> = new Map<string, Extension>();
 themeMap.set('Solarized Light', solarizedLight);
 themeMap.set('Basic Light', basicLight);
@@ -190,6 +193,32 @@ function myCompletions(context: CompletionContext) {
     }
 }
 
+let history: Uint8Array[] = [];
+var ydoc:Y.Doc;
+export function saveHistory(docId: string){
+    const update = Y.encodeStateAsUpdate(ydoc);
+    history.push(update);
+    const snapshot = Y.snapshot(ydoc);
+    let snap: Uint8Array = Y.encodeSnapshot(snapshot);
+    const decoder = new TextDecoder('utf-8');
+    const snapString = decoder.decode(snap);
+    const text = ydoc.getText(docId);
+    console.log(text.toString());
+}
+
+export function restoreFromHistory(version:number, docId: string) {
+    if(ydoc){
+        const snapshot = history[version];
+        Y.applyUpdate(ydoc,snapshot);
+        const txt = ydoc.getText(docId);
+        console.log(txt.toString());
+    }
+}
+
+const throttledFn = lodash.throttle((params: any) => {
+    addFileVersion(params);
+  }, 10000)
+
 export function initEditor(editorAttr: EditorAttr,
     activeEditorView: EditorView | undefined,
     edContainer: RefObject<HTMLDivElement>): [EditorView | undefined, WebsocketProvider] {
@@ -198,19 +227,28 @@ export function initEditor(editorAttr: EditorAttr,
     }
     let docOpt = {
         guid: editorAttr.docId,
-        collectionid: editorAttr.projectId
+        collectionid: editorAttr.projectId,
+        // https://discuss.yjs.dev/t/error-garbage-collection-must-be-disabled-in-origindoc/2313
+        gc: false
     };
-    const ydoc = new Y.Doc(docOpt);
+    ydoc = new Y.Doc(docOpt);
     const ytext = ydoc.getText(editorAttr.docId);
     const undoManager = new Y.UndoManager(ytext);
     let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr);
     ydoc.on('update', (update, origin) => {
         try {
-            let current_connection_status = wsProvider.bcconnected;
-            if(!current_connection_status){
-                //debugger
-            }
-            Y.logUpdate(update);
+            let snapshot: Y.Snapshot = Y.snapshot(ydoc);
+            let snap: Uint8Array = Y.encodeSnapshot(snapshot);
+            const decoder = new TextDecoder('utf-8');
+            const snapString = decoder.decode(snap);
+            let params: TexFileVersion = {
+                file_id: editorAttr.docId,
+                name: editorAttr.name,
+                project_id: editorAttr.projectId,
+                content: ytext.toString(),
+                snapshot: snapString
+            };
+            throttledFn(params);
         } catch (e) {
             console.log(e);
         }
@@ -248,4 +286,31 @@ export function initEditor(editorAttr: EditorAttr,
     });
     curEditorView = editorView;
     return [editorView, wsProvider];
+}
+
+const revertChangesSinceSnapshot = (snapshot: string) => {
+    const buffString = snapshot.replace(/^\\x/, '');
+    const buff = new TextEncoder().encode(buffString);
+    // this removes the leading `\x` from the snapshot string that was specific to our implementation
+    const snap = Y.decodeSnapshot(buff);
+    const tempdoc: Y.Doc = Y.createDocFromSnapshot(ydoc,snap);
+    // We cannot simply replace `this.yDoc` because we have to sync with other clients.
+    // Replacing `this.yDoc` would be similar to doing `git reset --hard $SNAPSHOT && git push --force`.
+    // Instead, we compute an "anti-operation" of all the changes made since that snapshot.
+    // This ends up being similar to `git revert $SNAPSHOT..HEAD`.
+    const currentStateVector = Y.encodeStateVector(ydoc);
+    const snapshotStateVector = Y.encodeStateVector(tempdoc);
+    
+    // creating undo command encompassing all changes since taking snapshot
+    const changesSinceSnapshotUpdate = Y.encodeStateAsUpdate(ydoc, snapshotStateVector);
+
+    // In our specific implementation, everything we care about is in a single root Y.Map, which makes
+    // it easy to track with a Y.UndoManager. To be honest, your mileage may vary if you don't know which root types need to be tracked
+    // const um = new Y.UndoManager(tempdoc.getMap(ROOT_YJS_MAP), { trackedOrigins: new Set([YJS_SNAPSHOT_ORIGIN]) });
+    // Y.applyUpdate(tempdoc, changesSinceSnapshotUpdate, YJS_SNAPSHOT_ORIGIN);
+    // um.undo();
+
+    // applying undo command to this.ydoc
+    const revertChangesSinceSnapshotUpdate = Y.encodeStateAsUpdate(tempdoc, currentStateVector);
+    // Y.applyUpdate(ydoc, revertChangesSinceSnapshotUpdate, YJS_SNAPSHOT_ORIGIN);
 }

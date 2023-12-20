@@ -10,5 +10,12 @@
     "console": "控制台",
     "logout": "登出",
     "document": "文档中心",
-    "delete_main_forbidden": "不能删除项目主文件"
+    "delete_main_forbidden": "不能删除项目主文件",
+    "btn_share": "分享",
+    "btn_compile": "编译",
+    "btn_history": "历史",
+    "btn_settings": "设置",
+    "btn_new": "新建",
+    "tab_all": "全部",
+    "tab_shared": "分享给我"
 }

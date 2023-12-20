@@ -4,6 +4,7 @@ export enum FileActionType {
     GET_FILE_LIST,
     GET_FILE_TREE,
     ADD_FILE,
+    ADD_FILE_HISTORY,
     CHOOSE_FILE,
     GET_MAIN_FILE,
     GET_FILE_CODE,
