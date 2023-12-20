@@ -240,13 +240,14 @@ export function initEditor(editorAttr: EditorAttr,
             let snapshot: Y.Snapshot = Y.snapshot(ydoc);
             let snap: Uint8Array = Y.encodeSnapshot(snapshot);
             const decoder = new TextDecoder('utf-8');
-            const snapString = decoder.decode(snap);
+            const snapString: string = decoder.decode(snap);
+            const snapBase64 = btoa(snapString);
             let params: TexFileVersion = {
                 file_id: editorAttr.docId,
                 name: editorAttr.name,
                 project_id: editorAttr.projectId,
                 content: ytext.toString(),
-                snapshot: snapString
+                snapshot: snapBase64
             };
             throttledFn(params);
         } catch (e) {
