@@ -39,7 +39,7 @@ export const themeConfig = new Compartment()
 export const userColor = usercolors[random.uint32() % usercolors.length];
 const wsMaxRetries = 1;
 let wsRetryCount = 0;
-let curEditorView: EditorView|null= null;
+let curEditorView: EditorView | null = null;
 let curStart: number = 0;
 let curEnd: number = 0;
 let clearCount: number = 0;
@@ -72,7 +72,7 @@ const extensions = [
             curEnd = end;
             hightlightSelection(start, end)
         }
-        if(start === end && clearCount<2) {
+        if (start === end && clearCount < 2) {
             clearCount = clearCount + 1;
             highlightUnselection();
         }
@@ -125,7 +125,7 @@ const handleWsAuth = (event: any, wsProvider: WebsocketProvider, editorAttr: Edi
 
 const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): WebsocketProvider => {
     let contains = projHasFile(editorAttr.docId, editorAttr.projectId);
-    if(!contains) {
+    if (!contains) {
         console.error("initial the file do not belong the project");
         debugger
         return;
@@ -165,7 +165,7 @@ const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): WebsocketProvider => {
     });
     wsProvider.on('status', (event: any) => {
         if (event.status === 'connected') {
-            
+
         } else if (event.status === 'disconnected' && wsRetryCount < wsMaxRetries) {
             console.error("wsProvider disconnected: doc:" + editorAttr.docId);
         } else {
@@ -194,8 +194,8 @@ function myCompletions(context: CompletionContext) {
 }
 
 let history: Uint8Array[] = [];
-var ydoc:Y.Doc;
-export function saveHistory(docId: string){
+var ydoc: Y.Doc;
+export function saveHistory(docId: string) {
     const update = Y.encodeStateAsUpdate(ydoc);
     history.push(update);
     const snapshot = Y.snapshot(ydoc);
@@ -206,10 +206,10 @@ export function saveHistory(docId: string){
     console.log(text.toString());
 }
 
-export function restoreFromHistory(version:number, docId: string) {
-    if(ydoc){
+export function restoreFromHistory(version: number, docId: string) {
+    if (ydoc) {
         const snapshot = history[version];
-        Y.applyUpdate(ydoc,snapshot);
+        Y.applyUpdate(ydoc, snapshot);
         const txt = ydoc.getText(docId);
         console.log(txt.toString());
     }
@@ -217,7 +217,7 @@ export function restoreFromHistory(version:number, docId: string) {
 
 const throttledFn = lodash.throttle((params: any) => {
     addFileVersion(params);
-  }, 10000)
+}, 10000)
 
 export function initEditor(editorAttr: EditorAttr,
     activeEditorView: EditorView | undefined,
@@ -239,9 +239,7 @@ export function initEditor(editorAttr: EditorAttr,
         try {
             let snapshot: Y.Snapshot = Y.snapshot(ydoc);
             let snap: Uint8Array = Y.encodeSnapshot(snapshot);
-            const decoder = new TextDecoder('utf-8');
-            const snapString: string = decoder.decode(snap);
-            const snapBase64 = btoa(snapString);
+            let snapBase64 = btoa(String.fromCharCode(...new Uint8Array(snap)));
             let params: TexFileVersion = {
                 file_id: editorAttr.docId,
                 name: editorAttr.name,
@@ -294,14 +292,14 @@ const revertChangesSinceSnapshot = (snapshot: string) => {
     const buff = new TextEncoder().encode(buffString);
     // this removes the leading `\x` from the snapshot string that was specific to our implementation
     const snap = Y.decodeSnapshot(buff);
-    const tempdoc: Y.Doc = Y.createDocFromSnapshot(ydoc,snap);
+    const tempdoc: Y.Doc = Y.createDocFromSnapshot(ydoc, snap);
     // We cannot simply replace `this.yDoc` because we have to sync with other clients.
     // Replacing `this.yDoc` would be similar to doing `git reset --hard $SNAPSHOT && git push --force`.
     // Instead, we compute an "anti-operation" of all the changes made since that snapshot.
     // This ends up being similar to `git revert $SNAPSHOT..HEAD`.
     const currentStateVector = Y.encodeStateVector(ydoc);
     const snapshotStateVector = Y.encodeStateVector(tempdoc);
-    
+
     // creating undo command encompassing all changes since taking snapshot
     const changesSinceSnapshotUpdate = Y.encodeStateAsUpdate(ydoc, snapshotStateVector);
 
