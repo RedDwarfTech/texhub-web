@@ -3,5 +3,6 @@ export interface TexFileVersion {
     name: string;
     file_id: string;
     content: string;
+    action: number;
     snapshot: string;
 }

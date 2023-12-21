@@ -245,6 +245,7 @@ export function initEditor(editorAttr: EditorAttr,
                 name: editorAttr.name,
                 project_id: editorAttr.projectId,
                 content: ytext.toString(),
+                action: 1,
                 snapshot: snapBase64
             };
             throttledFn(params);
