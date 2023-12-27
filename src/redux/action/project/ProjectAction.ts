@@ -9,6 +9,7 @@ export enum ProjectActionType {
     GET_PROJ_INFO,
     DELETE_PROJ_INFO,
     DELETE_PROJ,
+    RENAME_PROJ,
     CLEAR_CURRENT_EDU,
     COMPILE_PROJ,
     LATEST_COMPILE,
@@ -151,5 +152,10 @@ export interface projShareAction {
 
 export interface projHistoryAction {
     type: ProjectActionType.PROJ_HISTORY;
+    data: any;
+}
+
+export interface renameProjAction {
+    type: ProjectActionType.RENAME_PROJ;
     data: any;
 }

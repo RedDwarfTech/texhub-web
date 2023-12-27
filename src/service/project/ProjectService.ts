@@ -105,6 +105,16 @@ export function deleteProject(proj: any) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
+export function renameProject(proj: any) {
+  const config: AxiosRequestConfig = {
+    method: 'patch',
+    url: '/tex/project/rename',
+    data: JSON.stringify(proj)
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.RENAME_PROJ];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
 export function compileProject(proj: CompileQueueReq) {
   const config: AxiosRequestConfig = {
     method: 'put',

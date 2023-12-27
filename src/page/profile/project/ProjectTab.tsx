@@ -1,7 +1,7 @@
 import TexHeader from "@/component/header/TexHeader";
 import styles from "./ProjectTab.module.css";
 import React, { useRef, useState } from "react";
-import { createProject, deleteProject, getProjectList } from "@/service/project/ProjectService";
+import { createProject, deleteProject, getProjectList, renameProject } from "@/service/project/ProjectService";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { TexProjectModel } from "@/model/proj/TexProjectModel";
@@ -62,14 +62,14 @@ const ProjectTab: React.FC = () => {
         let proj = {
             project_id: currProject?.project_id
         };
-        deleteProject(proj).then((resp) => {
+        renameProject(proj).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
                 getProjectList(getProjFilter());
                 if (delProjCancelRef && delProjCancelRef.current) {
                     delProjCancelRef.current.click();
                 }
             } else {
-                toast.error("删除项目失败，{}", resp.msg);
+                toast.error("重命名项目失败，{}", resp.msg);
             }
         });
     }
