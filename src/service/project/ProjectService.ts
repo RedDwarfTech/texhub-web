@@ -105,10 +105,10 @@ export function deleteProject(proj: any) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function renameProject(proj: any) {
+export function editProject(proj: any) {
   const config: AxiosRequestConfig = {
     method: 'patch',
-    url: '/tex/project/rename',
+    url: '/tex/project/edit',
     data: JSON.stringify(proj)
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.RENAME_PROJ];

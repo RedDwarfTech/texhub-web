@@ -1,7 +1,7 @@
 import TexHeader from "@/component/header/TexHeader";
 import styles from "./ProjectTab.module.css";
 import React, { useRef, useState } from "react";
-import { createProject, deleteProject, getProjectList, renameProject } from "@/service/project/ProjectService";
+import { createProject, deleteProject, editProject, getProjectList } from "@/service/project/ProjectService";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { TexProjectModel } from "@/model/proj/TexProjectModel";
@@ -62,7 +62,7 @@ const ProjectTab: React.FC = () => {
         let proj = {
             project_id: currProject?.project_id
         };
-        renameProject(proj).then((resp) => {
+        editProject(proj).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
                 getProjectList(getProjFilter());
                 if (delProjCancelRef && delProjCancelRef.current) {
