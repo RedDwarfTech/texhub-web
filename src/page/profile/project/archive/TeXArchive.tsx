@@ -1,4 +1,4 @@
-import { QueryProjReq } from "@/model/request/proj/QueryProjReq";
+import { QueryProjReq } from "@/model/request/proj/query/QueryProjReq";
 import { ArchiveProjReq } from "@/model/request/proj/edit/ArchiveProjReq";
 import { archiveProj, getProjectList } from "@/service/project/ProjectService";
 import { ResponseHandler } from "rdjs-wheel";

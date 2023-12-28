@@ -9,7 +9,7 @@ import { CompileProjLog } from "@/model/request/proj/CompileProjLog";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
 import { CreateProjReq } from "@/model/request/proj/CreateProjReq";
 import { JoinProjReq } from "@/model/request/proj/JoinProjReq";
-import { QueryProjReq } from "@/model/request/proj/QueryProjReq";
+import { QueryProjReq } from "@/model/request/proj/query/QueryProjReq";
 import { CreateTplProjReq } from "@/model/request/proj/create/CreateTplProjReq";
 import { ArchiveProjReq } from "@/model/request/proj/edit/ArchiveProjReq";
 import { EditProjReq } from "@/model/request/proj/edit/EditProjReq";

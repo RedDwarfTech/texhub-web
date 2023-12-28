@@ -11,7 +11,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import dayjs from 'dayjs';
 import { UserService } from "rd-component";
 import TeXShare from "./share/TeXShare";
-import { QueryProjReq } from "@/model/request/proj/QueryProjReq";
+import { QueryProjReq } from "@/model/request/proj/query/QueryProjReq";
 import { useTranslation } from "react-i18next";
 import TeXEdit from "./edit/TeXEdit";
 import TeXArchive from "./archive/TeXArchive";
@@ -181,8 +181,8 @@ const ProjectTab: React.FC = () => {
             getProjectList(projReq);
         }
         if (clickTab === 3) {
-            let projReq = {
-                role_id: 3
+            let projReq: QueryProjReq = {
+                archive_status: 1
             };
             getProjectList(projReq);
         }
