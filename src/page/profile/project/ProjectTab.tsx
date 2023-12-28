@@ -75,6 +75,31 @@ const ProjectTab: React.FC = () => {
         setCurrProject(docItem);
     }
 
+    const renderMenu = (docItem: TexProjectModel) => {
+        if (activeTab === 1) {
+            return (
+                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#delPrj">删除</a></li>
+                    <li><a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#editPrj">修改项目名称</a></li>
+                    <li>
+                        <a className="dropdown-item" data-bs-toggle="modal"
+                            onClick={() => { setCurrProject(docItem) }} data-bs-target="#sharePrj">分享项目</a>
+                    </li>
+                    <li>
+                        <a className="dropdown-item" data-bs-toggle="modal"
+                            onClick={() => { setCurrProject(docItem) }} data-bs-target="#archiveProj">归档项目
+                        </a>
+                    </li>
+                </ul>);
+        } else if (activeTab === 3) {
+            return (
+                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#delPrj">删除</a></li>
+                </ul>
+            );
+        }
+    }
+
     const renderProj = () => {
         if (!userDocList || userDocList.length === 0) {
             return (<div></div>);
@@ -101,19 +126,7 @@ const ProjectTab: React.FC = () => {
                                     aria-expanded="false">
                                     操作
                                 </button>
-                                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#delPrj">删除</a></li>
-                                    <li><a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#editPrj">修改项目名称</a></li>
-                                    <li>
-                                        <a className="dropdown-item" data-bs-toggle="modal"
-                                            onClick={() => { setCurrProject(docItem) }} data-bs-target="#sharePrj">分享项目</a>
-                                    </li>
-                                    <li>
-                                        <a className="dropdown-item" data-bs-toggle="modal"
-                                            onClick={() => { setCurrProject(docItem) }} data-bs-target="#archiveProj">归档项目
-                                        </a>
-                                    </li>
-                                </ul>
+                                {renderMenu(docItem)}
                             </div>
                         </div>
                     </div>
