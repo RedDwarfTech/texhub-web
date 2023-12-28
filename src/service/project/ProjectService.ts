@@ -11,6 +11,7 @@ import { CreateProjReq } from "@/model/request/proj/CreateProjReq";
 import { JoinProjReq } from "@/model/request/proj/JoinProjReq";
 import { QueryProjReq } from "@/model/request/proj/QueryProjReq";
 import { CreateTplProjReq } from "@/model/request/proj/create/CreateTplProjReq";
+import { EditProjReq } from "@/model/request/proj/edit/EditProjReq";
 import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
 import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
@@ -105,7 +106,7 @@ export function deleteProject(proj: any) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function editProject(proj: any) {
+export function editProject(proj: EditProjReq) {
   const config: AxiosRequestConfig = {
     method: 'patch',
     url: '/tex/project/edit',

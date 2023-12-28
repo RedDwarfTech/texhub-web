@@ -13,6 +13,7 @@ import { UserService } from "rd-component";
 import TeXShare from "./share/TeXShare";
 import { QueryProjReq } from "@/model/request/proj/QueryProjReq";
 import { useTranslation } from "react-i18next";
+import { EditProjReq } from "@/model/request/proj/edit/EditProjReq";
 
 const ProjectTab: React.FC = () => {
 
@@ -56,11 +57,21 @@ const ProjectTab: React.FC = () => {
     }
 
     const handleProjEdit = () => {
-        if (!currProject) {
+        if (!currProject || !currProject.project_id) {
             toast.info("请选择编辑项目");
+            return;
         }
-        let proj = {
-            project_id: currProject?.project_id
+        if (projName == null || projName.length == 0) {
+            toast.warning("请填写新项目名称");
+            return;
+        }
+        if (projName.length > 256) {
+            toast.warning("超过项目名称长度限制");
+            return;
+        }
+        let proj: EditProjReq = {
+            project_id: currProject?.project_id,
+            proj_name: projName
         };
         editProject(proj).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
