@@ -76,8 +76,8 @@ const ProjectTab: React.FC = () => {
         editProject(proj).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
                 getProjectList(getProjFilter());
-                if (delProjCancelRef && delProjCancelRef.current) {
-                    delProjCancelRef.current.click();
+                if (editProjCancelRef && editProjCancelRef.current) {
+                    editProjCancelRef.current.click();
                 }
             } else {
                 toast.error("重命名项目失败，{}", resp.msg);
@@ -187,6 +187,7 @@ const ProjectTab: React.FC = () => {
             proj_name: event.target.value
         };
         setCurrProject(proj as TexProjectModel);
+        setProjName(event.target.value);
     };
 
     const handleTabClick = (clickTab: number) => {
