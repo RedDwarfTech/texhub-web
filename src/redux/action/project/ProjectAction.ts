@@ -32,7 +32,8 @@ export enum ProjectActionType {
     CHANGE_PROJ_CONF,
     PROJ_SEARCH,
     PROJ_HISTORY,
-    SHARE_PROJ
+    SHARE_PROJ,
+    ARCHIVE_PROJ
 }
 
 export interface saveDocAction {
@@ -157,5 +158,10 @@ export interface projHistoryAction {
 
 export interface renameProjAction {
     type: ProjectActionType.RENAME_PROJ;
+    data: any;
+}
+
+export interface archiveProjAction {
+    type: ProjectActionType.ARCHIVE_PROJ;
     data: any;
 }

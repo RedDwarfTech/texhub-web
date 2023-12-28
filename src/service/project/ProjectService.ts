@@ -11,6 +11,7 @@ import { CreateProjReq } from "@/model/request/proj/CreateProjReq";
 import { JoinProjReq } from "@/model/request/proj/JoinProjReq";
 import { QueryProjReq } from "@/model/request/proj/QueryProjReq";
 import { CreateTplProjReq } from "@/model/request/proj/create/CreateTplProjReq";
+import { ArchiveProjReq } from "@/model/request/proj/edit/ArchiveProjReq";
 import { EditProjReq } from "@/model/request/proj/edit/EditProjReq";
 import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
 import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
@@ -341,4 +342,14 @@ export function projHasFile(fileId: string, projId: string){
   if(cachedItems == null) return false;
   const result = TexFileUtil.searchTreeNode(cachedItems, fileId);
   return result;
+}
+
+export function archiveProj(req: ArchiveProjReq) {
+  const config: AxiosRequestConfig = {
+    method: 'put',
+    url: '/tex/project/archive',
+    data: JSON.stringify(req)
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.ARCHIVE_PROJ];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
