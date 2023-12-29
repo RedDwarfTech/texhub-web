@@ -17,6 +17,7 @@ import TeXEdit from "./edit/TeXEdit";
 import TeXArchive from "./archive/TeXArchive";
 import TeXTrash from "./trash/TeXTrash";
 import { ProjTabType } from "@/model/proj/config/ProjTabType";
+import TeXRecovery from "./recovery/TeXRecovery";
 
 const ProjectTab: React.FC = () => {
 
@@ -114,7 +115,12 @@ const ProjectTab: React.FC = () => {
         } else if (activeTab === ProjTabType.Trash) {
             return (
                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#delPrj">删除</a></li>
+                    <li>
+                        <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#recoveryProj">恢复项目</a>
+                    </li>
+                    <li>
+                        <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#delPrj">删除</a>
+                    </li>
                 </ul>
             );
         }
@@ -324,6 +330,9 @@ const ProjectTab: React.FC = () => {
             }
             {
                 (currProject && currProject.project_id) ? <TeXTrash projectId={currProject.project_id.toString()} currProject={currProject} getProjFilter={getProjFilter}></TeXTrash> : <div></div>
+            }
+            {
+                (currProject && currProject.project_id) ? <TeXRecovery projectId={currProject.project_id.toString()} currProject={currProject} getProjFilter={getProjFilter}></TeXRecovery> : <div></div>
             }
             <ToastContainer />
         </div>
