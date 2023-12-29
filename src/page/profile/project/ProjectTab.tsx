@@ -207,6 +207,12 @@ const ProjectTab: React.FC = () => {
             };
             getProjectList(projReq);
         }
+        if (clickTab === 4) {
+            let projReq: QueryProjReq = {
+                trash: 1
+            };
+            getProjectList(projReq);
+        }
     }
 
     return (
@@ -230,6 +236,11 @@ const ProjectTab: React.FC = () => {
                             <a className={activeTab === 3 ? "nav-link active" : "nav-link"}
                                 href="#"
                                 onClick={() => { handleTabClick(3) }}>{t("tab_archived")}</a>
+                        </li>
+                        <li className="nav-item">
+                            <a className={activeTab === 4 ? "nav-link active" : "nav-link"}
+                                href="#"
+                                onClick={() => { handleTabClick(4) }}>{t("tab_trash")}</a>
                         </li>
                     </ul>
                     <div className={styles.docContainer}>

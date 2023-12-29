@@ -1,9 +1,9 @@
 import { QueryProjReq } from "@/model/request/proj/query/QueryProjReq";
-import { ArchiveProjReq } from "@/model/request/proj/edit/ArchiveProjReq";
 import { getProjectList, trashProj } from "@/service/project/ProjectService";
 import { ResponseHandler } from "rdjs-wheel";
 import { useRef } from "react";
 import { toast } from "react-toastify";
+import { TrashProjReq } from "@/model/request/proj/edit/TrashProjReq";
 
 export type TrashProps = {
     projectId: string;
@@ -21,9 +21,9 @@ const TeXTrash: React.FC<TrashProps> = (props: TrashProps) => {
             toast.info("请选择编辑项目");
             return;
         }
-        let proj: ArchiveProjReq = {
+        let proj: TrashProjReq = {
             project_id: currProject?.project_id,
-            archive_status: 1
+            trash: 1
         };
         trashProj(proj).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {

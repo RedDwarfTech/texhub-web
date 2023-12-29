@@ -23,6 +23,7 @@ import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
 import { XHRClient } from "rd-component";
 import { AuthHandler, RequestHandler } from 'rdjs-wheel';
+import { TrashProjReq } from "@/model/request/proj/edit/TrashProjReq";
 
 export function getProjectList(req: QueryProjReq) {
   const params = new URLSearchParams();
@@ -354,7 +355,7 @@ export function archiveProj(req: ArchiveProjReq) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function trashProj(req: ArchiveProjReq) {
+export function trashProj(req: TrashProjReq) {
   const config: AxiosRequestConfig = {
     method: 'put',
     url: '/tex/project/trash',
