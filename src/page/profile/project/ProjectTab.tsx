@@ -94,7 +94,7 @@ const ProjectTab: React.FC = () => {
                         </a>
                     </li>
                     <li>
-                        <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#trashPrj">移动到回收站</a>
+                        <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#trashProj">移动到回收站</a>
                     </li>
                 </ul>);
         } else if (activeTab === ProjTabType.Shared) {
