@@ -8,7 +8,7 @@ import { toast, ToastContainer } from 'react-toastify';
 export type EditProps = {
     projectId: string;
     projName: string | undefined;
-    getProjFilter: () => QueryProjReq;
+    getProjFilter: (query: QueryProjReq) => QueryProjReq;
     handleEditInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
     currProject: any
 };
@@ -37,7 +37,7 @@ const TeXEdit: React.FC<EditProps> = (props: EditProps) => {
         };
         editProject(proj).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                getProjectList(props.getProjFilter());
+                getProjectList(props.getProjFilter({}));
                 if (editProjCancelRef && editProjCancelRef.current) {
                     editProjCancelRef.current.click();
                 }

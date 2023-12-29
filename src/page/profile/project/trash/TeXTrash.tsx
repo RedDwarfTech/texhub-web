@@ -8,7 +8,7 @@ import { TrashProjReq } from "@/model/request/proj/edit/TrashProjReq";
 export type TrashProps = {
     projectId: string;
     currProject: any;
-    getProjFilter: () => QueryProjReq;
+    getProjFilter: (query: QueryProjReq) => QueryProjReq;
 };
 
 const TeXTrash: React.FC<TrashProps> = (props: TrashProps) => {
@@ -27,7 +27,7 @@ const TeXTrash: React.FC<TrashProps> = (props: TrashProps) => {
         };
         trashProj(proj).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                getProjectList(props.getProjFilter());
+                getProjectList(props.getProjFilter({}));
                 if (trashProjCancelRef && trashProjCancelRef.current) {
                     trashProjCancelRef.current.click();
                 }

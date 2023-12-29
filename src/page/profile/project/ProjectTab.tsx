@@ -34,7 +34,7 @@ const ProjectTab: React.FC = () => {
     const { i18n } = useTranslation();
 
     React.useEffect(() => {
-        getProjectList(getProjFilter());
+        getProjectList(getProjFilter({}));
     }, []);
 
     React.useEffect(() => {
@@ -50,7 +50,7 @@ const ProjectTab: React.FC = () => {
         };
         deleteProject(proj).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                getProjectList(getProjFilter());
+                getProjectList(getProjFilter({}));
                 if (delProjCancelRef && delProjCancelRef.current) {
                     delProjCancelRef.current.click();
                 }
@@ -60,15 +60,14 @@ const ProjectTab: React.FC = () => {
         });
     }
 
-    const getProjFilter = (): QueryProjReq => {
-        let query: QueryProjReq = {
-
-        };
+    const getProjFilter = (query: QueryProjReq): QueryProjReq => {
         if (activeTab === 1) {
             return query;
         } else if (activeTab === 2) {
             query.role_id = 2;
             return query;
+        } else if (activeTab === ProjTabType.Trash) {
+            query.trash = 1;
         }
         return query;
     }
@@ -185,7 +184,7 @@ const ProjectTab: React.FC = () => {
         };
         createProject(doc).then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
-                getProjectList(getProjFilter());
+                getProjectList(getProjFilter({}));
                 if (createDocCancelRef && createDocCancelRef.current) {
                     createDocCancelRef.current.click();
                 }

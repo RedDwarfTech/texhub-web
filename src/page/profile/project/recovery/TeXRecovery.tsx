@@ -8,7 +8,7 @@ import { TrashProjReq } from "@/model/request/proj/edit/TrashProjReq";
 export type RecoveryProps = {
     projectId: string;
     currProject: any;
-    getProjFilter: () => QueryProjReq;
+    getProjFilter: (query: QueryProjReq) => QueryProjReq;
 };
 
 const TeXRecovery: React.FC<RecoveryProps> = (props: RecoveryProps) => {
@@ -27,7 +27,7 @@ const TeXRecovery: React.FC<RecoveryProps> = (props: RecoveryProps) => {
         };
         trashProj(proj).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                getProjectList(props.getProjFilter());
+                getProjectList(props.getProjFilter({}));
                 if (recoveryProjCancelRef && recoveryProjCancelRef.current) {
                     recoveryProjCancelRef.current.click();
                 }

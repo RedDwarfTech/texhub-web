@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 export type ArchiveProps = {
     projectId: string;
     currProject: any;
-    getProjFilter: () => QueryProjReq;
+    getProjFilter: (query: QueryProjReq) => QueryProjReq;
 };
 
 const TeXArchive: React.FC<ArchiveProps> = (props: ArchiveProps) => {
@@ -27,7 +27,7 @@ const TeXArchive: React.FC<ArchiveProps> = (props: ArchiveProps) => {
         };
         archiveProj(proj).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                getProjectList(props.getProjFilter());
+                getProjectList(props.getProjFilter({}));
                 if (archiveProjCancelRef && archiveProjCancelRef.current) {
                     archiveProjCancelRef.current.click();
                 }
