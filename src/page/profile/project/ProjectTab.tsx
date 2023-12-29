@@ -15,6 +15,7 @@ import { QueryProjReq } from "@/model/request/proj/query/QueryProjReq";
 import { useTranslation } from "react-i18next";
 import TeXEdit from "./edit/TeXEdit";
 import TeXArchive from "./archive/TeXArchive";
+import TeXTrash from "./trash/TeXTrash";
 
 const ProjectTab: React.FC = () => {
 
@@ -79,8 +80,12 @@ const ProjectTab: React.FC = () => {
         if (activeTab === 1) {
             return (
                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#delPrj">删除</a></li>
-                    <li><a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#editPrj">修改项目名称</a></li>
+                    <li>
+                        <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#delPrj">删除</a>
+                    </li>
+                    <li>
+                        <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#editPrj">修改项目名称</a>
+                    </li>
                     <li>
                         <a className="dropdown-item" data-bs-toggle="modal"
                             onClick={() => { setCurrProject(docItem) }} data-bs-target="#sharePrj">分享项目</a>
@@ -89,6 +94,9 @@ const ProjectTab: React.FC = () => {
                         <a className="dropdown-item" data-bs-toggle="modal"
                             onClick={() => { setCurrProject(docItem) }} data-bs-target="#archiveProj">归档项目
                         </a>
+                    </li>
+                    <li>
+                        <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#trashPrj">移动到回收站</a>
                     </li>
                 </ul>);
         } else if (activeTab === 3) {
@@ -290,6 +298,9 @@ const ProjectTab: React.FC = () => {
             }
             {
                 (currProject && currProject.project_id) ? <TeXArchive projectId={currProject.project_id.toString()} currProject={currProject} getProjFilter={getProjFilter}></TeXArchive> : <div></div>
+            }
+            {
+                (currProject && currProject.project_id) ? <TeXTrash projectId={currProject.project_id.toString()} currProject={currProject} getProjFilter={getProjFilter}></TeXTrash> : <div></div>
             }
             <ToastContainer />
         </div>

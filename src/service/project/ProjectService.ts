@@ -353,3 +353,13 @@ export function archiveProj(req: ArchiveProjReq) {
   const actionTypeString: string = ProjectActionType[ProjectActionType.ARCHIVE_PROJ];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
+
+export function trashProj(req: ArchiveProjReq) {
+  const config: AxiosRequestConfig = {
+    method: 'put',
+    url: '/tex/project/trash',
+    data: JSON.stringify(req)
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.TRASH_PROJ];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}

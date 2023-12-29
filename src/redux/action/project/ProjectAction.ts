@@ -33,7 +33,8 @@ export enum ProjectActionType {
     PROJ_SEARCH,
     PROJ_HISTORY,
     SHARE_PROJ,
-    ARCHIVE_PROJ
+    ARCHIVE_PROJ,
+    TRASH_PROJ
 }
 
 export interface saveDocAction {
