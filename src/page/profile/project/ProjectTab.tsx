@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import TeXEdit from "./edit/TeXEdit";
 import TeXArchive from "./archive/TeXArchive";
 import TeXTrash from "./trash/TeXTrash";
+import { ProjTabType } from "@/model/proj/config/ProjTabType";
 
 const ProjectTab: React.FC = () => {
 
@@ -77,12 +78,9 @@ const ProjectTab: React.FC = () => {
     }
 
     const renderMenu = (docItem: TexProjectModel) => {
-        if (activeTab === 1) {
+        if (activeTab === ProjTabType.All) {
             return (
                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li>
-                        <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#delPrj">删除</a>
-                    </li>
                     <li>
                         <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#editPrj">修改项目名称</a>
                     </li>
@@ -99,7 +97,21 @@ const ProjectTab: React.FC = () => {
                         <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#trashPrj">移动到回收站</a>
                     </li>
                 </ul>);
-        } else if (activeTab === 3) {
+        } else if (activeTab === ProjTabType.Shared) {
+            return (
+                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li>
+                        <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#trashPrj">移动到回收站</a>
+                    </li>
+                </ul>
+            );
+        } else if (activeTab === ProjTabType.Archived) {
+                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li>
+                        <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#trashPrj">移动到回收站</a>
+                    </li>
+                </ul>
+        } else if (activeTab === ProjTabType.Trash) {
             return (
                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                     <li><a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#delPrj">删除</a></li>
