@@ -24,7 +24,7 @@ const ProjectTab: React.FC = () => {
     const [userDocList, setUserDocList] = useState<TexProjectModel[]>([]);
     const [currProject, setCurrProject] = useState<TexProjectModel>();
     const [projName, setProjName] = useState<string>();
-    const [activeTab, setActiveTab] = useState<number>(1);
+    const [activeTab, setActiveTab] = useState<ProjTabType>(ProjTabType.All);
     const { projList } = useSelector((state: AppState) => state.proj);
     const createDocCancelRef = useRef<HTMLButtonElement>(null);
     const delProjCancelRef = useRef<HTMLButtonElement>(null);
@@ -109,6 +109,9 @@ const ProjectTab: React.FC = () => {
                return(<ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                     <li>
                         <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#trashProj">移动到回收站</a>
+                    </li>
+                    <li>
+                        <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#recoveryProj">恢复项目</a>
                     </li>
                 </ul>);
         } else if (activeTab === ProjTabType.Trash) {
@@ -331,7 +334,7 @@ const ProjectTab: React.FC = () => {
                 (currProject && currProject.project_id) ? <TeXTrash projectId={currProject.project_id.toString()} currProject={currProject} getProjFilter={getProjFilter}></TeXTrash> : <div></div>
             }
             {
-                (currProject && currProject.project_id) ? <TeXRecovery projectId={currProject.project_id.toString()} currProject={currProject} getProjFilter={getProjFilter}></TeXRecovery> : <div></div>
+                (currProject && currProject.project_id) ? <TeXRecovery projectId={currProject.project_id.toString()} currProject={currProject} getProjFilter={getProjFilter} activeTab={activeTab}></TeXRecovery> : <div></div>
             }
             <ToastContainer />
         </div>

@@ -4,11 +4,13 @@ import { ResponseHandler } from "rdjs-wheel";
 import { useRef } from "react";
 import { toast } from "react-toastify";
 import { TrashProjReq } from "@/model/request/proj/edit/TrashProjReq";
+import { ProjTabType } from "@/model/proj/config/ProjTabType";
 
 export type RecoveryProps = {
     projectId: string;
     currProject: any;
     getProjFilter: (query: QueryProjReq) => QueryProjReq;
+    activeTab: ProjTabType;
 };
 
 const TeXRecovery: React.FC<RecoveryProps> = (props: RecoveryProps) => {
