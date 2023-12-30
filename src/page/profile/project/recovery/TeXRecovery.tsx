@@ -1,10 +1,11 @@
 import { QueryProjReq } from "@/model/request/proj/query/QueryProjReq";
-import { getProjectList, trashProj } from "@/service/project/ProjectService";
+import { archiveProj, getProjectList, trashProj } from "@/service/project/ProjectService";
 import { ResponseHandler } from "rdjs-wheel";
 import { useRef } from "react";
 import { toast } from "react-toastify";
 import { TrashProjReq } from "@/model/request/proj/edit/TrashProjReq";
 import { ProjTabType } from "@/model/proj/config/ProjTabType";
+import { ArchiveProjReq } from "@/model/request/proj/edit/ArchiveProjReq";
 
 export type RecoveryProps = {
     projectId: string;
@@ -39,6 +40,36 @@ const TeXRecovery: React.FC<RecoveryProps> = (props: RecoveryProps) => {
         });
     }
 
+    const handleProjArchive = () => {
+        if (!currProject || !currProject.project_id) {
+            toast.info("请选择编辑项目");
+            return;
+        }
+        let proj: ArchiveProjReq = {
+            project_id: currProject?.project_id,
+            archive_status: 0
+        };
+        archiveProj(proj).then((resp) => {
+            if (ResponseHandler.responseSuccess(resp)) {
+                getProjectList(props.getProjFilter({}));
+                if (recoveryProjCancelRef && recoveryProjCancelRef.current) {
+                    recoveryProjCancelRef.current.click();
+                }
+            } else {
+                toast.error("项目移动到回收站失败，{}", resp.msg);
+            }
+        });
+    }
+
+    const handleProjRecovery = () => {
+        if(props.activeTab === ProjTabType.Archived){
+            handleProjArchive();
+        }
+        if(props.activeTab === ProjTabType.Trash){
+            handleProjTrash();
+        }
+    }
+
     return (
         <div>
             <div className="modal" id="recoveryProj" tabIndex={-1}>
@@ -53,7 +84,7 @@ const TeXRecovery: React.FC<RecoveryProps> = (props: RecoveryProps) => {
                         </div>
                         <div className="modal-footer">
                             <button type="button" ref={recoveryProjCancelRef} className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                            <button type="button" className="btn btn-primary" onClick={() => { handleProjTrash() }}>确定</button>
+                            <button type="button" className="btn btn-primary" onClick={() => { handleProjRecovery() }}>确定</button>
                         </div>
                     </div>
                 </div>
