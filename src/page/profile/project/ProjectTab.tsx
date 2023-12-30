@@ -106,11 +106,11 @@ const ProjectTab: React.FC = () => {
                 </ul>
             );
         } else if (activeTab === ProjTabType.Archived) {
-                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+               return(<ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                     <li>
                         <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#trashProj">移动到回收站</a>
                     </li>
-                </ul>
+                </ul>);
         } else if (activeTab === ProjTabType.Trash) {
             return (
                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
