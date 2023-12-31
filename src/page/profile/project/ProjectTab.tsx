@@ -1,7 +1,7 @@
 import TexHeader from "@/component/header/TexHeader";
 import styles from "./ProjectTab.module.css";
 import React, { ChangeEvent, useRef, useState } from "react";
-import { createProject, deleteProject, getProjectList } from "@/service/project/ProjectService";
+import { createProject, deleteProject, downloadProj, getProjectList } from "@/service/project/ProjectService";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { TexProjectModel } from "@/model/proj/TexProjectModel";
@@ -18,6 +18,7 @@ import TeXArchive from "./archive/TeXArchive";
 import TeXTrash from "./trash/TeXTrash";
 import { ProjTabType } from "@/model/proj/config/ProjTabType";
 import TeXRecovery from "./recovery/TeXRecovery";
+import { QueryDownload } from "@/model/request/proj/query/QueryDownload";
 
 const ProjectTab: React.FC = () => {
 
@@ -60,6 +61,23 @@ const ProjectTab: React.FC = () => {
         });
     }
 
+    const handleProjDownload = (docItem: TexProjectModel) => {
+        if (!currProject) {
+            toast.info("请选择下载项目");
+        }
+        let proj : QueryDownload = {
+            project_id: docItem.project_id,
+            version: "1"
+        };
+        downloadProj(proj).then((resp) => {
+            if (ResponseHandler.responseSuccess(resp)) {
+                
+            } else {
+                toast.error("下载项目失败，{}", resp.msg);
+            }
+        });
+    }
+
     const getProjFilter = (query: QueryProjReq): QueryProjReq => {
         if (activeTab === 1) {
             return query;
@@ -91,6 +109,11 @@ const ProjectTab: React.FC = () => {
                     <li>
                         <a className="dropdown-item" data-bs-toggle="modal"
                             onClick={() => { setCurrProject(docItem) }} data-bs-target="#archiveProj">归档项目
+                        </a>
+                    </li>
+                    <li>
+                        <a className="dropdown-item" data-bs-toggle="modal"
+                            onClick={() => { handleProjDownload(docItem) }}>下载项目
                         </a>
                     </li>
                     <li>

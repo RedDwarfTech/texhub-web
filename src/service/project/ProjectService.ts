@@ -24,6 +24,7 @@ import { AxiosRequestConfig } from "axios";
 import { XHRClient } from "rd-component";
 import { AuthHandler, RequestHandler } from 'rdjs-wheel';
 import { TrashProjReq } from "@/model/request/proj/edit/TrashProjReq";
+import { QueryDownload } from "@/model/request/proj/query/QueryDownload";
 
 export function getProjectList(req: QueryProjReq) {
   const params = new URLSearchParams();
@@ -362,5 +363,19 @@ export function trashProj(req: TrashProjReq) {
     data: JSON.stringify(req)
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.TRASH_PROJ];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
+export function downloadProj(req: QueryDownload) {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(req)) {
+    params.append(key, value);
+  }
+  const config: AxiosRequestConfig = {
+    method: 'get',
+    url: '/tex/project/download',
+    data: JSON.stringify(req)
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.DOWNLOAD_PROJ];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }

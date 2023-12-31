@@ -34,7 +34,8 @@ export enum ProjectActionType {
     PROJ_HISTORY,
     SHARE_PROJ,
     ARCHIVE_PROJ,
-    TRASH_PROJ
+    TRASH_PROJ,
+    DOWNLOAD_PROJ
 }
 
 export interface saveDocAction {
@@ -164,5 +165,10 @@ export interface renameProjAction {
 
 export interface archiveProjAction {
     type: ProjectActionType.ARCHIVE_PROJ;
+    data: any;
+}
+
+export interface downloadProjAction {
+    type: ProjectActionType.DOWNLOAD_PROJ;
     data: any;
 }
