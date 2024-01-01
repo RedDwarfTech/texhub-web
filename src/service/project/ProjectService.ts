@@ -373,12 +373,9 @@ export function downloadProj(req: QueryDownload) {
     params.append(key, value);
   }
   const config: AxiosRequestConfig = {
-    method: 'get',
-    url: '/tex/project/download',
-    params: params,
-    headers: {
-      'Content-Type': 'application/octet-stream',
-    }
+    method: 'put',
+    url: '/tex/project/compress',
+    params: params
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.DOWNLOAD_PROJ];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
