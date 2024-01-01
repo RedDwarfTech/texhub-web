@@ -367,15 +367,10 @@ export function trashProj(req: TrashProjReq) {
 }
 
 export function downloadProj(req: QueryDownload) {
-  debugger
-  const params = new URLSearchParams();
-  for (const [key, value] of Object.entries(req)) {
-    params.append(key, value);
-  }
   const config: AxiosRequestConfig = {
     method: 'put',
-    url: '/tex/project/compress',
-    params: params
+    url: '/tex/project/download',
+    data: JSON.stringify(req)
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.DOWNLOAD_PROJ];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
