@@ -70,14 +70,9 @@ const ProjectTab: React.FC = () => {
             version: "1"
         };
         downloadProj(proj).then((resp) => {
-            debugger
-            const blob = new Blob([resp], { type: 'application/zip' })
+            const blob = new Blob([resp], { type: 'application/zip' }); 
             const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'file.zip';
-            link.click();
-            window.URL.revokeObjectURL(url);
+            window.open(url);
         });
     }
 

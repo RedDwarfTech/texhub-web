@@ -370,7 +370,9 @@ export function downloadProj(req: QueryDownload) {
   const config: AxiosRequestConfig = {
     method: 'put',
     url: '/tex/project/download',
-    data: JSON.stringify(req)
+    data: JSON.stringify(req),
+    // https://stackoverflow.com/questions/77741285/uncaught-in-promise-typeerror-failed-to-execute-createobjecturl-on-url-o
+    responseType: 'arraybuffer'
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.DOWNLOAD_PROJ];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
