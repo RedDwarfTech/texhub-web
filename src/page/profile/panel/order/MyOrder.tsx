@@ -14,7 +14,7 @@ const MyOrder: React.FC = () => {
             pageNum: 1,
             pageSize: 10
         };
-        OrderService.getUserOrderPage(params,store);
+        OrderService.getUserOrderPage(store, params);
     }, []);
 
     React.useEffect(() => {
