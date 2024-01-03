@@ -19,9 +19,10 @@ const MyOrder: React.FC = () => {
 
     React.useEffect(() => {
         debugger
-        //if (orderList && orderList.length > 0) {
-            //setCurOrders(orderList);
-        //}
+        if(orderPage){
+            let orderList = orderPage.result;
+            setCurOrders(orderList);
+        }
     }, [orderPage]);
 
     const renderOrders = () => {
@@ -53,7 +54,7 @@ const MyOrder: React.FC = () => {
             let ord = curOrders[i];
             orderList.push(
                 <li className="page-item">
-                    <a className="page-link" href="#">3</a>
+                    <a className="page-link" href="#">{i}</a>
                 </li>
             );
         }
@@ -82,12 +83,6 @@ const MyOrder: React.FC = () => {
                         <a className="page-link" href="#" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
-                    </li>
-                    <li className="page-item">
-                        <a className="page-link" href="#">1</a>
-                    </li>
-                    <li className="page-item">
-                        <a className="page-link" href="#">2</a>
                     </li>
                     {renderPageNumbers()}
                     <li className="page-item">
