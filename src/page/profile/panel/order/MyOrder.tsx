@@ -18,9 +18,8 @@ const MyOrder: React.FC = () => {
     }, []);
 
     React.useEffect(() => {
-        debugger
         if(orderPage){
-            let orderList = orderPage.result;
+            let orderList = orderPage.list;
             setCurOrders(orderList);
         }
     }, [orderPage]);
