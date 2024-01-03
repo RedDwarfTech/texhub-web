@@ -44,6 +44,14 @@ const MyOrder: React.FC = () => {
         return orderList;
     }
 
+    const handlePageClick = (pageNum: number) => {
+        let params = {
+            pageNum: pageNum,
+            pageSize: 10
+        };
+        OrderService.getUserOrderPage(store, params);
+    }
+
     const renderPageNumbers = () => {
         if (!curOrders || curOrders.length === 0) {
             return <div></div>;
@@ -53,7 +61,7 @@ const MyOrder: React.FC = () => {
             let ord = curOrders[i];
             orderList.push(
                 <li className="page-item">
-                    <a className="page-link" href="#">{i}</a>
+                    <a className="page-link" href="#" onClick={() => handlePageClick(i)}>{i}</a>
                 </li>
             );
         }
