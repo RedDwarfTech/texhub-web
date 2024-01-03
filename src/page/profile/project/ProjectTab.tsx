@@ -153,6 +153,14 @@ const ProjectTab: React.FC = () => {
         }
     }
 
+    const handleProjNameClick = (docItem: TexProjectModel) => {
+        if(activeTab === ProjTabType.Archived){
+            toast.info("项目已归档");
+            return;
+        }
+        navigate("/editor?pid=" + docItem.project_id)
+    }
+
     const renderProj = () => {
         if (!userDocList || userDocList.length === 0) {
             return (<div></div>);
@@ -165,7 +173,7 @@ const ProjectTab: React.FC = () => {
                 <div key={docItem.project_id} className="list-group-item">
                     <div className={styles.docHeader}>
                         <div className={styles.projTiltle}>
-                            <a onClick={() => { navigate("/editor?pid=" + docItem.project_id) }}>
+                            <a onClick={() => { handleProjNameClick(docItem) }}>
                                 <h6>{docItem.proj_name}</h6>
                             </a>
                         </div>
