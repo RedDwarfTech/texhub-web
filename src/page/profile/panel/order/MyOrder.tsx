@@ -6,27 +6,32 @@ import { useSelector } from "react-redux";
 
 const MyOrder: React.FC = () => {
 
-    const { orderList } = useSelector((state: any) => state.rdRootReducer.order);
+    const { orderPage } = useSelector((state: any) => state.rdRootReducer.order);
     const [curOrders, setCurOrders] = useState<Order[]>();
 
     React.useEffect(() => {
-        OrderService.getUserOrderList(store);
+        let params = {
+            pageNum: 1,
+            pageSize: 10
+        };
+        OrderService.getUserOrderPage(params,store);
     }, []);
 
     React.useEffect(() => {
-        if (orderList && orderList.length > 0) {
-            setCurOrders(orderList);
-        }
-    }, [orderList]);
+        debugger
+        //if (orderList && orderList.length > 0) {
+            //setCurOrders(orderList);
+        //}
+    }, [orderPage]);
 
     const renderOrders = () => {
         if (!curOrders || curOrders.length === 0) {
             return <div></div>;
         }
-        const tagList: JSX.Element[] = [];
+        const orderList: JSX.Element[] = [];
         for (let i = 1; i <= curOrders.length - 1; i++) {
             let ord = curOrders[i];
-            tagList.push(
+            orderList.push(
                 <tr>
                     <th scope="row">{ord.orderId}</th>
                     <td>{ord.subject}</td>
@@ -36,7 +41,23 @@ const MyOrder: React.FC = () => {
                 </tr>
             );
         }
-        return tagList;
+        return orderList;
+    }
+
+    const renderPageNumbers = () => {
+        if (!curOrders || curOrders.length === 0) {
+            return <div></div>;
+        }
+        const orderList: JSX.Element[] = [];
+        for (let i = 1; i <= curOrders.length - 1; i++) {
+            let ord = curOrders[i];
+            orderList.push(
+                <li className="page-item">
+                    <a className="page-link" href="#">3</a>
+                </li>
+            );
+        }
+        return orderList;
     }
 
     return (
@@ -55,6 +76,27 @@ const MyOrder: React.FC = () => {
                     {renderOrders()}
                 </tbody>
             </table>
+            <nav aria-label="Page navigation example">
+                <ul className="pagination">
+                    <li className="page-item">
+                        <a className="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li className="page-item">
+                        <a className="page-link" href="#">1</a>
+                    </li>
+                    <li className="page-item">
+                        <a className="page-link" href="#">2</a>
+                    </li>
+                    {renderPageNumbers()}
+                    <li className="page-item">
+                        <a className="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     );
 }
