@@ -30,7 +30,7 @@ const MyOrder: React.FC = () => {
             return <div></div>;
         }
         const orderList: JSX.Element[] = [];
-        for (let i = 1; i <= curOrders.length - 1; i++) {
+        for (let i = 0; i <= curOrders.length - 1; i++) {
             let ord = curOrders[i];
             orderList.push(
                 <tr>
