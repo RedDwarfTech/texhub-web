@@ -119,7 +119,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     }, [streamLogText]);
 
     const options: Options = {
-        cMapUrl: `/pdfjs-dist@${pdfjs.version}/cmaps/`,
+        cMapUrl: `/pdfjs-dist/${pdfjs.version}/cmaps/`,
         httpHeaders: {
             'Authorization': 'Bearer ' + getAccessToken()
         }
