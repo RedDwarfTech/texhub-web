@@ -1,32 +1,38 @@
 import store from "@/redux/store/store";
 import { OrderService, Order, orderStatus } from "rd-component";
-import { TimeUtils } from "rdjs-wheel";
+import { TimeUtils, JPagination } from "rdjs-wheel";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
 const MyOrder: React.FC = () => {
 
-    const { orderList } = useSelector((state: any) => state.rdRootReducer.order);
+    const { orderPage } = useSelector((state: any) => state.rdRootReducer.order);
     const [curOrders, setCurOrders] = useState<Order[]>();
+    const [curPagination, setCurPagination] = useState<JPagination>();
 
     React.useEffect(() => {
-        OrderService.getUserOrderList(store);
+        let params = {
+            pageNum: 1,
+            pageSize: 10
+        };
+        OrderService.getUserOrderPage(store, params);
     }, []);
 
     React.useEffect(() => {
-        if (orderList && orderList.length > 0) {
+        if (orderPage) {
+            let orderList = orderPage.list;
             setCurOrders(orderList);
         }
-    }, [orderList]);
+    }, [orderPage]);
 
     const renderOrders = () => {
         if (!curOrders || curOrders.length === 0) {
             return <div></div>;
         }
-        const tagList: JSX.Element[] = [];
-        for (let i = 1; i <= curOrders.length - 1; i++) {
+        const orderList: JSX.Element[] = [];
+        for (let i = 0; i <= curOrders.length - 1; i++) {
             let ord = curOrders[i];
-            tagList.push(
+            orderList.push(
                 <tr>
                     <th scope="row">{ord.orderId}</th>
                     <td>{ord.subject}</td>
@@ -36,7 +42,32 @@ const MyOrder: React.FC = () => {
                 </tr>
             );
         }
-        return tagList;
+        return orderList;
+    }
+
+    const handlePageClick = (pageNum: number) => {
+        let params = {
+            pageNum: pageNum,
+            pageSize: 10
+        };
+        OrderService.getUserOrderPage(store, params);
+    }
+
+    const renderPageNumbers = () => {
+        if (!curPagination || curPagination.pages === 0) {
+            return (<li className="page-item">
+                <a className="page-link" href="#" onClick={() => handlePageClick(1)}>1</a>
+            </li>);
+        }
+        const orderList: JSX.Element[] = [];
+        for (let i = 1; i <= curPagination.pages - 1; i++) {
+            orderList.push(
+                <li className="page-item">
+                    <a className="page-link" href="#" onClick={() => handlePageClick(i)}>{i}</a>
+                </li>
+            );
+        }
+        return orderList;
     }
 
     return (
@@ -55,6 +86,21 @@ const MyOrder: React.FC = () => {
                     {renderOrders()}
                 </tbody>
             </table>
+            <nav aria-label="Page navigation example">
+                <ul className="pagination">
+                    <li className="page-item">
+                        <a className="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {renderPageNumbers()}
+                    <li className="page-item">
+                        <a className="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     );
 }

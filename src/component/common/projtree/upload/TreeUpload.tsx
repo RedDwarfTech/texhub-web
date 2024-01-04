@@ -30,6 +30,7 @@ const TreeUpload: React.FC<TreeUploadProps> = (props: TreeUploadProps) => {
                 toast.warn("请选择文件上传位置");
                 return;
             }
+            if(uploadFile.size)
             uploadProjectFile(uploadFile, props.projectId, selectedFile.file_id).then((res) => {
                 if (ResponseHandler.responseSuccess(res)) {
                     let query: QueryProjInfo = {

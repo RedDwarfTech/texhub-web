@@ -9,8 +9,10 @@ import { CompileProjLog } from "@/model/request/proj/CompileProjLog";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
 import { CreateProjReq } from "@/model/request/proj/CreateProjReq";
 import { JoinProjReq } from "@/model/request/proj/JoinProjReq";
-import { QueryProjReq } from "@/model/request/proj/QueryProjReq";
+import { QueryProjReq } from "@/model/request/proj/query/QueryProjReq";
 import { CreateTplProjReq } from "@/model/request/proj/create/CreateTplProjReq";
+import { ArchiveProjReq } from "@/model/request/proj/edit/ArchiveProjReq";
+import { EditProjReq } from "@/model/request/proj/edit/EditProjReq";
 import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
 import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
@@ -21,6 +23,8 @@ import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
 import { XHRClient } from "rd-component";
 import { AuthHandler, RequestHandler } from 'rdjs-wheel';
+import { TrashProjReq } from "@/model/request/proj/edit/TrashProjReq";
+import { QueryDownload } from "@/model/request/proj/query/QueryDownload";
 
 export function getProjectList(req: QueryProjReq) {
   const params = new URLSearchParams();
@@ -102,6 +106,16 @@ export function deleteProject(proj: any) {
     data: JSON.stringify(proj)
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.DELETE_PROJ];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
+export function editProject(proj: EditProjReq) {
+  const config: AxiosRequestConfig = {
+    method: 'patch',
+    url: '/tex/project/edit',
+    data: JSON.stringify(proj)
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.RENAME_PROJ];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
@@ -330,4 +344,36 @@ export function projHasFile(fileId: string, projId: string){
   if(cachedItems == null) return false;
   const result = TexFileUtil.searchTreeNode(cachedItems, fileId);
   return result;
+}
+
+export function archiveProj(req: ArchiveProjReq) {
+  const config: AxiosRequestConfig = {
+    method: 'put',
+    url: '/tex/project/archive',
+    data: JSON.stringify(req)
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.ARCHIVE_PROJ];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
+export function trashProj(req: TrashProjReq) {
+  const config: AxiosRequestConfig = {
+    method: 'put',
+    url: '/tex/project/trash',
+    data: JSON.stringify(req)
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.TRASH_PROJ];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
+export function downloadProj(req: QueryDownload) {
+  const config: AxiosRequestConfig = {
+    method: 'put',
+    url: '/tex/project/download',
+    data: JSON.stringify(req),
+    // https://stackoverflow.com/questions/77741285/uncaught-in-promise-typeerror-failed-to-execute-createobjecturl-on-url-o
+    responseType: 'arraybuffer'
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.DOWNLOAD_PROJ];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
 }

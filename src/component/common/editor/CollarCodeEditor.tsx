@@ -136,14 +136,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     }
   }
 
-  const handleVerRestore = () => {
-    const activeFileJson = localStorage.getItem(activeKey);
-    if(activeFileJson){
-      const af = JSON.parse(activeFileJson);
-      restoreFromHistory(0, af.file_id);
-    }
-  }
-
   const handlePdfLocate = () => {
     if (mainFileModel && mainFileModel.name && activeEditorView) {
       let { line, column } = getCursorPos(activeEditorView);
@@ -189,9 +181,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
           <i className="fa-solid fa-arrow-right"></i>
         </button>
         <button className={styles.menuButton} onClick={() => { handleImageAdd() }}>
-          <i className="fa-solid fa-image"></i>
-        </button>
-        <button className={styles.menuButton} onClick={() => { handleVerRestore() }}>
           <i className="fa-solid fa-image"></i>
         </button>
       </div>
