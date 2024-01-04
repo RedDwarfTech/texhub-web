@@ -1,6 +1,6 @@
 import store from "@/redux/store/store";
 import { OrderService, Order, orderStatus } from "rd-component";
-import { TimeUtils } from "rdjs-wheel";
+import { TimeUtils, JPagination } from "rdjs-wheel";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -8,6 +8,7 @@ const MyOrder: React.FC = () => {
 
     const { orderPage } = useSelector((state: any) => state.rdRootReducer.order);
     const [curOrders, setCurOrders] = useState<Order[]>();
+    const [curPagination, setCurPagination] = useState<JPagination>();
 
     React.useEffect(() => {
         let params = {
@@ -18,7 +19,7 @@ const MyOrder: React.FC = () => {
     }, []);
 
     React.useEffect(() => {
-        if(orderPage){
+        if (orderPage) {
             let orderList = orderPage.list;
             setCurOrders(orderList);
         }
@@ -53,12 +54,13 @@ const MyOrder: React.FC = () => {
     }
 
     const renderPageNumbers = () => {
-        if (!curOrders || curOrders.length === 0) {
-            return <div></div>;
+        if (!curPagination || curPagination.pages === 0) {
+            return (<li className="page-item">
+                <a className="page-link" href="#" onClick={() => handlePageClick(1)}>1</a>
+            </li>);
         }
         const orderList: JSX.Element[] = [];
-        for (let i = 1; i <= curOrders.length - 1; i++) {
-            let ord = curOrders[i];
+        for (let i = 1; i <= curPagination.pages - 1; i++) {
             orderList.push(
                 <li className="page-item">
                     <a className="page-link" href="#" onClick={() => handlePageClick(i)}>{i}</a>
