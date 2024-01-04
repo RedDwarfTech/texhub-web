@@ -14,7 +14,6 @@ jobs:
           node-version: 16
       - name: Build React App
         run: |
-          git config --global url."https://github".insteadOf ssh://git@github
           npm install -g pnpm 
           pnpm install
           pnpm run build
