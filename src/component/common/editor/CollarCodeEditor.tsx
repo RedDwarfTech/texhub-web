@@ -17,7 +17,6 @@ import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { ProjConfType } from "@/model/proj/config/ProjConfType";
 import { readConfig } from "@/config/app/config-reader";
 import { TreeFileType } from "@/model/file/TreeFileType";
-import { toUint8Array } from "lib0/encoding";
 
 export type EditorProps = {
   projectId: string;

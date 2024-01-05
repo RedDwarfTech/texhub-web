@@ -152,6 +152,13 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         }
     }
 
+    const handleOpenInBrowser = (curPdfUrl: string) => {
+        const pdfContainerDiv = document.getElementById('pdfContainer');
+        if (pdfContainerDiv) {
+            window.open(curPdfUrl,'_blank');
+        }
+    }
+
     const handleSrcLocate = () => {
         if (!projectId) {
             toast.info("项目信息为空");
@@ -255,6 +262,12 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         if (curPreviewTab === "pdfview") {
             return (
                 <div className={styles.rightAction}>
+                    <button className={styles.previewIconButton}
+                        data-bs-toggle="tooltip"
+                        title="浏览器中打开"
+                        onClick={() => { handleOpenInBrowser(curPdfUrl) }}>
+                        <i className="fa-brands fa-chrome"></i>
+                    </button>
                     <button className={styles.previewIconButton}
                         data-bs-toggle="tooltip"
                         title="滚动到顶部"
