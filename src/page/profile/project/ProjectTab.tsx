@@ -1,7 +1,7 @@
 import TexHeader from "@/component/header/TexHeader";
 import styles from "./ProjectTab.module.css";
 import React, { ChangeEvent, useRef, useState } from "react";
-import { createProject, deleteProject, downloadProj, getProjectList } from "@/service/project/ProjectService";
+import { deleteProject, downloadProj, getProjectList } from "@/service/project/ProjectService";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { TexProjectModel } from "@/model/proj/TexProjectModel";
@@ -9,7 +9,6 @@ import { ResponseHandler } from "rdjs-wheel";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
 import dayjs from 'dayjs';
-import { UserService } from "rd-component";
 import TeXShare from "./share/TeXShare";
 import { QueryProjReq } from "@/model/request/proj/query/QueryProjReq";
 import { useTranslation } from "react-i18next";
@@ -19,15 +18,15 @@ import TeXTrash from "./trash/TeXTrash";
 import { ProjTabType } from "@/model/proj/config/ProjTabType";
 import TeXRecovery from "./recovery/TeXRecovery";
 import { QueryDownload } from "@/model/request/proj/query/QueryDownload";
+import TeXBlank from "./new/TeXBlank";
 
 const ProjectTab: React.FC = () => {
 
     const [userDocList, setUserDocList] = useState<TexProjectModel[]>([]);
     const [currProject, setCurrProject] = useState<TexProjectModel>();
-    const [projName, setProjName] = useState<string>();
+    const [projName, setProjName] = useState<string>('');
     const [activeTab, setActiveTab] = useState<ProjTabType>(ProjTabType.All);
     const { projList } = useSelector((state: AppState) => state.proj);
-    const createDocCancelRef = useRef<HTMLButtonElement>(null);
     const delProjCancelRef = useRef<HTMLButtonElement>(null);
 
     const navigate = useNavigate();
@@ -65,7 +64,7 @@ const ProjectTab: React.FC = () => {
         if (!currProject) {
             toast.info("请选择下载项目");
         }
-        let proj : QueryDownload = {
+        let proj: QueryDownload = {
             project_id: docItem.project_id,
             version: "1"
         };
@@ -131,14 +130,14 @@ const ProjectTab: React.FC = () => {
                 </ul>
             );
         } else if (activeTab === ProjTabType.Archived) {
-               return(<ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li>
-                        <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#trashProj">移动到回收站</a>
-                    </li>
-                    <li>
-                        <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#recoveryProj">恢复项目</a>
-                    </li>
-                </ul>);
+            return (<ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li>
+                    <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#trashProj">移动到回收站</a>
+                </li>
+                <li>
+                    <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#recoveryProj">恢复项目</a>
+                </li>
+            </ul>);
         } else if (activeTab === ProjTabType.Trash) {
             return (
                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -154,7 +153,7 @@ const ProjectTab: React.FC = () => {
     }
 
     const handleProjNameClick = (docItem: TexProjectModel) => {
-        if(activeTab === ProjTabType.Archived){
+        if (activeTab === ProjTabType.Archived) {
             toast.info("项目已归档");
             return;
         }
@@ -202,32 +201,6 @@ const ProjectTab: React.FC = () => {
         return tagList;
     };
 
-    const handleProjCreate = () => {
-        if (!UserService.isLoggedIn()) {
-            toast.warning("登录后即可创建项目");
-            return;
-        }
-        if (projName == null || projName.length == 0) {
-            toast.warning("请填写项目名称");
-            return;
-        }
-        if (projName.length > 256) {
-            toast.warning("超过项目名称长度限制");
-            return;
-        }
-        let doc = {
-            name: projName == null ? "" : projName
-        };
-        createProject(doc).then((res) => {
-            if (ResponseHandler.responseSuccess(res)) {
-                getProjectList(getProjFilter({}));
-                if (createDocCancelRef && createDocCancelRef.current) {
-                    createDocCancelRef.current.click();
-                }
-            }
-        });
-    };
-
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         setProjName(event.target.value);
     };
@@ -243,24 +216,24 @@ const ProjectTab: React.FC = () => {
 
     const handleTabClick = (clickTab: number) => {
         setActiveTab(clickTab);
-        if (clickTab === 1) {
+        if (clickTab === ProjTabType.All) {
             let projReq = {
             };
             getProjectList(projReq);
         }
-        if (clickTab === 2) {
+        if (clickTab === ProjTabType.Shared) {
             let projReq = {
                 role_id: 2
             };
             getProjectList(projReq);
         }
-        if (clickTab === 3) {
+        if (clickTab === ProjTabType.Archived) {
             let projReq: QueryProjReq = {
                 archive_status: 1
             };
             getProjectList(projReq);
         }
-        if (clickTab === 4) {
+        if (clickTab === ProjTabType.Trash) {
             let projReq: QueryProjReq = {
                 trash: 1
             };
@@ -275,23 +248,23 @@ const ProjectTab: React.FC = () => {
                 <div className={styles.projList}>
                     <ul className="nav nav-tabs">
                         <li className="nav-item">
-                            <a className={activeTab === 1 ? "nav-link active" : "nav-link"}
+                            <a className={activeTab === ProjTabType.All ? "nav-link active" : "nav-link"}
                                 aria-current="page"
                                 onClick={() => { handleTabClick(1) }}
                                 href="#">{t("tab_all")}</a>
                         </li>
                         <li className="nav-item">
-                            <a className={activeTab === 2 ? "nav-link active" : "nav-link"}
+                            <a className={activeTab === ProjTabType.Shared ? "nav-link active" : "nav-link"}
                                 href="#"
                                 onClick={() => { handleTabClick(2) }}>{t("tab_shared")}</a>
                         </li>
                         <li className="nav-item">
-                            <a className={activeTab === 3 ? "nav-link active" : "nav-link"}
+                            <a className={activeTab === ProjTabType.Archived ? "nav-link active" : "nav-link"}
                                 href="#"
                                 onClick={() => { handleTabClick(3) }}>{t("tab_archived")}</a>
                         </li>
                         <li className="nav-item">
-                            <a className={activeTab === 4 ? "nav-link active" : "nav-link"}
+                            <a className={activeTab === ProjTabType.Trash ? "nav-link active" : "nav-link"}
                                 href="#"
                                 onClick={() => { handleTabClick(4) }}>{t("tab_trash")}</a>
                         </li>
@@ -299,9 +272,20 @@ const ProjectTab: React.FC = () => {
                     <div className={styles.docContainer}>
                         <div className={styles.docList}>
                             <div className={styles.docListHeader}>
-                                <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPrj">
-                                    {t("btn_new")}
-                                </button>
+                                <div className="dropdown">
+                                    <button className="btn btn-secondary dropdown-toggle"
+                                        type="button"
+                                        id="dropdownMenuButton1"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        {t("btn_new")}
+                                    </button>
+                                    <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <li>
+                                            <a className="dropdown-item" data-bs-toggle="modal" data-bs-target="#newProj">创建空白项目</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                             <div className="list-group">
                                 {renderProj()}
@@ -312,23 +296,6 @@ const ProjectTab: React.FC = () => {
                                 <a href="mailto:jiangxiaoqiang@poemhub.top">jiangxiaoqiang@poemhub.top</a>
                                 ,我们会第一时间处理
                             </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="modal" id="newPrj" tabIndex={-1}>
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">新建项目</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div className="modal-body">
-                            <input id="projName" onChange={handleInputChange} className="form-control" placeholder="项目名称"></input>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" ref={createDocCancelRef} className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                            <button type="button" className="btn btn-primary" onClick={() => { handleProjCreate() }}>确定</button>
                         </div>
                     </div>
                 </div>
@@ -350,6 +317,12 @@ const ProjectTab: React.FC = () => {
                     </div>
                 </div>
             </div>
+            {
+                (currProject && currProject.project_id) ? <TeXBlank
+                    getProjFilter={getProjFilter}
+                    handleInputChange={handleInputChange}
+                    projName={projName}></TeXBlank> : <div></div>
+            }
             {
                 (currProject && currProject.project_id) ? <TeXEdit projectId={currProject.project_id.toString()}
                     getProjFilter={getProjFilter}
