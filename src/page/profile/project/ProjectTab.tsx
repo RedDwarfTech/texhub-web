@@ -20,6 +20,7 @@ import TeXRecovery from "./recovery/TeXRecovery";
 import { QueryDownload } from "@/model/request/proj/query/QueryDownload";
 import TeXBlank from "./new/TeXBlank";
 import { TexProjectFolder } from "@/model/proj/TexProjectFolder";
+import TeXNewFolder from "./new/TeXNewFolder";
 
 const ProjectTab: React.FC = () => {
 
@@ -323,6 +324,12 @@ const ProjectTab: React.FC = () => {
                     </div>
                 </div>
             </div>
+            {
+                (currProject && currProject.project_id) ? <TeXNewFolder
+                    getProjFilter={getProjFilter}
+                    handleInputChange={handleInputChange}
+                    projName={projName}></TeXNewFolder> : <div></div>
+            }
             {
                 (currProject && currProject.project_id) ? <TeXBlank
                     getProjFilter={getProjFilter}
