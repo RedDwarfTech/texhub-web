@@ -5,6 +5,7 @@ export type projectAction = saveDocAction | getDocListAction | compileProjAction
 
 export enum ProjectActionType {
     CREATE_DOC,
+    CREATE_FOLDER,
     GET_PROJ_LIST,
     GET_PROJ_INFO,
     DELETE_PROJ_INFO,

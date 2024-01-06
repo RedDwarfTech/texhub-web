@@ -287,6 +287,9 @@ const ProjectTab: React.FC = () => {
                                         <li>
                                             <a className="dropdown-item" data-bs-toggle="modal" data-bs-target="#newProj">创建空白项目</a>
                                         </li>
+                                        <li>
+                                            <a className="dropdown-item" data-bs-toggle="modal" data-bs-target="#newFolder">新建文件夹</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>

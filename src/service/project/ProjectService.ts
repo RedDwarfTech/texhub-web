@@ -64,6 +64,16 @@ export function createProject(doc: CreateProjReq) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
+export function createFolder(doc: CreateProjReq) {
+  const config: AxiosRequestConfig = {
+    method: 'post',
+    url: '/tex/project/folder',
+    data: JSON.stringify(doc)
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.CREATE_FOLDER];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
 export function uploadProjectFile(doc: File, project_id: string, parent: string) {
   const formData = new FormData();
   formData.append('file', doc);
