@@ -14,10 +14,11 @@ import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 import { ProjConf } from "@/model/proj/config/ProjConf";
 import { SearchResult } from "@/model/proj/search/SearchResult";
 import { ProjHisotry } from "@/model/proj/history/ProjHistory";
+import { TexProjects } from "@/model/proj/TexProjects";
 
 export interface AppState {
     proj: {
-        projList: TexProjectModel[],
+        projList: TexProjects,
         compileResult: CompileResult,
         latestComp: LatestCompile,
         joinResult: JoinResult,

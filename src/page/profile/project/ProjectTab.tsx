@@ -19,10 +19,12 @@ import { ProjTabType } from "@/model/proj/config/ProjTabType";
 import TeXRecovery from "./recovery/TeXRecovery";
 import { QueryDownload } from "@/model/request/proj/query/QueryDownload";
 import TeXBlank from "./new/TeXBlank";
+import { TexProjectFolder } from "@/model/proj/TexProjectFolder";
 
 const ProjectTab: React.FC = () => {
 
     const [userDocList, setUserDocList] = useState<TexProjectModel[]>([]);
+    const [projFolders, setProjFolders] = useState<TexProjectFolder[]>([]);
     const [currProject, setCurrProject] = useState<TexProjectModel>();
     const [projName, setProjName] = useState<string>('');
     const [activeTab, setActiveTab] = useState<ProjTabType>(ProjTabType.All);
@@ -38,7 +40,8 @@ const ProjectTab: React.FC = () => {
     }, []);
 
     React.useEffect(() => {
-        setUserDocList(projList);
+        setUserDocList(projList.projects);
+        setProjFolders(projList.folders);
     }, [projList]);
 
     const handleProjDel = () => {
