@@ -101,6 +101,10 @@ const ProjectTab: React.FC = () => {
         setCurrProject(docItem);
     }
 
+    const renderFolderMenu = () => {
+        return (<div></div>);
+    }
+
     const renderMenu = (docItem: TexProjectModel) => {
         if (activeTab === ProjTabType.All) {
             return (
@@ -169,6 +173,46 @@ const ProjectTab: React.FC = () => {
             return;
         }
         navigate("/editor?pid=" + docItem.project_id)
+    }
+
+    const renderFolder = () => {
+        if (!projFolders || projFolders.length === 0) {
+            return (<div></div>);
+        };
+        const tagList: JSX.Element[] = [];
+        projFolders.forEach((docItem: TexProjectFolder) => {
+            const formattedTime = dayjs(docItem.updated_time).format('YYYY-MM-DD HH:mm:ss');
+            const projCreatedTime = dayjs(docItem.created_time).format('YYYY-MM-DD HH:mm:ss');
+            tagList.push(
+                <div key={docItem.id} className="list-group-item">
+                    <div className={styles.docHeader}>
+                        <div className={styles.projTiltle}>
+                            <a onClick={() => { }}>
+                                <h6>{docItem.folder_name}</h6>
+                            </a>
+                        </div>
+                        <div className={styles.option}>
+                            <div className="dropdown">
+                                <button className="btn btn-secondary dropdown-toggle"
+                                    type="button"
+                                    id="dropdownMenuButton1"
+                                    data-bs-toggle="dropdown"
+                                    // onClick={(e) => { handleOperClick(e, docItem) }}
+                                    aria-expanded="false">
+                                    操作
+                                </button>
+                                {renderFolderMenu()}
+                            </div>
+                        </div>
+                    </div>
+                    <div className={styles.projAttr}>
+                        <div><span>创建时间：</span>{projCreatedTime}</div>
+                        <div><span>更新时间：</span>{formattedTime}</div>
+                    </div>
+                </div>
+            );
+        });
+        return tagList;
     }
 
     const renderProj = () => {
@@ -306,6 +350,8 @@ const ProjectTab: React.FC = () => {
                                 </div>
                             </div>
                             <div className="list-group">
+                                {renderFolder()}
+                                <hr/>
                                 {renderProj()}
                             </div>
                         </div>
