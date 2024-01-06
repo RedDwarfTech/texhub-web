@@ -26,6 +26,7 @@ import { AuthHandler, RequestHandler } from 'rdjs-wheel';
 import { TrashProjReq } from "@/model/request/proj/edit/TrashProjReq";
 import { QueryDownload } from "@/model/request/proj/query/QueryDownload";
 import { CreateFolder } from "@/model/request/proj/create/CreateFolder";
+import { MoveProjReq } from "@/model/request/proj/edit/MoveProjReq";
 
 export function getProjectList(req: QueryProjReq) {
   const params = new URLSearchParams();
@@ -124,6 +125,16 @@ export function editProject(proj: EditProjReq) {
   const config: AxiosRequestConfig = {
     method: 'patch',
     url: '/tex/project/edit',
+    data: JSON.stringify(proj)
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.RENAME_PROJ];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
+export function moveProject(proj: MoveProjReq) {
+  const config: AxiosRequestConfig = {
+    method: 'patch',
+    url: '/tex/project/move',
     data: JSON.stringify(proj)
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.RENAME_PROJ];

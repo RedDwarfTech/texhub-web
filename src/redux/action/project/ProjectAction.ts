@@ -11,6 +11,7 @@ export enum ProjectActionType {
     DELETE_PROJ_INFO,
     DELETE_PROJ,
     RENAME_PROJ,
+    MOVE_PROJ,
     CLEAR_CURRENT_EDU,
     COMPILE_PROJ,
     LATEST_COMPILE,
@@ -171,5 +172,10 @@ export interface archiveProjAction {
 
 export interface downloadProjAction {
     type: ProjectActionType.DOWNLOAD_PROJ;
+    data: any;
+}
+
+export interface moveProjAction {
+    type: ProjectActionType.MOVE_PROJ;
     data: any;
 }

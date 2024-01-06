@@ -21,6 +21,7 @@ import { QueryDownload } from "@/model/request/proj/query/QueryDownload";
 import TeXBlank from "./new/TeXBlank";
 import { TexProjectFolder } from "@/model/proj/TexProjectFolder";
 import TeXNewFolder from "./new/TeXNewFolder";
+import TeXMoveToFolder from "./edit/TeXMoveToFolder";
 
 const ProjectTab: React.FC = () => {
 
@@ -125,6 +126,9 @@ const ProjectTab: React.FC = () => {
                         <a className="dropdown-item" data-bs-toggle="modal"
                             onClick={() => { handleProjDownload(docItem) }}>下载项目
                         </a>
+                    </li>
+                    <li>
+                        <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#moveProj">移动到文件夹</a>
                     </li>
                     <li>
                         <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#trashProj">移动到回收站</a>
@@ -352,7 +356,7 @@ const ProjectTab: React.FC = () => {
                             </div>
                             <div className="list-group">
                                 {renderFolder()}
-                                <hr/>
+                                <hr />
                                 {renderProj()}
                             </div>
                         </div>
@@ -389,6 +393,13 @@ const ProjectTab: React.FC = () => {
                 getProjFilter={getProjFilter}
                 handleInputChange={handleInputChange}
                 projName={projName}></TeXBlank>
+            {
+                (currProject && currProject.project_id) ? <TeXMoveToFolder projectId={currProject.project_id.toString()}
+                getProjFilter={getProjFilter}
+                handleEditInputChange={handleEditInputChange}
+                projName={projName}
+                currProject={currProject} folders={projFolders} ></TeXMoveToFolder> : <div></div>
+            }
             {
                 (currProject && currProject.project_id) ? <TeXEdit projectId={currProject.project_id.toString()}
                     getProjFilter={getProjFilter}
