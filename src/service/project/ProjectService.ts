@@ -7,7 +7,7 @@ import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
 import { ProjConf } from "@/model/proj/config/ProjConf";
 import { CompileProjLog } from "@/model/request/proj/CompileProjLog";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
-import { CreateProjReq } from "@/model/request/proj/CreateProjReq";
+import { CreateProjReq } from "@/model/request/proj/create/CreateProjReq";
 import { JoinProjReq } from "@/model/request/proj/JoinProjReq";
 import { QueryProjReq } from "@/model/request/proj/query/QueryProjReq";
 import { CreateTplProjReq } from "@/model/request/proj/create/CreateTplProjReq";
@@ -25,6 +25,7 @@ import { XHRClient } from "rd-component";
 import { AuthHandler, RequestHandler } from 'rdjs-wheel';
 import { TrashProjReq } from "@/model/request/proj/edit/TrashProjReq";
 import { QueryDownload } from "@/model/request/proj/query/QueryDownload";
+import { CreateFolder } from "@/model/request/proj/create/CreateFolder";
 
 export function getProjectList(req: QueryProjReq) {
   const params = new URLSearchParams();
@@ -64,7 +65,7 @@ export function createProject(doc: CreateProjReq) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function createFolder(doc: CreateProjReq) {
+export function createFolder(doc: CreateFolder) {
   const config: AxiosRequestConfig = {
     method: 'post',
     url: '/tex/project/folder',

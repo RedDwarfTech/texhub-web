@@ -21,7 +21,6 @@ import { QueryDownload } from "@/model/request/proj/query/QueryDownload";
 import TeXBlank from "./new/TeXBlank";
 import { TexProjectFolder } from "@/model/proj/TexProjectFolder";
 import TeXNewFolder from "./new/TeXNewFolder";
-import { Modal } from "bootstrap";
 
 const ProjectTab: React.FC = () => {
 
@@ -93,6 +92,7 @@ const ProjectTab: React.FC = () => {
         } else if (activeTab === ProjTabType.Trash) {
             query.trash = 1;
         }
+        query.proj_type = activeTab;
         return query;
     }
 
@@ -337,13 +337,11 @@ const ProjectTab: React.FC = () => {
             </div>
             <TeXNewFolder
                 getProjFilter={getProjFilter}
-                handleInputChange={handleInputChange}
-                projName={projName}></TeXNewFolder>
+                projType={activeTab}></TeXNewFolder>
             <TeXBlank
                 getProjFilter={getProjFilter}
                 handleInputChange={handleInputChange}
                 projName={projName}></TeXBlank>
-
             {
                 (currProject && currProject.project_id) ? <TeXEdit projectId={currProject.project_id.toString()}
                     getProjFilter={getProjFilter}
