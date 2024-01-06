@@ -11,9 +11,10 @@ import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 import { ProjConf } from "@/model/proj/config/ProjConf";
 import { SearchResult } from "@/model/proj/search/SearchResult";
 import { ProjHisotry } from "@/model/proj/history/ProjHistory";
+import { TexProjects } from "@/model/proj/TexProjects";
 
 const initState: AppState["proj"] = {
-    projList: [],
+    projList: {} as TexProjects,
     compileResult: {} as CompileResult,
     joinResult: {} as JoinResult,
     latestComp: {} as LatestCompile,
