@@ -141,6 +141,15 @@ export function moveProject(proj: MoveProjReq) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
+export function getFolderProject(folder_id: number) {
+  const config: AxiosRequestConfig = {
+    method: 'get',
+    url: '/tex/project/perfolder?folder_id=' + folder_id,
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.GET_FOLDER_PROJ];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
 export function compileProject(proj: CompileQueueReq) {
   const config: AxiosRequestConfig = {
     method: 'put',

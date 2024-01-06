@@ -6,4 +6,5 @@ export interface TexProjectModel {
     updated_time: string;
     project_id: string;
     nickname: string;
+    folder_id: number;
 }

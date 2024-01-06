@@ -1,7 +1,7 @@
 import TexHeader from "@/component/header/TexHeader";
 import styles from "./ProjectTab.module.css";
 import React, { ChangeEvent, useRef, useState } from "react";
-import { deleteProject, downloadProj, getProjectList } from "@/service/project/ProjectService";
+import { deleteProject, downloadProj, getFolderProject, getProjectList } from "@/service/project/ProjectService";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { TexProjectModel } from "@/model/proj/TexProjectModel";
@@ -26,11 +26,12 @@ import TeXMoveToFolder from "./edit/TeXMoveToFolder";
 const ProjectTab: React.FC = () => {
 
     const [userDocList, setUserDocList] = useState<TexProjectModel[]>([]);
+    const [projMap, setProjMap] = useState<Map<number, TexProjectModel[]>>(new Map<number, TexProjectModel[]>());
     const [projFolders, setProjFolders] = useState<TexProjectFolder[]>([]);
     const [currProject, setCurrProject] = useState<TexProjectModel>();
     const [projName, setProjName] = useState<string>('');
     const [activeTab, setActiveTab] = useState<ProjTabType>(ProjTabType.All);
-    const { projList } = useSelector((state: AppState) => state.proj);
+    const { projList, folderProjList } = useSelector((state: AppState) => state.proj);
     const delProjCancelRef = useRef<HTMLButtonElement>(null);
 
     const navigate = useNavigate();
@@ -40,6 +41,16 @@ const ProjectTab: React.FC = () => {
     React.useEffect(() => {
         getProjectList(getProjFilter({}));
     }, []);
+
+    React.useEffect(() => {
+        if (folderProjList && folderProjList.length > 0) {
+            let folderId = folderProjList[0].folder_id;
+            if (folderId) {
+                projMap.set(folderId, folderProjList);
+                setProjMap(projMap);
+            }
+        }
+    }, [folderProjList]);
 
     React.useEffect(() => {
         setUserDocList(projList.projects);
@@ -102,7 +113,8 @@ const ProjectTab: React.FC = () => {
         setCurrProject(docItem);
     }
 
-    const renderFolderMenu = () => {
+    const renderFolderMenu = (folderId: number) => {
+        
         return (<div></div>);
     }
 
@@ -179,6 +191,21 @@ const ProjectTab: React.FC = () => {
         navigate("/editor?pid=" + docItem.project_id)
     }
 
+
+    const renderFolderProj = (folderId: number) => {
+        let curProjMap: TexProjectModel[] | undefined = projMap.get(folderId);
+        if (!curProjMap || curProjMap.length === 0) {
+            return (<div></div>);
+        }
+        let projList = renderProj(curProjMap);
+        return projList;
+    }
+
+
+    const getFolderProjects = (folder_id: number) => {
+        getFolderProject(folder_id);
+    }
+
     const renderFolder = () => {
         if (!projFolders || projFolders.length === 0) {
             return (<div></div>);
@@ -192,9 +219,10 @@ const ProjectTab: React.FC = () => {
                     <div className={styles.docHeader}>
                         <div className={styles.projTiltle}>
                             <i className="fa-solid fa-folder"></i>
-                            <a onClick={() => { }}>
+                            <a onClick={() => { getFolderProjects(docItem.id!) }}>
                                 <h6>{docItem.folder_name}</h6>
                             </a>
+                            
                         </div>
                         <div className={styles.option}>
                             <div className="dropdown">
@@ -206,7 +234,7 @@ const ProjectTab: React.FC = () => {
                                     aria-expanded="false">
                                     操作
                                 </button>
-                                {renderFolderMenu()}
+                                {renderFolderMenu(docItem.id!)}
                             </div>
                         </div>
                     </div>
@@ -214,13 +242,16 @@ const ProjectTab: React.FC = () => {
                         <div><span>创建时间：</span>{projCreatedTime}</div>
                         <div><span>更新时间：</span>{formattedTime}</div>
                     </div>
+                    <div>
+                        {renderFolderProj(docItem.id!)}
+                    </div>
                 </div>
             );
         });
         return tagList;
     }
 
-    const renderProj = () => {
+    const renderProj = (userDocList: TexProjectModel[]) => {
         if (!userDocList || userDocList.length === 0) {
             return (<div></div>);
         };
@@ -357,7 +388,7 @@ const ProjectTab: React.FC = () => {
                             <div className="list-group">
                                 {renderFolder()}
                                 <hr />
-                                {renderProj()}
+                                {renderProj(userDocList)}
                             </div>
                         </div>
                         <div className={styles.helpTip}>
@@ -395,10 +426,10 @@ const ProjectTab: React.FC = () => {
                 projName={projName}></TeXBlank>
             {
                 (currProject && currProject.project_id) ? <TeXMoveToFolder projectId={currProject.project_id.toString()}
-                getProjFilter={getProjFilter}
-                handleEditInputChange={handleEditInputChange}
-                projName={projName}
-                currProject={currProject} folders={projFolders} ></TeXMoveToFolder> : <div></div>
+                    getProjFilter={getProjFilter}
+                    handleEditInputChange={handleEditInputChange}
+                    projName={projName}
+                    currProject={currProject} folders={projFolders} ></TeXMoveToFolder> : <div></div>
             }
             {
                 (currProject && currProject.project_id) ? <TeXEdit projectId={currProject.project_id.toString()}

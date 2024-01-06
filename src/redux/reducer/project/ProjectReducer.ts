@@ -15,6 +15,7 @@ import { TexProjects } from "@/model/proj/TexProjects";
 
 const initState: AppState["proj"] = {
     projList: {} as TexProjects,
+    folderProjList: [],
     compileResult: {} as CompileResult,
     joinResult: {} as JoinResult,
     latestComp: {} as LatestCompile,
@@ -151,6 +152,11 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 projHistories: action.data
+            };
+        case "GET_FOLDER_PROJ":
+            return {
+                ...state,
+                folderProjList: action.data
             };
         default:
             break;

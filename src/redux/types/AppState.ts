@@ -19,6 +19,7 @@ import { TexProjects } from "@/model/proj/TexProjects";
 export interface AppState {
     proj: {
         projList: TexProjects,
+        folderProjList: TexProjectModel[],
         compileResult: CompileResult,
         latestComp: LatestCompile,
         joinResult: JoinResult,

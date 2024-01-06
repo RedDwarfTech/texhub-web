@@ -7,6 +7,7 @@ export enum ProjectActionType {
     CREATE_DOC,
     CREATE_FOLDER,
     GET_PROJ_LIST,
+    GET_FOLDER_PROJ,
     GET_PROJ_INFO,
     DELETE_PROJ_INFO,
     DELETE_PROJ,
@@ -177,5 +178,10 @@ export interface downloadProjAction {
 
 export interface moveProjAction {
     type: ProjectActionType.MOVE_PROJ;
+    data: any;
+}
+
+export interface getFolderProjAction {
+    type: ProjectActionType.GET_FOLDER_PROJ;
     data: any;
 }

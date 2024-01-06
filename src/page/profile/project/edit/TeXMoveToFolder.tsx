@@ -1,10 +1,14 @@
 import { QueryProjReq } from "@/model/request/proj/query/QueryProjReq";
 import { getProjectList, moveProject } from "@/service/project/ProjectService";
 import { ResponseHandler } from "rdjs-wheel";
-import { ChangeEvent, useRef } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { toast } from 'react-toastify';
 import { MoveProjReq } from "@/model/request/proj/edit/MoveProjReq";
 import { TexProjectFolder } from "@/model/proj/TexProjectFolder";
+import { useSelector } from "react-redux";
+import { AppState } from "@/redux/types/AppState";
+import { TexProjectModel } from "@/model/proj/TexProjectModel";
+import React from "react";
 
 export type MoveProps = {
     projectId: string;
@@ -22,15 +26,7 @@ const TeXMoveToFolder: React.FC<MoveProps> = (props: MoveProps) => {
 
     const handleProjMove = () => {
         if (!currProject || !currProject.project_id) {
-            toast.info("请选择编辑项目");
-            return;
-        }
-        if (props.projName == null || props.projName.length == 0) {
-            toast.warning("请填写新项目名称");
-            return;
-        }
-        if (props.projName.length > 256) {
-            toast.warning("超过项目名称长度限制");
+            toast.info("请选择项目");
             return;
         }
         let proj: MoveProjReq = {
@@ -44,7 +40,7 @@ const TeXMoveToFolder: React.FC<MoveProps> = (props: MoveProps) => {
                     editProjCancelRef.current.click();
                 }
             } else {
-                toast.error("重命名项目失败，{}", resp.msg);
+                toast.error("移动项目失败，{}", resp.msg);
             }
         });
     }
@@ -55,7 +51,7 @@ const TeXMoveToFolder: React.FC<MoveProps> = (props: MoveProps) => {
         }
         const tagList: JSX.Element[] = [];
         props.folders.forEach((folderItem: TexProjectFolder) => {
-            tagList.push(<option value={folderItem.id}>{folderItem.folder_name}</option>);
+            tagList.push(<option key={folderItem.id} value={folderItem.id}>{folderItem.folder_name}</option>);
         });
         return tagList;
     }
