@@ -21,6 +21,7 @@ import { QueryDownload } from "@/model/request/proj/query/QueryDownload";
 import TeXBlank from "./new/TeXBlank";
 import { TexProjectFolder } from "@/model/proj/TexProjectFolder";
 import TeXNewFolder from "./new/TeXNewFolder";
+import { Modal } from "bootstrap";
 
 const ProjectTab: React.FC = () => {
 
@@ -84,9 +85,9 @@ const ProjectTab: React.FC = () => {
     }
 
     const getProjFilter = (query: QueryProjReq): QueryProjReq => {
-        if (activeTab === 1) {
+        if (activeTab === ProjTabType.All) {
             return query;
-        } else if (activeTab === 2) {
+        } else if (activeTab === ProjTabType.Shared) {
             query.role_id = 2;
             return query;
         } else if (activeTab === ProjTabType.Trash) {
@@ -136,10 +137,16 @@ const ProjectTab: React.FC = () => {
         } else if (activeTab === ProjTabType.Archived) {
             return (<ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                 <li>
-                    <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#trashProj">移动到回收站</a>
+                    <a className="dropdown-item"
+                        data-bs-toggle="modal"
+                        onClick={() => { setCurrProject(docItem) }}
+                        data-bs-target="#trashProj">移动到回收站</a>
                 </li>
                 <li>
-                    <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#recoveryProj">恢复项目</a>
+                    <a className="dropdown-item"
+                        data-bs-toggle="modal"
+                        onClick={() => { setCurrProject(docItem) }}
+                        data-bs-target="#recoveryProj">恢复项目</a>
                 </li>
             </ul>);
         } else if (activeTab === ProjTabType.Trash) {
@@ -279,17 +286,21 @@ const ProjectTab: React.FC = () => {
                                 <div className="dropdown">
                                     <button className="btn btn-secondary dropdown-toggle"
                                         type="button"
-                                        id="dropdownMenuButton1"
+                                        id="dropdownMenuLink"
                                         data-bs-toggle="dropdown"
                                         aria-expanded="false">
                                         {t("btn_new")}
                                     </button>
-                                    <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    <ul className="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                         <li>
-                                            <a className="dropdown-item" data-bs-toggle="modal" data-bs-target="#newProj">创建空白项目</a>
+                                            <a className="dropdown-item"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#newProj">创建空白项目</a>
                                         </li>
                                         <li>
-                                            <a className="dropdown-item" data-bs-toggle="modal" data-bs-target="#newFolder">新建文件夹</a>
+                                            <a className="dropdown-item"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#newFolder">新建文件夹</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -324,18 +335,15 @@ const ProjectTab: React.FC = () => {
                     </div>
                 </div>
             </div>
-            {
-                (currProject && currProject.project_id) ? <TeXNewFolder
-                    getProjFilter={getProjFilter}
-                    handleInputChange={handleInputChange}
-                    projName={projName}></TeXNewFolder> : <div></div>
-            }
-            {
-                (currProject && currProject.project_id) ? <TeXBlank
-                    getProjFilter={getProjFilter}
-                    handleInputChange={handleInputChange}
-                    projName={projName}></TeXBlank> : <div></div>
-            }
+            <TeXNewFolder
+                getProjFilter={getProjFilter}
+                handleInputChange={handleInputChange}
+                projName={projName}></TeXNewFolder>
+            <TeXBlank
+                getProjFilter={getProjFilter}
+                handleInputChange={handleInputChange}
+                projName={projName}></TeXBlank>
+
             {
                 (currProject && currProject.project_id) ? <TeXEdit projectId={currProject.project_id.toString()}
                     getProjFilter={getProjFilter}
