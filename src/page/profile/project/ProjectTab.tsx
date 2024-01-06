@@ -187,6 +187,7 @@ const ProjectTab: React.FC = () => {
                 <div key={docItem.id} className="list-group-item">
                     <div className={styles.docHeader}>
                         <div className={styles.projTiltle}>
+                            <i className="fa-solid fa-folder"></i>
                             <a onClick={() => { }}>
                                 <h6>{docItem.folder_name}</h6>
                             </a>
