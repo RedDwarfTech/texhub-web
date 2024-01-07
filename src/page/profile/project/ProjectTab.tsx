@@ -22,6 +22,7 @@ import TeXBlank from "./new/TeXBlank";
 import { TexProjectFolder } from "@/model/proj/TexProjectFolder";
 import TeXNewFolder from "./new/TeXNewFolder";
 import TeXMoveToFolder from "./edit/TeXMoveToFolder";
+import FolderRename from "./edit/FolderRename";
 
 const ProjectTab: React.FC = () => {
 
@@ -29,6 +30,7 @@ const ProjectTab: React.FC = () => {
     const [projMap, setProjMap] = useState<Map<number, TexProjectModel[]>>(new Map<number, TexProjectModel[]>());
     const [projFolders, setProjFolders] = useState<TexProjectFolder[]>([]);
     const [currProject, setCurrProject] = useState<TexProjectModel>();
+    const [currFolder, setCurrFolder] = useState<TexProjectFolder>();
     const [projName, setProjName] = useState<string>('');
     const [activeTab, setActiveTab] = useState<ProjTabType>(ProjTabType.All);
     const { projList, folderProjList } = useSelector((state: AppState) => state.proj);
@@ -106,7 +108,7 @@ const ProjectTab: React.FC = () => {
         copyProj(proj).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
                 toast.success("项目已复制");
-            }else{
+            } else {
                 toast.error("项目复制失败");
             }
         });
@@ -130,9 +132,22 @@ const ProjectTab: React.FC = () => {
         setCurrProject(docItem);
     }
 
-    const renderFolderMenu = (folderId: number) => {
-        
-        return (<div></div>);
+    const handleFolderOperClick = (e: React.MouseEvent<HTMLButtonElement>, docItem: TexProjectFolder) => {
+        e.stopPropagation();
+        setCurrFolder(docItem);
+    }
+
+    const renderFolderMenu = () => {
+        return (
+            <ul className="dropdown-menu" aria-labelledby="dropdownMenuButtonFolder">
+                <li>
+                    <a className="dropdown-item" data-bs-toggle="modal" data-bs-target="#delFolder">删除文件夹</a>
+                </li>
+                <li>
+                    <a className="dropdown-item" data-bs-toggle="modal" data-bs-target="#renameFolder">重命名文件夹</a>
+                </li>
+            </ul>
+        );
     }
 
     const renderMenu = (docItem: TexProjectModel) => {
@@ -213,7 +228,6 @@ const ProjectTab: React.FC = () => {
         navigate("/editor?pid=" + docItem.project_id)
     }
 
-
     const renderFolderProj = (folderId: number) => {
         let curProjMap: TexProjectModel[] | undefined = projMap.get(folderId);
         if (!curProjMap || curProjMap.length === 0) {
@@ -244,19 +258,18 @@ const ProjectTab: React.FC = () => {
                             <a onClick={() => { getFolderProjects(docItem.id!) }}>
                                 <h6>{docItem.folder_name}</h6>
                             </a>
-                            
                         </div>
                         <div className={styles.option}>
                             <div className="dropdown">
                                 <button className="btn btn-secondary dropdown-toggle"
                                     type="button"
-                                    id="dropdownMenuButton1"
+                                    id="dropdownMenuButtonFolder"
                                     data-bs-toggle="dropdown"
-                                    // onClick={(e) => { handleOperClick(e, docItem) }}
+                                    onClick={(e) => { handleFolderOperClick(e, docItem) }}
                                     aria-expanded="false">
                                     操作
                                 </button>
-                                {renderFolderMenu(docItem.id!)}
+                                {renderFolderMenu()}
                             </div>
                         </div>
                     </div>
@@ -316,6 +329,18 @@ const ProjectTab: React.FC = () => {
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         setProjName(event.target.value);
+    };
+
+    const handleFolderNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+        let legacyFolder: TexProjectFolder|undefined = currFolder;
+        if(legacyFolder){
+            let newFolder:TexProjectFolder = {
+                ...legacyFolder,
+                folder_name: event.target.value,
+            };
+            setCurrFolder(newFolder);
+        }
+        
     };
 
     const handleEditInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -439,6 +464,7 @@ const ProjectTab: React.FC = () => {
                     </div>
                 </div>
             </div>
+            <FolderRename currFolder={currFolder} handleFolderNameChange={ handleFolderNameChange} ></FolderRename>
             <TeXNewFolder
                 getProjFilter={getProjFilter}
                 projType={activeTab}></TeXNewFolder>

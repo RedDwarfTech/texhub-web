@@ -28,6 +28,7 @@ import { QueryDownload } from "@/model/request/proj/query/QueryDownload";
 import { CreateFolder } from "@/model/request/proj/create/CreateFolder";
 import { MoveProjReq } from "@/model/request/proj/edit/MoveProjReq";
 import { CopyProjReq } from "@/model/request/proj/edit/CopyProjReq";
+import { RenameFolderReq } from "@/model/request/proj/edit/RenameFolderReq";
 
 export function getProjectList(req: QueryProjReq) {
   const params = new URLSearchParams();
@@ -132,13 +133,23 @@ export function editProject(proj: EditProjReq) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
+export function renameFolder(proj: RenameFolderReq) {
+  const config: AxiosRequestConfig = {
+    method: 'patch',
+    url: '/tex/project/folder/rename',
+    data: JSON.stringify(proj)
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.RENAME_FOLDER];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
 export function moveProject(proj: MoveProjReq) {
   const config: AxiosRequestConfig = {
     method: 'patch',
     url: '/tex/project/move',
     data: JSON.stringify(proj)
   };
-  const actionTypeString: string = ProjectActionType[ProjectActionType.RENAME_PROJ];
+  const actionTypeString: string = ProjectActionType[ProjectActionType.MOVE_PROJ];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 

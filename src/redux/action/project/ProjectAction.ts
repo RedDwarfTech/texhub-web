@@ -12,6 +12,7 @@ export enum ProjectActionType {
     DELETE_PROJ_INFO,
     DELETE_PROJ,
     RENAME_PROJ,
+    RENAME_FOLDER,
     MOVE_PROJ,
     CLEAR_CURRENT_EDU,
     COMPILE_PROJ,
@@ -189,5 +190,10 @@ export interface getFolderProjAction {
 
 export interface copyProjAction {
     type: ProjectActionType.COPY_PROJ;
+    data: any;
+}
+
+export interface renameFolderAction {
+    type: ProjectActionType.RENAME_FOLDER;
     data: any;
 }
