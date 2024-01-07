@@ -1,13 +1,10 @@
 import { QueryProjReq } from "@/model/request/proj/query/QueryProjReq";
 import { getProjectList, moveProject } from "@/service/project/ProjectService";
 import { ResponseHandler } from "rdjs-wheel";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useRef } from "react";
 import { toast } from 'react-toastify';
 import { MoveProjReq } from "@/model/request/proj/edit/MoveProjReq";
 import { TexProjectFolder } from "@/model/proj/TexProjectFolder";
-import { useSelector } from "react-redux";
-import { AppState } from "@/redux/types/AppState";
-import { TexProjectModel } from "@/model/proj/TexProjectModel";
 import React from "react";
 
 export type MoveProps = {

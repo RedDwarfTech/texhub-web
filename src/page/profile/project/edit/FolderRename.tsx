@@ -1,14 +1,16 @@
-import { renameFolder } from "@/service/project/ProjectService";
+import { getProjectList, renameFolder } from "@/service/project/ProjectService";
 import { ResponseHandler } from "rdjs-wheel";
 import { ChangeEvent, useRef } from "react";
 import { toast } from 'react-toastify';
 import { TexProjectFolder } from "@/model/proj/TexProjectFolder";
 import React from "react";
 import { RenameFolderReq } from "@/model/request/proj/edit/RenameFolderReq";
+import { QueryProjReq } from "@/model/request/proj/query/QueryProjReq";
 
 export type RenameFolderProps = {
     currFolder: TexProjectFolder | undefined;
     handleFolderNameChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    getProjFilter: (query: QueryProjReq) => QueryProjReq;
 };
 
 const FolderRename: React.FC<RenameFolderProps> = (props: RenameFolderProps) => {
@@ -22,6 +24,7 @@ const FolderRename: React.FC<RenameFolderProps> = (props: RenameFolderProps) => 
         };
         renameFolder(renameReq).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
+                getProjectList(props.getProjFilter({}));
                 if (editProjCancelRef && editProjCancelRef.current) {
                     editProjCancelRef.current.click();
                 }

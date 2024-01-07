@@ -332,15 +332,15 @@ const ProjectTab: React.FC = () => {
     };
 
     const handleFolderNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-        let legacyFolder: TexProjectFolder|undefined = currFolder;
-        if(legacyFolder){
-            let newFolder:TexProjectFolder = {
+        let legacyFolder: TexProjectFolder | undefined = currFolder;
+        if (legacyFolder) {
+            let newFolder: TexProjectFolder = {
                 ...legacyFolder,
                 folder_name: event.target.value,
             };
             setCurrFolder(newFolder);
         }
-        
+
     };
 
     const handleEditInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -464,7 +464,9 @@ const ProjectTab: React.FC = () => {
                     </div>
                 </div>
             </div>
-            <FolderRename currFolder={currFolder} handleFolderNameChange={ handleFolderNameChange} ></FolderRename>
+            <FolderRename currFolder={currFolder}
+                handleFolderNameChange={handleFolderNameChange}
+                getProjFilter={getProjFilter} ></FolderRename>
             <TeXNewFolder
                 getProjFilter={getProjFilter}
                 projType={activeTab}></TeXNewFolder>
