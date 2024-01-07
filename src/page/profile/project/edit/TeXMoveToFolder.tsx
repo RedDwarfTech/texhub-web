@@ -1,25 +1,25 @@
 import { QueryProjReq } from "@/model/request/proj/query/QueryProjReq";
 import { getProjectList, moveProject } from "@/service/project/ProjectService";
 import { ResponseHandler } from "rdjs-wheel";
-import { ChangeEvent, useRef } from "react";
+import { useRef, useState } from "react";
 import { toast } from 'react-toastify';
 import { MoveProjReq } from "@/model/request/proj/edit/MoveProjReq";
 import { TexProjectFolder } from "@/model/proj/TexProjectFolder";
 import React from "react";
 
 export type MoveProps = {
-    projectId: string;
-    projName: string | undefined;
     getProjFilter: (query: QueryProjReq) => QueryProjReq;
-    handleEditInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
     currProject: any,
-    folders: TexProjectFolder[]
+    currFolder: TexProjectFolder | undefined,
+    folders: TexProjectFolder[],
+    projType: number,
 };
 
 const TeXMoveToFolder: React.FC<MoveProps> = (props: MoveProps) => {
 
     const editProjCancelRef = useRef<HTMLButtonElement>(null);
     const currProject = props.currProject;
+    const [currSelectFolderId, setCurrSelectFolderId] = useState<number>(-1);
 
     const handleProjMove = () => {
         if (!currProject || !currProject.project_id) {
@@ -28,7 +28,8 @@ const TeXMoveToFolder: React.FC<MoveProps> = (props: MoveProps) => {
         }
         let proj: MoveProjReq = {
             project_id: currProject?.project_id,
-            folder_id: 1
+            folder_id: currSelectFolderId,
+            proj_type: props.projType
         };
         moveProject(proj).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
@@ -43,15 +44,26 @@ const TeXMoveToFolder: React.FC<MoveProps> = (props: MoveProps) => {
     }
 
     const renderSelected = () => {
-        if(!props.folders || props.folders.length === 0){
+        if (!props.folders || props.folders.length === 0) {
             return;
         }
         const tagList: JSX.Element[] = [];
-        props.folders.forEach((folderItem: TexProjectFolder) => {
-            tagList.push(<option key={folderItem.id} value={folderItem.id}>{folderItem.folder_name}</option>);
-        });
+        let folders = props.folders;
+        for (let i = 0; i < folders.length; i++) {
+            if (i === 0) {
+                setCurrSelectFolderId(folders[i].id!);
+                tagList.push(<option selected key={folders[i].id} value={folders[i].id}>{folders[i].folder_name}</option>);
+            } else {
+                tagList.push(<option key={folders[i].id} value={folders[i].id}>{folders[i].folder_name}</option>);
+            }
+        }
         return tagList;
     }
+
+    const handleSelectChange = (e:React.ChangeEvent<HTMLSelectElement>) => {
+        let selectValue = e.target.value
+        setCurrSelectFolderId(parseInt(selectValue));
+    };
 
     return (
         <div>
@@ -63,7 +75,9 @@ const TeXMoveToFolder: React.FC<MoveProps> = (props: MoveProps) => {
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            <select className="form-select" aria-label="Default select example">
+                            <select className="form-select"
+                                onChange={handleSelectChange}
+                                aria-label="Default select example">
                                 {renderSelected()}
                             </select>
                         </div>

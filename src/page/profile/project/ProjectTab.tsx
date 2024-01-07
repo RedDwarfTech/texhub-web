@@ -478,11 +478,10 @@ const ProjectTab: React.FC = () => {
                 handleInputChange={handleInputChange}
                 projName={projName}></TeXBlank>
             {
-                (currProject && currProject.project_id) ? <TeXMoveToFolder projectId={currProject.project_id.toString()}
+                (currProject && currProject.project_id) ? <TeXMoveToFolder 
                     getProjFilter={getProjFilter}
-                    handleEditInputChange={handleEditInputChange}
-                    projName={projName}
-                    currProject={currProject} folders={projFolders} ></TeXMoveToFolder> : <div></div>
+                    projType={activeTab}
+                    currProject={currProject} folders={projFolders} currFolder={currFolder} ></TeXMoveToFolder> : <div></div>
             }
             {
                 (currProject && currProject.project_id) ? <TeXEdit projectId={currProject.project_id.toString()}
