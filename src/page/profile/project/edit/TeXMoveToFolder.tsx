@@ -21,6 +21,12 @@ const TeXMoveToFolder: React.FC<MoveProps> = (props: MoveProps) => {
     const currProject = props.currProject;
     const [currSelectFolderId, setCurrSelectFolderId] = useState<number>(-1);
 
+    React.useEffect(() => {
+        if (props.folders && props.folders.length > 0) {
+            setCurrSelectFolderId(props.folders[0].id!);
+        }
+    }, []);
+
     const handleProjMove = () => {
         if (!currProject || !currProject.project_id) {
             toast.info("请选择项目");
@@ -51,8 +57,7 @@ const TeXMoveToFolder: React.FC<MoveProps> = (props: MoveProps) => {
         let folders = props.folders;
         for (let i = 0; i < folders.length; i++) {
             if (i === 0) {
-                setCurrSelectFolderId(folders[i].id!);
-                tagList.push(<option selected key={folders[i].id} value={folders[i].id}>{folders[i].folder_name}</option>);
+                tagList.push(<option key={folders[i].id} value={folders[i].id}>{folders[i].folder_name}</option>);
             } else {
                 tagList.push(<option key={folders[i].id} value={folders[i].id}>{folders[i].folder_name}</option>);
             }
@@ -60,7 +65,7 @@ const TeXMoveToFolder: React.FC<MoveProps> = (props: MoveProps) => {
         return tagList;
     }
 
-    const handleSelectChange = (e:React.ChangeEvent<HTMLSelectElement>) => {
+    const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         let selectValue = e.target.value
         setCurrSelectFolderId(parseInt(selectValue));
     };
@@ -76,6 +81,7 @@ const TeXMoveToFolder: React.FC<MoveProps> = (props: MoveProps) => {
                         </div>
                         <div className="modal-body">
                             <select className="form-select"
+                                defaultValue={(props.folders && props.folders.length > 0) ? props.folders[0].id : -1}
                                 onChange={handleSelectChange}
                                 aria-label="Default select example">
                                 {renderSelected()}
