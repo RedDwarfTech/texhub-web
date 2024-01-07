@@ -38,6 +38,7 @@ export enum ProjectActionType {
     SHARE_PROJ,
     ARCHIVE_PROJ,
     TRASH_PROJ,
+    COPY_PROJ,
     DOWNLOAD_PROJ
 }
 
@@ -183,5 +184,10 @@ export interface moveProjAction {
 
 export interface getFolderProjAction {
     type: ProjectActionType.GET_FOLDER_PROJ;
+    data: any;
+}
+
+export interface copyProjAction {
+    type: ProjectActionType.COPY_PROJ;
     data: any;
 }

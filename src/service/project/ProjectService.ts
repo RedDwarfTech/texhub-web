@@ -27,6 +27,7 @@ import { TrashProjReq } from "@/model/request/proj/edit/TrashProjReq";
 import { QueryDownload } from "@/model/request/proj/query/QueryDownload";
 import { CreateFolder } from "@/model/request/proj/create/CreateFolder";
 import { MoveProjReq } from "@/model/request/proj/edit/MoveProjReq";
+import { CopyProjReq } from "@/model/request/proj/edit/CopyProjReq";
 
 export function getProjectList(req: QueryProjReq) {
   const params = new URLSearchParams();
@@ -406,5 +407,15 @@ export function downloadProj(req: QueryDownload) {
     responseType: 'arraybuffer'
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.DOWNLOAD_PROJ];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
+export function copyProj(req: CopyProjReq) {
+  const config: AxiosRequestConfig = {
+    method: 'post',
+    url: '/tex/project/coppy',
+    data: JSON.stringify(req)
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.COPY_PROJ];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }

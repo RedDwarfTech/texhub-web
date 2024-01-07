@@ -1,7 +1,7 @@
 import TexHeader from "@/component/header/TexHeader";
 import styles from "./ProjectTab.module.css";
 import React, { ChangeEvent, useRef, useState } from "react";
-import { deleteProject, downloadProj, getFolderProject, getProjectList } from "@/service/project/ProjectService";
+import { copyProj, deleteProject, downloadProj, getFolderProject, getProjectList } from "@/service/project/ProjectService";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { TexProjectModel } from "@/model/proj/TexProjectModel";
@@ -95,6 +95,23 @@ const ProjectTab: React.FC = () => {
         });
     }
 
+    const handleProjCopy = (docItem: TexProjectModel) => {
+        if (!currProject) {
+            toast.info("请选择复制的项目");
+        }
+        let proj: QueryDownload = {
+            project_id: docItem.project_id,
+            version: "1"
+        };
+        copyProj(proj).then((resp) => {
+            if (ResponseHandler.responseSuccess(resp)) {
+                toast.success("项目已复制");
+            }else{
+                toast.error("项目复制失败");
+            }
+        });
+    }
+
     const getProjFilter = (query: QueryProjReq): QueryProjReq => {
         if (activeTab === ProjTabType.All) {
             return query;
@@ -137,6 +154,11 @@ const ProjectTab: React.FC = () => {
                     <li>
                         <a className="dropdown-item" data-bs-toggle="modal"
                             onClick={() => { handleProjDownload(docItem) }}>下载项目
+                        </a>
+                    </li>
+                    <li>
+                        <a className="dropdown-item" data-bs-toggle="modal"
+                            onClick={() => { handleProjCopy(docItem) }}>复制项目
                         </a>
                     </li>
                     <li>
