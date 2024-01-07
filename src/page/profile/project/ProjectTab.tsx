@@ -23,6 +23,7 @@ import { TexProjectFolder } from "@/model/proj/TexProjectFolder";
 import TeXNewFolder from "./new/TeXNewFolder";
 import TeXMoveToFolder from "./edit/TeXMoveToFolder";
 import FolderRename from "./edit/FolderRename";
+import FolderDel from "./edit/FolderDel";
 
 const ProjectTab: React.FC = () => {
 
@@ -464,6 +465,8 @@ const ProjectTab: React.FC = () => {
                     </div>
                 </div>
             </div>
+            <FolderDel currFolder={currFolder}
+                getProjFilter={getProjFilter} ></FolderDel>
             <FolderRename currFolder={currFolder}
                 handleFolderNameChange={handleFolderNameChange}
                 getProjFilter={getProjFilter} ></FolderRename>
