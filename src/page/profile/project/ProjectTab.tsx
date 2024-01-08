@@ -249,40 +249,42 @@ const ProjectTab: React.FC = () => {
         };
         const tagList: JSX.Element[] = [];
         projFolders.forEach((docItem: TexProjectFolder) => {
-            const formattedTime = dayjs(docItem.updated_time).format('YYYY-MM-DD HH:mm:ss');
-            const projCreatedTime = dayjs(docItem.created_time).format('YYYY-MM-DD HH:mm:ss');
-            tagList.push(
-                <div key={docItem.id} className="list-group-item">
-                    <div className={styles.docHeader}>
-                        <div className={styles.projTiltle}>
-                            <i className="fa-solid fa-folder"></i>
-                            <a onClick={() => { getFolderProjects(docItem.id!) }}>
-                                <h6>{docItem.folder_name}</h6>
-                            </a>
-                        </div>
-                        <div className={styles.option}>
-                            <div className="dropdown">
-                                <button className="btn btn-secondary dropdown-toggle"
-                                    type="button"
-                                    id="dropdownMenuButtonFolder"
-                                    data-bs-toggle="dropdown"
-                                    onClick={(e) => { handleFolderOperClick(e, docItem) }}
-                                    aria-expanded="false">
-                                    操作
-                                </button>
-                                {renderFolderMenu()}
+            if (docItem.default_folder !== 1) {
+                const formattedTime = dayjs(docItem.updated_time).format('YYYY-MM-DD HH:mm:ss');
+                const projCreatedTime = dayjs(docItem.created_time).format('YYYY-MM-DD HH:mm:ss');
+                tagList.push(
+                    <div key={docItem.id} className="list-group-item">
+                        <div className={styles.docHeader}>
+                            <div className={styles.projTiltle}>
+                                <i className="fa-solid fa-folder"></i>
+                                <a onClick={() => { getFolderProjects(docItem.id!) }}>
+                                    <h6>{docItem.folder_name}</h6>
+                                </a>
+                            </div>
+                            <div className={styles.option}>
+                                <div className="dropdown">
+                                    <button className="btn btn-secondary dropdown-toggle"
+                                        type="button"
+                                        id="dropdownMenuButtonFolder"
+                                        data-bs-toggle="dropdown"
+                                        onClick={(e) => { handleFolderOperClick(e, docItem) }}
+                                        aria-expanded="false">
+                                        操作
+                                    </button>
+                                    {renderFolderMenu()}
+                                </div>
                             </div>
                         </div>
+                        <div className={styles.projAttr}>
+                            <div><span>创建时间：</span>{projCreatedTime}</div>
+                            <div><span>更新时间：</span>{formattedTime}</div>
+                        </div>
+                        <div>
+                            {renderFolderProj(docItem.id!)}
+                        </div>
                     </div>
-                    <div className={styles.projAttr}>
-                        <div><span>创建时间：</span>{projCreatedTime}</div>
-                        <div><span>更新时间：</span>{formattedTime}</div>
-                    </div>
-                    <div>
-                        {renderFolderProj(docItem.id!)}
-                    </div>
-                </div>
-            );
+                );
+            }
         });
         return tagList;
     }
@@ -478,7 +480,7 @@ const ProjectTab: React.FC = () => {
                 handleInputChange={handleInputChange}
                 projName={projName}></TeXBlank>
             {
-                (currProject && currProject.project_id) ? <TeXMoveToFolder 
+                (currProject && currProject.project_id) ? <TeXMoveToFolder
                     getProjFilter={getProjFilter}
                     projType={activeTab}
                     currProject={currProject} folders={projFolders} currFolder={currFolder} ></TeXMoveToFolder> : <div></div>

@@ -56,10 +56,12 @@ const TeXMoveToFolder: React.FC<MoveProps> = (props: MoveProps) => {
         const tagList: JSX.Element[] = [];
         let folders = props.folders;
         for (let i = 0; i < folders.length; i++) {
-            if (i === 0) {
-                tagList.push(<option key={folders[i].id} value={folders[i].id}>{folders[i].folder_name}</option>);
-            } else {
-                tagList.push(<option key={folders[i].id} value={folders[i].id}>{folders[i].folder_name}</option>);
+            if(folders[i].default_folder !== 1){
+                if (i === 0) {
+                    tagList.push(<option key={folders[i].id} value={folders[i].id}>{folders[i].folder_name}</option>);
+                } else {
+                    tagList.push(<option key={folders[i].id} value={folders[i].id}>{folders[i].folder_name}</option>);
+                }
             }
         }
         return tagList;

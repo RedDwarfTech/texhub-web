@@ -3,4 +3,5 @@ export interface TexProjectFolder {
     folder_name: string;
     created_time: string;
     updated_time: string;
+    default_folder: number;
 }
