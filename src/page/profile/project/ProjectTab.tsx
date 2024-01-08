@@ -47,9 +47,8 @@ const ProjectTab: React.FC = () => {
 
     React.useEffect(() => {
         if (folderProjList && folderProjList.length > 0) {
-            let folderId = folderProjList[0].folder_id;
-            if (folderId) {
-                projMap.set(folderId, folderProjList);
+            if (currFolder) {
+                projMap.set(currFolder.id, folderProjList);
                 setProjMap(projMap);
             }
         }
@@ -156,19 +155,27 @@ const ProjectTab: React.FC = () => {
             return (
                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                     <li>
-                        <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#editPrj">修改项目名称</a>
+                        <a className="dropdown-item"
+                            data-bs-toggle="modal"
+                            onClick={() => { setCurrProject(docItem) }}
+                            data-bs-target="#editPrj">修改项目名称</a>
                     </li>
                     <li>
-                        <a className="dropdown-item" data-bs-toggle="modal"
-                            onClick={() => { setCurrProject(docItem) }} data-bs-target="#sharePrj">分享项目</a>
+                        <a className="dropdown-item"
+                            data-bs-toggle="modal"
+                            onClick={() => { setCurrProject(docItem) }}
+                            data-bs-target="#sharePrj">分享项目</a>
                     </li>
                     <li>
-                        <a className="dropdown-item" data-bs-toggle="modal"
-                            onClick={() => { setCurrProject(docItem) }} data-bs-target="#archiveProj">归档项目
+                        <a className="dropdown-item"
+                            data-bs-toggle="modal"
+                            onClick={() => { setCurrProject(docItem) }}
+                            data-bs-target="#archiveProj">归档项目
                         </a>
                     </li>
                     <li>
-                        <a className="dropdown-item" data-bs-toggle="modal"
+                        <a className="dropdown-item"
+                            data-bs-toggle="modal"
                             onClick={() => { handleProjDownload(docItem) }}>下载项目
                         </a>
                     </li>
@@ -234,13 +241,15 @@ const ProjectTab: React.FC = () => {
         if (!curProjMap || curProjMap.length === 0) {
             return (<div></div>);
         }
+        debugger
         let projList = renderProj(curProjMap);
         return projList;
     }
 
 
-    const getFolderProjects = (folder_id: number) => {
-        getFolderProject(folder_id);
+    const getFolderProjects = (folder: TexProjectFolder) => {
+        setCurrFolder(folder);
+        getFolderProject(folder.id);
     }
 
     const renderFolder = () => {
@@ -248,17 +257,17 @@ const ProjectTab: React.FC = () => {
             return (<div></div>);
         };
         const tagList: JSX.Element[] = [];
-        projFolders.forEach((docItem: TexProjectFolder) => {
-            if (docItem.default_folder !== 1) {
-                const formattedTime = dayjs(docItem.updated_time).format('YYYY-MM-DD HH:mm:ss');
-                const projCreatedTime = dayjs(docItem.created_time).format('YYYY-MM-DD HH:mm:ss');
+        projFolders.forEach((folderItem: TexProjectFolder) => {
+            if (folderItem.default_folder !== 1) {
+                const formattedTime = dayjs(folderItem.updated_time).format('YYYY-MM-DD HH:mm:ss');
+                const projCreatedTime = dayjs(folderItem.created_time).format('YYYY-MM-DD HH:mm:ss');
                 tagList.push(
-                    <div key={docItem.id} className="list-group-item">
+                    <div key={folderItem.id} className="list-group-item">
                         <div className={styles.docHeader}>
                             <div className={styles.projTiltle}>
                                 <i className="fa-solid fa-folder"></i>
-                                <a onClick={() => { getFolderProjects(docItem.id!) }}>
-                                    <h6>{docItem.folder_name}</h6>
+                                <a onClick={() => { getFolderProjects(folderItem) }}>
+                                    <h6>{folderItem.folder_name}</h6>
                                 </a>
                             </div>
                             <div className={styles.option}>
@@ -267,7 +276,7 @@ const ProjectTab: React.FC = () => {
                                         type="button"
                                         id="dropdownMenuButtonFolder"
                                         data-bs-toggle="dropdown"
-                                        onClick={(e) => { handleFolderOperClick(e, docItem) }}
+                                        onClick={(e) => { handleFolderOperClick(e, folderItem) }}
                                         aria-expanded="false">
                                         操作
                                     </button>
@@ -280,7 +289,7 @@ const ProjectTab: React.FC = () => {
                             <div><span>更新时间：</span>{formattedTime}</div>
                         </div>
                         <div>
-                            {renderFolderProj(docItem.id!)}
+                            {renderFolderProj(folderItem.id!)}
                         </div>
                     </div>
                 );
