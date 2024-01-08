@@ -48,13 +48,17 @@ const ProjectTab: React.FC = () => {
     React.useEffect(() => {
         if (folderProjList && folderProjList.length > 0) {
             if (currFolder) {
-                let cachedExpand = projMap.get(currFolder.id)?.expand;
-                let folderModel: FolderModel = {
-                    expand: cachedExpand ? cachedExpand : true,
-                    projects: folderProjList
-                };
-                projMap.set(currFolder.id, folderModel);
-                setProjMap(projMap);
+                // https://stackoverflow.com/questions/77779484/the-react-setstate-did-not-trigger-the-map-rerender
+                setProjMap((prevMapState) => {
+                    const newMapState = new Map<number, FolderModel>(prevMapState);
+                    let cachedExpand = newMapState.get(currFolder.id)?.expand;
+                    let folderModel: FolderModel = {
+                        expand: cachedExpand ? cachedExpand : true,
+                        projects: folderProjList
+                    };
+                    newMapState.set(currFolder.id, folderModel);
+                    return newMapState;
+                });
             }
         }
     }, [folderProjList]);
@@ -241,15 +245,16 @@ const ProjectTab: React.FC = () => {
         navigate("/editor?pid=" + docItem.project_id)
     }
 
-    const renderFolderProj = (folderId: number) => {
+    const renderFolderProj = (folderId: number): JSX.Element[] => {
         let curProjMap: FolderModel | undefined = projMap.get(folderId);
         if (!curProjMap || curProjMap.projects.length === 0) {
-            return (<div></div>);
+            return ([]);
         }
         if (!curProjMap.expand) {
-            return (<div></div>);
+            return ([]);
         }
         let projList = renderProj(curProjMap.projects);
+        debugger
         return projList;
     }
 
@@ -316,9 +321,9 @@ const ProjectTab: React.FC = () => {
         return tagList;
     }
 
-    const renderProj = (userDocList: TexProjectModel[]) => {
+    const renderProj = (userDocList: TexProjectModel[]): JSX.Element[] => {
         if (!userDocList || userDocList.length === 0) {
-            return (<div></div>);
+            return ([]);
         };
         const tagList: JSX.Element[] = [];
         userDocList.forEach((docItem: TexProjectModel) => {
