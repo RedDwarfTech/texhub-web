@@ -25,6 +25,7 @@ import TeXMoveToFolder from "./edit/TeXMoveToFolder";
 import FolderRename from "./edit/FolderRename";
 import FolderDel from "./edit/FolderDel";
 import { FolderModel } from "@/model/proj/folder/FolderModel";
+import TeXProjCopy from "./new/TeXProjCopy";
 
 const ProjectTab: React.FC = () => {
 
@@ -189,12 +190,22 @@ const ProjectTab: React.FC = () => {
                         </a>
                     </li>
                     <li>
-                        <a className="dropdown-item" data-bs-toggle="modal"
+                        <a className="dropdown-item"
+                            data-bs-toggle="modal"
                             onClick={() => { handleProjCopy(docItem) }}>复制项目
                         </a>
                     </li>
                     <li>
-                        <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#moveProj">移动到文件夹</a>
+                        <a className="dropdown-item"
+                            data-bs-toggle="modal"
+                            onClick={() => { setCurrProject(docItem) }}
+                            data-bs-target="#moveProj">移动到文件夹</a>
+                    </li>
+                    <li>
+                        <a className="dropdown-item"
+                            data-bs-toggle="modal"
+                            onClick={() => { setCurrProject(docItem) }}
+                            data-bs-target="#copyProject">复制项目</a>
                     </li>
                     <li>
                         <a className="dropdown-item" data-bs-toggle="modal" onClick={() => { setCurrProject(docItem) }} data-bs-target="#trashProj">移动到回收站</a>
@@ -523,8 +534,8 @@ const ProjectTab: React.FC = () => {
                     getProjFilter={getProjFilter}
                     projType={activeTab}
                     rmFolder={rmFolder}
-                    currProject={currProject} 
-                    folders={projFolders} 
+                    currProject={currProject}
+                    folders={projFolders}
                     currFolder={currFolder} ></TeXMoveToFolder> : <div></div>
             }
             {
@@ -533,6 +544,12 @@ const ProjectTab: React.FC = () => {
                     handleEditInputChange={handleEditInputChange}
                     projName={projName}
                     currProject={currProject} ></TeXEdit> : <div></div>
+            }
+            {
+                (currProject && currProject.project_id) ? <TeXProjCopy
+                    getProjFilter={getProjFilter}
+                    currProject={currProject}
+                    projType={activeTab} ></TeXProjCopy> : <div></div>
             }
             {
                 (currProject && currProject.project_id) ? <TeXShare projectId={currProject.project_id.toString()}></TeXShare> : <div></div>

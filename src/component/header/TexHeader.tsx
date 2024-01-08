@@ -130,7 +130,7 @@ const TexHeader: React.FC = () => {
         <div className={styles.headerLayout}>
             <nav className="navbar navbar-expand-sm navbar-dark">
                 <div className="container-fluid">
-                    <a className="navbar-brand text-light" href="/">TeXHub</a>
+                    <a className="navbar-brand text-light" href="/">TeXHub(Beta)</a>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item">
