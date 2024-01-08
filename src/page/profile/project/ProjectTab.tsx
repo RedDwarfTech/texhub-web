@@ -253,7 +253,6 @@ const ProjectTab: React.FC = () => {
         return projList;
     }
 
-
     const getFolderProjects = (folder: TexProjectFolder) => {
         setCurrFolder(folder);
         let curProjMap: FolderModel | undefined = projMap.get(folder.id);
@@ -266,9 +265,9 @@ const ProjectTab: React.FC = () => {
             };
             updatedItems.set(folder.id, new_map);
             setProjMap(updatedItems);
-        }else{
+        } else {
             getFolderProject(folder.id);
-        } 
+        }
     }
 
     const renderFolder = () => {
