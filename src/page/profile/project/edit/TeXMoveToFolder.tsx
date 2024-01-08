@@ -13,6 +13,7 @@ export type MoveProps = {
     currFolder: TexProjectFolder | undefined,
     folders: TexProjectFolder[],
     projType: number,
+    rmFolder: (folderId: number) => void
 };
 
 const TeXMoveToFolder: React.FC<MoveProps> = (props: MoveProps) => {
@@ -39,6 +40,7 @@ const TeXMoveToFolder: React.FC<MoveProps> = (props: MoveProps) => {
         };
         moveProject(proj).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
+                props.rmFolder(currSelectFolderId);
                 getProjectList(props.getProjFilter({}));
                 if (editProjCancelRef && editProjCancelRef.current) {
                     editProjCancelRef.current.click();

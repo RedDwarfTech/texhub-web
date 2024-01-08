@@ -254,7 +254,6 @@ const ProjectTab: React.FC = () => {
             return ([]);
         }
         let projList = renderProj(curProjMap.projects);
-        debugger
         return projList;
     }
 
@@ -273,6 +272,14 @@ const ProjectTab: React.FC = () => {
         } else {
             getFolderProject(folder.id);
         }
+    }
+
+    const rmFolder = (folderId: number) => {
+        setProjMap((prevMapState) => {
+            const newMapState = new Map<number, FolderModel>(prevMapState);
+            newMapState.delete(folderId);
+            return newMapState;
+        });
     }
 
     const renderFolder = () => {
@@ -515,7 +522,10 @@ const ProjectTab: React.FC = () => {
                 (currProject && currProject.project_id) ? <TeXMoveToFolder
                     getProjFilter={getProjFilter}
                     projType={activeTab}
-                    currProject={currProject} folders={projFolders} currFolder={currFolder} ></TeXMoveToFolder> : <div></div>
+                    rmFolder={rmFolder}
+                    currProject={currProject} 
+                    folders={projFolders} 
+                    currFolder={currFolder} ></TeXMoveToFolder> : <div></div>
             }
             {
                 (currProject && currProject.project_id) ? <TeXEdit projectId={currProject.project_id.toString()}
