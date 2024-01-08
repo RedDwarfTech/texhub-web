@@ -24,11 +24,12 @@ import TeXNewFolder from "./new/TeXNewFolder";
 import TeXMoveToFolder from "./edit/TeXMoveToFolder";
 import FolderRename from "./edit/FolderRename";
 import FolderDel from "./edit/FolderDel";
+import { FolderModel } from "@/model/proj/folder/FolderModel";
 
 const ProjectTab: React.FC = () => {
 
     const [userDocList, setUserDocList] = useState<TexProjectModel[]>([]);
-    const [projMap, setProjMap] = useState<Map<number, TexProjectModel[]>>(new Map<number, TexProjectModel[]>());
+    const [projMap, setProjMap] = useState<Map<number, FolderModel>>(new Map<number, FolderModel>());
     const [projFolders, setProjFolders] = useState<TexProjectFolder[]>([]);
     const [currProject, setCurrProject] = useState<TexProjectModel>();
     const [currFolder, setCurrFolder] = useState<TexProjectFolder>();
@@ -47,7 +48,12 @@ const ProjectTab: React.FC = () => {
     React.useEffect(() => {
         if (folderProjList && folderProjList.length > 0) {
             if (currFolder) {
-                projMap.set(currFolder.id, folderProjList);
+                let cachedExpand = projMap.get(currFolder.id)?.expand;
+                let folderModel: FolderModel = {
+                    expand: cachedExpand ? cachedExpand : true,
+                    projects: folderProjList
+                };
+                projMap.set(currFolder.id, folderModel);
                 setProjMap(projMap);
             }
         }
@@ -236,18 +242,33 @@ const ProjectTab: React.FC = () => {
     }
 
     const renderFolderProj = (folderId: number) => {
-        let curProjMap: TexProjectModel[] | undefined = projMap.get(folderId);
-        if (!curProjMap || curProjMap.length === 0) {
+        let curProjMap: FolderModel | undefined = projMap.get(folderId);
+        if (!curProjMap || curProjMap.projects.length === 0) {
             return (<div></div>);
         }
-        let projList = renderProj(curProjMap);
+        if (!curProjMap.expand) {
+            return (<div></div>);
+        }
+        let projList = renderProj(curProjMap.projects);
         return projList;
     }
 
 
     const getFolderProjects = (folder: TexProjectFolder) => {
         setCurrFolder(folder);
-        getFolderProject(folder.id);
+        let curProjMap: FolderModel | undefined = projMap.get(folder.id);
+        if (curProjMap) {
+            // expand or collapse the folder
+            const updatedItems = new Map<number, FolderModel>(projMap);
+            let new_map: FolderModel = {
+                expand: !curProjMap.expand,
+                projects: curProjMap.projects
+            };
+            updatedItems.set(folder.id, new_map);
+            setProjMap(updatedItems);
+        }else{
+            getFolderProject(folder.id);
+        } 
     }
 
     const renderFolder = () => {
@@ -287,7 +308,7 @@ const ProjectTab: React.FC = () => {
                             <div><span>更新时间：</span>{formattedTime}</div>
                         </div>
                         <div>
-                            {renderFolderProj(folderItem.id!)}
+                            {renderFolderProj(folderItem.id)}
                         </div>
                     </div>
                 );
