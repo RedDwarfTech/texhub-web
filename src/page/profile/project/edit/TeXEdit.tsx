@@ -1,16 +1,19 @@
 import { QueryProjReq } from "@/model/request/proj/query/QueryProjReq";
 import { EditProjReq } from "@/model/request/proj/edit/EditProjReq";
-import { editProject, getProjectList } from "@/service/project/ProjectService";
+import { editProject, getFolderProject, getProjectList } from "@/service/project/ProjectService";
 import { ResponseHandler } from "rdjs-wheel";
-import { ChangeEvent, useRef, useState } from "react";
-import { toast, ToastContainer } from 'react-toastify';
+import { ChangeEvent, useRef } from "react";
+import { toast } from 'react-toastify';
+import { TexProjectModel } from "@/model/proj/TexProjectModel";
+import { TexProjectFolder } from "@/model/proj/TexProjectFolder";
 
 export type EditProps = {
     projectId: string;
     projName: string | undefined;
     getProjFilter: (query: QueryProjReq) => QueryProjReq;
     handleEditInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
-    currProject: any
+    currProject: TexProjectModel,
+    currFolder: TexProjectFolder | undefined
 };
 
 const TeXEdit: React.FC<EditProps> = (props: EditProps) => {
@@ -37,7 +40,11 @@ const TeXEdit: React.FC<EditProps> = (props: EditProps) => {
         };
         editProject(proj).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                getProjectList(props.getProjFilter({}));
+                if(props.currFolder && props.currFolder.default_folder !== 1){
+                    getFolderProject(props.currFolder.id);
+                }else{
+                    getProjectList(props.getProjFilter({}));
+                }
                 if (editProjCancelRef && editProjCancelRef.current) {
                     editProjCancelRef.current.click();
                 }

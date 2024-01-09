@@ -526,6 +526,7 @@ const ProjectTab: React.FC = () => {
                     getProjFilter={getProjFilter}
                     handleEditInputChange={handleEditInputChange}
                     projName={projName}
+                    currFolder={currFolder}
                     currProject={currProject} ></TeXEdit> : <div></div>
             }
             {
