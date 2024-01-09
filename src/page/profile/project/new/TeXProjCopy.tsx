@@ -6,11 +6,13 @@ import { toast } from "react-toastify";
 import { UserService } from "rd-component";
 import { CopyProjReq } from "@/model/request/proj/edit/CopyProjReq";
 import { TexProjectModel } from "@/model/proj/TexProjectModel";
+import { TexProjectFolder } from "@/model/proj/TexProjectFolder";
 
 export type CopyProjProps = {
     getProjFilter: (query: QueryProjReq) => QueryProjReq;
     projType: number;
     currProject: TexProjectModel,
+    currFolder: TexProjectFolder | undefined
 };
 
 const TeXProjCopy: React.FC<CopyProjProps> = (props: CopyProjProps) => {
@@ -22,10 +24,14 @@ const TeXProjCopy: React.FC<CopyProjProps> = (props: CopyProjProps) => {
             toast.warning("登录后即可复制项目");
             return;
         }
+        if(!props.currFolder || !props.currFolder.id){
+            return;
+        }
         let doc:CopyProjReq = {
             project_id: props.currProject.project_id,
-            version: ""
-        }
+            version: "",
+            folder_id: props.currFolder.id
+        };
         copyProj(doc).then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
                 getProjectList(props.getProjFilter({}));
