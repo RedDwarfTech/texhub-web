@@ -435,7 +435,7 @@ export function downloadProj(req: QueryDownload) {
 export function copyProj(req: CopyProjReq) {
   const config: AxiosRequestConfig = {
     method: 'post',
-    url: '/tex/project/coppy',
+    url: '/tex/project/copy',
     data: JSON.stringify(req)
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.COPY_PROJ];
