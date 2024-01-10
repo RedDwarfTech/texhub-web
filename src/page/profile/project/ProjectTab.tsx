@@ -543,13 +543,18 @@ const ProjectTab: React.FC = () => {
                 (currProject && currProject.project_id) ? <TeXShare projectId={currProject.project_id.toString()}></TeXShare> : <div></div>
             }
             {
-                (currProject && currProject.project_id) ? <TeXArchive projectId={currProject.project_id.toString()} currProject={currProject} getProjFilter={getProjFilter}></TeXArchive> : <div></div>
+                (currProject && currProject.project_id) ? <TeXArchive projectId={currProject.project_id.toString()} currProject={currProject}
+                    getProjFilter={getProjFilter}></TeXArchive> : <div></div>
             }
             {
-                (currProject && currProject.project_id) ? <TeXTrash projectId={currProject.project_id.toString()} currProject={currProject} getProjFilter={getProjFilter}></TeXTrash> : <div></div>
+                (currProject && currProject.project_id) ? <TeXTrash projectId={currProject.project_id.toString()} currProject={currProject}
+                    getProjFilter={getProjFilter}
+                    currFolder={currFolder}></TeXTrash> : <div></div>
             }
             {
-                (currProject && currProject.project_id) ? <TeXRecovery projectId={currProject.project_id.toString()} currProject={currProject} getProjFilter={getProjFilter} activeTab={activeTab}></TeXRecovery> : <div></div>
+                (currProject && currProject.project_id) ? <TeXRecovery projectId={currProject.project_id.toString()} currProject={currProject}
+                    getProjFilter={getProjFilter}
+                    activeTab={activeTab}></TeXRecovery> : <div></div>
             }
             <ToastContainer />
         </div>

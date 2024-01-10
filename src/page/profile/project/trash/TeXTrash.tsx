@@ -1,14 +1,16 @@
 import { QueryProjReq } from "@/model/request/proj/query/QueryProjReq";
-import { getProjectList, trashProj } from "@/service/project/ProjectService";
+import { getFolderProject, getProjectList, trashProj } from "@/service/project/ProjectService";
 import { ResponseHandler } from "rdjs-wheel";
 import { useRef } from "react";
 import { toast } from "react-toastify";
 import { TrashProjReq } from "@/model/request/proj/edit/TrashProjReq";
+import { TexProjectFolder } from "@/model/proj/TexProjectFolder";
 
 export type TrashProps = {
     projectId: string;
     currProject: any;
     getProjFilter: (query: QueryProjReq) => QueryProjReq;
+    currFolder: TexProjectFolder | undefined
 };
 
 const TeXTrash: React.FC<TrashProps> = (props: TrashProps) => {
@@ -27,7 +29,11 @@ const TeXTrash: React.FC<TrashProps> = (props: TrashProps) => {
         };
         trashProj(proj).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                getProjectList(props.getProjFilter({}));
+                if(props.currFolder && props.currFolder.default_folder !== 1){
+                    getFolderProject(props.currFolder.id);
+                }else{
+                    getProjectList(props.getProjFilter({}));
+                }
                 if (trashProjCancelRef && trashProjCancelRef.current) {
                     trashProjCancelRef.current.click();
                 }
