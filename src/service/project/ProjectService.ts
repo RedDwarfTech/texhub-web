@@ -164,10 +164,10 @@ export function moveProject(proj: MoveProjReq) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function getFolderProject(folder_id: number) {
+export function getFolderProject(folder_id: number, proj_type: number) {
   const config: AxiosRequestConfig = {
     method: 'get',
-    url: '/tex/project/perfolder?folder_id=' + folder_id,
+    url: '/tex/project/perfolder?folder_id=' + folder_id + '&proj_type=' + proj_type,
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.GET_FOLDER_PROJ];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
