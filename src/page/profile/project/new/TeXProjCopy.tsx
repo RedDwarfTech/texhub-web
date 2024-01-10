@@ -35,7 +35,7 @@ const TeXProjCopy: React.FC<CopyProjProps> = (props: CopyProjProps) => {
         copyProj(doc).then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
                 if(props.currFolder && props.currFolder.default_folder !== 1){
-                    getFolderProject(props.currFolder.id);
+                    getFolderProject(props.currFolder.id, props.projType);
                 }else{
                     getProjectList(props.getProjFilter({}));
                 }

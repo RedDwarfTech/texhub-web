@@ -13,7 +13,8 @@ export type EditProps = {
     getProjFilter: (query: QueryProjReq) => QueryProjReq;
     handleEditInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
     currProject: TexProjectModel,
-    currFolder: TexProjectFolder | undefined
+    currFolder: TexProjectFolder | undefined,
+    projType: number;
 };
 
 const TeXEdit: React.FC<EditProps> = (props: EditProps) => {
@@ -41,7 +42,7 @@ const TeXEdit: React.FC<EditProps> = (props: EditProps) => {
         editProject(proj).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
                 if(props.currFolder && props.currFolder.default_folder !== 1){
-                    getFolderProject(props.currFolder.id);
+                    getFolderProject(props.currFolder.id, props.projType);
                 }else{
                     getProjectList(props.getProjFilter({}));
                 }

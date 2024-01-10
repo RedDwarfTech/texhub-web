@@ -266,7 +266,7 @@ const ProjectTab: React.FC = () => {
             updatedItems.set(folder.id, new_map);
             setProjMap(updatedItems);
         } else {
-            getFolderProject(folder.id);
+            getFolderProject(folder.id, activeTab);
         }
     }
 
@@ -540,6 +540,7 @@ const ProjectTab: React.FC = () => {
                     handleEditInputChange={handleEditInputChange}
                     projName={projName}
                     currFolder={currFolder}
+                    projType={activeTab}
                     currProject={currProject} ></TeXEdit> : <div></div>
             }
             {
@@ -559,6 +560,7 @@ const ProjectTab: React.FC = () => {
             {
                 (currProject && currProject.project_id) ? <TeXTrash projectId={currProject.project_id.toString()} currProject={currProject}
                     getProjFilter={getProjFilter}
+                    projType={activeTab}
                     currFolder={currFolder}></TeXTrash> : <div></div>
             }
             {

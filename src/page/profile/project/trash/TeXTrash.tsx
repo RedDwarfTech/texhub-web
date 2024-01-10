@@ -10,7 +10,8 @@ export type TrashProps = {
     projectId: string;
     currProject: any;
     getProjFilter: (query: QueryProjReq) => QueryProjReq;
-    currFolder: TexProjectFolder | undefined
+    currFolder: TexProjectFolder | undefined,
+    projType: number;
 };
 
 const TeXTrash: React.FC<TrashProps> = (props: TrashProps) => {
@@ -30,7 +31,7 @@ const TeXTrash: React.FC<TrashProps> = (props: TrashProps) => {
         trashProj(proj).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
                 if(props.currFolder && props.currFolder.default_folder !== 1){
-                    getFolderProject(props.currFolder.id);
+                    getFolderProject(props.currFolder.id, props.projType);
                 }else{
                     getProjectList(props.getProjFilter({}));
                 }
