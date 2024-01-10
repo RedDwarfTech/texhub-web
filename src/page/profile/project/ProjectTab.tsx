@@ -397,19 +397,22 @@ const ProjectTab: React.FC = () => {
         }
         if (clickTab === ProjTabType.Shared) {
             let projReq = {
-                role_id: 2
+                role_id: 2,
+                proj_type: ProjTabType.Shared
             };
             getProjectList(projReq);
         }
         if (clickTab === ProjTabType.Archived) {
             let projReq: QueryProjReq = {
-                archive_status: 1
+                archive_status: 1,
+                proj_type: ProjTabType.Archived
             };
             getProjectList(projReq);
         }
         if (clickTab === ProjTabType.Trash) {
             let projReq: QueryProjReq = {
-                trash: 1
+                trash: 1,
+                proj_type: ProjTabType.Trash
             };
             getProjectList(projReq);
         }
