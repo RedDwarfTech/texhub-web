@@ -1,5 +1,5 @@
 import { QueryProjReq } from "@/model/request/proj/query/QueryProjReq";
-import { copyProj, getProjectList } from "@/service/project/ProjectService";
+import { copyProj, getFolderProject, getProjectList } from "@/service/project/ProjectService";
 import { ResponseHandler } from "rdjs-wheel";
 import { useRef } from "react";
 import { toast } from "react-toastify";
@@ -34,7 +34,11 @@ const TeXProjCopy: React.FC<CopyProjProps> = (props: CopyProjProps) => {
         };
         copyProj(doc).then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
-                getProjectList(props.getProjFilter({}));
+                if(props.currFolder && props.currFolder.default_folder !== 1){
+                    getFolderProject(props.currFolder.id);
+                }else{
+                    getProjectList(props.getProjFilter({}));
+                }
                 if (createFolderCancelRef && createFolderCancelRef.current) {
                     createFolderCancelRef.current.click();
                 }
