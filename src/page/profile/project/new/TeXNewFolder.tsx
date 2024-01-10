@@ -35,7 +35,7 @@ const TeXNewFolder: React.FC<BlankProjProps> = (props: BlankProjProps) => {
         }
         let doc:CreateFolder = {
             folder_name: folderName == null ? "" : folderName,
-            proj_type: 1
+            proj_type: props.projType
         }
         createFolder(doc).then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
