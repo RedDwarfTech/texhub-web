@@ -418,6 +418,33 @@ const ProjectTab: React.FC = () => {
         }
     }
 
+    const renderNewEntry = () => {
+        if(activeTab !== 1){
+            return (<div></div>);
+        }
+        return (<div className="dropdown">
+            <button className="btn btn-secondary dropdown-toggle"
+                type="button"
+                id="dropdownMenuLink"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+                {t("btn_new")}
+            </button>
+            <ul className="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <li>
+                    <a className="dropdown-item"
+                        data-bs-toggle="modal"
+                        data-bs-target="#newProj">创建空白项目</a>
+                </li>
+                <li>
+                    <a className="dropdown-item"
+                        data-bs-toggle="modal"
+                        data-bs-target="#newFolder">新建文件夹</a>
+                </li>
+            </ul>
+        </div>);
+    }
+
     return (
         <div>
             <TexHeader></TexHeader>
@@ -449,27 +476,7 @@ const ProjectTab: React.FC = () => {
                     <div className={styles.docContainer}>
                         <div className={styles.docList}>
                             <div className={styles.docListHeader}>
-                                <div className="dropdown">
-                                    <button className="btn btn-secondary dropdown-toggle"
-                                        type="button"
-                                        id="dropdownMenuLink"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                        {t("btn_new")}
-                                    </button>
-                                    <ul className="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                        <li>
-                                            <a className="dropdown-item"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#newProj">创建空白项目</a>
-                                        </li>
-                                        <li>
-                                            <a className="dropdown-item"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#newFolder">新建文件夹</a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                {renderNewEntry()}
                             </div>
                             <div className="list-group">
                                 {renderFolder()}
