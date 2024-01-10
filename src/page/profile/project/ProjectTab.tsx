@@ -35,7 +35,9 @@ const ProjectTab: React.FC = () => {
     const [currProject, setCurrProject] = useState<TexProjectModel>();
     const [currFolder, setCurrFolder] = useState<TexProjectFolder>();
     const [projName, setProjName] = useState<string>('');
-    const [activeTab, setActiveTab] = useState<ProjTabType>(ProjTabType.All);
+    const cachedTab = localStorage.getItem("activeTab");
+    const cachedTabVal = cachedTab?parseInt(cachedTab):ProjTabType.All;
+    const [activeTab, setActiveTab] = useState<ProjTabType>(cachedTabVal);
     const { projList, folderProjList } = useSelector((state: AppState) => state.proj);
     const delProjCancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
@@ -390,6 +392,7 @@ const ProjectTab: React.FC = () => {
 
     const handleTabClick = (clickTab: number) => {
         setActiveTab(clickTab);
+        localStorage.setItem("activeTab", clickTab.toString());
         if (clickTab === ProjTabType.All) {
             let projReq = {
             };
