@@ -177,12 +177,6 @@ const ProjectTab: React.FC = () => {
                     <li>
                         <a className="dropdown-item"
                             data-bs-toggle="modal"
-                            onClick={() => { setCurrProject(docItem) }}>复制项目
-                        </a>
-                    </li>
-                    <li>
-                        <a className="dropdown-item"
-                            data-bs-toggle="modal"
                             onClick={() => { setCurrProject(docItem) }}
                             data-bs-target="#moveProj">移动到文件夹</a>
                     </li>
