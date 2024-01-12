@@ -117,7 +117,7 @@ export function joinProject(req: JoinProjReq) {
 export function deleteProject(proj: any) {
   const config: AxiosRequestConfig = {
     method: 'delete',
-    url: '/tex/project/del',
+    url: '/tex/project/',
     data: JSON.stringify(proj)
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.DELETE_PROJ];
