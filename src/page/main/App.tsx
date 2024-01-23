@@ -142,14 +142,14 @@ const App: React.FC = () => {
         if (!projTreeRef.current) {
           return;
         }
-        const prjTreeWidth = projTreeRef.current.offsetWidth;
+        const projTreeWidth = projTreeRef.current.offsetWidth;
         const { screenX } = e
         e.preventDefault()
         e.stopPropagation()
         if (prevCursorOffset === -1) {
           prevCursorOffset = screenX
         } else if (Math.abs(prevCursorOffset - screenX) >= 5) {
-          resizeElement.style.flex = `0 0 ${screenX - prjTreeWidth - 18}px`;
+          resizeElement.style.flex = `0 0 ${screenX - projTreeWidth - 18}px`;
           resizeElement.style.maxWidth = "100vw";
           prevCursorOffset = screenX;
         }

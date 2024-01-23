@@ -107,7 +107,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         for (let i = 0; i < treeNodes.length; i++) {
             if (treeNodes[i].file_type == TreeFileType.Folder && treeNodes[i].expand && treeNodes[i].expand == true) {
                 let newTree = handleAutoExpandFolder(treeNodes[i], tempTree, false);
-                if(newTree){
+                if (newTree) {
                     /**
                      * make the collapse works with the same levels if directory
                      */
@@ -137,7 +137,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     }
 
     const handleFileTreeUpdate = (tree: TexFileModel[]) => {
-        if(!tree || tree.length === 0){
+        if (!tree || tree.length === 0) {
             return;
         }
         let legacyTree = localStorage.getItem('projTree:' + props.projectId);
@@ -197,7 +197,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         };
         addFile(params).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                let req:QueryProjInfo = {
+                let req: QueryProjInfo = {
                     project_id: pid?.toString()
                 };
                 getProjectInfo(req);
@@ -247,7 +247,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const handleAutoExpandFolder = (item: TexFileModel, treeNode: TexFileModel[], expandFolder?: boolean) => {
         if (!treeNode || treeNode.length === 0) return;
         const updatedItems = handleExpandClick(item.file_id, treeNode, expandFolder);
-        debugger
         localStorage.setItem("projTree:" + item.project_id, JSON.stringify(updatedItems));
         setTexFileTree(updatedItems);
         return updatedItems;
@@ -433,44 +432,44 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
    * @param resizeBarName 
    * @param resizeArea 
    */
-  const resizeLeft = (resizeBarName: string) => {
-    setTimeout(() => {
-        let prevCursorOffset = -1;
-        let resizing = false;
-        const resizeElement: HTMLElement | null = props.divRef.current;
-        if (resizeElement == null || !resizeElement) {
-            console.error("left resize element is null");
-            return;
-        }
-        const resizeBar: HTMLElement | null = document.getElementById(resizeBarName);
-        if (resizeBar == null) {
-            console.error("resize bar is null");
-            return;
-        }
-        resizeBar.addEventListener("mousedown", () => {
-            resizing = true
-        });
-        window.addEventListener("mousemove", handleResizeMenu);
-        window.addEventListener("mouseup", () => {
-            resizing = false
-        });
-        function handleResizeMenu(e: MouseEvent) {
-            const { screenX } = e
-            e.preventDefault()
-            e.stopPropagation()
-            if (!resizing) {
-                return
+    const resizeLeft = (resizeBarName: string) => {
+        setTimeout(() => {
+            let prevCursorOffset = -1;
+            let resizing = false;
+            const resizeElement: HTMLElement | null = props.divRef.current;
+            if (resizeElement == null || !resizeElement) {
+                console.error("left resize element is null");
+                return;
             }
-            if(resizeElement==null) return;
-            if (prevCursorOffset === -1) {
-                prevCursorOffset = screenX
-            } else if (Math.abs(prevCursorOffset - screenX) >= 5) {
-                resizeElement.style.flex = `0 0 ${screenX}px`;
-                resizeElement.style.maxWidth = "100vw";
-                prevCursorOffset = screenX;
+            const resizeBar: HTMLElement | null = document.getElementById(resizeBarName);
+            if (resizeBar == null) {
+                console.error("resize bar is null");
+                return;
             }
-        }
-      }, 1500);
+            resizeBar.addEventListener("mousedown", () => {
+                resizing = true
+            });
+            window.addEventListener("mousemove", handleResizeMenu);
+            window.addEventListener("mouseup", () => {
+                resizing = false
+            });
+            function handleResizeMenu(e: MouseEvent) {
+                const { screenX } = e
+                e.preventDefault()
+                e.stopPropagation()
+                if (!resizing) {
+                    return
+                }
+                if (resizeElement == null) return;
+                if (prevCursorOffset === -1) {
+                    prevCursorOffset = screenX
+                } else if (Math.abs(prevCursorOffset - screenX) >= 5) {
+                    resizeElement.style.flex = `0 0 ${screenX}px`;
+                    resizeElement.style.maxWidth = "100vw";
+                    prevCursorOffset = screenX;
+                }
+            }
+        }, 1500);
     }
 
     const handleFolderAddConfirm = () => {
@@ -531,10 +530,12 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     }
 
     return (
-        <div id="prjTree" ref={divRef} className={styles.prjTree}>
+        <div id="projTree" ref={divRef} className={styles.projTree}>
             <div className={styles.treeMenus}>
                 <div>
-                    <button className={styles.menuButton} onClick={() => { handleFileAdd() }}>
+                    <button className={styles.menuButton}
+                        title="新增文件"
+                        onClick={() => { handleFileAdd() }}>
                         <i className="fa-solid fa-file-circle-plus"></i>
                     </button>
                     <button className={styles.menuButton} onClick={() => { handleHeaderAction("createFolderModal") }}>
