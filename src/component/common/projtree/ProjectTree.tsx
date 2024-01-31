@@ -43,7 +43,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const [draggedOverNode, setDraggedOverNode] = useState<TexFileModel | null>(null);
 
     React.useEffect(() => {
-        resizeLeft("leftDraggable");
         return () => {
         };
     }, []);
@@ -52,6 +51,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         if (projInfo && Object.keys(projInfo).length > 0) {
             handleFileTreeUpdate(projInfo.tree);
             setMainFile(projInfo.main_file);
+            resizeLeft("leftDraggable");
         }
     }, [projInfo]);
 
