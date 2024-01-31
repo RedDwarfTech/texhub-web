@@ -427,7 +427,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         });
     }
 
-    /**
+   /**
    * resize left should put to the app layer
    * @param resizeBarName 
    * @param resizeArea 
@@ -524,10 +524,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const handleFileInputChange = (event: any) => {
         setCreateFileName(event.target.value);
     };
-
-    if (!mainFile) {
-        return <div>Loading...</div>
-    }
 
     return (
         <div id="projTree" ref={divRef} className={styles.projTree}>

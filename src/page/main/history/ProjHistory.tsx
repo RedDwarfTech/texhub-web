@@ -36,7 +36,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         const tagList: JSX.Element[] = [];
         histories.forEach((item: ProjHisotry) => {
             tagList.push(
-                <div className={styles.hiscard}>
+                <div key={item.id} className={styles.hiscard}>
                     <div>{item.name}</div>
                     <div>时间：{dayjs(item.updated_time).format('YYYY-MM-DD HH:mm:ss')}</div>
                     <div className={styles.footer}>
