@@ -427,11 +427,11 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         });
     }
 
-   /**
-   * resize left should put to the app layer
-   * @param resizeBarName 
-   * @param resizeArea 
-   */
+    /**
+    * resize left should put to the app layer
+    * @param resizeBarName 
+    * @param resizeArea 
+    */
     const resizeLeft = (resizeBarName: string) => {
         setTimeout(() => {
             let prevCursorOffset = -1;
@@ -548,7 +548,9 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                     <button className={styles.menuButton} onClick={() => { handleProjSymbol() }}>
                         <i className="fa-solid fa-infinity"></i>
                     </button>
-                    <button className={styles.menuButton} onClick={() => { handleProjSearch() }}>
+                    <button className={styles.menuButton}
+                        title="搜索"
+                        onClick={() => { handleProjSearch() }}>
                         <i className="fa-solid fa-magnifying-glass"></i>
                     </button>
                 </div>
