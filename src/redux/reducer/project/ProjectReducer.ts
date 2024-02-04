@@ -35,7 +35,8 @@ const initState: AppState["proj"] = {
     projConf: {} as ProjConf,
     hits: [] as SearchResult[],
     activeShare: false,
-    projHistories: [] as ProjHisotry[]
+    projHistories: [] as ProjHisotry[],
+    insertContext: ""
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -157,6 +158,11 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 folderProjList: action.data
+            };
+        case "EDITOR_INSERT_TEXT":
+            return {
+                ...state,
+                insertContext: action.data
             };
         default:
             break;

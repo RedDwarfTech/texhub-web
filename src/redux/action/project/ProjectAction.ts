@@ -40,7 +40,8 @@ export enum ProjectActionType {
     ARCHIVE_PROJ,
     TRASH_PROJ,
     COPY_PROJ,
-    DOWNLOAD_PROJ
+    DOWNLOAD_PROJ,
+    EDITOR_INSERT_TEXT
 }
 
 export interface saveDocAction {
@@ -195,5 +196,10 @@ export interface copyProjAction {
 
 export interface renameFolderAction {
     type: ProjectActionType.RENAME_FOLDER;
+    data: any;
+}
+
+export interface insertTextAction {
+    type: ProjectActionType.EDITOR_INSERT_TEXT;
     data: any;
 }

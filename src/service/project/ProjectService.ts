@@ -351,6 +351,11 @@ export function shareProj() {
   return XHRClient.dispathAction("", actionTypeString, store);
 }
 
+export function insertTextToEditor(text: string) {
+  const actionTypeString: string = ProjectActionType[ProjectActionType.EDITOR_INSERT_TEXT];
+  return XHRClient.dispathAction(text, actionTypeString, store);
+}
+
 export function setProjAttr(data: ProjAttribute) {
   const actionTypeString: string = ProjectActionType[ProjectActionType.PROJ_ATTR];
   return XHRClient.dispathAction(data, actionTypeString, store);

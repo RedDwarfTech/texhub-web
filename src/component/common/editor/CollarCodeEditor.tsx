@@ -2,13 +2,12 @@ import { useRef, useState } from "react";
 import { EditorView } from "@codemirror/view";
 import styles from "./CollarCodeEditor.module.css";
 import React from "react";
-import * as Y from 'yjs';
 // @ts-ignore
 import { WebsocketProvider } from "y-websocket";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import 'react-toastify/dist/ReactToastify.css';
-import { initEditor, restoreFromHistory, themeConfig, themeMap } from "@/service/editor/CollarEditorService";
+import { initEditor, themeConfig, themeMap } from "@/service/editor/CollarEditorService";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { delProjInfo, getPdfPosition, projHasFile } from "@/service/project/ProjectService";
 import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
@@ -25,7 +24,7 @@ export type EditorProps = {
 const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<HTMLDivElement>(null)
   const { activeFile } = useSelector((state: AppState) => state.file);
-  const { projInfo, projConf, activeShare } = useSelector((state: AppState) => state.proj);
+  const { projInfo, projConf, activeShare, insertContext } = useSelector((state: AppState) => state.proj);
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   const [shareProj, setShareProj] = useState<boolean>();
@@ -68,6 +67,10 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   React.useEffect(()=>{
     setShareProj(activeShare);
   },[activeShare]);
+
+  React.useEffect(()=>{
+    handleInsertText(insertContext);
+  },[insertContext]);
 
   React.useEffect(() => {
     if (projConf && Object.keys(projConf).length > 0) {
@@ -113,6 +116,20 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const destroy = () => {
     if (activeEditorView) {
       setActiveEditorView(undefined);
+    }
+  }
+
+  const handleInsertText = (text: string) => {
+    if(text && activeEditorView){
+      var figureCodeArray : Array<string> = [ 
+        text
+      ];
+      const figureCode: string = figureCodeArray.join('\n');
+      const cursorPos = activeEditorView.state.selection.main.head;
+      const transaction = activeEditorView.state.update({
+        changes: { from: cursorPos, to: cursorPos, insert: figureCode },
+      });
+      activeEditorView.dispatch(transaction);
     }
   }
 

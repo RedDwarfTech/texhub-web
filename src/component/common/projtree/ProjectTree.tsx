@@ -534,18 +534,26 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                         onClick={() => { handleFileAdd() }}>
                         <i className="fa-solid fa-file-circle-plus"></i>
                     </button>
-                    <button className={styles.menuButton} onClick={() => { handleHeaderAction("createFolderModal") }}>
+                    <button className={styles.menuButton}
+                        title="创建文件夹"
+                        onClick={() => { handleHeaderAction("createFolderModal") }}>
                         <i className="fa-solid fa-folder-plus"></i>
                     </button>
-                    <button className={styles.menuButton} onClick={() => { handleHeaderAction("uploadFileModal") }}>
+                    <button className={styles.menuButton}
+                        title="上传文件"
+                        onClick={() => { handleHeaderAction("uploadFileModal") }}>
                         <i className="fa-solid fa-upload"></i>
                     </button>
                 </div>
                 <div>
-                    <button className={styles.menuButton} onClick={() => { handleCollapseAll() }}>
+                    <button className={styles.menuButton}
+                        title="折叠"
+                        onClick={() => { handleCollapseAll() }}>
                         <i className="fa-solid fa-minus"></i>
                     </button>
-                    <button className={styles.menuButton} onClick={() => { handleProjSymbol() }}>
+                    <button className={styles.menuButton}
+                        title="常用符号"
+                        onClick={() => { handleProjSymbol() }}>
                         <i className="fa-solid fa-infinity"></i>
                     </button>
                     <button className={styles.menuButton}
