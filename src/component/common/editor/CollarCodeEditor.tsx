@@ -48,11 +48,11 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       setMainFileModel(projInfo.main_file);
       const activeFileJson = localStorage.getItem(activeKey);
       if (activeFileJson) {
-        const curActiveFile:TexFileModel = JSON.parse(activeFileJson);
+        const curActiveFile: TexFileModel = JSON.parse(activeFileJson);
         let contains = projHasFile(curActiveFile.file_id, projInfo.main.project_id);
-        if(contains){
+        if (contains) {
           init(curActiveFile);
-        }else{
+        } else {
           init(projInfo.main_file);
         }
       } else {
@@ -64,13 +64,13 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     };
   }, [projInfo]);
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     setShareProj(activeShare);
-  },[activeShare]);
+  }, [activeShare]);
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     handleInsertText(insertContext);
-  },[insertContext]);
+  }, [insertContext]);
 
   React.useEffect(() => {
     if (projConf && Object.keys(projConf).length > 0) {
@@ -90,7 +90,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     if (!activeFile || !activeFile.file_id) return;
     if (activeFile && activeFile.file_type !== TreeFileType.Folder) {
       let contains = projHasFile(activeFile.file_id, props.projectId);
-      if(!contains) {
+      if (!contains) {
         return;
       }
       init(activeFile);
@@ -120,8 +120,8 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }
 
   const handleInsertText = (text: string) => {
-    if(text && activeEditorView){
-      var figureCodeArray : Array<string> = [ 
+    if (text && activeEditorView) {
+      var figureCodeArray: Array<string> = [
         text
       ];
       const figureCode: string = figureCodeArray.join('\n');
@@ -134,12 +134,12 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }
 
   const handleImageAdd = () => {
-    if(activeEditorView){
-      var figureCodeArray : Array<string> = [ 
-        '\\begin{figure}', 
-        '\t\\centering', 
-        '\t\\includegraphics[width=\\textwidth]{}' , 
-        '\t\\caption{Caption}', 
+    if (activeEditorView) {
+      var figureCodeArray: Array<string> = [
+        '\\begin{figure}',
+        '\t\\centering',
+        '\t\\includegraphics[width=\\textwidth]{}',
+        '\t\\caption{Caption}',
         '\t\\label{fig:my_label}',
         '\\end{figure}'
       ];
@@ -193,10 +193,14 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   return (
     <div className={styles.container}>
       <div className={styles.editorHeader}>
-        <button className={styles.menuButton} onClick={() => { handlePdfLocate() }}>
+        <button className={styles.menuButton}
+          title="导航到PDF"
+          onClick={() => { handlePdfLocate() }}>
           <i className="fa-solid fa-arrow-right"></i>
         </button>
-        <button className={styles.menuButton} onClick={() => { handleImageAdd() }}>
+        <button className={styles.menuButton}
+          title="插入图片"
+          onClick={() => { handleImageAdd() }}>
           <i className="fa-solid fa-image"></i>
         </button>
       </div>

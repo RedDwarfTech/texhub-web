@@ -24,8 +24,6 @@ const TeXSymbol: React.FC<ProjSymbolProps> = (props: ProjSymbolProps) => {
         return symList;
     }
 
-    const renderExtSymbol = () => { }
-
     return (
         <div className={styles.symbolContainer}>
             {renderBaseSymbol()}
