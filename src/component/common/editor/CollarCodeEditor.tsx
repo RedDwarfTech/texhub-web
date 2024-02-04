@@ -152,6 +152,10 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     }
   }
 
+  const handleTables = () => {
+
+  }
+
   const handlePdfLocate = () => {
     if (mainFileModel && mainFileModel.name && activeEditorView) {
       let { line, column } = getCursorPos(activeEditorView);
@@ -202,6 +206,13 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
           title="插入图片"
           onClick={() => { handleImageAdd() }}>
           <i className="fa-solid fa-image"></i>
+        </button>
+        <button className={styles.menuButton}
+          title="表格设计器"
+          data-bs-toggle="modal"
+          data-bs-target="#tableDesignerModal"
+          onClick={() => { handleTables() }}>
+          <i className="fa-solid fa-table"></i>
         </button>
       </div>
       <div ref={edContainer} className={styles.editorContainer}>
