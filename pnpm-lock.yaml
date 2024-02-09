@@ -108,7 +108,7 @@ dependencies:
     specifier: ^23.7.15
     version: registry.npmmirror.com/i18next@23.7.15
   jspreadsheet-ce:
-    specifier: ^4.13.4
+    specifier: ^4.6.2
     version: 4.13.4
   lib0:
     specifier: ^0.2.88
@@ -4040,7 +4040,7 @@ packages:
     dev: false
 
   github.com/RedDwarfTech/y-websocket/baf7fecd350398b32e523f14bc4f4536f9bc6f82(yjs@13.6.10):
-    resolution: {tarball: https://codeload.github.com/RedDwarfTech/y-websocket/tar.gz/baf7fecd350398b32e523f14bc4f4536f9bc6f82}
+    resolution: {commit: baf7fecd350398b32e523f14bc4f4536f9bc6f82, repo: git+ssh://git@github.com/RedDwarfTech/y-websocket.git, type: git}
     id: github.com/RedDwarfTech/y-websocket/baf7fecd350398b32e523f14bc4f4536f9bc6f82
     name: y-websocket
     version: 1.5.0
@@ -17663,8 +17663,8 @@ packages:
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     dependencies:
       '@jest/schemas': registry.npmmirror.com/@jest/schemas@28.1.3
-      ansi-regex: registry.npmmirror.com/ansi-regex@5.0.1
-      ansi-styles: registry.npmmirror.com/ansi-styles@5.2.0
+      ansi-regex: 5.0.1
+      ansi-styles: 5.2.0
       react-is: registry.npmmirror.com/react-is@18.2.0
     dev: false
 
@@ -21123,7 +21123,7 @@ packages:
     version: 1.1.5
     requiresBuild: true
     dependencies:
-      string-width: registry.npmmirror.com/string-width@4.2.3
+      string-width: 4.2.3
     dev: false
     optional: true
 

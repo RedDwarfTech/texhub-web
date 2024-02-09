@@ -17,6 +17,7 @@ import { ProjConfType } from "@/model/proj/config/ProjConfType";
 import { readConfig } from "@/config/app/config-reader";
 import { TreeFileType } from "@/model/file/TreeFileType";
 import TableDesigner from "./table/TableDesigner";
+import Snippet from "./snippet/Snippet";
 
 export type EditorProps = {
   projectId: string;
@@ -215,10 +216,18 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
           onClick={() => { handleTables() }}>
           <i className="fa-solid fa-table"></i>
         </button>
+        <button className={styles.menuButton}
+          title="代码片段"
+          data-bs-toggle="modal"
+          data-bs-target="#snippetModal"
+          onClick={() => { handleTables() }}>
+          <i className="fa-solid fa-code"></i>
+        </button>
       </div>
       <div ref={edContainer} className={styles.editorContainer}>
       </div>
       <TableDesigner></TableDesigner>
+      <Snippet></Snippet>
     </div>
   );
 }
