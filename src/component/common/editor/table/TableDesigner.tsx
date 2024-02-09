@@ -11,23 +11,44 @@ import { ReactComponent as BorderRight } from '@/assets/icon/border-right.svg';
 import styles from "./TableDesigner.module.css";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import jspreadsheet, { JSpreadsheetOptions, JspreadsheetInstanceElement } from "jspreadsheet-ce";
+import { useRef } from 'react';
+import React from 'react';
 
 export type TableDesignerProps = {
 
 };
 
 const TableDesigner: React.FC<TableDesignerProps> = (props: TableDesignerProps) => {
-
+    const jRef = useRef<JspreadsheetInstanceElement>(null);
+    const options: JSpreadsheetOptions = {
+        data: [[]],
+        minDimensions: [2, 2]
+    };
     const code = `\begin{table}[]
-	\centering
-	\begin{tabular}{llll}
-		 &  &  &  \\
-		 &  &  &  \\
-		 &  &  & 
-	\end{tabular}
-	\caption{}
-	\label{tab:my-table}
-\end{table}`;
+                \centering
+                \begin{tabular}{llll}
+                    &  &  &  \\
+                    &  &  &  \\
+                    &  &  & 
+                \end{tabular}
+                \caption{}
+                \label{tab:my-table}
+                \end{table}`;
+
+    React.useEffect(() => {
+        if (jRef.current) {
+            if (!jRef.current.jspreadsheet) {
+                jspreadsheet(jRef.current, options);
+            }
+        }
+    }, [options]);
+
+    const addRow = () => {
+        if (jRef.current) {
+            // jRef.current.jexcel.insertRow();
+        }
+    };
 
     return (
         <div className="modal fade" id="tableDesignerModal" aria-labelledby="tableDesignerLabel" aria-hidden="true">
@@ -61,8 +82,9 @@ const TableDesigner: React.FC<TableDesignerProps> = (props: TableDesignerProps) 
                                     <th><BorderRight width={'20px'} height={'20px'}></BorderRight></th>
                                 </tr>
                             </table>
-                            <div className="modal-col"></div>
                         </div>
+                        <hr />
+                        <div ref={jRef} className={styles.jspredsheet}/>
                         <hr />
                         <div>
                             <button type="button" className="btn btn-primary" data-bs-dismiss="modal">生成LaTeX代码</button>

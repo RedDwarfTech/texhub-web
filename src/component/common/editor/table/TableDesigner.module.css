@@ -28,3 +28,7 @@ tr:nth-child(even) {
     flex-direction: row;
     gap: 10px;
 }
+
+.jspredsheet {
+    margin-top: 20px;
+}
