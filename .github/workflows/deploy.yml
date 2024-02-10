@@ -14,6 +14,7 @@ jobs:
           node-version: 18
       - name: Build React App
         run: |
+          npm install -g npm@10.4.0
           npm install -g pnpm 
           pnpm add -g pnpm
           pnpm install
