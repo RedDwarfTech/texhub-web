@@ -112,7 +112,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     };
     editorView = initEditor(editorAttr, activeEditorView, edContainer);
     setActiveEditorView(editorView[0]);
-    ws = editorView[1];
+    ws = editorView[1]!;
   };
 
   const destroy = () => {

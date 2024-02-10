@@ -128,7 +128,6 @@ const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): WebsocketProvider => {
     if (!contains) {
         console.error("initial the file do not belong the project");
         debugger
-        return;
     }
     const wsProvider: WebsocketProvider = new WebsocketProvider(readConfig("wssUrl"), editorAttr.docId, ydoc, {
         maxBackoffTime: 1000000,
@@ -140,7 +139,7 @@ const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): WebsocketProvider => {
     const uInfo = localStorage.getItem("userInfo");
     if (!uInfo) {
         console.error("user info is null", uInfo);
-        return;
+        return wsProvider;
     };
     const user: UserModel = JSON.parse(uInfo);
     const ydocUser = {
@@ -278,7 +277,7 @@ export function initEditor(editorAttr: EditorAttr,
         ],
     });
     if (edContainer.current && edContainer.current.children && edContainer.current.children.length > 0) {
-        return [undefined, undefined];
+        return [undefined, wsProvider];
     }
     const editorView: EditorView = new EditorView({
         state,

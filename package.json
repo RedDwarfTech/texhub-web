@@ -70,6 +70,7 @@
     "web-vitals": "^2.1.4",
     "y-codemirror.next": "^0.3.2",
     "rdy-websocket": "1.5.0",
+    "y-websocket": "1.5.0",
     "yjs": "^13.6.10"
   },
   "scripts": {
