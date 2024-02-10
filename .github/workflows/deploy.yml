@@ -12,12 +12,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
       - name: Build React App
         run: |
-          npm install -g npm@10.4.0
-          npm install -g pnpm
-          pnpm setup
-          pnpm add -g pnpm
           pnpm install
           pnpm run build
         env:
