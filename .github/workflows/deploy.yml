@@ -17,6 +17,7 @@ jobs:
           version: 8
       - name: Build React App
         run: |
+          git config --global url.https://github.com/.insteadOf git@github.com:
           pnpm install
           pnpm run build
         env:
