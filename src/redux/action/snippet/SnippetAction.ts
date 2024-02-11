@@ -3,7 +3,7 @@ export type snippetAction = saveDocAction | getDocListAction | compileProjAction
 export enum SnippetActionType {
     DELETE_SNIPPET,
     EDIT_SNIPPET,
-    GET_SNIPPET
+    GET_SNIPPET_LIST
 }
 
 export interface saveDocAction {
@@ -17,6 +17,6 @@ export interface getDocListAction {
 }
 
 export interface compileProjAction {
-    type: SnippetActionType.GET_SNIPPET;
+    type: SnippetActionType.GET_SNIPPET_LIST;
     data: any;
 }

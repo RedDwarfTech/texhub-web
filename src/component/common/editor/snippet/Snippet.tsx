@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./Snippet.module.css";
 import Table from 'rc-table';
 import { getSnippetList } from "@/service/project/SnippetService";
+import { useSelector } from "react-redux";
+import { AppState } from "@/redux/types/AppState";
+import { TexSnippetModel } from "@/model/snippet/TexSnippetModel";
 
 export type SnippetProps = {
 
@@ -9,15 +12,24 @@ export type SnippetProps = {
 
 const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
 
+    const { snippets } = useSelector((state: AppState) => state.snippet);
+    const [snippetModels, setSnippetModels] = useState<TexSnippetModel[]>();
+
     React.useEffect(() => {
         getSnippetList({});
     }, []);
 
+    React.useEffect(() => {
+        if(snippets && snippets.length > 0){
+            setSnippetModels(snippets);
+        }
+    }, [snippets]);
+
     const columns = [
         {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
+            title: 'Snippet',
+            dataIndex: 'snippet',
+            key: 'snippet',
             width: 100,
         },
         {
@@ -26,11 +38,6 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
             key: 'operations',
             render: () => <a href="#">删除</a>,
         },
-    ];
-
-    const data = [
-        { name: 'Jack' },
-        { name: 'Rose' },
     ];
 
     return (<div className="modal fade" id="snippetModal" aria-labelledby="snippetLabel" aria-hidden="true">
@@ -42,7 +49,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
                 </div>
                 <div className="modal-body">
                     <div className={styles.tableAction}>
-                        <Table columns={columns} data={data} />
+                        <Table columns={columns} data={snippetModels} />
                     </div>
                 </div>
                 <div className="modal-footer">
