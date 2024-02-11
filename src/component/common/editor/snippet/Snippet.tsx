@@ -1,10 +1,38 @@
+import React from "react";
 import styles from "./Snippet.module.css";
+import Table from 'rc-table';
+import { getSnippetList } from "@/service/project/SnippetService";
 
 export type SnippetProps = {
 
 };
 
 const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
+
+    React.useEffect(() => {
+        getSnippetList({});
+    }, []);
+
+    const columns = [
+        {
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+            width: 100,
+        },
+        {
+            title: 'Operations',
+            dataIndex: '',
+            key: 'operations',
+            render: () => <a href="#">删除</a>,
+        },
+    ];
+
+    const data = [
+        { name: 'Jack' },
+        { name: 'Rose' },
+    ];
+
     return (<div className="modal fade" id="snippetModal" aria-labelledby="snippetLabel" aria-hidden="true">
         <div className="modal-dialog">
             <div className="modal-content">
@@ -14,6 +42,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
                 </div>
                 <div className="modal-body">
                     <div className={styles.tableAction}>
+                        <Table columns={columns} data={data} />
                     </div>
                 </div>
                 <div className="modal-footer">

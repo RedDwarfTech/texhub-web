@@ -86,6 +86,9 @@ dependencies:
   bootstrap:
     specifier: 5.3.0-alpha1
     version: registry.npmmirror.com/bootstrap@5.3.0-alpha1(@popperjs/core@2.11.8)
+  bootstrap-table:
+    specifier: ^1.22.2
+    version: 1.22.2(jquery@3.7.1)
   clipboard-polyfill:
     specifier: ^4.0.1
     version: registry.npmmirror.com/clipboard-polyfill@4.0.1
@@ -122,6 +125,9 @@ dependencies:
   query-string:
     specifier: ^8.1.0
     version: registry.npmmirror.com/query-string@8.1.0
+  rc-table:
+    specifier: 7.40.0
+    version: 7.40.0(react-dom@18.2.0)(react@18.2.0)
   rd-component:
     specifier: ^0.1.150
     version: registry.npmmirror.com/rd-component@0.1.150(@fingerprintjs/fingerprintjs@4.2.1)(@reduxjs/toolkit@1.9.7)(@types/node@16.18.69)(esbuild@0.18.20)(react-dom@18.2.0)(react-redux@8.1.3)(react-router-dom@6.21.1)(react@18.2.0)(redux@4.2.1)(rollup@4.9.2)(ts-node@10.9.2)(typescript@4.9.5)(uuid@9.0.1)(vite@4.5.1)
@@ -687,6 +693,18 @@ packages:
 
   /@popperjs/core@2.11.8:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
+    dev: false
+
+  /@rc-component/context@1.4.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-kFcNxg9oLRMoL3qki0OMxK+7g5mypjgaaJp/pkOis/6rVxma9nJBF/8kCIuTYHUQNr0ii7MxqE33wirPZLJQ2w==}
+    peerDependencies:
+      react: '>=16.9.0'
+      react-dom: '>=16.9.0'
+    dependencies:
+      '@babel/runtime': 7.23.7
+      rc-util: 5.38.1(react-dom@18.2.0)(react@18.2.0)
+      react: registry.npmmirror.com/react@18.2.0
+      react-dom: registry.npmmirror.com/react-dom@18.2.0(react@18.2.0)
     dev: false
 
   /@rollup/rollup-android-arm-eabi@4.9.2:
@@ -1414,6 +1432,14 @@ packages:
       - supports-color
     dev: false
 
+  /bootstrap-table@1.22.2(jquery@3.7.1):
+    resolution: {integrity: sha512-ZjZGcEXm/N7N/wAykmANWKKV+U+7AxgoNuBwWLrKbvAGT8XXS2f0OCiFmuMwpkqg7pDbF+ff9bEf/lOAlxcF1w==}
+    peerDependencies:
+      jquery: '3'
+    dependencies:
+      jquery: 3.7.1
+    dev: false
+
   /brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
     dependencies:
@@ -1520,6 +1546,10 @@ packages:
   /chrome-trace-event@1.0.3:
     resolution: {integrity: sha512-p3KULyQg4S7NIHixdwbGX+nFHkoBiA4YQmyWtjb8XngSKV124nJmRysgAeujbUVb15vh+RvFUfCPqU7rXk+hZg==}
     engines: {node: '>=6.0'}
+    dev: false
+
+  /classnames@2.5.1:
+    resolution: {integrity: sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==}
     dev: false
 
   /cnpm@9.4.0:
@@ -2529,6 +2559,10 @@ packages:
       supports-color: 8.1.1
     dev: false
 
+  /jquery@3.7.1:
+    resolution: {integrity: sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==}
+    dev: false
+
   /js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
     dev: false
@@ -3199,6 +3233,64 @@ packages:
       unpipe: 1.0.0
     dev: false
 
+  /rc-resize-observer@1.4.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-PnMVyRid9JLxFavTjeDXEXo65HCRqbmLBw9xX9gfC4BZiSzbLXKzW3jPz+J0P71pLbD5tBMTT+mkstV5gD0c9Q==}
+    peerDependencies:
+      react: '>=16.9.0'
+      react-dom: '>=16.9.0'
+    dependencies:
+      '@babel/runtime': 7.23.7
+      classnames: 2.5.1
+      rc-util: 5.38.1(react-dom@18.2.0)(react@18.2.0)
+      react: registry.npmmirror.com/react@18.2.0
+      react-dom: registry.npmmirror.com/react-dom@18.2.0(react@18.2.0)
+      resize-observer-polyfill: 1.5.1
+    dev: false
+
+  /rc-table@7.40.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-3O/AMZQt6MXr1rMRBkn+L6v80ym07Yp+ESG3yv7SiTZOyTRcpkSlDAcK+zu8rdCEuKUbQx/s3XHB9kHSfxTtEg==}
+    engines: {node: '>=8.x'}
+    peerDependencies:
+      react: '>=16.9.0'
+      react-dom: '>=16.9.0'
+    dependencies:
+      '@babel/runtime': 7.23.7
+      '@rc-component/context': 1.4.0(react-dom@18.2.0)(react@18.2.0)
+      classnames: 2.5.1
+      rc-resize-observer: 1.4.0(react-dom@18.2.0)(react@18.2.0)
+      rc-util: 5.38.1(react-dom@18.2.0)(react@18.2.0)
+      rc-virtual-list: 3.11.4(react-dom@18.2.0)(react@18.2.0)
+      react: registry.npmmirror.com/react@18.2.0
+      react-dom: registry.npmmirror.com/react-dom@18.2.0(react@18.2.0)
+    dev: false
+
+  /rc-util@5.38.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-e4ZMs7q9XqwTuhIK7zBIVFltUtMSjphuPPQXHoHlzRzNdOwUxDejo0Zls5HYaJfRKNURcsS/ceKVULlhjBrxng==}
+    peerDependencies:
+      react: '>=16.9.0'
+      react-dom: '>=16.9.0'
+    dependencies:
+      '@babel/runtime': 7.23.7
+      react: registry.npmmirror.com/react@18.2.0
+      react-dom: registry.npmmirror.com/react-dom@18.2.0(react@18.2.0)
+      react-is: 18.2.0
+    dev: false
+
+  /rc-virtual-list@3.11.4(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-NbBi0fvyIu26gP69nQBiWgUMTPX3mr4FcuBQiVqagU0BnuX8WQkiivnMs105JROeuUIFczLrlgUhLQwTWV1XDA==}
+    engines: {node: '>=8.x'}
+    peerDependencies:
+      react: '>=16.9.0'
+      react-dom: '>=16.9.0'
+    dependencies:
+      '@babel/runtime': 7.23.7
+      classnames: 2.5.1
+      rc-resize-observer: 1.4.0(react-dom@18.2.0)(react@18.2.0)
+      rc-util: 5.38.1(react-dom@18.2.0)(react@18.2.0)
+      react: registry.npmmirror.com/react@18.2.0
+      react-dom: registry.npmmirror.com/react-dom@18.2.0(react@18.2.0)
+    dev: false
+
   /rdy-websocket@1.5.0(yjs@13.6.10):
     resolution: {integrity: sha512-wYQK4ieHVhZWtGeLlwXY/Oz1ky/txuqvWJVJq+oXPcyTEG1GGK7Dz2SNzkJ13AxkOHPiL8Pzxo2N1PqB/sv/jg==}
     hasBin: true
@@ -3231,6 +3323,10 @@ packages:
 
   /react-is@17.0.2:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
+    dev: false
+
+  /react-is@18.2.0:
+    resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
     dev: false
 
   /react-syntax-highlighter@15.5.0(react@18.2.0):
@@ -3286,6 +3382,10 @@ packages:
       call-bind: 1.0.5
       define-properties: 1.2.1
       set-function-name: 2.0.1
+    dev: false
+
+  /resize-observer-polyfill@1.5.1:
+    resolution: {integrity: sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==}
     dev: false
 
   /resolve-from@4.0.0:
@@ -9687,7 +9787,7 @@ packages:
     version: 3.1.0
     engines: {node: '>=10', npm: '>=6'}
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime@7.23.7
+      '@babel/runtime': 7.23.7
       cosmiconfig: registry.npmmirror.com/cosmiconfig@7.1.0
       resolve: registry.npmmirror.com/resolve@1.22.8
     dev: false
@@ -9824,7 +9924,7 @@ packages:
       '@babel/preset-env': registry.npmmirror.com/@babel/preset-env@7.23.7(@babel/core@7.23.7)
       '@babel/preset-react': registry.npmmirror.com/@babel/preset-react@7.23.3(@babel/core@7.23.7)
       '@babel/preset-typescript': registry.npmmirror.com/@babel/preset-typescript@7.23.3(@babel/core@7.23.7)
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime@7.23.7
+      '@babel/runtime': 7.23.7
       babel-plugin-macros: registry.npmmirror.com/babel-plugin-macros@3.1.0
       babel-plugin-transform-react-remove-prop-types: registry.npmmirror.com/babel-plugin-transform-react-remove-prop-types@0.4.24
     transitivePeerDependencies:
@@ -12022,7 +12122,7 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime@7.23.7
+      '@babel/runtime': 7.23.7
       aria-query: registry.npmmirror.com/aria-query@5.3.0
       array-includes: registry.npmmirror.com/array-includes@3.1.7
       array.prototype.flatmap: registry.npmmirror.com/array.prototype.flatmap@1.3.2
@@ -17553,7 +17653,7 @@ packages:
       '@jest/schemas': registry.npmmirror.com/@jest/schemas@28.1.3
       ansi-regex: 5.0.1
       ansi-styles: 5.2.0
-      react-is: registry.npmmirror.com/react-is@18.2.0
+      react-is: 18.2.0
     dev: false
 
   registry.npmmirror.com/pretty-format@29.7.0:
@@ -17564,7 +17664,7 @@ packages:
     dependencies:
       '@jest/schemas': registry.npmmirror.com/@jest/schemas@29.6.3
       ansi-styles: registry.npmmirror.com/ansi-styles@5.2.0
-      react-is: registry.npmmirror.com/react-is@18.2.0
+      react-is: 18.2.0
     dev: false
 
   registry.npmmirror.com/pretty-hrtime@1.0.3:
@@ -17765,7 +17865,7 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime@7.23.7
+      '@babel/runtime': 7.23.7
       react: registry.npmmirror.com/react@18.2.0
       react-dom: registry.npmmirror.com/react-dom@18.2.0(react@18.2.0)
       react-is: registry.npmmirror.com/react-is@18.2.0
@@ -18484,7 +18584,7 @@ packages:
     name: regenerator-transform
     version: 0.15.2
     dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime@7.23.7
+      '@babel/runtime': 7.23.7
     dev: false
 
   registry.npmmirror.com/regex-parser@2.3.0:
@@ -21054,7 +21154,7 @@ packages:
       '@apideck/better-ajv-errors': registry.npmmirror.com/@apideck/better-ajv-errors@0.3.6(ajv@8.12.0)
       '@babel/core': registry.npmmirror.com/@babel/core@7.23.7
       '@babel/preset-env': registry.npmmirror.com/@babel/preset-env@7.23.7(@babel/core@7.23.7)
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime@7.23.7
+      '@babel/runtime': 7.23.7
       '@rollup/plugin-babel': registry.npmmirror.com/@rollup/plugin-babel@5.3.1(@babel/core@7.23.7)(rollup@2.79.1)
       '@rollup/plugin-node-resolve': registry.npmmirror.com/@rollup/plugin-node-resolve@11.2.1(rollup@2.79.1)
       '@rollup/plugin-replace': registry.npmmirror.com/@rollup/plugin-replace@2.4.2(rollup@2.79.1)
