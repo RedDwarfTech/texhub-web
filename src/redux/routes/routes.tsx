@@ -55,6 +55,7 @@ const routes = createBrowserRouter([
         cfSiteKey={readConfig("cfSiteKey")}
         store={store}
         loginUrl={readConfig("loginUrl")}
+        enableWechatLogin={false}
       />
     ),
   },
