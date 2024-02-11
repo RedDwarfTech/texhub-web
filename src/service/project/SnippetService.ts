@@ -1,5 +1,4 @@
 import { QuerySnippetReq } from "@/model/request/snippet/query/QuerySnippetReq";
-import { ProjectActionType } from "@/redux/action/project/ProjectAction";
 import { SnippetActionType } from "@/redux/action/snippet/SnippetAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
@@ -15,6 +14,6 @@ export function getSnippetList(req: QuerySnippetReq) {
         url: '/tex/snippet/list',
         params: params
     };
-    const actionTypeString: string = ProjectActionType[SnippetActionType.GET_SNIPPET];
+    const actionTypeString: string = SnippetActionType[SnippetActionType.GET_SNIPPET_LIST];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }

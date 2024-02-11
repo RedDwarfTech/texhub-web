@@ -20,7 +20,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
     }, []);
 
     React.useEffect(() => {
-        if(snippets && snippets.length > 0){
+        if (snippets && snippets.length > 0) {
             setSnippetModels(snippets);
         }
     }, [snippets]);
