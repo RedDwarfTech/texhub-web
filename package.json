@@ -44,7 +44,7 @@
     "pdfjs-dist": "^3.11.174",
     "query-string": "^8.2.0",
     "rc-table": "7.40.0",
-    "rd-component": "^0.1.151",
+    "rd-component": "^0.1.152",
     "rd-lang-tex": "^0.0.6",
     "rd-lezer-tex": "0.0.3",
     "rdjs-wheel": "0.0.28",
