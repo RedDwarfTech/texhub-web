@@ -416,7 +416,7 @@ const ProjectTab: React.FC = () => {
     }
 
     const navToVerify = () => {
-        navigate("/user/pwd/verify");
+        navigate("/user/pwd/retrieve");
     }
 
     const renderNewEntry = () => {
@@ -431,7 +431,6 @@ const ProjectTab: React.FC = () => {
                 aria-expanded="false">
                 {t("btn_new")}
             </button>
-            <button onClick={()=>{navToVerify()}}>忘记密码</button>
             <ul className="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <li>
                     <a className="dropdown-item"
