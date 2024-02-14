@@ -13,6 +13,8 @@ import TeXShareRecieved from "@/page/profile/project/share/TexShareRecieved";
 import Settings from "@/page/profile/panel/Settings";
 import FullScreen from "@/component/common/previewer/feat/fullscreen/FullScreen";
 import DocCenter from "@/page/document/DocCenter";
+import VerifyPwd from "@/page/pwd/verify/VerifyPwd";
+import ResetPwd from "@/page/pwd/reset/ResetPwd";
 
 const routes = createBrowserRouter([
   {
@@ -80,6 +82,14 @@ const routes = createBrowserRouter([
   {
     path: "/proj/share",
     element: <TeXShareRecieved />,
+  },
+  {
+    path: "/user/pwd/verify",
+    element: <VerifyPwd />,
+  },
+  {
+    path: "/user/pwd/reset",
+    element: <ResetPwd />,
   },
 ]);
 
