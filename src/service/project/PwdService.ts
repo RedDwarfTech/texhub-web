@@ -1,3 +1,4 @@
+import { ResetPwdReq } from "@/model/request/pwd/ResetPwdReq";
 import { SendVerifyReq } from "@/model/request/pwd/SendVerifyReq";
 import { VerifyReq } from "@/model/request/pwd/VerifyReq";
 import { PwdActionType } from "@/redux/action/pwd/PwdAction";
@@ -25,7 +26,7 @@ export function verifySmsCode(doc: VerifyReq) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function changePwd(doc: VerifyReq) {
+export function resetPwd(doc: ResetPwdReq) {
   const config: AxiosRequestConfig = {
     method: 'post',
     url: '/texpub/user/pwd/reset',

@@ -1,16 +1,42 @@
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import styles from "./ResetPwd.module.css";
 import { useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { resetPwd } from "@/service/project/PwdService";
+import { ResetPwdReq } from "@/model/request/pwd/ResetPwdReq";
 
 const ResetPwd: React.FC = () => {
 
-    const phoneInputRef = useRef(null);
     const passwordInputRef = useRef(null);
-    const navigate = useNavigate();
+    const reinputPwdInputRef = useRef(null);
 
-    const handleChangePwd = () => {
-        
+    const handleResetPwd = () => {
+        if (
+            !passwordInputRef.current ||
+            (passwordInputRef.current as HTMLInputElement).value.length === 0
+        ) {
+            debugger;
+            toast("请输入密码!");
+            return;
+        }
+        if (
+            !reinputPwdInputRef.current ||
+            (reinputPwdInputRef.current as HTMLInputElement).value.length === 0
+        ) {
+            debugger;
+            toast("请再次输入密码!");
+            return;
+        }
+        let reinputValue = (reinputPwdInputRef.current as HTMLInputElement).value;
+        let phoneValue = (passwordInputRef.current as HTMLInputElement).value;
+        if(reinputValue !== phoneValue){
+            toast("两次输入密码不一致!");
+            return;
+        }
+        let resetReq: ResetPwdReq = {
+            phone: phoneValue,
+            code: ""
+        };
+        resetPwd(resetReq);
     }
 
     return (<div className={styles.verifyCodeContainer}>
@@ -19,7 +45,7 @@ const ResetPwd: React.FC = () => {
             <form
                 method="post"
                 className={styles.loginElement}
-                onSubmit={(e) => { }}
+                onSubmit={(e) => { handleResetPwd() }}
             >
                 <div className={styles.password}>
                     <input
@@ -33,7 +59,7 @@ const ResetPwd: React.FC = () => {
                 <div className={styles.password}>
                     <input
                         type="password"
-                        ref={passwordInputRef}
+                        ref={reinputPwdInputRef}
                         placeholder="再次输入新密码"
                         name="p"
                     ></input>
