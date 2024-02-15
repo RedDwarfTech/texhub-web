@@ -84,11 +84,11 @@ const routes = createBrowserRouter([
     element: <TeXShareRecieved />,
   },
   {
-    path: "/user/pwd/retrieve",
+    path: "/userpage/pwd/retrieve",
     element: <VerifyPwd />,
   },
   {
-    path: "/user/pwd/reset",
+    path: "/userpage/pwd/reset",
     element: <ResetPwd />,
   },
 ]);
