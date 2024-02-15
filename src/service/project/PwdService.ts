@@ -18,7 +18,7 @@ export function sendVerifySMS(doc: SendVerifyReq) {
 
 export function verifySmsCode(doc: VerifyReq) {
   const config: AxiosRequestConfig = {
-    method: 'post',
+    method: 'put',
     url: '/texpub/user/verify',
     data: JSON.stringify(doc)
   };

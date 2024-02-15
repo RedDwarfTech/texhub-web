@@ -28,6 +28,7 @@ const VerifyPwd: React.FC = () => {
             code: "123456"
         };
         verifySmsCode(req).then((resp) => {
+            debugger
             if(ResponseHandler.responseSuccess(resp)) {
                 navigate("/user/pwd/reset");
             }

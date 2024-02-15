@@ -415,10 +415,6 @@ const ProjectTab: React.FC = () => {
         }
     }
 
-    const navToVerify = () => {
-        navigate("/user/pwd/retrieve");
-    }
-
     const renderNewEntry = () => {
         if(activeTab !== 1){
             return (<div></div>);
