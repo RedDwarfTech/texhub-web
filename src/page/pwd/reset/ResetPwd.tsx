@@ -3,13 +3,17 @@ import styles from "./ResetPwd.module.css";
 import { useRef } from "react";
 import { resetPwd } from "@/service/project/PwdService";
 import { ResetPwdReq } from "@/model/request/pwd/ResetPwdReq";
+import { ResponseHandler } from "rdjs-wheel";
+import { useNavigate } from "react-router-dom";
 
 const ResetPwd: React.FC = () => {
 
     const passwordInputRef = useRef(null);
     const reinputPwdInputRef = useRef(null);
+    const navigate = useNavigate();
 
-    const handleResetPwd = () => {
+    const handleResetPwd = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         if (
             !passwordInputRef.current ||
             (passwordInputRef.current as HTMLInputElement).value.length === 0
@@ -36,7 +40,13 @@ const ResetPwd: React.FC = () => {
             phone: phoneValue,
             code: ""
         };
-        resetPwd(resetReq);
+        resetPwd(resetReq).then((resp) => {
+            if (ResponseHandler.responseSuccess(resp)) {
+                navigate("/user/login");
+            } else {
+                toast(resp.msg);
+            }
+        });
     }
 
     return (
@@ -46,7 +56,7 @@ const ResetPwd: React.FC = () => {
                 <form
                     method="post"
                     className={styles.loginElement}
-                    onSubmit={(e) => { handleResetPwd() }}
+                    onSubmit={(e) => { handleResetPwd(e) }}
                 >
                     <div className={styles.password}>
                         <input

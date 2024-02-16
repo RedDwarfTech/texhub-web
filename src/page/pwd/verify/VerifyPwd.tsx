@@ -30,7 +30,7 @@ const VerifyPwd: React.FC = () => {
         };
         verifySmsCode(req).then((resp) => {
             if(ResponseHandler.responseSuccess(resp)) {
-                navigate("/user/pwd/reset");
+                navigate("/userpage/pwd/reset");
             }else{
                 debugger
                 toast(resp.msg);

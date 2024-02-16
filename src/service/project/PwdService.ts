@@ -28,7 +28,7 @@ export function verifySmsCode(doc: VerifyReq) {
 
 export function resetPwd(doc: ResetPwdReq) {
   const config: AxiosRequestConfig = {
-    method: 'post',
+    method: 'put',
     url: '/texpub/user/pwd/reset',
     data: JSON.stringify(doc)
   };
