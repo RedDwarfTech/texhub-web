@@ -14,13 +14,12 @@ const VerifyPwd: React.FC = () => {
     const navigate = useNavigate();
 
     const handleNextStep = (e: React.FormEvent<HTMLFormElement>) => {
+        // https://stackoverflow.com/questions/78001281/why-the-react-cllient-axios-send-http-with-an-extended-local-url
         e.preventDefault();
-        debugger
         if (
             !phoneInputRef.current ||
             (phoneInputRef.current as HTMLInputElement).value.length === 0
           ) {
-            debugger;
             toast("请输入用户名!");
             return;
           }
@@ -30,7 +29,6 @@ const VerifyPwd: React.FC = () => {
             code: "123456"
         };
         verifySmsCode(req).then((resp) => {
-            debugger
             if(ResponseHandler.responseSuccess(resp)) {
                 navigate("/user/pwd/reset");
             }
