@@ -21,10 +21,9 @@ const TemplateReducer = (state = initState, action: any) => {
                 tplList: action.data
             };
         case "GET_TPL_PAGE":
-            let resp: EntityList<TemplateModel> = ResponseHandler.mapUnwrapPage(action.data);
             return {
                 ...state,
-                tplPage: resp
+                tplPage: action.data
             };
         default:
             break;
