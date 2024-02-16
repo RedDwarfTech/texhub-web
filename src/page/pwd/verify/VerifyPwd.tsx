@@ -96,10 +96,10 @@ const VerifyPwd: React.FC = () => {
                     {renderVerifyCodeAction()}
                     <div className={styles.password}>
                         <input
-                            type="password"
+                            type="text"
                             ref={passwordInputRef}
                             placeholder="验证码"
-                            name="p"
+                            name=""
                         ></input>
                     </div>
                     <div className={styles.operate}>

@@ -66,7 +66,7 @@
     font-size: 16px;
 }
 
-.password input[type="password"] {
+.password input {
     width: 95%;
     padding: 6px;
     border-radius: 5px;

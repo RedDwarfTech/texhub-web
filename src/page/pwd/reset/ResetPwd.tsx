@@ -49,7 +49,11 @@ const ResetPwd: React.FC = () => {
         };
         resetPwd(resetReq).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                navigate("/user/login");
+                toast("密码重置成功",{
+                    onClose:()=>{
+                        navigate("/user/login");
+                    }
+                });
             } else {
                 toast(resp.msg);
             }
