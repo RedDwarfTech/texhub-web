@@ -1,4 +1,4 @@
 export interface VerifyReq { 
     phone: string;
-    code: string;
+    verifyCode: string;
 }

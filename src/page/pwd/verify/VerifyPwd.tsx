@@ -26,7 +26,7 @@ const VerifyPwd: React.FC = () => {
        let phoneValue = (phoneInputRef.current as HTMLInputElement).value;
         let req: VerifyReq = {
             phone: phoneValue,
-            code: "123456"
+            verifyCode: "123456"
         };
         verifySmsCode(req).then((resp) => {
             if(ResponseHandler.responseSuccess(resp)) {
