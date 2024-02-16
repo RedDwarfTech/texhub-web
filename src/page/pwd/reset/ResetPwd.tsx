@@ -4,13 +4,15 @@ import { useRef } from "react";
 import { resetPwd } from "@/service/project/PwdService";
 import { ResetPwdReq } from "@/model/request/pwd/ResetPwdReq";
 import { ResponseHandler } from "rdjs-wheel";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { readConfig } from "@/config/app/config-reader";
 
 const ResetPwd: React.FC = () => {
 
     const passwordInputRef = useRef(null);
     const reinputPwdInputRef = useRef(null);
     const navigate = useNavigate();
+    let { phone } = useParams();
 
     const handleResetPwd = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -37,8 +39,10 @@ const ResetPwd: React.FC = () => {
             return;
         }
         let resetReq: ResetPwdReq = {
-            phone: phoneValue,
-            code: ""
+            phone: phone!,
+            code: "123456",
+            password: reinputValue,
+            appId: readConfig("appId")
         };
         resetPwd(resetReq).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
