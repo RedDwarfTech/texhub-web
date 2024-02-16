@@ -39,7 +39,8 @@ export interface AppState {
         hits: SearchResult[],
         activeShare: false,
         projHistories: ProjHisotry[],
-        insertContext: string
+        insertContext: string,
+        projHisPage: EntityList<ProjHisotry>
     },
     tpl: {
         tplList: TemplateModel[],

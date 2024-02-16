@@ -3,7 +3,7 @@ import styles from "./ProjHistory.module.css";
 import { AppState } from "@/redux/types/AppState";
 import React, { useState } from "react";
 import { ProjHisotry } from "@/model/proj/history/ProjHistory";
-import { projHistory } from "@/service/project/ProjectService";
+import { projHistory, projHistoryPage } from "@/service/project/ProjectService";
 import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
 import dayjs from "dayjs";
 
@@ -13,21 +13,21 @@ export type HistoryProps = {
 
 const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     
-    const { projHistories } = useSelector((state: AppState) => state.proj);
+    const { projHisPage } = useSelector((state: AppState) => state.proj);
     const [histories, setHistories] = useState<ProjHisotry[]>([]);
 
     React.useEffect(()=>{
         const hist: QueryHistory = {
             project_id: props.projectId
         };
-        projHistory(hist);
+        projHistoryPage(hist);
     },[]);
 
     React.useEffect(()=>{
-        if(projHistories && projHistories.length > 0) {
-            setHistories(projHistories);
+        if(projHisPage && projHisPage.data) {
+            setHistories(projHisPage.data);
         }
-    },[projHistories]);
+    },[projHisPage]);
 
     const renderHistroy = () => {
         if(!histories || histories.length === 0){

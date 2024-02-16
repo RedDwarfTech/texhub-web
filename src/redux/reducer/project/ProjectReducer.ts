@@ -36,7 +36,14 @@ const initState: AppState["proj"] = {
     hits: [] as SearchResult[],
     activeShare: false,
     projHistories: [] as ProjHisotry[],
-    insertContext: ""
+    insertContext: "",
+    projHisPage: {
+        pagination: {
+            total: 0,
+            per_page: 0,
+            page: 0
+        }
+    }
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -153,6 +160,11 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 projHistories: action.data
+            };
+        case "PROJ_HISTORY_PAGE":
+            return {
+                ...state,
+                projHisPage: action.data
             };
         case "GET_FOLDER_PROJ":
             return {

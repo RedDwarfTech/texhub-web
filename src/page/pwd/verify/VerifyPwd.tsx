@@ -14,6 +14,8 @@ const VerifyPwd: React.FC = () => {
     const navigate = useNavigate();
 
     const handleNextStep = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        debugger
         if (
             !phoneInputRef.current ||
             (phoneInputRef.current as HTMLInputElement).value.length === 0

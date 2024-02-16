@@ -389,6 +389,20 @@ export function projHistory(history: QueryHistory) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
+export function projHistoryPage(history: QueryHistory) {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(history)) {
+    params.append(key, value);
+  }
+  const config: AxiosRequestConfig = {
+    method: 'get',
+    url: '/tex/project/history/page',
+    params: params
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.PROJ_HISTORY_PAGE];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
 export function getCachedProjInfo(projId: string){
   let legacyTree = localStorage.getItem('projTree:' + projId);
   if (legacyTree == null) {

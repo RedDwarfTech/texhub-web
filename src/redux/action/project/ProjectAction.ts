@@ -1,7 +1,7 @@
 import { CompileStatus } from "@/model/proj/compile/CompileStatus";
 import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
 
-export type projectAction = saveDocAction | getDocListAction | compileProjAction | getLatestCompileAction | renderLogAction | clearCompLogAction | addQueueCompileAction | getCompQueueStatusAction | texCompEndAction | getProjInfoAction | delProjInfoAction | uploadProjFileAction;
+export type projectAction = saveDocAction | getDocListAction | compileProjAction | getLatestCompileAction | renderLogAction | clearCompLogAction | addQueueCompileAction | getCompQueueStatusAction | texCompEndAction | getProjInfoAction | delProjInfoAction | uploadProjFileAction | getHisPageAction;
 
 export enum ProjectActionType {
     CREATE_DOC,
@@ -36,6 +36,7 @@ export enum ProjectActionType {
     CHANGE_PROJ_CONF,
     PROJ_SEARCH,
     PROJ_HISTORY,
+    PROJ_HISTORY_PAGE,
     SHARE_PROJ,
     ARCHIVE_PROJ,
     TRASH_PROJ,
@@ -51,6 +52,11 @@ export interface saveDocAction {
 
 export interface getDocListAction {
     type: ProjectActionType.GET_PROJ_LIST;
+    data: any;
+}
+
+export interface getHisPageAction {
+    type: ProjectActionType.PROJ_HISTORY_PAGE;
     data: any;
 }
 
