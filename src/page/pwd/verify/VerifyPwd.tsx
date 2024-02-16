@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import styles from "./VerifyPwd.module.css";
 import { sendVerifySMS, verifySmsCode } from "@/service/project/PwdService";
 import { SendVerifyReq } from "@/model/request/pwd/SendVerifyReq";
@@ -6,12 +6,14 @@ import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { VerifyReq } from "@/model/request/pwd/VerifyReq";
 import { ResponseHandler } from "rdjs-wheel";
+import CountdownTimer from "./CountdownTimer";
 
 const VerifyPwd: React.FC = () => {
 
     const phoneInputRef = useRef(null);
     const passwordInputRef = useRef(null);
     const navigate = useNavigate();
+    const [showCountDown, setShowCountDown] = useState<boolean>(false);
 
     const handleNextStep = (e: React.FormEvent<HTMLFormElement>) => {
         // https://stackoverflow.com/questions/78001281/why-the-react-cllient-axios-send-http-with-an-extended-local-url
@@ -19,39 +21,55 @@ const VerifyPwd: React.FC = () => {
         if (
             !phoneInputRef.current ||
             (phoneInputRef.current as HTMLInputElement).value.length === 0
-          ) {
+        ) {
             toast("请输入用户名!");
             return;
-          }
-       let phoneValue = (phoneInputRef.current as HTMLInputElement).value;
+        }
+        let phoneValue = (phoneInputRef.current as HTMLInputElement).value;
         let req: VerifyReq = {
             phone: phoneValue,
             verifyCode: "123456"
         };
         verifySmsCode(req).then((resp) => {
-            if(ResponseHandler.responseSuccess(resp)) {
+            if (ResponseHandler.responseSuccess(resp)) {
                 navigate("/userpage/pwd/reset");
-            }else{
-                debugger
+            } else {
                 toast(resp.msg);
             }
         });
+    }
+
+    const resetCodeSend = () => {
+        setShowCountDown(false);
     }
 
     const sendverifyCode = () => {
         if (
             !phoneInputRef.current ||
             (phoneInputRef.current as HTMLInputElement).value.length === 0
-          ) {
-            debugger;
-            toast("请输入用户名!");
+        ) {
+            toast("请输入手机号码!");
             return;
-          }
-       let phoneValue = (phoneInputRef.current as HTMLInputElement).value;
+        }
+        let phoneValue = (phoneInputRef.current as HTMLInputElement).value;
         let req: SendVerifyReq = {
             phone: phoneValue
         };
-        sendVerifySMS(req);
+        sendVerifySMS(req).then((resp) => {
+            if (ResponseHandler.responseSuccess(resp)) {
+                setShowCountDown(true);
+            } else {
+                toast(resp.msg);
+            }
+        });
+    }
+
+    const renderVerifyCodeAction = () => {
+        if (showCountDown) {
+            return (<CountdownTimer seconds={60} resetCodeSend={() => resetCodeSend()} />);
+        } else {
+            return (<button type="button" className="btn btn-primary" onClick={() => { sendverifyCode() }}>获取验证码</button>);
+        }
     }
 
     return (
@@ -73,9 +91,9 @@ const VerifyPwd: React.FC = () => {
                             ref={phoneInputRef}
                             id="phone"
                             placeholder="请输入手机号码"
-                        />     
+                        />
                     </div>
-                    <button type="button" className="btn btn-primary" onClick={()=>{sendverifyCode()}}>获取验证码</button>
+                    {renderVerifyCodeAction()}
                     <div className={styles.password}>
                         <input
                             type="password"
