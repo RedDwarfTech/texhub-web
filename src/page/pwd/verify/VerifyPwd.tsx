@@ -32,7 +32,7 @@ const VerifyPwd: React.FC = () => {
         };
         verifySmsCode(req).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                navigate("/userpage/pwd/reset");
+                navigate("/userpage/pwd/reset?phone=" + phoneValue);
             } else {
                 toast(resp.msg);
             }

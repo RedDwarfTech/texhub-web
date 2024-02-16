@@ -4,15 +4,16 @@ import { useRef } from "react";
 import { resetPwd } from "@/service/project/PwdService";
 import { ResetPwdReq } from "@/model/request/pwd/ResetPwdReq";
 import { ResponseHandler } from "rdjs-wheel";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { readConfig } from "@/config/app/config-reader";
+import { useSearchParams } from 'react-router-dom';
 
 const ResetPwd: React.FC = () => {
 
     const passwordInputRef = useRef(null);
     const reinputPwdInputRef = useRef(null);
     const navigate = useNavigate();
-    let { phone } = useParams();
+    const [searchParams] = useSearchParams();
 
     const handleResetPwd = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -37,7 +38,9 @@ const ResetPwd: React.FC = () => {
         if (reinputValue !== phoneValue) {
             toast("两次输入密码不一致!");
             return;
-        }
+        };
+        
+        const phone = searchParams.get("phone");
         let resetReq: ResetPwdReq = {
             phone: phone!,
             code: "123456",
