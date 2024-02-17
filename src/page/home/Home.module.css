@@ -33,7 +33,7 @@
 .template {
     display: flex;
     flex-direction: row;
-    gap: 200px;
+    gap: 120px;
     margin-top: 100px;
 }
 
@@ -42,4 +42,15 @@
     align-items: left;
     justify-content: center;
     flex-direction: column;
+}
+
+.opRight h4 {
+    color: gray;
+    margin-top: 15px;
+}
+
+.tplRight img{
+    width: 950px;
+    height: 500px;
+    border-radius: 15px;
 }
