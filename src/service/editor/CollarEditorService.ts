@@ -236,6 +236,7 @@ export function initEditor(editorAttr: EditorAttr,
     let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr);
     ydoc.on('update', (update, origin) => {
         try {
+            debugger
             let snapshot: Y.Snapshot = Y.snapshot(ydoc);
             let snap: Uint8Array = Y.encodeSnapshot(snapshot);
             let snapBase64 = btoa(String.fromCharCode(...new Uint8Array(snap)));

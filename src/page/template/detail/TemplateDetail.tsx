@@ -11,6 +11,7 @@ import { createProjectFromTpl } from "@/service/project/ProjectService";
 import { ResponseHandler } from "rdjs-wheel";
 import { toast } from "react-toastify";
 import { CreateTplProjReq } from "@/model/request/proj/create/CreateTplProjReq";
+import { UserService } from "rd-component";
 
 const TemplateDetail: React.FC = () => {
 
@@ -56,6 +57,12 @@ const TemplateDetail: React.FC = () => {
         });
     }
 
+    const renderLoggedInBtn = () => {
+        if(UserService.isLoggedIn()){
+            return (<button type="button" className="btn btn-primary" onClick={()=>{createProjByTpl()}}>以此模版创建项目</button>);
+        }
+    }
+
     return (
         <div>
             <TexHeader></TexHeader>
@@ -63,7 +70,7 @@ const TemplateDetail: React.FC = () => {
                 <h6>模版详情</h6>
                 <div className={styles.intro}>模版简介：<span>{tpl.intro}</span></div>
                 <div className={styles.tplAction}>
-                    <button type="button" className="btn btn-primary" onClick={()=>{createProjByTpl()}}>以此模版创建项目</button>
+                    {renderLoggedInBtn()}
                     <button type="button" className="btn btn-primary" onClick={() => { previewTplPdf() }}>预览模版</button>
                     <button type="button" className="btn btn-primary" onClick={() => {openTplSrc(tpl)}}>模版来源</button>
                 </div>
