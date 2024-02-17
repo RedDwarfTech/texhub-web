@@ -1,6 +1,6 @@
 import { EditorView, Decoration } from "@codemirror/view";
 // @ts-ignore
-import { WebsocketProvider } from "y-websocket";
+import { WebsocketProvider } from "rdy-websocket";
 import * as Y from 'yjs';
 import * as random from 'lib0/random';
 import * as decoding from 'lib0/decoding'
