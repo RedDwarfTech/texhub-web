@@ -86,6 +86,7 @@ const hightlightSelection = (from: number, to: number) => {
     const highlight_decoration = Decoration.mark({
         attributes: { style: "background-color: yellow" }
     });
+    debugger
     curEditorView.dispatch({
         effects: highlight_effect.of([highlight_decoration.range(from, to)])
     });
@@ -236,7 +237,6 @@ export function initEditor(editorAttr: EditorAttr,
     let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr);
     ydoc.on('update', (update, origin) => {
         try {
-            debugger
             let snapshot: Y.Snapshot = Y.snapshot(ydoc);
             let snap: Uint8Array = Y.encodeSnapshot(snapshot);
             let snapBase64 = btoa(String.fromCharCode(...new Uint8Array(snap)));
@@ -253,19 +253,7 @@ export function initEditor(editorAttr: EditorAttr,
             console.log(e);
         }
     });
-    const highlight_extension = StateField.define({
-        create() { return Decoration.none },
-        update(value, transaction) {
-            value = value.map(transaction.changes)
-            for (let effect of transaction.effects) {
-                if (effect.is(highlight_effect) && effect.value) {
-                    value = value.update({ add: effect.value, sort: true })
-                }
-            }
-            return value
-        },
-        provide: f => EditorView.decorations.from(f)
-    });
+    
     const state = EditorState.create({
         doc: ytext.toString(),
         extensions: [
@@ -274,7 +262,7 @@ export function initEditor(editorAttr: EditorAttr,
             extensions,
             themeConfig.of(themeMap.get("Solarized Light")!),
             autocompletion({ override: [myCompletions] }),
-            // highlight_extension
+            highlight_extension
         ],
     });
     if (edContainer.current && edContainer.current.children && edContainer.current.children.length > 0) {
@@ -287,3 +275,17 @@ export function initEditor(editorAttr: EditorAttr,
     curEditorView = editorView;
     return [editorView, wsProvider];
 }
+
+const highlight_extension = StateField.define({
+    create() { return Decoration.none },
+    update(value, transaction) {
+        value = value.map(transaction.changes)
+        for (let effect of transaction.effects) {
+            if (effect.is(highlight_effect) && effect.value) {
+                value = value.update({ add: effect.value, sort: true })
+            }
+        }
+        return value
+    },
+    provide: f => EditorView.decorations.from(f)
+});
