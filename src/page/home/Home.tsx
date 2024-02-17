@@ -3,6 +3,7 @@ import styles from "./Home.module.css";
 import { useNavigate } from "react-router-dom";
 import moderncv from "@/assets/cv/template/moderncv-legacy-template-zh.png";
 import onlineEditor from "@/assets/cv/template/tex-online-editor-compress.jpg";
+import userProjects from "@/assets/cv/template/user-projects.jpg";
 import { UserService } from "rd-component";
 import { toast, ToastContainer } from 'react-toastify';
 
@@ -36,6 +37,15 @@ const Home: React.FC = () => {
                     </div>
                     <div className={styles.tplRight}>
                         <img src={onlineEditor} alt="Image 1" />
+                    </div>
+                </div>
+                <div className={styles.templateDark}>
+                    <div className={styles.tplRight}>
+                        <img src={userProjects} alt="Image 2" />
+                    </div>
+                    <div className={styles.opRight}>
+                        <h1>不止论文</h1>
+                        <h4>一切有价值、需要长期保存的记忆</h4>
                     </div>
                 </div>
                 <div className={styles.template}>
