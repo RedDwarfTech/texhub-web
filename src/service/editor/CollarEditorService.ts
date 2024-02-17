@@ -274,7 +274,7 @@ export function initEditor(editorAttr: EditorAttr,
             extensions,
             themeConfig.of(themeMap.get("Solarized Light")!),
             autocompletion({ override: [myCompletions] }),
-            highlight_extension
+            // highlight_extension
         ],
     });
     if (edContainer.current && edContainer.current.children && edContainer.current.children.length > 0) {
@@ -286,31 +286,4 @@ export function initEditor(editorAttr: EditorAttr,
     });
     curEditorView = editorView;
     return [editorView, wsProvider];
-}
-
-const revertChangesSinceSnapshot = (snapshot: string) => {
-    const buffString = snapshot.replace(/^\\x/, '');
-    const buff = new TextEncoder().encode(buffString);
-    // this removes the leading `\x` from the snapshot string that was specific to our implementation
-    const snap = Y.decodeSnapshot(buff);
-    const tempdoc: Y.Doc = Y.createDocFromSnapshot(ydoc, snap);
-    // We cannot simply replace `this.yDoc` because we have to sync with other clients.
-    // Replacing `this.yDoc` would be similar to doing `git reset --hard $SNAPSHOT && git push --force`.
-    // Instead, we compute an "anti-operation" of all the changes made since that snapshot.
-    // This ends up being similar to `git revert $SNAPSHOT..HEAD`.
-    const currentStateVector = Y.encodeStateVector(ydoc);
-    const snapshotStateVector = Y.encodeStateVector(tempdoc);
-
-    // creating undo command encompassing all changes since taking snapshot
-    const changesSinceSnapshotUpdate = Y.encodeStateAsUpdate(ydoc, snapshotStateVector);
-
-    // In our specific implementation, everything we care about is in a single root Y.Map, which makes
-    // it easy to track with a Y.UndoManager. To be honest, your mileage may vary if you don't know which root types need to be tracked
-    // const um = new Y.UndoManager(tempdoc.getMap(ROOT_YJS_MAP), { trackedOrigins: new Set([YJS_SNAPSHOT_ORIGIN]) });
-    // Y.applyUpdate(tempdoc, changesSinceSnapshotUpdate, YJS_SNAPSHOT_ORIGIN);
-    // um.undo();
-
-    // applying undo command to this.ydoc
-    const revertChangesSinceSnapshotUpdate = Y.encodeStateAsUpdate(tempdoc, currentStateVector);
-    // Y.applyUpdate(ydoc, revertChangesSinceSnapshotUpdate, YJS_SNAPSHOT_ORIGIN);
 }
