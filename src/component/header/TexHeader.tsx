@@ -126,6 +126,14 @@ const TexHeader: React.FC = () => {
         localStorage.setItem("userLanguage", name);
     }
 
+    const renderUserTab = () => {
+        if (UserService.isLoggedIn()) {
+            return (<li className="nav-item">
+                <a className="nav-link text-light" href="/doc/tab">{t("projects")}</a>
+            </li>);
+        }
+    }
+
     return (
         <div className={styles.headerLayout}>
             <nav className="navbar navbar-expand-sm navbar-dark">
@@ -139,9 +147,7 @@ const TexHeader: React.FC = () => {
                             <li className="nav-item">
                                 <a className="nav-link text-light" href="/tpl">{t("template")}</a>
                             </li>
-                            <li className="nav-item">
-                                <a className="nav-link text-light" href="/doc/tab">{t("projects")}</a>
-                            </li>
+                            {renderUserTab()}
                             <li className="nav-item">
                                 <a className="nav-link text-light" href="/doc/help">{t("document")}</a>
                             </li>
@@ -156,10 +162,10 @@ const TexHeader: React.FC = () => {
                         语言
                     </button>
                     <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li onClick={()=>langChoose("zh")}>
+                        <li onClick={() => langChoose("zh")}>
                             <a className="dropdown-item" href="#">简体中文</a>
                         </li>
-                        <li onClick={()=>langChoose("en")}>
+                        <li onClick={() => langChoose("en")}>
                             <a className="dropdown-item" href="#">English</a>
                         </li>
                     </ul>
