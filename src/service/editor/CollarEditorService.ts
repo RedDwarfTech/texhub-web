@@ -105,13 +105,13 @@ const highlightUnselection = () => {
 const handleWsAuth = (event: any, wsProvider: WebsocketProvider, editorAttr: EditorAttr, ydoc: Y.Doc) => {
     if (event.status === 'failed') {
         debugger
-        toast.error("access token授权失败");
+        toast.error("access token auth failed");
         wsProvider.shouldConnect = false;
         wsProvider.ws?.close()
     }
     if (event.status === 'expired') {
         debugger
-        toast.error("access token授权过期");
+        toast.error("access token auth expired");
         RequestHandler.handleWebAccessTokenExpire().then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
                 wsProvider.ws?.close();
@@ -262,7 +262,8 @@ export function initEditor(editorAttr: EditorAttr,
             extensions,
             themeConfig.of(themeMap.get("Solarized Light")!),
             autocompletion({ override: [myCompletions] }),
-            highlight_extension
+            // https://stackoverflow.com/questions/78011822/how-to-fix-the-codemirror-text-infilite-copy
+            //highlight_extension
         ],
     });
     if (edContainer.current && edContainer.current.children && edContainer.current.children.length > 0) {
