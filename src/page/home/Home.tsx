@@ -25,7 +25,7 @@ const Home: React.FC = () => {
                 <div className={styles.overview}>
                     <div className={styles.overviewContent}>
                         <h1>在线LaTeX</h1>
-                        <h3>开箱即用、在线编译、云端协同，使用LaTeX更容易</h3>
+                        <h4>开箱即用、在线编译、云端协同，使用LaTeX更容易</h4>
                         <button className="btn btn-primary" onClick={() => { handleUseReq() }}>立即体验</button>
                     </div>
                 </div>
@@ -54,7 +54,7 @@ const Home: React.FC = () => {
                     </div>
                     <div className={styles.opRight}>
                         <h1>在线协作</h1>
-                        <h3>同时编辑文档，并行不悖</h3>
+                        <h4>同时编辑文档，并行不悖</h4>
                     </div>
                 </div>
             </div>

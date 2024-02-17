@@ -28,6 +28,12 @@
 .overviewContent button {
     width: 120px;
     height: 45px;
+    margin-top: 15px;
+}
+
+.overviewContent h4 {
+    color: gray;
+    margin-top: 15px;
 }
 
 .template {
