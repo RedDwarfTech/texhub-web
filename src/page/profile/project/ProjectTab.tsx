@@ -325,7 +325,6 @@ const ProjectTab: React.FC = () => {
 
     const renderProj = (userDocList: TexProjectModel[]): JSX.Element[] => {
         if (projLoading) {
-            debugger
             return [(
                 <div className={styles.loadingA}>
                     <div className="spinner-border text-primary" role="status">
@@ -517,7 +516,7 @@ const ProjectTab: React.FC = () => {
                         </div>
                         <div className="modal-footer">
                             <button type="button" ref={delProjCancelRef} className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                            <button type="button" className="btn btn-primary" onClick={() => { handleProjDel() }}>确定</button>
+                            <button type="button" className="btn btn-danger" onClick={() => { handleProjDel() }}>删除</button>
                         </div>
                     </div>
                 </div>
