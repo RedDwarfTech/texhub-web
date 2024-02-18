@@ -44,6 +44,7 @@ const ProjectTab: React.FC = () => {
     const navigate = useNavigate();
     const { t } = useTranslation();
     const { i18n } = useTranslation();
+    const firstUpdate = useRef(true);
 
     React.useEffect(() => {
         getProjectList(getProjFilter({}));
@@ -67,10 +68,16 @@ const ProjectTab: React.FC = () => {
         }
     }, [folderProjList]);
 
-    React.useEffect(() => {
-        setUserDocList(projList.projects);
-        setProjFolders(projList.folders);
-        setProjLoading(false);
+    React.useLayoutEffect(() => {
+        if (firstUpdate.current) {
+            firstUpdate.current = false;
+        } else {
+            debugger
+            // do things after first render
+            setUserDocList(projList.projects);
+            setProjFolders(projList.folders);
+            setProjLoading(false);
+        }
     }, [projList]);
 
     const handleProjDel = () => {
@@ -275,7 +282,7 @@ const ProjectTab: React.FC = () => {
     }
 
     const renderFolder = () => {
-        if(projLoading){
+        if (projLoading) {
             return;
         }
         if (!projFolders || projFolders.length === 0) {
