@@ -35,8 +35,9 @@ const ProjectTab: React.FC = () => {
     const [currProject, setCurrProject] = useState<TexProjectModel>();
     const [currFolder, setCurrFolder] = useState<TexProjectFolder>();
     const [projName, setProjName] = useState<string>('');
+    const [projLoading, setProjLoading] = useState<boolean>(true);
     const cachedTab = localStorage.getItem("activeTab");
-    const cachedTabVal = cachedTab?parseInt(cachedTab):ProjTabType.All;
+    const cachedTabVal = cachedTab ? parseInt(cachedTab) : ProjTabType.All;
     const [activeTab, setActiveTab] = useState<ProjTabType>(cachedTabVal);
     const { projList, folderProjList } = useSelector((state: AppState) => state.proj);
     const delProjCancelRef = useRef<HTMLButtonElement>(null);
@@ -69,6 +70,7 @@ const ProjectTab: React.FC = () => {
     React.useEffect(() => {
         setUserDocList(projList.projects);
         setProjFolders(projList.folders);
+        setProjLoading(false);
     }, [projList]);
 
     const handleProjDel = () => {
@@ -273,6 +275,9 @@ const ProjectTab: React.FC = () => {
     }
 
     const renderFolder = () => {
+        if(projLoading){
+            return;
+        }
         if (!projFolders || projFolders.length === 0) {
             return (<div></div>);
         };
@@ -319,6 +324,16 @@ const ProjectTab: React.FC = () => {
     }
 
     const renderProj = (userDocList: TexProjectModel[]): JSX.Element[] => {
+        if (projLoading) {
+            debugger
+            return [(
+                <div className={styles.loadingA}>
+                    <div className="spinner-border text-primary" role="status">
+                        <span className="sr-only">Loading...</span>
+                    </div>
+                </div>
+            )];
+        }
         if (!userDocList || userDocList.length === 0) {
             return ([]);
         };
@@ -416,7 +431,7 @@ const ProjectTab: React.FC = () => {
     }
 
     const renderNewEntry = () => {
-        if(activeTab !== 1){
+        if (activeTab !== 1) {
             return (<div></div>);
         }
         return (<div className="dropdown">
