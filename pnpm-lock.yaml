@@ -48,8 +48,8 @@ dependencies:
     specifier: ^0.2.0
     version: 0.2.0(@fortawesome/fontawesome-svg-core@6.5.1)(react@18.2.0)
   '@reduxjs/toolkit':
-    specifier: ^1.9.7
-    version: 1.9.7(react-redux@8.1.3)(react@18.2.0)
+    specifier: ^2.2.1
+    version: 2.2.1(react-redux@8.1.3)(react@18.2.0)
   '@testing-library/jest-dom':
     specifier: ^5.17.0
     version: 5.17.0
@@ -129,8 +129,8 @@ dependencies:
     specifier: 7.40.0
     version: 7.40.0(react-dom@18.2.0)(react@18.2.0)
   rd-component:
-    specifier: ^0.1.154
-    version: 0.1.154(@fingerprintjs/fingerprintjs@4.2.2)(@reduxjs/toolkit@1.9.7)(@types/node@16.18.80)(esbuild@0.18.20)(react-dom@18.2.0)(react-redux@8.1.3)(react-router-dom@6.22.0)(react@18.2.0)(redux@4.2.1)(rollup@4.10.0)(ts-node@10.9.2)(typescript@4.9.5)(uuid@9.0.1)(vite@4.5.2)
+    specifier: ^0.1.155
+    version: 0.1.155(@fingerprintjs/fingerprintjs@4.2.2)(@reduxjs/toolkit@2.2.1)(@types/node@16.18.80)(esbuild@0.18.20)(react-dom@18.2.0)(react-redux@8.1.3)(react-router-dom@6.22.0)(react@18.2.0)(redux@4.2.1)(rollup@4.10.0)(ts-node@10.9.2)(typescript@4.9.5)(uuid@9.0.1)(vite@4.5.2)
   rd-lang-tex:
     specifier: ^0.0.6
     version: 0.0.6
@@ -3166,23 +3166,23 @@ packages:
     resolution: {integrity: sha512-Pc/AFTdwZwEKJxFJvlxrSmGe/di+aAOBn60sremrpLo6VI/6cmiUYNNwlI5KNYttg7uypzA3ILPMPgxB2GYZEg==}
     dev: false
 
-  /@reduxjs/toolkit@1.9.7(react-redux@8.1.3)(react@18.2.0):
-    resolution: {integrity: sha512-t7v8ZPxhhKgOKtU+uyJT13lu4vL7az5aFi4IdoDs/eS548edn2M8Ik9h8fxgvMjGoAUVFSt6ZC1P5cWmQ014QQ==}
+  /@reduxjs/toolkit@2.2.1(react-redux@8.1.3)(react@18.2.0):
+    resolution: {integrity: sha512-8CREoqJovQW/5I4yvvijm/emUiCCmcs4Ev4XPWd4mizSO+dD3g5G6w34QK5AGeNrSH7qM8Fl66j4vuV7dpOdkw==}
     peerDependencies:
       react: ^16.9.0 || ^17.0.0 || ^18
-      react-redux: ^7.2.1 || ^8.0.2
+      react-redux: ^7.2.1 || ^8.1.3 || ^9.0.0
     peerDependenciesMeta:
       react:
         optional: true
       react-redux:
         optional: true
     dependencies:
-      immer: 9.0.21
+      immer: 10.0.3
       react: 18.2.0
       react-redux: 8.1.3(@types/react-dom@18.2.19)(@types/react@18.2.55)(react-dom@18.2.0)(react@18.2.0)(redux@4.2.1)
-      redux: 4.2.1
-      redux-thunk: 2.4.2(redux@4.2.1)
-      reselect: 4.1.8
+      redux: 5.0.1
+      redux-thunk: 3.1.0(redux@5.0.1)
+      reselect: 5.1.0
     dev: false
 
   /@remix-run/router@1.15.0:
@@ -8952,6 +8952,10 @@ packages:
     dev: false
     optional: true
 
+  /immer@10.0.3:
+    resolution: {integrity: sha512-pwupu3eWfouuaowscykeckFmVTpqbzW+rXFCX8rQLkZzM9ftBmU/++Ra+o+L27mz03zJTlyV4UUr+fdKNffo4A==}
+    dev: false
+
   /immer@9.0.21:
     resolution: {integrity: sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==}
     dev: false
@@ -13167,8 +13171,8 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /rd-component@0.1.154(@fingerprintjs/fingerprintjs@4.2.2)(@reduxjs/toolkit@1.9.7)(@types/node@16.18.80)(esbuild@0.18.20)(react-dom@18.2.0)(react-redux@8.1.3)(react-router-dom@6.22.0)(react@18.2.0)(redux@4.2.1)(rollup@4.10.0)(ts-node@10.9.2)(typescript@4.9.5)(uuid@9.0.1)(vite@4.5.2):
-    resolution: {integrity: sha512-a9CJPNqPFm1IU13O4WFE/iT4Y+d61N0TFfI+hoot58NDZi1e/GbwjNunH4DxbYgmVyz6JP6iwl5HkTsT0X5wDw==}
+  /rd-component@0.1.155(@fingerprintjs/fingerprintjs@4.2.2)(@reduxjs/toolkit@2.2.1)(@types/node@16.18.80)(esbuild@0.18.20)(react-dom@18.2.0)(react-redux@8.1.3)(react-router-dom@6.22.0)(react@18.2.0)(redux@4.2.1)(rollup@4.10.0)(ts-node@10.9.2)(typescript@4.9.5)(uuid@9.0.1)(vite@4.5.2):
+    resolution: {integrity: sha512-3XyHfU+PFs39NVNbcCUUk3+EF62PW4rySwu1Dp1F0drVH1Tay2CCC0B25FEMOeOzkITBwaNmwjGCfEWXK1ouIg==}
     peerDependencies:
       '@fingerprintjs/fingerprintjs': ^4.0.0
       '@reduxjs/toolkit': ^1.9.5
@@ -13183,7 +13187,7 @@ packages:
       '@babel/preset-env': 7.23.9(@babel/core@7.23.9)
       '@babel/preset-typescript': 7.23.3(@babel/core@7.23.9)
       '@fingerprintjs/fingerprintjs': 4.2.2
-      '@reduxjs/toolkit': 1.9.7(react-redux@8.1.3)(react@18.2.0)
+      '@reduxjs/toolkit': 2.2.1(react-redux@8.1.3)(react@18.2.0)
       '@types/react': 18.2.55
       '@types/redux-logger': 3.0.13
       '@types/uuid': 9.0.8
@@ -13801,6 +13805,14 @@ packages:
       redux: 4.2.1
     dev: false
 
+  /redux-thunk@3.1.0(redux@5.0.1):
+    resolution: {integrity: sha512-NW2r5T6ksUKXCabzhL9z+h206HQw/NJkcLm1GPImRQ8IzfXwRGqjVhKJGauHirT0DAuyy6hjdnMZaRoAcy0Klw==}
+    peerDependencies:
+      redux: ^5.0.0
+    dependencies:
+      redux: 5.0.1
+    dev: false
+
   /redux@4.2.1:
     resolution: {integrity: sha512-LAUYz4lc+Do8/g7aeRa8JkyDErK6ekstQaqWQrNRW//MY1TvCEpMtpTWvlQ+FPbWCx+Xixu/6SHt5N0HR+SB4w==}
     dependencies:
@@ -13917,8 +13929,8 @@ packages:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
     dev: false
 
-  /reselect@4.1.8:
-    resolution: {integrity: sha512-ab9EmR80F/zQTMNeneUr4cv+jSwPJgIlvEmVwLerwrWVbpLlBuls9XHzIeTFy4cegU2NHBp3va0LKOzU5qFEYQ==}
+  /reselect@5.1.0:
+    resolution: {integrity: sha512-aw7jcGLDpSgNDyWBQLv2cedml85qd95/iszJjN988zX1t7AVRJi19d9kto5+W7oCfQ94gyo40dVbT6g2k4/kXg==}
     dev: false
 
   /resize-observer-polyfill@1.5.1:

@@ -69,10 +69,11 @@ const ProjectTab: React.FC = () => {
     }, [folderProjList]);
 
     React.useLayoutEffect(() => {
+        // https://stackoverflow.com/questions/53253940/make-react-useeffect-hook-not-run-on-initial-render
+        // https://stackoverflow.com/questions/57858803/react-how-to-skip-useeffect-on-first-render
         if (firstUpdate.current) {
             firstUpdate.current = false;
         } else {
-            debugger
             // do things after first render
             setUserDocList(projList.projects);
             setProjFolders(projList.folders);

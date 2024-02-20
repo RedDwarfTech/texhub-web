@@ -17,6 +17,8 @@
     "btn_settings": "设置",
     "btn_new": "新建",
     "tab_all": "全部",
+    "tab_proj_share": "分享",
+    "tab_proj_share_admin": "管理",
     "tab_shared": "分享给我",
     "tab_archived": "已归档",
     "tab_trash": "回收站"

@@ -17,6 +17,8 @@
     "btn_settings": "Setting",
     "btn_new": "New",
     "tab_all": "All",
+    "tab_proj_share": "Share",
+    "tab_proj_share_admin": "Admin",
     "tab_shared": "Shared",
     "tab_archived": "Archived",
     "tab_trash": "Trash"
