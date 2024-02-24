@@ -253,7 +253,7 @@ export function initEditor(editorAttr: EditorAttr,
             console.log(e);
         }
     });
-    
+
     const state = EditorState.create({
         doc: ytext.toString(),
         extensions: [
