@@ -8,6 +8,7 @@ import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
 import dayjs from "dayjs";
 import { QueryHistoryDetail } from "@/model/request/proj/query/QueryHistoryDetail";
 import { ResponseHandler } from "rdjs-wheel";
+import * as Y from 'yjs';
 
 export type HistoryProps = {
     projectId: string;
@@ -15,8 +16,9 @@ export type HistoryProps = {
 
 const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
 
-    const { projHisPage } = useSelector((state: AppState) => state.proj);
+    const { projHisPage, curYDoc } = useSelector((state: AppState) => state.proj);
     const [histories, setHistories] = useState<ProjHisotry[]>([]);
+    const [curDoc, setCurDoc] = useState<Y.Doc>();
 
     React.useEffect(() => {
         const myOffcanvas = document.getElementById('projHistory');
@@ -26,6 +28,12 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
             })
         }
     }, []);
+
+    React.useEffect(()=>{
+        if(curYDoc){
+            setCurDoc(curYDoc);
+        }
+    },[curYDoc]);
 
     React.useEffect(() => {
         if (projHisPage && projHisPage.data) {
@@ -47,9 +55,12 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         getProjHistory(hist).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
                 debugger
-                let snapshot = resp.snapshot;
-                // const decoded = Y.decodeSnapshot(encoded);
-                // const docRestored = Y.createDocFromSnapshot(doc, snapshot);
+                let snapshot = resp.result.snapshot;
+                if(snapshot && curDoc){
+                    const decoded = Y.decodeSnapshot(snapshot);
+                    const docRestored = Y.createDocFromSnapshot(curDoc, snapshot);
+                    console.log(docRestored);
+                }
             }
         });
 

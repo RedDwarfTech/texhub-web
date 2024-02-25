@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { basicLight } from 'cm6-theme-basic-light';
 import { RefObject } from "react";
-import { projHasFile } from "../project/ProjectService";
+import { projHasFile, setCurYDoc } from "../project/ProjectService";
 import { addFileVersion } from "../file/FileService";
 import lodash from 'lodash';
 import { TexFileVersion } from "@/model/file/TexFileVersion";
@@ -232,6 +232,7 @@ export function initEditor(editorAttr: EditorAttr,
         gc: false
     };
     ydoc = new Y.Doc(docOpt);
+    setCurYDoc(ydoc);
     const ytext = ydoc.getText(editorAttr.docId);
     const undoManager = new Y.UndoManager(ytext);
     let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr);

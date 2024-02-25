@@ -31,6 +31,7 @@ import { CopyProjReq } from "@/model/request/proj/edit/CopyProjReq";
 import { RenameFolderReq } from "@/model/request/proj/edit/RenameFolderReq";
 import { DelFolderReq } from "@/model/request/proj/edit/DelFolderReq";
 import { QueryHistoryDetail } from "@/model/request/proj/query/QueryHistoryDetail";
+import * as Y from 'yjs';
 
 export function getProjectList(req: QueryProjReq) {
   const params = new URLSearchParams();
@@ -383,7 +384,7 @@ export function getProjHistory(history: QueryHistoryDetail) {
   }
   const config: AxiosRequestConfig = {
     method: 'get',
-    url: '/tex/file/version',
+    url: '/tex/fileversion/detail',
     params: params
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.PROJ_HISTORY_DETAIL];
@@ -460,4 +461,9 @@ export function copyProj(req: CopyProjReq) {
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.COPY_PROJ];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
+export function setCurYDoc(ydoc: Y.Doc) {
+  const actionTypeString: string = ProjectActionType[ProjectActionType.SET_CUR_YDOC];
+  return XHRClient.dispathAction(ydoc, actionTypeString, store);
 }

@@ -43,7 +43,8 @@ export enum ProjectActionType {
     TRASH_PROJ,
     COPY_PROJ,
     DOWNLOAD_PROJ,
-    EDITOR_INSERT_TEXT
+    EDITOR_INSERT_TEXT,
+    SET_CUR_YDOC
 }
 
 export interface saveDocAction {
@@ -208,5 +209,10 @@ export interface renameFolderAction {
 
 export interface insertTextAction {
     type: ProjectActionType.EDITOR_INSERT_TEXT;
+    data: any;
+}
+
+export interface setYDocAction {
+    type: ProjectActionType.SET_CUR_YDOC;
     data: any;
 }

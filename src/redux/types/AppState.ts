@@ -16,6 +16,7 @@ import { SearchResult } from "@/model/proj/search/SearchResult";
 import { ProjHisotry } from "@/model/proj/history/ProjHistory";
 import { TexProjects } from "@/model/proj/TexProjects";
 import { TexSnippetModel } from "@/model/snippet/TexSnippetModel";
+import * as Y from 'yjs';
 
 export interface AppState {
     proj: {
@@ -40,7 +41,8 @@ export interface AppState {
         activeShare: false,
         projHistories: ProjHisotry[],
         insertContext: string,
-        projHisPage: EntityList<ProjHisotry>
+        projHisPage: EntityList<ProjHisotry>,
+        curYDoc: Y.Doc
     },
     tpl: {
         tplList: TemplateModel[],

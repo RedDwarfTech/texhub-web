@@ -12,6 +12,7 @@ import { ProjConf } from "@/model/proj/config/ProjConf";
 import { SearchResult } from "@/model/proj/search/SearchResult";
 import { ProjHisotry } from "@/model/proj/history/ProjHistory";
 import { TexProjects } from "@/model/proj/TexProjects";
+import * as Y from 'yjs';
 
 const initState: AppState["proj"] = {
     projList: {} as TexProjects,
@@ -43,7 +44,8 @@ const initState: AppState["proj"] = {
             per_page: 0,
             page: 0
         }
-    }
+    },
+    curYDoc: new Y.Doc()
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -176,6 +178,11 @@ const ProjectReducer = (state = initState, action: any) => {
                 ...state,
                 insertContext: action.data
             };
+        case "SET_CUR_YDOC":
+        return {
+            ...state,
+            curYDoc: action.data
+        };
         default:
             break;
     }
