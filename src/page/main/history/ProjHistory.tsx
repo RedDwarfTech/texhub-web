@@ -3,7 +3,7 @@ import styles from "./ProjHistory.module.css";
 import { AppState } from "@/redux/types/AppState";
 import React, { useState } from "react";
 import { ProjHisotry } from "@/model/proj/history/ProjHistory";
-import { getProjHistory, projHistoryPage } from "@/service/project/ProjectService";
+import { getProjHistory, projHistoryPage, replaceTextToEditor } from "@/service/project/ProjectService";
 import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
 import dayjs from "dayjs";
 import { QueryHistoryDetail } from "@/model/request/proj/query/QueryHistoryDetail";
@@ -48,6 +48,18 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         projHistoryPage(hist);
     }
 
+    const base64ToUint8Array = (base64: string): Uint8Array => {
+        const binaryString = atob(base64);
+        const length = binaryString.length;
+        const uint8Array = new Uint8Array(length);
+    
+        for (let i = 0; i < length; i++) {
+            uint8Array[i] = binaryString.charCodeAt(i);
+        }
+    
+        return uint8Array;
+    }
+
     const restoreProjHistories = (snapId: number) => {
         const hist: QueryHistoryDetail = {
             id: snapId
@@ -55,15 +67,17 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         getProjHistory(hist).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
                 debugger
-                let snapshot = resp.result.snapshot;
-                if(snapshot && curDoc){
-                    const decoded = Y.decodeSnapshot(snapshot);
-                    const docRestored = Y.createDocFromSnapshot(curDoc, snapshot);
+                let snapshot = resp.result.content;
+                replaceTextToEditor(snapshot);
+                /**if(snapshot && curDoc){
+                    let ss: Uint8Array = base64ToUint8Array(snapshot);
+                    const decoded = Y.decodeSnapshot(ss);
+                    const docRestored = Y.createDocFromSnapshot(curDoc, decoded);
+                    replaceTextToEditor(docRestored);
                     console.log(docRestored);
-                }
+                }**/
             }
         });
-
     }
 
     const renderHistroy = () => {

@@ -45,7 +45,8 @@ const initState: AppState["proj"] = {
             page: 0
         }
     },
-    curYDoc: new Y.Doc()
+    curYDoc: new Y.Doc(),
+    replaceContext: ""
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -95,7 +96,7 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 queue: action.data
-            };  
+            };
         case "GET_COMP_QUEUE_STATUS":
             return {
                 ...state,
@@ -178,11 +179,16 @@ const ProjectReducer = (state = initState, action: any) => {
                 ...state,
                 insertContext: action.data
             };
+        case "EDITOR_REPLACE_TEXT":
+            return {
+                ...state,
+                replaceContext: action.data
+            };
         case "SET_CUR_YDOC":
-        return {
-            ...state,
-            curYDoc: action.data
-        };
+            return {
+                ...state,
+                curYDoc: action.data
+            };
         default:
             break;
     }

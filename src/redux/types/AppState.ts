@@ -42,7 +42,8 @@ export interface AppState {
         projHistories: ProjHisotry[],
         insertContext: string,
         projHisPage: EntityList<ProjHisotry>,
-        curYDoc: Y.Doc
+        curYDoc: Y.Doc,
+        replaceContext: string,
     },
     tpl: {
         tplList: TemplateModel[],

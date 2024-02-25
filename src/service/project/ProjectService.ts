@@ -358,6 +358,11 @@ export function insertTextToEditor(text: string) {
   return XHRClient.dispathAction(text, actionTypeString, store);
 }
 
+export function replaceTextToEditor(text: string) {
+  const actionTypeString: string = ProjectActionType[ProjectActionType.EDITOR_REPLACE_TEXT];
+  return XHRClient.dispathAction(text, actionTypeString, store);
+}
+
 export function setProjAttr(data: ProjAttribute) {
   const actionTypeString: string = ProjectActionType[ProjectActionType.PROJ_ATTR];
   return XHRClient.dispathAction(data, actionTypeString, store);

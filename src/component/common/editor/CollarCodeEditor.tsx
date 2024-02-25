@@ -26,7 +26,7 @@ export type EditorProps = {
 const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<HTMLDivElement>(null)
   const { activeFile } = useSelector((state: AppState) => state.file);
-  const { projInfo, projConf, activeShare, insertContext } = useSelector((state: AppState) => state.proj);
+  const { projInfo, projConf, activeShare, insertContext, replaceContext } = useSelector((state: AppState) => state.proj);
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   const [shareProj, setShareProj] = useState<boolean>();
@@ -73,6 +73,10 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   React.useEffect(() => {
     handleInsertText(insertContext);
   }, [insertContext]);
+
+  React.useEffect(() => {
+    handleReplaceText(replaceContext);
+  },[replaceContext]);
 
   React.useEffect(() => {
     if (projConf && Object.keys(projConf).length > 0) {
@@ -130,6 +134,17 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       const cursorPos = activeEditorView.state.selection.main.head;
       const transaction = activeEditorView.state.update({
         changes: { from: cursorPos, to: cursorPos, insert: figureCode },
+      });
+      activeEditorView.dispatch(transaction);
+    }
+  }
+
+  const handleReplaceText = (text: string) => {
+    if (text && activeEditorView) {
+      let doc = activeEditorView.state.doc;
+      let size = doc.length;
+      const transaction = activeEditorView.state.update({
+        changes: { from: 0, to: size, insert: text },
       });
       activeEditorView.dispatch(transaction);
     }
