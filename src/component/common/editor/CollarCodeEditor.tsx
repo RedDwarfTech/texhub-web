@@ -140,7 +140,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }
 
   const handleReplaceText = (text: string) => {
-    debugger
     if (text && activeEditorView) {
       let doc = activeEditorView.state.doc;
       let size = doc.length;

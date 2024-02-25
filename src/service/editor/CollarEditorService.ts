@@ -219,6 +219,18 @@ const throttledFn = lodash.throttle((params: any) => {
     addFileVersion(params);
 }, 10000)
 
+const base64ToUint8Array = (base64: string): Uint8Array => {
+    const binaryString = atob(base64);
+    const length = binaryString.length;
+    const uint8Array = new Uint8Array(length);
+
+    for (let i = 0; i < length; i++) {
+        uint8Array[i] = binaryString.charCodeAt(i);
+    }
+
+    return uint8Array;
+}
+
 export function initEditor(editorAttr: EditorAttr,
     activeEditorView: EditorView | undefined,
     edContainer: RefObject<HTMLDivElement>): [EditorView | undefined, WebsocketProvider] {
@@ -242,6 +254,20 @@ export function initEditor(editorAttr: EditorAttr,
             let snap: Uint8Array = Y.encodeSnapshot(snapshot);
             // https://discuss.yjs.dev/t/save-the-yjs-snapshot-to-database/2317
             let snapBase64 = btoa(String.fromCharCode(...new Uint8Array(snap)));
+            let lastsnapshot = localStorage.getItem("lastsnapshot");
+            if(snapBase64 === lastsnapshot){
+                debugger
+                return;
+            }
+            if(lastsnapshot){
+                let cached = base64ToUint8Array(lastsnapshot);
+                const decoded = Y.decodeSnapshot(cached);
+                let equal = Y.equalSnapshots(decoded,snapshot);
+                if(equal){
+                    debugger
+                    return;
+                }
+            }
             let params: TexFileVersion = {
                 file_id: editorAttr.docId,
                 name: editorAttr.name,
@@ -250,6 +276,8 @@ export function initEditor(editorAttr: EditorAttr,
                 action: 1,
                 snapshot: snapBase64
             };
+            // https://discuss.yjs.dev/t/is-it-possible-to-detect-the-document-changed-or-not/2453
+            localStorage.setItem("lastsnapshot",snapBase64);
             throttledFn(params);
         } catch (e) {
             console.log(e);
