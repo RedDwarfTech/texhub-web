@@ -269,16 +269,23 @@ export function initEditor(editorAttr: EditorAttr,
                     return;
                 }
             }
+            let editorText = ytext.toString();
+            let lasteditortext = localStorage.getItem("lasteditortext");
+            if(lasteditortext === editorText){
+                debugger
+                return;
+            }
             let params: TexFileVersion = {
                 file_id: editorAttr.docId,
                 name: editorAttr.name,
                 project_id: editorAttr.projectId,
-                content: ytext.toString(),
+                content: editorText,
                 action: 1,
                 snapshot: snapBase64
             };
             // https://discuss.yjs.dev/t/is-it-possible-to-detect-the-document-changed-or-not/2453
             localStorage.setItem("lastsnapshot",snapBase64);
+            localStorage.setItem("lasteditortext",editorText);
             throttledFn(params);
         } catch (e) {
             console.log(e);
