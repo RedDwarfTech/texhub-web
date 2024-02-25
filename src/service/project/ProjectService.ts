@@ -30,6 +30,7 @@ import { MoveProjReq } from "@/model/request/proj/edit/MoveProjReq";
 import { CopyProjReq } from "@/model/request/proj/edit/CopyProjReq";
 import { RenameFolderReq } from "@/model/request/proj/edit/RenameFolderReq";
 import { DelFolderReq } from "@/model/request/proj/edit/DelFolderReq";
+import { QueryHistoryDetail } from "@/model/request/proj/query/QueryHistoryDetail";
 
 export function getProjectList(req: QueryProjReq) {
   const params = new URLSearchParams();
@@ -375,17 +376,17 @@ export function projSerach(req: QueryFile) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function projHistory(history: QueryHistory) {
+export function getProjHistory(history: QueryHistoryDetail) {
   const params = new URLSearchParams();
   for (const [key, value] of Object.entries(history)) {
     params.append(key, value);
   }
   const config: AxiosRequestConfig = {
     method: 'get',
-    url: '/tex/project/history',
+    url: '/tex/file/version',
     params: params
   };
-  const actionTypeString: string = ProjectActionType[ProjectActionType.PROJ_HISTORY];
+  const actionTypeString: string = ProjectActionType[ProjectActionType.PROJ_HISTORY_DETAIL];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 

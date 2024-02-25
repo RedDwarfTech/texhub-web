@@ -3,9 +3,11 @@ import styles from "./ProjHistory.module.css";
 import { AppState } from "@/redux/types/AppState";
 import React, { useState } from "react";
 import { ProjHisotry } from "@/model/proj/history/ProjHistory";
-import { projHistoryPage } from "@/service/project/ProjectService";
+import { getProjHistory, projHistoryPage } from "@/service/project/ProjectService";
 import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
 import dayjs from "dayjs";
+import { QueryHistoryDetail } from "@/model/request/proj/query/QueryHistoryDetail";
+import { ResponseHandler } from "rdjs-wheel";
 
 export type HistoryProps = {
     projectId: string;
@@ -18,7 +20,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
 
     React.useEffect(() => {
         const myOffcanvas = document.getElementById('projHistory');
-        if(myOffcanvas){
+        if (myOffcanvas) {
             myOffcanvas.addEventListener('show.bs.offcanvas', event => {
                 getProjHistories();
             })
@@ -38,6 +40,21 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         projHistoryPage(hist);
     }
 
+    const restoreProjHistories = (snapId: number) => {
+        const hist: QueryHistoryDetail = {
+            id: snapId
+        };
+        getProjHistory(hist).then((resp) => {
+            if (ResponseHandler.responseSuccess(resp)) {
+                debugger
+                let snapshot = resp.snapshot;
+                // const decoded = Y.decodeSnapshot(encoded);
+                // const docRestored = Y.createDocFromSnapshot(doc, snapshot);
+            }
+        });
+
+    }
+
     const renderHistroy = () => {
         if (!histories || histories.length === 0) {
             return;
@@ -49,8 +66,12 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
                     <div>{item.name}</div>
                     <div>时间：{dayjs(item.updated_time).format('YYYY-MM-DD HH:mm:ss')}</div>
                     <div className={styles.footer}>
-                        <div><button>详情</button></div>
-                        <div><button>还原</button></div>
+                        <div>
+                            <button className="btn btn-primary">详情</button>
+                        </div>
+                        <div>
+                            <button className="btn btn-primary" onClick={() => { restoreProjHistories(item.id) }}>还原</button>
+                        </div>
                     </div>
                 </div>
             );

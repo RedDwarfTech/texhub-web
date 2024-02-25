@@ -36,6 +36,7 @@ export enum ProjectActionType {
     CHANGE_PROJ_CONF,
     PROJ_SEARCH,
     PROJ_HISTORY,
+    PROJ_HISTORY_DETAIL,
     PROJ_HISTORY_PAGE,
     SHARE_PROJ,
     ARCHIVE_PROJ,
