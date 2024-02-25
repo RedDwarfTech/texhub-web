@@ -253,7 +253,8 @@ export function initEditor(editorAttr: EditorAttr,
             let snapshot: Y.Snapshot = Y.snapshot(ydoc);
             let snap: Uint8Array = Y.encodeSnapshot(snapshot);
             // https://discuss.yjs.dev/t/save-the-yjs-snapshot-to-database/2317
-            let snapBase64 = btoa(String.fromCharCode(...new Uint8Array(snap)));
+            let content = String.fromCharCode(...new Uint8Array(snap));
+            let snapBase64 = btoa(content);
             let lastsnapshot = localStorage.getItem("lastsnapshot");
             if(snapBase64 === lastsnapshot){
                 debugger
