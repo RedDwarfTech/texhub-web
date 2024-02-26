@@ -116,6 +116,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
                             <button className="btn btn-primary" onClick={() => { restoreProjHistories(item.id) }}>还原</button>
                         </div>
                     </div>
+                    <ProjHistoryDetail projectId={props.projectId}></ProjHistoryDetail>
                 </div>
             );
         });

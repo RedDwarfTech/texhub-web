@@ -117,7 +117,8 @@ const ProjHistoryDetail: React.FC<HistoryProps> = (props: HistoryProps) => {
                     </div>
                     <div className="modal-body">
                         <React.Suspense fallback={<div>Loading...</div>}>
-                            <OmsSyntaxHighlight textContent={curDoc?.getText().toString()!}
+                            <OmsSyntaxHighlight
+                                textContent={curDoc?.getText().toString()!}
                                 language={"tex"}>
                             </OmsSyntaxHighlight>
                         </React.Suspense>
