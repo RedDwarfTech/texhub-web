@@ -257,7 +257,7 @@ export function initEditor(editorAttr: EditorAttr,
             let snapBase64 = btoa(content);
             let lastsnapshot = localStorage.getItem("lastsnapshot");
             if(snapBase64 === lastsnapshot){
-                debugger
+                // never run into this
                 return;
             }
             if(lastsnapshot){
@@ -265,14 +265,14 @@ export function initEditor(editorAttr: EditorAttr,
                 const decoded = Y.decodeSnapshot(cached);
                 let equal = Y.equalSnapshots(decoded,snapshot);
                 if(equal){
-                    debugger
+                    // never run into this
                     return;
                 }
             }
             let editorText = ytext.toString();
             let lasteditortext = localStorage.getItem("lasteditortext");
             if(lasteditortext === editorText){
-                debugger
+                // will run into this
                 return;
             }
             let params: TexFileVersion = {

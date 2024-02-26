@@ -126,6 +126,8 @@ const EHeader: React.FC = () => {
         <div className={styles.container}>
             <div>
                 <TeXShare projectId={mainFile.project_id}></TeXShare>
+                <ProjHistory projectId={mainFile.project_id}></ProjHistory>
+                <ProjSetting></ProjSetting>
             </div>
             <div className={styles.actions}>
                 <button type="button" 
@@ -159,9 +161,7 @@ const EHeader: React.FC = () => {
                 <button type="button" className="btn btn-primary btn-sm" onClick={() => { handleNavProfile() }}>
                     <i className="fa-solid fa-user"></i> { t("projects") }
                 </button>
-            </div>
-            <ProjHistory projectId={mainFile.project_id}></ProjHistory>
-            <ProjSetting></ProjSetting>
+            </div>         
         </div>
     );
 }

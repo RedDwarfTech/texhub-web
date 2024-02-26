@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
-import styles from "./ProjHistory.module.css";
+import styles from "./ProjHistoryDetail.module.css";
 import { AppState } from "@/redux/types/AppState";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { ProjHisotry } from "@/model/proj/history/ProjHistory";
 import { getProjHistory, projHistoryPage, replaceTextToEditor } from "@/service/project/ProjectService";
 import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
@@ -9,20 +9,19 @@ import dayjs from "dayjs";
 import { QueryHistoryDetail } from "@/model/request/proj/query/QueryHistoryDetail";
 import { ResponseHandler } from "rdjs-wheel";
 import * as Y from 'yjs';
-import { useTranslation } from "react-i18next";
-import * as bootstrap from 'bootstrap';
-import ProjHistoryDetail from "./detail/ProjHistoryDetail";
+import { toast } from "react-toastify";
+import OmsSyntaxHighlight from "./OmsSyntaxHighlight";
 
 export type HistoryProps = {
     projectId: string;
 };
 
-const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
+const ProjHistoryDetail: React.FC<HistoryProps> = (props: HistoryProps) => {
 
     const { projHisPage, curYDoc } = useSelector((state: AppState) => state.proj);
     const [histories, setHistories] = useState<ProjHisotry[]>([]);
     const [curDoc, setCurDoc] = useState<Y.Doc>();
-    const { t } = useTranslation();
+    const delProjCancelRef = useRef<HTMLButtonElement>(null);
 
     React.useEffect(() => {
         const myOffcanvas = document.getElementById('projHistory');
@@ -84,17 +83,6 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         });
     }
 
-    const openHistoryDetail = (snapId: number) => {
-        let firstOffcanvasDiv = document.getElementById('projHistory');
-        let secondOffcanvasDiv = document.getElementById('secondOffcanvas');
-        if(firstOffcanvasDiv && secondOffcanvasDiv){
-            let firstOffcanvas = new bootstrap.Offcanvas(firstOffcanvasDiv);
-            let secondOffcanvas = new bootstrap.Offcanvas(secondOffcanvasDiv);
-            firstOffcanvas.hide();
-            secondOffcanvas.show();
-        }
-    }
-
     const renderHistroy = () => {
         if (!histories || histories.length === 0) {
             return;
@@ -107,10 +95,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
                     <div>时间：{dayjs(item.updated_time).format('YYYY-MM-DD HH:mm:ss')}</div>
                     <div className={styles.footer}>
                         <div>
-                            <button className="btn btn-primary" 
-                            data-bs-toggle="modal"
-                            data-bs-target="#projHistoryDetail" 
-                            >详情</button>
+                            <button className="btn btn-primary">详情</button>
                         </div>
                         <div>
                             <button className="btn btn-primary" onClick={() => { restoreProjHistories(item.id) }}>还原</button>
@@ -123,23 +108,27 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     }
 
     return (
-        <div>
-            <div className="offcanvas offcanvas-end" tab-index="-1" id="projHistory" aria-labelledby="offcanvasExampleLabel">
-                <div className="offcanvas-header">
-                    <h6 className="offcanvas-title" id="projHistoryLabel">项目历史</h6>
-                    <button type="button"
-                        className="btn-close text-reset"
-                        data-bs-dismiss="offcanvas"
-                        aria-label="Close"></button>
-                </div>
-                <div className="offcanvas-body">
-                    <div className={styles.divline}></div>
-                    {renderHistroy()}
+        <div className="modal" id="projHistoryDetail" tabIndex={-1}>
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title">版本详情</h5>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div className="modal-body">
+                        <React.Suspense fallback={<div>Loading...</div>}>
+                            <OmsSyntaxHighlight textContent={curDoc?.getText().toString()!}
+                                language={"tex"}>
+                            </OmsSyntaxHighlight>
+                        </React.Suspense>
+                    </div>
+                    <div className="modal-footer">
+                        <button type="button" ref={delProjCancelRef} className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    </div>
                 </div>
             </div>
-            <ProjHistoryDetail projectId={props.projectId}></ProjHistoryDetail>
         </div>
     );
 }
 
-export default ProjHistory;
+export default ProjHistoryDetail;
