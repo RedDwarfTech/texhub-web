@@ -125,6 +125,9 @@ dependencies:
   pdfjs-dist:
     specifier: ^3.11.174
     version: 3.11.174
+  prism:
+    specifier: link:react-syntax-highlighter/dist/esm/styles/prism
+    version: link:react-syntax-highlighter/dist/esm/styles/prism
   query-string:
     specifier: ^8.2.0
     version: 8.2.0
