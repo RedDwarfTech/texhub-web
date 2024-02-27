@@ -23,15 +23,6 @@ const ProjHistoryDetail: React.FC<HistoryProps> = (props: HistoryProps) => {
     const delProjCancelRef = useRef<HTMLButtonElement>(null);
 
     React.useEffect(() => {
-        const myOffcanvas = document.getElementById('projHistory');
-        if (myOffcanvas) {
-            myOffcanvas.addEventListener('show.bs.offcanvas', event => {
-                getProjHistories();
-            })
-        }
-    }, []);
-
-    React.useEffect(() => {
         if (curYDoc) {
             setCurDoc(curYDoc);
         }
@@ -94,7 +85,7 @@ const ProjHistoryDetail: React.FC<HistoryProps> = (props: HistoryProps) => {
                     <div>时间：{dayjs(item.updated_time).format('YYYY-MM-DD HH:mm:ss')}</div>
                     <div className={styles.footer}>
                         <div>
-                            <button className="btn btn-primary">详情</button>
+                            <button className="btn btn-primary" onClick={() => { getProjHistories() }}>详情</button>
                         </div>
                         <div>
                             <button className="btn btn-primary" onClick={() => { restoreProjHistories(item.id) }}>还原</button>
@@ -118,7 +109,7 @@ const ProjHistoryDetail: React.FC<HistoryProps> = (props: HistoryProps) => {
                         <React.Suspense fallback={<div>Loading...</div>}>
                             <OmsSyntaxHighlight
                                 textContent={curDoc?.getText().toString()!}
-                                language={"tex"}/>
+                                language={"tex"} />
                         </React.Suspense>
                     </div>
                     <div className="modal-footer">
