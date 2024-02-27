@@ -382,7 +382,7 @@ export function projSerach(req: QueryFile) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function getProjHistory(history: QueryHistoryDetail) {
+export function getProjHistoryDetail(history: QueryHistoryDetail) {
   const params = new URLSearchParams();
   for (const [key, value] of Object.entries(history)) {
     params.append(key, value);

@@ -10,7 +10,7 @@ import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 import { ProjConf } from "@/model/proj/config/ProjConf";
 import { SearchResult } from "@/model/proj/search/SearchResult";
-import { ProjHisotry } from "@/model/proj/history/ProjHistory";
+import { ProjHisotry as ProjHistory } from "@/model/proj/history/ProjHistory";
 import { TexProjects } from "@/model/proj/TexProjects";
 import * as Y from 'yjs';
 
@@ -36,7 +36,7 @@ const initState: AppState["proj"] = {
     projConf: {} as ProjConf,
     hits: [] as SearchResult[],
     activeShare: false,
-    projHistories: [] as ProjHisotry[],
+    projHistories: [] as ProjHistory[],
     insertContext: "",
     projHisPage: {
         pagination: {
@@ -46,7 +46,8 @@ const initState: AppState["proj"] = {
         }
     },
     curYDoc: new Y.Doc(),
-    replaceContext: ""
+    replaceContext: "",
+    curHistory: {} as ProjHistory
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -188,6 +189,11 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 curYDoc: action.data
+            };
+        case "PROJ_HISTORY_DETAIL":
+            return {
+                ...state,
+                curHistory: action.data
             };
         default:
             break;

@@ -3,14 +3,13 @@ import styles from "./ProjHistory.module.css";
 import { AppState } from "@/redux/types/AppState";
 import React, { useState } from "react";
 import { ProjHisotry } from "@/model/proj/history/ProjHistory";
-import { getProjHistory, projHistoryPage, replaceTextToEditor } from "@/service/project/ProjectService";
+import { getProjHistoryDetail, projHistoryPage, replaceTextToEditor } from "@/service/project/ProjectService";
 import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
 import dayjs from "dayjs";
 import { QueryHistoryDetail } from "@/model/request/proj/query/QueryHistoryDetail";
 import { ResponseHandler } from "rdjs-wheel";
 import * as Y from 'yjs';
 import { useTranslation } from "react-i18next";
-import * as bootstrap from 'bootstrap';
 import ProjHistoryDetail from "./detail/ProjHistoryDetail";
 
 export type HistoryProps = {
@@ -25,12 +24,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     const { t } = useTranslation();
 
     React.useEffect(() => {
-        const myOffcanvas = document.getElementById('projHistory');
-        if (myOffcanvas) {
-            myOffcanvas.addEventListener('show.bs.offcanvas', event => {
-                getProjHistories();
-            })
-        }
+        getProjHistories();
     }, []);
 
     React.useEffect(() => {
@@ -52,6 +46,13 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         projHistoryPage(hist);
     }
 
+    const getHistoryDetail = (id: number) => {
+        const hist: QueryHistoryDetail = {
+            id: id
+        };
+        getProjHistoryDetail(hist);
+    }
+
     const base64ToUint8Array = (base64: string): Uint8Array => {
         const binaryString = atob(base64);
         const length = binaryString.length;
@@ -68,7 +69,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         const hist: QueryHistoryDetail = {
             id: snapId
         };
-        getProjHistory(hist).then((resp) => {
+        getProjHistoryDetail(hist).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
                 debugger
                 let snapshot = resp.result.content;
@@ -84,17 +85,6 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         });
     }
 
-    const openHistoryDetail = (snapId: number) => {
-        let firstOffcanvasDiv = document.getElementById('projHistory');
-        let secondOffcanvasDiv = document.getElementById('secondOffcanvas');
-        if(firstOffcanvasDiv && secondOffcanvasDiv){
-            let firstOffcanvas = new bootstrap.Offcanvas(firstOffcanvasDiv);
-            let secondOffcanvas = new bootstrap.Offcanvas(secondOffcanvasDiv);
-            firstOffcanvas.hide();
-            secondOffcanvas.show();
-        }
-    }
-
     const renderHistroy = () => {
         if (!histories || histories.length === 0) {
             return;
@@ -107,9 +97,10 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
                     <div>时间：{dayjs(item.updated_time).format('YYYY-MM-DD HH:mm:ss')}</div>
                     <div className={styles.footer}>
                         <div>
-                            <button className="btn btn-primary" 
-                            data-bs-toggle="modal"
-                            data-bs-target="#projHistoryDetail" 
+                            <button className="btn btn-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#projHistoryDetail"
+                                onClick={() => { getHistoryDetail(item.id) }}
                             >详情</button>
                         </div>
                         <div>
