@@ -24,10 +24,6 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     const { t } = useTranslation();
 
     React.useEffect(() => {
-        getProjHistories();
-    }, []);
-
-    React.useEffect(() => {
         if (curYDoc) {
             setCurDoc(curYDoc);
         }
@@ -38,13 +34,6 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
             setHistories(projHisPage.data);
         }
     }, [projHisPage]);
-
-    const getProjHistories = () => {
-        const hist: QueryHistory = {
-            project_id: props.projectId
-        };
-        projHistoryPage(hist);
-    }
 
     const getHistoryDetail = (id: number) => {
         const hist: QueryHistoryDetail = {

@@ -12,7 +12,8 @@ import {
     sendQueueCompileRequest, 
     setCompileStatus, 
     showPreviewTab, 
-    updateLogText
+    updateLogText,
+    projHistoryPage
 } from "@/service/project/ProjectService";
 import { useNavigate } from "react-router-dom";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
@@ -24,6 +25,7 @@ import ProjSetting from "@/page/main/setting/ProjSetting";
 import TeXShare from "@/page/profile/project/share/TeXShare";
 import { useTranslation } from "react-i18next";
 import ProjHistory from "@/page/main/history/ProjHistory";
+import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
 
 const EHeader: React.FC = () => {
 
@@ -110,6 +112,13 @@ const EHeader: React.FC = () => {
 
     }
 
+    const handleProjHist = (mainFile: TexFileModel) => {
+        const hist: QueryHistory = {
+            project_id: mainFile.project_id
+        };
+        projHistoryPage(hist);
+    }
+
     const onSseMessage = (msg: string, eventSource: EventSource) => {
         updateLogText(msg);
     }
@@ -147,7 +156,7 @@ const EHeader: React.FC = () => {
                     data-bs-toggle="offcanvas"
                     data-bs-target="#projHistory"
                     aria-controls="offcanvasExample"
-                    onClick={() => { handleSettings(mainFile) }}>
+                    onClick={() => { handleProjHist(mainFile) }}>
                     <i className="fa-solid fa-timeline"></i> { t("btn_history") }
                 </button>
                 <button type="button"
