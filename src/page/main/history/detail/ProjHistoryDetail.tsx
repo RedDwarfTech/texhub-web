@@ -9,7 +9,6 @@ import dayjs from "dayjs";
 import { QueryHistoryDetail } from "@/model/request/proj/query/QueryHistoryDetail";
 import { ResponseHandler } from "rdjs-wheel";
 import * as Y from 'yjs';
-import { toast } from "react-toastify";
 import OmsSyntaxHighlight from "./OmsSyntaxHighlight";
 
 export type HistoryProps = {
@@ -119,8 +118,7 @@ const ProjHistoryDetail: React.FC<HistoryProps> = (props: HistoryProps) => {
                         <React.Suspense fallback={<div>Loading...</div>}>
                             <OmsSyntaxHighlight
                                 textContent={curDoc?.getText().toString()!}
-                                language={"tex"}>
-                            </OmsSyntaxHighlight>
+                                language={"tex"}/>
                         </React.Suspense>
                     </div>
                     <div className="modal-footer">

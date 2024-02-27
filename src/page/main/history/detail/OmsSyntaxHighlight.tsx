@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import React from 'react';
 
-type tProps = {
+export type OmsProps = {
   textContent: string;
   language: string;
   darkMode?: boolean;
 }
 
-const OmsSyntaxHighlight = (props: tProps) => {
+const OmsSyntaxHighlight: React.FC<OmsProps> = (props: OmsProps) => {
   const { textContent, darkMode, language = 'txt' } = props;
 
   const [SyntaxHighlighter, setSyntaxHighlighter] = useState<any>();
