@@ -29,7 +29,7 @@ const ProjHistoryDetail: React.FC<HistoryProps> = (props: HistoryProps) => {
 
     return (
         <div className="modal" id="projHistoryDetail" tabIndex={-1} data-bs-backdrop="false">
-            <div className="modal-dialog">
+            <div className="modal-dialog modal-lg">
                 <div className="modal-content">
                     <div className="modal-header">
                         <h5 className="modal-title">版本详情</h5>
