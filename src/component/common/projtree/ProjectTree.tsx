@@ -201,6 +201,8 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                     project_id: pid?.toString()
                 };
                 getProjectInfo(req);
+            }else{
+                toast.error(resp.msg);
             }
         });
     };
@@ -490,6 +492,8 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         addFile(params).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
                 getFileTree(pid?.toString());
+            }else{
+                toast.error(resp.msg);
             }
         });
     }
