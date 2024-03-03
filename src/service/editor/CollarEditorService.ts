@@ -86,7 +86,6 @@ const hightlightSelection = (from: number, to: number) => {
     const highlight_decoration = Decoration.mark({
         attributes: { style: "background-color: yellow" }
     });
-    debugger
     curEditorView.dispatch({
         effects: highlight_effect.of([highlight_decoration.range(from, to)])
     });
