@@ -43,7 +43,9 @@ const TeXBlank: React.FC<BlankProjProps> = (props: BlankProjProps) => {
             }else{
                 switch(res.resultCode){
                     case "NON_VIP_TOO_MUCH_PROJ":
-                        toast.error(t("msg_non_vip_exceed"));
+                        let msg = t("msg_non_vip_exceed");
+                        debugger
+                        toast.error(msg);
                         break;
                     case "VIP_TOO_MUCH_PROJ":
                         toast.error(t("msg_vip_exceed"));
