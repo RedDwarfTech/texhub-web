@@ -22,6 +22,6 @@
     "tab_shared": "分享给我",
     "tab_archived": "已归档",
     "tab_trash": "回收站",
-    "msg_non_vip_proj_too_much": "最多创建2个项目，成为VIP创建更多项目",
+    "msg_non_vip_exceed": "最多创建2个项目，成为VIP创建更多项目",
     "msg_vip_exceed": "超出数量上限"
 }
