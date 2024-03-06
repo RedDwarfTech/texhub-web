@@ -21,5 +21,7 @@
     "tab_proj_share_admin": "Admin",
     "tab_shared": "Shared",
     "tab_archived": "Archived",
-    "tab_trash": "Trash"
+    "tab_trash": "Trash",
+    "msg_non_vip_exceed": "become vip too create more project",
+    "msg_vip_exceed": "exceed the vip limit"
 }

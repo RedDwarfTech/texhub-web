@@ -4,6 +4,7 @@ import { ResponseHandler } from "rdjs-wheel";
 import { ChangeEvent, useRef } from "react";
 import { toast } from "react-toastify";
 import { UserService } from "rd-component";
+import { useTranslation } from "react-i18next";
 
 export type BlankProjProps = {
     projName: string;
@@ -15,6 +16,7 @@ const TeXBlank: React.FC<BlankProjProps> = (props: BlankProjProps) => {
 
     const createDocCancelRef = useRef<HTMLButtonElement>(null);
     const projName = props.projName;
+    const { t } = useTranslation();
 
     const handleProjCreate = () => {
         if (!UserService.isLoggedIn()) {
@@ -37,6 +39,15 @@ const TeXBlank: React.FC<BlankProjProps> = (props: BlankProjProps) => {
                 getProjectList(props.getProjFilter({}));
                 if (createDocCancelRef && createDocCancelRef.current) {
                     createDocCancelRef.current.click();
+                }
+            }else{
+                switch(res.resultCode){
+                    case "NON_VIP_TOO_MUCH_PROJ":
+                        toast.error(t("msg_non_vip_exceed"));
+                        break;
+                    case "VIP_TOO_MUCH_PROJ":
+                        toast.error(t("msg_vip_exceed"));
+                        break;
                 }
             }
         });
