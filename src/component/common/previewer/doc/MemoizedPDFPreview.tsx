@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Document, Page, pdfjs } from 'react-pdf';
+import { Document, Page } from 'react-pdf';
 import styles from "./MemoizedPDFPreview.module.css";
 import { DocumentCallback, Options, PageCallback } from 'react-pdf/dist/cjs/shared/types';
 import { AppState } from '@/redux/types/AppState';
@@ -24,7 +24,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({
     options,
     viewModel='default' 
 }) => {
-
     const [numPages, setNumPages] = useState<number>();
     let curPage = localStorage.getItem(readConfig("pdfCurPage") + projId);
     const [currentPage, setCurrentPage] = useState<number>(Number(curPage));
@@ -72,7 +71,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({
 
     var pageObserve = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
         entries.forEach((item: IntersectionObserverEntry) => {
-            if (item.intersectionRatio >= 0.4) {
+            if (item.intersectionRatio > 0) {
                 let dataPage = item.target.getAttribute('data-page-number');
                 setCurrentPage(Number(dataPage));
                 if (!dataPage) return;
@@ -80,7 +79,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({
             }
         })
     }, {
-        threshold: 0.4,
+        threshold: 0,
     });
 
     const goPage = (i: number) => {
