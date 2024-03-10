@@ -25,6 +25,7 @@ import { TexFileModel } from '@/model/file/TexFileModel';
 import { QueryProjInfo } from '@/model/request/proj/query/QueryProjInfo';
 import { CompileResultType } from '@/model/proj/compile/CompileResultType';
 import { BaseMethods } from 'rdjs-wheel';
+import { ReactComponent as RightDraggable } from '@/assets/icon/border-right.svg';
 
 const App: React.FC = () => {
 
@@ -173,6 +174,7 @@ const App: React.FC = () => {
           </div>
         </div>
         <div className={styles.rightDraggable} id="rightDraggable">
+          <RightDraggable width={'2px'} height={'2px'}></RightDraggable>
         </div>
         <Previewer projectId={pid as string} viewModel={'default'}></Previewer>
       </div>
