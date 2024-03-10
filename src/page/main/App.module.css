@@ -38,7 +38,7 @@
 .rightDraggable {
   height: 100%;
   width: 4px;
-  min-width: 2px;
+  min-width: 4px;
   background-color: rgb(33, 41, 53);
 }
 
