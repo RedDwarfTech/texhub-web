@@ -25,7 +25,7 @@ const Template: React.FC = () => {
             setUserTplList(tplPage.data ?? []);
             debugger
             setCurPage(tplPage.pagination.pageNum);
-            let totalPage = tplPage.pagination.total / tplPage.pagination.per_page;
+            let totalPage = tplPage.pagination.total / tplPage.pagination.pageSize;
             setTotalPage(Math.ceil(totalPage));
         }
     }, [tplPage]);
