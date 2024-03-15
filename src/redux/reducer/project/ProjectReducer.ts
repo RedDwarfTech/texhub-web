@@ -41,8 +41,8 @@ const initState: AppState["proj"] = {
     projHisPage: {
         pagination: {
             total: 0,
-            per_page: 0,
-            page: 0
+            pageNum: 0,
+            pageSize: 0
         }
     },
     curYDoc: new Y.Doc(),
