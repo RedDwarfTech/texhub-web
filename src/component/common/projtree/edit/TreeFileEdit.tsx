@@ -5,7 +5,7 @@ export type TreeFileEditProps = {
 const TreeFileEdit: React.FC<TreeFileEditProps> = (props: TreeFileEditProps) => {
 
     const handleOk = () => {
-        
+        console.log("working...");
     }
 
     return (
@@ -18,7 +18,7 @@ const TreeFileEdit: React.FC<TreeFileEditProps> = (props: TreeFileEditProps) => 
                     </div>
                     <div className="modal-body">
                         <div>
-                            <input className="form-control form-control-md" id="formFileLg" type="file" />
+                            
                         </div>
                     </div>
                     <div className="modal-footer">
