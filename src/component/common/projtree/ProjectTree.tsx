@@ -361,7 +361,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                                     <li><a className="dropdown-item" onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { handleModal(e, true, "deleteFileModal", item) }}>删除</a></li>
                                     <li><a className="dropdown-item" onClick={(e) => { handleModal(e, true, "renameFileModal", item) }}>重命名</a></li>
                                     <li><a className="dropdown-item" onClick={(e) => { handleModal(e, true, "downloadFileModal", item) }}>下载文件</a></li>
-                                    <li><a className="dropdown-item" onClick={(e) => { handleModal(e, true, "moveFileModal", item) }}>移动到文件夹(Beta)</a></li>**/
+                                    <li><a className="dropdown-item" onClick={(e) => { handleModal(e, true, "moveFileModal", item) }}>移动到文件夹(Beta)</a></li>
                                 </ul>
                             </div>
                         </div>
