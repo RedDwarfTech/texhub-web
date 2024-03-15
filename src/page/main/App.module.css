@@ -46,6 +46,13 @@
   cursor: ew-resize;
 }
 
+.rightDraggableIcon {
+  width: 2px;
+  height: 14px;
+  color: white;
+  margin-top: 200px;
+}
+
 .editorFooter {
   height: 3vh;
   background-color: rgb(29, 35, 47);
