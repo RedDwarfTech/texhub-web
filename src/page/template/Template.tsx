@@ -23,7 +23,6 @@ const Template: React.FC = () => {
     React.useEffect(() => {
         if (tplPage && Object.keys(tplPage).length > 0) {
             setUserTplList(tplPage.data ?? []);
-            debugger
             setCurPage(tplPage.pagination.pageNum);
             let totalPage = tplPage.pagination.total / tplPage.pagination.pageSize;
             setTotalPage(Math.ceil(totalPage));
@@ -71,7 +70,6 @@ const Template: React.FC = () => {
     }
 
     const handlePageDown = (e: any) => {
-        debugger
         if (!curPage || curPage >= totalPage) return;
         const searchElement = document.getElementById('stext') as HTMLInputElement;
         const searchValue = searchElement.value;
