@@ -14,6 +14,7 @@ import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import jspreadsheet, { JSpreadsheetOptions, JspreadsheetInstanceElement } from "jspreadsheet-ce";
 import { useRef } from 'react';
 import React from 'react';
+import "jspreadsheet-ce/dist/jspreadsheet.css";
 
 export type TableDesignerProps = {
 

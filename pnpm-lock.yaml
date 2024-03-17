@@ -114,7 +114,7 @@ dependencies:
     specifier: ^23.10.1
     version: 23.10.1
   jspreadsheet-ce:
-    specifier: ^4.13.4
+    specifier: ^4.6.2
     version: 4.13.4
   lib0:
     specifier: ^0.2.92
