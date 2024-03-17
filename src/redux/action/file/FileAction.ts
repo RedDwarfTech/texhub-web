@@ -4,6 +4,7 @@ export enum FileActionType {
     GET_FILE_LIST,
     GET_FILE_TREE,
     ADD_FILE,
+    MV_FILE,
     ADD_FILE_HISTORY,
     CHOOSE_FILE,
     GET_MAIN_FILE,
@@ -55,5 +56,10 @@ export interface switchEditorFileAction {
 
 export interface renameFileAction {
     type: FileActionType.RENAME_FILE;
+    data: any;
+}
+
+export interface mvFileAction {
+    type: FileActionType.MV_FILE;
     data: any;
 }

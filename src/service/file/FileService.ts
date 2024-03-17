@@ -1,5 +1,6 @@
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { TexFileVersion } from "@/model/file/TexFileVersion";
+import { MoveFileReq } from "@/model/request/file/edit/MoveFileReq";
 import { RenameFile } from "@/model/request/file/edit/RenameFile";
 import { FileActionType } from "@/redux/action/file/FileAction";
 import store from "@/redux/store/store";
@@ -59,6 +60,16 @@ export function addFile(params: any) {
         data: JSON.stringify(params)
     };
     const actionTypeString: string = FileActionType[FileActionType.ADD_FILE];
+    return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
+export function mvFile(params: MoveFileReq) {
+    const config: AxiosRequestConfig = {
+        method: 'patch',
+        url: '/tex/file/mv',
+        data: JSON.stringify(params)
+    };
+    const actionTypeString: string = FileActionType[FileActionType.MV_FILE];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
