@@ -19,7 +19,7 @@ const TreeFileEdit: React.FC<TreeFileEditProps> = (props: TreeFileEditProps) => 
         let treeNodes: TexFileModel[] = JSON.parse(projTree);
         let projFolderTree = treeNodes.filter((node) => node.file_type == TreeFileType.Folder);
         const tagList: JSX.Element[] = [];
-        for (let i = 1; i <= projFolderTree.length; i++) {
+        for (let i = 0; i < projFolderTree.length; i++) {
             tagList.push(
                 <option selected>{projFolderTree[i].name}</option>
             );
