@@ -9,6 +9,9 @@ import React from "react";
 import { toast } from "react-toastify";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
+import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
+import { getProjectInfo } from "@/service/project/ProjectService";
+import { ResponseHandler } from "rdjs-wheel";
 
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 const { DirectoryTree } = Tree;
@@ -58,7 +61,14 @@ const TreeFileMove: React.FC<TreeFileEditProps> = (props: TreeFileEditProps) => 
             file_id: props.texFile.file_id,
             dist_file_id: distFileId
         };
-        mvFile(req);
+        mvFile(req).then((resp) => {
+            if(ResponseHandler.responseSuccess(resp)) {
+                let query: QueryProjInfo = {
+                    project_id: props.projectId
+                };
+                getProjectInfo(query);
+            }
+        });
     }
 
     const onSelect: DirectoryTreeProps['onSelect'] = (keys: React.Key[], info) => {
