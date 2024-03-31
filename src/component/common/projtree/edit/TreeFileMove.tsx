@@ -26,8 +26,22 @@ const TreeFileMove: React.FC<TreeFileEditProps> = (props: TreeFileEditProps) => 
     const { folderTree } = useSelector((state: AppState) => state.file);
 
     React.useEffect(() => {
-        getFolderTree(props.projectId);
+        const modalElement = document.getElementById('moveFileModal');
+        if (modalElement) {
+            modalElement.addEventListener('shown.bs.modal', handleModalShown);
+        }
+
+        return () => {
+            if (modalElement) {
+                modalElement.removeEventListener('shown.bs.modal', handleModalShown);
+            }
+        };
     }, []);
+
+    const handleModalShown = () => {
+        toast.info('Modal 已弹出');
+        getFolderTree(props.projectId);
+    };
 
     React.useEffect(() => {
         if (folderTree && folderTree.length > 0) {
