@@ -9,7 +9,7 @@ import React from "react";
 import * as bootstrap from 'bootstrap';
 import { toast } from "react-toastify";
 import TreeUpload from "./upload/TreeUpload";
-import TreeFileEdit from "./edit/TreeFileEdit";
+import TreeFileMove from "./edit/TreeFileMove";
 import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 import TexFileUtil from "@/common/TexFileUtil";
 import { TreeFileType } from "@/model/file/TreeFileType";
@@ -39,6 +39,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const [selectedFile, setSelectedFile] = useState<TexFileModel>(selected ? JSON.parse(selected) : null);
     const [operFile, setOperFile] = useState<TexFileModel>();
     const [renameFile, setRenameFile] = useState<TexFileModel>();
+    const [moveFile, setMoveFile] = useState<TexFileModel>();
     const [draggedNode, setDraggedNode] = useState<TexFileModel | null>(null);
     const [draggedOverNode, setDraggedOverNode] = useState<TexFileModel | null>(null);
 
@@ -177,7 +178,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         e.stopPropagation();
         let modal = document.getElementById(modalId);
         if (modal) {
-            setRenameFile(file);
+            setMoveFile(file);
             var myModal = new bootstrap.Modal(modal);
             show ? myModal.show() : myModal.hide();
         }
@@ -664,7 +665,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                 </div>
             </div>
             <TreeUpload projectId={pid}></TreeUpload>
-            <TreeFileEdit projectId={pid}></TreeFileEdit>
+            <TreeFileMove projectId={pid}></TreeFileMove>
         </div>
     );
 }
