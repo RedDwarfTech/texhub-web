@@ -16,6 +16,15 @@ export function getFileTree(parent: string) {
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
+export function getFolderTree(parent: string) {
+    const config: AxiosRequestConfig = {
+        method: 'get',
+        url: '/tex/file/folder/tree?parent=' + parent,
+    };
+    const actionTypeString: string = FileActionType[FileActionType.GET_FILE_TREE];
+    return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
 export function getMainFile(projectId: string) {
     const config: AxiosRequestConfig = {
         method: 'get',

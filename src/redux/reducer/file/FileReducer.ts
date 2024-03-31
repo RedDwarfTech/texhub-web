@@ -4,6 +4,7 @@ import { AppState } from "@/redux/types/AppState";
 const initState: AppState["file"] = {
     fileList: [],
     fileTree: [],
+    folderTree: [],
     activeFile: {} as TexFileModel,
     selectItem: {} as TexFileModel,
     mainFile: {} as TexFileModel
@@ -20,6 +21,11 @@ const FileReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 fileTree: action.data
+            };
+        case "GET_FOLDER_TREE":
+            return {
+                ...state,
+                folderTree: action.data
             };
         case "CHOOSE_FILE":
             return {

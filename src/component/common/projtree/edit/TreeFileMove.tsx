@@ -1,13 +1,15 @@
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { TreeFileType } from "@/model/file/TreeFileType";
 import { MoveFileReq } from "@/model/request/file/edit/MoveFileReq";
-import { mvFile } from "@/service/file/FileService";
+import { getFolderTree, mvFile } from "@/service/file/FileService";
 import { useState } from "react";
 import Tree from 'antd/lib/tree';
 import type { GetProps, TreeDataNode } from 'antd';
 import 'antd/lib/tree/style';
 import React from "react";
 import { toast } from "react-toastify";
+import { AppState } from "@/redux/types/AppState";
+import { useSelector } from "react-redux";
 
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 const { DirectoryTree } = Tree;
@@ -21,20 +23,21 @@ const TreeFileMove: React.FC<TreeFileEditProps> = (props: TreeFileEditProps) => 
 
     const [texFileModel, setTexFileModel] = useState<TreeDataNode[]>();
     const [distFileId, setDistFileId] = useState<string>();
+    const { folderTree } = useSelector((state: AppState) => state.file);
 
     React.useEffect(() => {
-        let projTree = localStorage.getItem('projTree:' + props.projectId);
-        if (projTree == null) {
-            return;
-        }
-        let treeNodes: TexFileModel[] = JSON.parse(projTree);
-        let projFolderTree = treeNodes.filter((node) => node.file_type == TreeFileType.Folder);
-        const treeData: TreeDataNode[] = convertToTreeDataNode(projFolderTree);
-        setTexFileModel(treeData);
+        getFolderTree(props.projectId);
     }, []);
 
+    React.useEffect(() => {
+        if (folderTree && folderTree.length > 0) {
+            const treeData: TreeDataNode[] = convertToTreeDataNode(folderTree);
+            setTexFileModel(treeData);
+        }
+    }, [folderTree]);
+
     const handleOk = () => {
-        if(!distFileId){
+        if (!distFileId) {
             toast.warn("请选择目标文件夹");
             return;
         }

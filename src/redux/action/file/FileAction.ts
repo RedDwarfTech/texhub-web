@@ -3,6 +3,7 @@ export type fileAction = getFileListAction | chooseFileAction | getMainFileActio
 export enum FileActionType {
     GET_FILE_LIST,
     GET_FILE_TREE,
+    GET_FOLDER_TREE,
     ADD_FILE,
     MV_FILE,
     ADD_FILE_HISTORY,
@@ -21,6 +22,11 @@ export interface getFileListAction {
 
 export interface getFileTreeAction {
     type: FileActionType.GET_FILE_TREE;
+    data: any;
+}
+
+export interface getFolderTreeAction {
+    type: FileActionType.GET_FOLDER_TREE;
     data: any;
 }
 
