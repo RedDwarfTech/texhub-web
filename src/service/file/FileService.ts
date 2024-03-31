@@ -21,7 +21,7 @@ export function getFolderTree(parent: string) {
         method: 'get',
         url: '/tex/file/folder/tree?parent=' + parent,
     };
-    const actionTypeString: string = FileActionType[FileActionType.GET_FILE_TREE];
+    const actionTypeString: string = FileActionType[FileActionType.GET_FOLDER_TREE];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 

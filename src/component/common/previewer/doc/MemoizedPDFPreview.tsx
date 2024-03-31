@@ -102,6 +102,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({
     const restorePdfPosition = () => {
         const key = readConfig("pdfScrollKey") + projId;
         const scrollPosition = localStorage.getItem(key);
+        console.log("滚动高度：" + scrollPosition);
         if (scrollPosition) {
             setTimeout(() => {
                 const pdfContainerDiv = document.getElementById('pdfContainer');

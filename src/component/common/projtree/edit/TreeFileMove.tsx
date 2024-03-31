@@ -1,5 +1,4 @@
 import { TexFileModel } from "@/model/file/TexFileModel";
-import { TreeFileType } from "@/model/file/TreeFileType";
 import { MoveFileReq } from "@/model/request/file/edit/MoveFileReq";
 import { getFolderTree, mvFile } from "@/service/file/FileService";
 import { useState } from "react";
@@ -39,7 +38,6 @@ const TreeFileMove: React.FC<TreeFileEditProps> = (props: TreeFileEditProps) => 
     }, []);
 
     const handleModalShown = () => {
-        toast.info('Modal 已弹出');
         getFolderTree(props.projectId);
     };
 
