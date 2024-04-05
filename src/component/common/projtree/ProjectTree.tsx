@@ -19,6 +19,7 @@ import TeXSymbol from "./symbol/TeXSymbol";
 import { getProjectInfo } from "@/service/project/ProjectService";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 import TreeFileRename from "./rename/TreeFileRename";
+import TreeFileDel from "./del/TreeFileDel";
 
 export type TreeProps = {
     projectId: string;
@@ -379,21 +380,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         return tagList;
     }
 
-    const handleFileDelete = () => {
-        if (!operFile) {
-            toast.error("请先选择要删除的文件");
-            return;
-        }
-        let params = {
-            file_id: operFile?.file_id
-        };
-        delTreeItem(params).then((resp) => {
-            if (ResponseHandler.responseSuccess(resp)) {
-                getFileTree(pid.toString());
-            }
-        });
-    };
-
     const handleDropdownClick = (e: React.MouseEvent<HTMLButtonElement>, file: TexFileModel) => {
         e.preventDefault();
         e.stopPropagation();
@@ -501,8 +487,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         setFolderName(event.target.value);
     };
 
-    
-
     const handleFileInputChange = (event: any) => {
         setCreateFileName(event.target.value);
     };
@@ -598,29 +582,10 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                     </div>
                 </div>
             </div>
-            
-            <div className="modal fade" id="deleteFileModal" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="deleteModalLabel">删除文件</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div className="modal-body">
-                            <div className="input-group flex-nowrap">
-                                删除后数据无法恢复，确定要删除文件吗？
-                            </div>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                            <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={() => { handleFileDelete() }}>确定</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <TreeUpload projectId={pid}></TreeUpload>
             <TreeFileMove projectId={pid} texFile={moveFile!}></TreeFileMove>
             <TreeFileRename projectId={pid} operFile={operFile!}></TreeFileRename>
+            <TreeFileDel projectId={pid} operFile={operFile!}></TreeFileDel>
         </div>
     );
 }
