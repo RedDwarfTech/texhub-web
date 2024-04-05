@@ -18,7 +18,13 @@ export type TreeFileRenameProps = {
 const TreeFileRename: React.FC<TreeFileRenameProps> = (
   props: TreeFileRenameProps
 ) => {
-  const [renameFile, setRenameFile] = useState<TexFileModel>();
+  const [renameFile, setRenameFile] = useState<TexFileModel>(props.operFile);
+
+  React.useEffect(() =>{
+    if(props.operFile){
+      setRenameFile(props.operFile);
+    }
+  },[props.operFile]);
 
   const handleRenameFile = () => {
     if (!renameFile || renameFile.name.length === 0 || !props.operFile) {
