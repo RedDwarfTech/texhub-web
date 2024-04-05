@@ -1,4 +1,4 @@
-import { RefObject, useRef, useState } from "react";
+import { RefObject, useState } from "react";
 import styles from './ProjectTree.module.css';
 import { addFile, chooseFile, delTreeItem, getFileTree, renameFileImpl, switchFile } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
@@ -9,7 +9,7 @@ import React from "react";
 import * as bootstrap from 'bootstrap';
 import { toast } from "react-toastify";
 import TreeUpload from "./upload/TreeUpload";
-import TreeFileMove from "./edit/TreeFileMove";
+import TreeFileMove from "./move/TreeFileMove";
 import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 import TexFileUtil from "@/common/TexFileUtil";
 import { TreeFileType } from "@/model/file/TreeFileType";
@@ -18,6 +18,7 @@ import ProjFileSearch from "./search/ProjFileSearch";
 import TeXSymbol from "./symbol/TeXSymbol";
 import { getProjectInfo } from "@/service/project/ProjectService";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
+import TreeFileRename from "./rename/TreeFileRename";
 
 export type TreeProps = {
     projectId: string;
@@ -38,7 +39,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const selected = localStorage.getItem("proj-select-file:" + pid);
     const [selectedFile, setSelectedFile] = useState<TexFileModel>(selected ? JSON.parse(selected) : null);
     const [operFile, setOperFile] = useState<TexFileModel>();
-    const [renameFile, setRenameFile] = useState<TexFileModel>();
     const [moveFile, setMoveFile] = useState<TexFileModel>();
     const [draggedNode, setDraggedNode] = useState<TexFileModel | null>(null);
     const [draggedOverNode, setDraggedOverNode] = useState<TexFileModel | null>(null);
@@ -66,17 +66,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             setMainFile(defaultFile[0]);
         }
     }, [fileTree]);
-
-    const handleMenuClose = (event: any) => {
-        const menu = document.getElementById('user-menu');
-        const dropdown = document.getElementById('dropdown');
-        if (menu && dropdown) {
-            const target = event.target;
-            if (!menu.contains(target)) {
-                dropdown.style.display = 'none';
-            }
-        }
-    }
 
     const handleExpandFolderCallback = (name_paths: string[], projId: string) => {
         for (let i = 0; i < name_paths.length; i++) {
@@ -427,23 +416,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         }
     }
 
-    const handleRenameFile = () => {
-        if (!renameFile || renameFile.name.length === 0 || !operFile) {
-            toast.warn("请输入文件新名称");
-            return;
-        }
-        let req: RenameFile = {
-            file_id: renameFile.file_id,
-            name: renameFile.name,
-            legacy_name: operFile.name
-        };
-        renameFileImpl(req).then((res) => {
-            if (ResponseHandler.responseSuccess(res)) {
-                getFileTree(pid?.toString());
-            }
-        });
-    }
-
     /**
     * resize left should put to the app layer
     * @param resizeBarName 
@@ -529,16 +501,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         setFolderName(event.target.value);
     };
 
-    const handleRenameFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (!renameFile) {
-            return;
-        }
-        let newFile: TexFileModel = {
-            ...renameFile,
-            name: event.target.value
-        };
-        setRenameFile(newFile);
-    };
+    
 
     const handleFileInputChange = (event: any) => {
         setCreateFileName(event.target.value);
@@ -635,32 +598,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                     </div>
                 </div>
             </div>
-            <div className="modal fade" id="renameFileModal" aria-labelledby="renameModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="renameModalLabel">重命名</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div className="modal-body">
-                            <div className="input-group flex-nowrap">
-                                <input id="folderName"
-                                    type="text"
-                                    onChange={handleRenameFileChange}
-                                    className="form-control"
-                                    placeholder="新名称"
-                                    aria-label="Username"
-                                    value={renameFile ? renameFile.name : ""}
-                                    aria-describedby="addon-wrapping" />
-                            </div>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                            <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={() => { handleRenameFile() }}>确定</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
             <div className="modal fade" id="deleteFileModal" aria-labelledby="deleteModalLabel" aria-hidden="true">
                 <div className="modal-dialog">
                     <div className="modal-content">
@@ -682,6 +620,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             </div>
             <TreeUpload projectId={pid}></TreeUpload>
             <TreeFileMove projectId={pid} texFile={moveFile!}></TreeFileMove>
+            <TreeFileRename projectId={pid} operFile={operFile!}></TreeFileRename>
         </div>
     );
 }
