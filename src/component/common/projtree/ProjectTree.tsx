@@ -1,4 +1,4 @@
-import { RefObject, useState } from "react";
+import { RefObject, useRef, useState } from "react";
 import styles from './ProjectTree.module.css';
 import { addFile, chooseFile, delTreeItem, getFileTree, renameFileImpl, switchFile } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
@@ -44,11 +44,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const [draggedOverNode, setDraggedOverNode] = useState<TexFileModel | null>(null);
 
     React.useEffect(() => {
-        return () => {
-        };
-    }, []);
-
-    React.useEffect(() => {
         if (projInfo && Object.keys(projInfo).length > 0) {
             handleFileTreeUpdate(projInfo.tree);
             setMainFile(projInfo.main_file);
@@ -71,6 +66,17 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             setMainFile(defaultFile[0]);
         }
     }, [fileTree]);
+
+    const handleMenuClose = (event: any) => {
+        const menu = document.getElementById('user-menu');
+        const dropdown = document.getElementById('dropdown');
+        if (menu && dropdown) {
+            const target = event.target;
+            if (!menu.contains(target)) {
+                dropdown.style.display = 'none';
+            }
+        }
+    }
 
     const handleExpandFolderCallback = (name_paths: string[], projId: string) => {
         for (let i = 0; i < name_paths.length; i++) {
@@ -173,7 +179,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         }
     }
 
-    const handleModal = (e: React.MouseEvent<HTMLAnchorElement>, show: boolean, modalId: string, file: TexFileModel) => {
+    const handleModal = (e: React.MouseEvent<HTMLDivElement>, show: boolean, modalId: string, file: TexFileModel) => {
         e.preventDefault();
         e.stopPropagation();
         let modal = document.getElementById(modalId);
@@ -359,10 +365,20 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                                     <i className="fa-solid fa-ellipsis-vertical"></i>
                                 </button>
                                 <ul className="dropdown-menu" aria-labelledby={"dropdownMenuButton1" + item.id}>
-                                    <li><a className="dropdown-item" onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { handleModal(e, true, "deleteFileModal", item) }}>删除</a></li>
-                                    <li><a className="dropdown-item" onClick={(e) => { handleModal(e, true, "renameFileModal", item) }}>重命名</a></li>
-                                    <li><a className="dropdown-item" onClick={(e) => { handleModal(e, true, "downloadFileModal", item) }}>下载文件</a></li>
-                                    <li><a className="dropdown-item" onClick={(e) => { handleModal(e, true, "moveFileModal", item) }}>移动到文件夹(Beta)</a></li>
+                                    <li>
+                                        <div className="dropdown-item" 
+                                        onClick={(e: React.MouseEvent<HTMLDivElement>) => { handleModal(e, true, "deleteFileModal", item) }}>删除</div>
+                                    </li>
+                                    <li>
+                                        <div className="dropdown-item" onClick={(e) => { handleModal(e, true, "renameFileModal", item) }}>重命名</div>
+                                    </li>
+                                    <li>
+                                        <div className="dropdown-item" onClick={(e) => { handleModal(e, true, "downloadFileModal", item) }}>下载文件</div>
+                                    </li>
+                                    <li>
+                                        <div className="dropdown-item" 
+                                        onClick={(e) => { handleModal(e, true, "moveFileModal", item) }}>移动到文件夹(Beta)</div>
+                                    </li>
                                 </ul>
                             </div>
                         </div>

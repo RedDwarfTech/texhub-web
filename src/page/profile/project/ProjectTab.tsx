@@ -43,7 +43,6 @@ const ProjectTab: React.FC = () => {
     const delProjCancelRef = useRef<HTMLButtonElement>(null);
     const navigate = useNavigate();
     const { t } = useTranslation();
-    const { i18n } = useTranslation();
     const firstUpdate = useRef(true);
 
     React.useEffect(() => {
@@ -160,10 +159,10 @@ const ProjectTab: React.FC = () => {
             return (
                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                     <li>
-                        <a className="dropdown-item"
+                        <div className="dropdown-item"
                             data-bs-toggle="modal"
                             onClick={() => { setCurrProject(docItem) }}
-                            data-bs-target="#editPrj">修改项目名称</a>
+                            data-bs-target="#editPrj">修改项目名称</div>
                     </li>
                     <li>
                         <a className="dropdown-item"
@@ -299,9 +298,9 @@ const ProjectTab: React.FC = () => {
                         <div className={styles.docHeader}>
                             <div className={styles.projTiltle}>
                                 <i className="fa-solid fa-folder"></i>
-                                <a onClick={() => { getFolderProjects(folderItem) }}>
+                                <div onClick={() => { getFolderProjects(folderItem) }}>
                                     <h6>{folderItem.folder_name}</h6>
-                                </a>
+                                </div>
                             </div>
                             <div className={styles.option}>
                                 <div className="dropdown">
@@ -352,9 +351,9 @@ const ProjectTab: React.FC = () => {
                 <div key={docItem.project_id} className="list-group-item">
                     <div className={styles.docHeader}>
                         <div className={styles.projTiltle}>
-                            <a onClick={() => { handleProjNameClick(docItem) }}>
+                            <div onClick={() => { handleProjNameClick(docItem) }}>
                                 <h6>{docItem.proj_name}</h6>
-                            </a>
+                            </div>
                         </div>
                         <div className={styles.option}>
                             <div className="dropdown">

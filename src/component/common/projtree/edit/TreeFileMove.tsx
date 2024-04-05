@@ -1,7 +1,7 @@
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { MoveFileReq } from "@/model/request/file/edit/MoveFileReq";
 import { getFolderTree, mvFile } from "@/service/file/FileService";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Tree from 'antd/lib/tree';
 import type { GetProps, TreeDataNode } from 'antd';
 import 'antd/lib/tree/style';
@@ -44,12 +44,25 @@ const TreeFileMove: React.FC<TreeFileEditProps> = (props: TreeFileEditProps) => 
         getFolderTree(props.projectId);
     };
 
+    const convertToTreeDataNode = (data: TexFileModel[]): TreeDataNode[] => {
+        return data.map(item => {
+            const node: TreeDataNode = {
+                key: String(item.file_id),
+                title: item.name,
+                children: item.children.length > 0 ? convertToTreeDataNode(item.children) : undefined
+            };
+            return node;
+        });
+    };
+
+    const convertToTreeDataNodeMemoized = useCallback(convertToTreeDataNode, []);
+
     React.useEffect(() => {
         if (folderTree && folderTree.length > 0) {
-            const treeData: TreeDataNode[] = convertToTreeDataNode(folderTree);
+            const treeData: TreeDataNode[] = convertToTreeDataNodeMemoized(folderTree);
             setTexFileModel(treeData);
-        }
-    }, [folderTree]);
+        } 
+    }, [folderTree, convertToTreeDataNodeMemoized]);
 
     const handleOk = () => {
         if (!distFileId) {
@@ -78,17 +91,6 @@ const TreeFileMove: React.FC<TreeFileEditProps> = (props: TreeFileEditProps) => 
 
     const onExpand: DirectoryTreeProps['onExpand'] = (keys, info) => {
         console.log('Trigger Expand', keys, info);
-    };
-
-    const convertToTreeDataNode = (data: TexFileModel[]): TreeDataNode[] => {
-        return data.map(item => {
-            const node: TreeDataNode = {
-                key: String(item.file_id),
-                title: item.name,
-                children: item.children.length > 0 ? convertToTreeDataNode(item.children) : undefined
-            };
-            return node;
-        });
     };
 
     return (

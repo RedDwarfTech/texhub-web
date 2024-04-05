@@ -132,3 +132,4 @@ dist
 build
 test.html
 .DS_Store
+.vscode

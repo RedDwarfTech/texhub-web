@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import styles from './App.module.css';
-const CollarCodeEditor = React.lazy(() => import('@/component/common/editor/CollarCodeEditor'));
 import { useLocation } from 'react-router-dom';
 import { AppState } from '@/redux/types/AppState';
 import { useSelector } from 'react-redux';
@@ -26,6 +25,7 @@ import { QueryProjInfo } from '@/model/request/proj/query/QueryProjInfo';
 import { CompileResultType } from '@/model/proj/compile/CompileResultType';
 import { BaseMethods } from 'rdjs-wheel';
 import { ReactComponent as RightDraggable } from '@/assets/icon/right-drag.svg';
+const CollarCodeEditor = React.lazy(() => import('@/component/common/editor/CollarCodeEditor'));
 
 const App: React.FC = () => {
 
