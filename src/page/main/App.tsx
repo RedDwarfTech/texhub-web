@@ -54,8 +54,8 @@ const App: React.FC = () => {
   }, []);
 
   React.useEffect(()=>{
-    if(errors){
-      toast.error("注意：" + errors);
+    if(errors && errors.msg){
+      toast.error("注意：" + errors.msg);
     }
   },[errors]);
 
