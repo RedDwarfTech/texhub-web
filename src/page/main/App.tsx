@@ -34,6 +34,7 @@ const App: React.FC = () => {
   const params = queryString.parse(search);
   const pid = params.pid!;
   const { compileResult, latestComp, endSignal, projInfo } = useSelector((state: AppState) => state.proj);
+  const { errors } = useSelector((state: any) => state.rdRootReducer.sys);
   const { activeFile, selectItem } = useSelector((state: AppState) => state.file);
   const [activeFileModel, setActiveFileModel] = useState<TexFileModel>();
   const [selectedItem, setSelectedItem] = useState<TexFileModel>();
@@ -51,6 +52,12 @@ const App: React.FC = () => {
     return () => {
     };
   }, []);
+
+  React.useEffect(()=>{
+    if(errors){
+      toast.error("注意：" + errors);
+    }
+  },[errors]);
 
   React.useEffect(() => {
     if (endSignal && endSignal.length > 0) {
