@@ -18,27 +18,19 @@ import jspreadsheet, {
 import { useRef } from "react";
 import React from "react";
 import "jspreadsheet-ce/dist/jspreadsheet.css";
+import { useState } from "react";
 
 export type TableDesignerProps = {};
 
 const TableDesigner: React.FC<TableDesignerProps> = (
   props: TableDesignerProps
 ) => {
+    const [code, setCode] = useState<string>('');
   const jRef = useRef<JspreadsheetInstanceElement>(null);
   const options: JSpreadsheetOptions = {
     data: [[]],
     minDimensions: [2, 2],
   };
-  const code = `\begin{table}[]
-                \centering
-                \begin{tabular}{llll}
-                    &  &  &  \\
-                    &  &  &  \\
-                    &  &  & 
-                \end{tabular}
-                \caption{}
-                \label{tab:my-table}
-                \end{table}`;
 
   React.useEffect(() => {
     if (jRef.current) {
@@ -71,6 +63,35 @@ const TableDesigner: React.FC<TableDesignerProps> = (
       jRef.current.jexcel.deleteColumn();
     }
   };
+
+  const handleTeXTableCodeGeneration = () => {
+    if (jRef.current) {
+        const spreadsheet = jspreadsheet(jRef.current);
+        const colNum = spreadsheet.getColumnOptions.length;
+        const rowNum = spreadsheet.row.length;
+        let latexCode = "\\begin{table}\n";
+        latexCode += "\\centering\n";
+        latexCode += "\\begin{tabular}{";
+        
+        // 添加列对齐方式
+        for (let i = 0; i < colNum; i++) {
+          latexCode += "c";
+        }
+  
+        latexCode += "}\n";
+        latexCode += "\\hline\n";
+        debugger
+        for (let i = 0; i < rowNum; i++) {
+           // const curRowData = data[i]?data[i]:" ";
+          // latexCode += curRowData.join(" & ") + " \\\\ \\hline\n";
+        }
+  
+        latexCode += "\\end{tabular}\n";
+        latexCode += "\\end{table}";
+  
+        setCode(latexCode); 
+      }
+  }
 
   return (
     <div
@@ -180,7 +201,9 @@ const TableDesigner: React.FC<TableDesignerProps> = (
               <button
                 type="button"
                 className="btn btn-primary"
-                data-bs-dismiss="modal"
+                onClick={()=>{
+                    handleTeXTableCodeGeneration();
+                }}
               >
                 生成LaTeX代码
               </button>
