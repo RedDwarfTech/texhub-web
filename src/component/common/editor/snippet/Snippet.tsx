@@ -1,7 +1,11 @@
 import React, { ChangeEvent, useState } from "react";
 import styles from "./Snippet.module.css";
 import Table from "rc-table";
-import { addSnippet, delSnippet, getSnippetList } from "@/service/project/SnippetService";
+import {
+  addSnippet,
+  delSnippet,
+  getSnippetList,
+} from "@/service/project/SnippetService";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { TexSnippetModel } from "@/model/snippet/TexSnippetModel";
@@ -9,6 +13,8 @@ import { toast } from "react-toastify";
 import { AddSnippetReq } from "@/model/request/snippet/add/AddSnippetReq";
 import { ResponseHandler } from "rdjs-wheel";
 import { QuerySnippetReq } from "@/model/request/snippet/query/QuerySnippetReq";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 export type SnippetProps = {};
 
@@ -18,42 +24,53 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
   const [searchWord, setSearchWord] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [snippet, setSnippet] = useState<string>("");
+  const [previewSnippet, setPreviewSnippet] = useState<string>("");
   const [showAdd, setShowAdd] = useState<boolean>(false);
+  const [showPreview, setShowPreview] = useState<boolean>(false);
 
   React.useEffect(() => {
     getSnippetList({});
   }, []);
 
   React.useEffect(() => {
-    if (snippets && snippets.length > 0) {
-      setSnippetModels(snippets);
-    }
+    setSnippetModels(snippets);
   }, [snippets]);
 
   const columns = [
     {
       title: "名称",
-      dataIndex: "snippet",
-      key: "snippet",
+      dataIndex: "title",
+      key: "title",
       width: 100,
     },
     {
       title: "操作",
       dataIndex: "",
       key: "operations",
-      render: (record:any) => {
+      render: (record: any) => {
         return (
           <div className={styles.oper}>
-            <button className="btn btn-primary" onClick={()=>{
-                delSnippet(record.id).then((resp)=>{
-                    if(ResponseHandler.responseSuccess(resp)){
-                        getSnippetList({});
-                    }
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                delSnippet(record.id).then((resp) => {
+                  if (ResponseHandler.responseSuccess(resp)) {
+                    getSnippetList({});
+                  }
                 });
-            }}>删除</button>
-            <div className="btn btn-primary" onClick={()=>{
-                
-            }}>预览</div>
+              }}
+            >
+              删除
+            </button>
+            <div
+              className="btn btn-primary"
+              onClick={() => {
+                setShowPreview(showPreview ? false : true);
+                setPreviewSnippet(record.snippet);
+              }}
+            >
+              预览
+            </div>
           </div>
         );
       },
@@ -70,53 +87,74 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
       toast.warn("请输入搜索关键字");
       return;
     }
-    let query: QuerySnippetReq ={
-        title: searchWord
+    let query: QuerySnippetReq = {
+      title: searchWord,
     };
     getSnippetList(query);
   };
 
   const renderAddSnippet = () => {
-    if(showAdd){
-        return <div className={styles.snipAdd}>
-            <input onChange={(e: ChangeEvent<HTMLInputElement>)=>{
-                setTitle(e.target.value);
-            }} placeholder="输入标题"></input>
-            <textarea onChange={(e: ChangeEvent<HTMLTextAreaElement>)=>{
-                setSnippet(e.target.value);
-            }} placeholder="输入代码片段" rows={5}></textarea>
-            <div className={styles.snipAddOper}>
+    if (showAdd) {
+      return (
+        <div className={styles.snipAdd}>
+          <input
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              setTitle(e.target.value);
+            }}
+            placeholder="输入标题"
+          ></input>
+          <textarea
+            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
+              setSnippet(e.target.value);
+            }}
+            placeholder="输入代码片段"
+            rows={5}
+          ></textarea>
+          <div className={styles.snipAddOper}>
             <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => {
-                    let addSnippetReq: AddSnippetReq = {
-                        snippet: snippet,
-                        title: title
-                    };
-                    addSnippet(addSnippetReq).then((resp)=>{
-                        if(ResponseHandler.responseSuccess(resp)){
-                            setShowAdd(false);
-                            getSnippetList({});
-                        }
-                    });
-                }}
-              >
-                确定
-              </button>
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => {
+              type="button"
+              className="btn btn-primary"
+              onClick={() => {
+                let addSnippetReq: AddSnippetReq = {
+                  snippet: snippet,
+                  title: title,
+                };
+                addSnippet(addSnippetReq).then((resp) => {
+                  if (ResponseHandler.responseSuccess(resp)) {
                     setShowAdd(false);
-                }}
-              >
-                取消
-              </button>
-            </div>
-        </div>;
-    }else{
-        return <div></div>;
+                    getSnippetList({});
+                  }
+                });
+              }}
+            >
+              确定
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => {
+                setShowAdd(false);
+              }}
+            >
+              取消
+            </button>
+          </div>
+        </div>
+      );
+    } else {
+      return <div></div>;
+    }
+  };
+
+  const renderPreview = () => {
+    if (showPreview) {
+      return (
+        <div className={styles.codeShow}>
+          <SyntaxHighlighter language="latex" style={dark}>
+            {previewSnippet}
+          </SyntaxHighlighter>
+        </div>
+      );
     }
   };
 
@@ -162,7 +200,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
                 type="button"
                 className="btn btn-primary"
                 onClick={() => {
-                    setShowAdd(true);
+                  setShowAdd(true);
                 }}
               >
                 添加
@@ -172,6 +210,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
             <div className={styles.tableAction}>
               <Table columns={columns} data={snippetModels} />
             </div>
+            {renderPreview()}
           </div>
           <div className="modal-footer">
             <button
