@@ -4,3 +4,26 @@
     gap: 10px;
 }
 
+.search {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.tableAction {
+    margin-top: 10px;
+}
+
+.snipAdd {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    gap: 5px;
+}
+
+.snipAddOper {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    justify-content: flex-end;
+}
