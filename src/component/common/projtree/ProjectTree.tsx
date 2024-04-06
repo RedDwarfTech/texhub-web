@@ -1,6 +1,6 @@
 import { RefObject, useState } from "react";
 import styles from './ProjectTree.module.css';
-import { addFile, chooseFile, delTreeItem, getFileTree, renameFileImpl, switchFile } from "@/service/file/FileService";
+import { addFile, chooseFile, getFileTree, switchFile } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { AppState } from "@/redux/types/AppState";
@@ -13,7 +13,6 @@ import TreeFileMove from "./move/TreeFileMove";
 import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 import TexFileUtil from "@/common/TexFileUtil";
 import { TreeFileType } from "@/model/file/TreeFileType";
-import { RenameFile } from "@/model/request/file/edit/RenameFile";
 import ProjFileSearch from "./search/ProjFileSearch";
 import TeXSymbol from "./symbol/TeXSymbol";
 import { getProjectInfo } from "@/service/project/ProjectService";
