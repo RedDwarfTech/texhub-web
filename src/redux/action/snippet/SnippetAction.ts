@@ -3,6 +3,7 @@ export type snippetAction = saveDocAction | getDocListAction | compileProjAction
 export enum SnippetActionType {
     DELETE_SNIPPET,
     EDIT_SNIPPET,
+    ADD_SNIPPET,
     GET_SNIPPET_LIST
 }
 

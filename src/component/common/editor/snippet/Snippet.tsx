@@ -1,11 +1,13 @@
 import React, { ChangeEvent, useState } from "react";
 import styles from "./Snippet.module.css";
 import Table from "rc-table";
-import { getSnippetList } from "@/service/project/SnippetService";
+import { addSnippet, getSnippetList } from "@/service/project/SnippetService";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { TexSnippetModel } from "@/model/snippet/TexSnippetModel";
 import { toast } from "react-toastify";
+import { AddSnippetReq } from "@/model/request/snippet/add/AddSnippetReq";
+import { ResponseHandler } from "rdjs-wheel";
 
 export type SnippetProps = {};
 
@@ -13,6 +15,8 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
   const { snippets } = useSelector((state: AppState) => state.snippet);
   const [snippetModels, setSnippetModels] = useState<TexSnippetModel[]>();
   const [searchWord, setSearchWord] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
+  const [snippet, setSnippet] = useState<string>("");
   const [showAdd, setShowAdd] = useState<boolean>(false);
 
   React.useEffect(() => {
@@ -63,14 +67,26 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
   const renderAddSnippet = () => {
     if(showAdd){
         return <div className={styles.snipAdd}>
-            <input placeholder="输入标题"></input>
-            <textarea placeholder="输入代码片段" rows={5}></textarea>
+            <input onChange={(e: ChangeEvent<HTMLInputElement>)=>{
+                setTitle(e.target.value);
+            }} placeholder="输入标题"></input>
+            <textarea onChange={(e: ChangeEvent<HTMLTextAreaElement>)=>{
+                setSnippet(e.target.value);
+            }} placeholder="输入代码片段" rows={5}></textarea>
             <div className={styles.snipAddOper}>
             <button
                 type="button"
                 className="btn btn-primary"
                 onClick={() => {
-                    
+                    let addSnippetReq: AddSnippetReq = {
+                        snippet: snippet,
+                        title: title
+                    };
+                    addSnippet(addSnippetReq).then((resp)=>{
+                        if(ResponseHandler.responseSuccess(resp)){
+                            setShowAdd(false);
+                        }
+                    });
                 }}
               >
                 确定
@@ -87,7 +103,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
             </div>
         </div>;
     }else{
-        return <div>add</div>;
+        return <div></div>;
     }
   };
 

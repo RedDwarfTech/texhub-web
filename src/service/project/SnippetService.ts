@@ -20,15 +20,11 @@ export function getSnippetList(req: QuerySnippetReq) {
 }
 
 export function addSnippet(req: EditSnippetReq) {
-    const params = new URLSearchParams();
-    for (const [key, value] of Object.entries(req)) {
-        params.append(key, value);
-    }
     const config: AxiosRequestConfig = {
         method: 'post',
         url: '/tex/snippet/add',
-        params: params
+        data: JSON.stringify(req)
     };
-    const actionTypeString: string = SnippetActionType[SnippetActionType.GET_SNIPPET_LIST];
+    const actionTypeString: string = SnippetActionType[SnippetActionType.ADD_SNIPPET];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
