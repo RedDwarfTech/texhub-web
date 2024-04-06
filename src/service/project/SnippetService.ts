@@ -28,3 +28,12 @@ export function addSnippet(req: EditSnippetReq) {
     const actionTypeString: string = SnippetActionType[SnippetActionType.ADD_SNIPPET];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
+
+export function delSnippet(id: number) {
+    const config: AxiosRequestConfig = {
+        method: 'delete',
+        url: '/tex/snippet/del?id=' + id,
+    };
+    const actionTypeString: string = SnippetActionType[SnippetActionType.DELETE_SNIPPET];
+    return XHRClient.requestWithActionType(config, actionTypeString, store);
+}

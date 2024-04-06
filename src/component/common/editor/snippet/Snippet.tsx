@@ -1,13 +1,14 @@
 import React, { ChangeEvent, useState } from "react";
 import styles from "./Snippet.module.css";
 import Table from "rc-table";
-import { addSnippet, getSnippetList } from "@/service/project/SnippetService";
+import { addSnippet, delSnippet, getSnippetList } from "@/service/project/SnippetService";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { TexSnippetModel } from "@/model/snippet/TexSnippetModel";
 import { toast } from "react-toastify";
 import { AddSnippetReq } from "@/model/request/snippet/add/AddSnippetReq";
 import { ResponseHandler } from "rdjs-wheel";
+import { QuerySnippetReq } from "@/model/request/snippet/query/QuerySnippetReq";
 
 export type SnippetProps = {};
 
@@ -40,12 +41,19 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
       title: "操作",
       dataIndex: "",
       key: "operations",
-      render: () => {
+      render: (record:any) => {
         return (
           <div className={styles.oper}>
-            <a href="#">删除</a>
-            <a href="#">预览</a>
-            <a href="#">编辑</a>
+            <button className="btn btn-primary" onClick={()=>{
+                delSnippet(record.id).then((resp)=>{
+                    if(ResponseHandler.responseSuccess(resp)){
+                        getSnippetList({});
+                    }
+                });
+            }}>删除</button>
+            <div className="btn btn-primary" onClick={()=>{
+                
+            }}>预览</div>
           </div>
         );
       },
@@ -62,6 +70,10 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
       toast.warn("请输入搜索关键字");
       return;
     }
+    let query: QuerySnippetReq ={
+        title: searchWord
+    };
+    getSnippetList(query);
   };
 
   const renderAddSnippet = () => {
@@ -85,6 +97,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
                     addSnippet(addSnippetReq).then((resp)=>{
                         if(ResponseHandler.responseSuccess(resp)){
                             setShowAdd(false);
+                            getSnippetList({});
                         }
                     });
                 }}

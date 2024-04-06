@@ -1,3 +1,3 @@
 export interface QuerySnippetReq { 
-    snippet?: string
+    title?: string
 }
