@@ -26,7 +26,7 @@ const EquationDesigner: React.FC<EquationDesignerProps> = (
             ></button>
           </div>
           <div className="modal-body">
-            <a target="_blank" rel="noreferrer" href="https://www.latexlive.com/home">妈咪叔公式设计器</a>
+            <a target="_blank"  href="https://www.latexlive.com/home">妈咪叔公式设计器</a>
           </div>
           <div className="modal-footer">
             <button
