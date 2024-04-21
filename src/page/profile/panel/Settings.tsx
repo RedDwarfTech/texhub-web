@@ -35,7 +35,7 @@ const Settings: React.FC = () => {
             const uInfo: UserModel = JSON.parse(userInfoJson);
             setUserInfo(uInfo);
         } else {
-            UserService.loadCurrUser(false, "/texpub/user/current-user");
+            UserService.loadCurrUser(false, "/infra/user/current-user");
         }
     }
 
