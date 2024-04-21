@@ -11,7 +11,7 @@ let devConfigMap = new Map([
     ["phone","+8615683761628"],
     ["password","12345678"],
     ["deviceName","dolphin's macbook pro"],
-    ["refreshUserUrl","/texpub/user/current-user"],
+    ["refreshUserUrl","/infra/user/current-user"],
     ["compileBaseUrl","http://dev-tex.poemhub.top/tex/static/proj"],
     ["tplBaseUrl","http://dev-tex.poemhub.top/tex/static/tpl"],
     ["shareBaseUrl","http://dev-tex.poemhub.top/proj/share"],

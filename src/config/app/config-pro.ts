@@ -6,7 +6,7 @@ let proConfigMap = new Map([
   ["accessTokenUrlPath","/texpub/auth/access-token/refresh"],
   ["appHome","https://tex.poemhub.top"],
   ["appId" , "n29Pa29WS1"],
-  ["refreshUserUrl","/texpub/user/current-user"],
+  ["refreshUserUrl","/infra/user/current-user"],
   ["compileBaseUrl","https://tex.poemhub.top/tex/static/proj"],
   ["tplBaseUrl","https://tex.poemhub.top/tex/static/tpl"],
   ["wssUrl","wss://ws.poemhub.top"],
