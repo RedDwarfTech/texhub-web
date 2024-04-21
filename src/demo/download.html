@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Excel</title>
+</head>
+<body>
+    <button onclick="downloadExcel()">Download Excel</button>
+
+    <script>
+        function downloadExcel() {
+            // 发送 GET 请求下载 Excel 文件
+            fetch('/download/excel', {
+                method: 'GET',
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                // 创建一个 <a> 元素
+                const downloadLink = document.createElement('a');
+                downloadLink.href = window.URL.createObjectURL(blob);
+                downloadLink.download = 'example.xlsx'; // 文件名
+                downloadLink.click();
+            })
+            .catch(error => console.error('Error downloading Excel file:', error));
+        }
+    </script>
+</body>
+</html>

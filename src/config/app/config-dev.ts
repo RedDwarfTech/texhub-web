@@ -3,7 +3,7 @@ let devConfigMap = new Map([
     ["wssUrl","wss://ws.poemhub.top"],
     ["logoutUrl", "http://dev-tex.poemhub.top"],
     ["baseAuthUrl","http://192.168.10.93:11014"],
-    ["loginUrl", "/texpub/user/login"],
+    ["loginUrl", "/infra/user/login"],
     ["regUrl", "/texpub/user/reg"],
     ["accessTokenUrlPath","/texpub/auth/access-token/refresh"],
     ["appHome","http://192.168.10.93:8084"],
