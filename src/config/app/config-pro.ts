@@ -1,7 +1,7 @@
 let proConfigMap = new Map([
   ["logoutUrl", "https://tex.poemhub.top"],
   ["loginUrl", "/infra/user/login"],
-  ["regUrl", "/texpub/user/reg"],
+  ["regUrl", "/infra/user/reg"],
   ["baseAuthUrl","https://tex.poemhub.top"],
   ["accessTokenUrlPath","/infra/auth/access-token/refresh"],
   ["appHome","https://tex.poemhub.top"],

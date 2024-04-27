@@ -60,7 +60,7 @@ const Settings: React.FC = () => {
         let newNick = {
             nickname: curNickname
         };
-        UserService.doSetNickname(newNick, "/texpub/user/nickname", store).then((res) => {
+        UserService.doSetNickname(newNick, "/infra/user/nickname", store).then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
                 UserService.loadCurrUser(true, readConfig("refreshUserUrl")).then((res)=>{
                     const userInfoJson = localStorage.getItem("userInfo");

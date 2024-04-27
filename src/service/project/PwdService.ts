@@ -9,7 +9,7 @@ import { XHRClient } from "rd-component";
 export function sendVerifySMS(doc: SendVerifyReq) {
     const config: AxiosRequestConfig = {
       method: 'put',
-      url: '/texpub/user/pwd/send-verify-code',
+      url: '/infra/user/pwd/send-verify-code',
       data: JSON.stringify(doc)
     };
     const actionTypeString: string = PwdActionType[PwdActionType.SEND_VERIFY_CODE];
@@ -19,7 +19,7 @@ export function sendVerifySMS(doc: SendVerifyReq) {
 export function verifySmsCode(doc: VerifyReq) {
   const config: AxiosRequestConfig = {
     method: 'put',
-    url: '/texpub/user/verify',
+    url: '/infra/user/verify',
     data: JSON.stringify(doc)
   };
   const actionTypeString: string = PwdActionType[PwdActionType.VERIFY];
@@ -29,7 +29,7 @@ export function verifySmsCode(doc: VerifyReq) {
 export function resetPwd(doc: ResetPwdReq) {
   const config: AxiosRequestConfig = {
     method: 'put',
-    url: '/texpub/user/pwd/reset',
+    url: '/infra/user/pwd/reset',
     data: JSON.stringify(doc)
   };
   const actionTypeString: string = PwdActionType[PwdActionType.VERIFY];

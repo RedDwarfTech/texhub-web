@@ -51,7 +51,7 @@ const PwdReset: React.FC = () => {
             oldPassword:oldPwd,
             newPassword:newPwd
         };
-        UserService.doResetPwd(params, "/texpub/user/change/pwd", store).then((resp)=>{
+        UserService.doResetPwd(params, "/infra/user/change/pwd", store).then((resp)=>{
             if(ResponseHandler.responseSuccess(resp)) {
                 toast.success("密码修改成功");
                 UserService.doLoginOut(readConfig("logoutUrl"));
