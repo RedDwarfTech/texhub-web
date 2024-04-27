@@ -46,7 +46,7 @@
     "prism": "link:react-syntax-highlighter/dist/esm/styles/prism",
     "query-string": "^8.2.0",
     "rc-table": "7.40.0",
-    "rd-component": "^0.1.161",
+    "rd-component": "^0.1.162",
     "rdjs-wheel": "0.0.30",
     "rdy-websocket": "1.5.0",
     "react": "^18.3.1",
