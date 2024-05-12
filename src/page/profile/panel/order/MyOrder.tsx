@@ -20,8 +20,9 @@ const MyOrder: React.FC = () => {
 
     React.useEffect(() => {
         if (orderPage) {
-            let orderList = orderPage.list;
+            let orderList = orderPage.data;
             setCurOrders(orderList);
+            setCurPagination(orderPage.pagination);
         }
     }, [orderPage]);
 
