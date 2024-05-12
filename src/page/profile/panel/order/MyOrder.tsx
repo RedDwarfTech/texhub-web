@@ -1,6 +1,6 @@
 import store from "@/redux/store/store";
 import { OrderService, Order, orderStatus } from "rd-component";
-import { TimeUtils, JPagination } from "rdjs-wheel";
+import { TimeUtils, Pagination } from "rdjs-wheel";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -8,7 +8,7 @@ const MyOrder: React.FC = () => {
 
     const { orderPage } = useSelector((state: any) => state.rdRootReducer.order);
     const [curOrders, setCurOrders] = useState<Order[]>();
-    const [curPagination, setCurPagination] = useState<JPagination>();
+    const [curPagination, setCurPagination] = useState<Pagination>();
 
     React.useEffect(() => {
         let params = {
@@ -55,13 +55,14 @@ const MyOrder: React.FC = () => {
     }
 
     const renderPageNumbers = () => {
-        if (!curPagination || curPagination.pages === 0) {
+        if (!curPagination || curPagination.total === 0) {
             return (<li className="page-item">
                 <a className="page-link" href="#" onClick={() => handlePageClick(1)}>1</a>
             </li>);
         }
+        let pages = Math.ceil(curPagination.total/curPagination.pageSize);
         const orderList: JSX.Element[] = [];
-        for (let i = 1; i <= curPagination.pages - 1; i++) {
+        for (let i = 1; i <= pages - 1; i++) {
             orderList.push(
                 <li className="page-item">
                     <a className="page-link" href="#" onClick={() => handlePageClick(i)}>{i}</a>
