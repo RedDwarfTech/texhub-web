@@ -109,8 +109,6 @@ const handleWsAuth = (event: any, wsProvider: WebsocketProvider, editorAttr: Edi
         wsProvider.ws?.close()
     }
     if (event.status === 'expired') {
-        debugger
-        toast.error("access token auth expired");
         RequestHandler.handleWebAccessTokenExpire().then((res) => {
             if (ResponseHandler.responseSuccess(res)) {
                 wsProvider.ws?.close();
