@@ -73,7 +73,7 @@ const TeXShare: React.FC<ShareProps> = (props: ShareProps) => {
             render: () => {
                 return (
                     <div className={styles.oper}>
-                        <a href="#">删除</a>
+                        <button className="btn btn-primary">删除</button>
                     </div>
                 );
             },

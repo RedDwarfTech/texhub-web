@@ -1,3 +1,16 @@
+#### 本地开发
+
+
+
+本机启动nginx服务：
+
+
+
+```bash
+/opt/homebrew/Cellar/nginx/1.25.4/bin/nginx -c /System/Volumes/Data/opt/homebrew/etc/nginx/nginx.conf
+```
+
+
 
 server start openresty:
 
@@ -25,7 +38,3 @@ docker push registry.cn-shanghai.aliyuncs.com/reddwarf-pro/dolphin-post:a56aeb19
 curl http://127.0.0.1:8000 --header "Host:tex.poemhub.top"
 curl http://172.29.217.209:8000 --header "Host:tex.poemhub.top"
 ```
-
-
-
-

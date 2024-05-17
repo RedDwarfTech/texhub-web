@@ -15,6 +15,7 @@ import { ResponseHandler } from "rdjs-wheel";
 import { QuerySnippetReq } from "@/model/request/snippet/query/QuerySnippetReq";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import dayjs from "dayjs";
 
 export type SnippetProps = {};
 
@@ -41,7 +42,17 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
       title: "名称",
       dataIndex: "title",
       key: "title",
-      width: 100,
+    },
+    {
+      title: "创建时间",
+      dataIndex: "created_time",
+      key: "created_time",
+      render: (value: number) => {
+        const formattedDate = dayjs
+          .unix(value/1000)
+          .format("YYYY-MM-DD HH:mm:ss");
+        return formattedDate;
+      },
     },
     {
       title: "操作",
