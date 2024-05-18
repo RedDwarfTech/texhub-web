@@ -96,14 +96,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         }
     }, [srcFocus]);
 
-    React.useEffect(() => {
-        if (fileTree && fileTree.length > 0) {
-            handleFileTreeUpdate(fileTree);
-            let defaultFile = fileTree.filter((file: TexFileModel) => file.main_flag === 1);
-            setMainFile(defaultFile[0]);
-        }
-    }, [fileTree]);
-
     const handleExpandFolderCallback = (name_paths: string[], projId: string) => {
         for (let i = 0; i < name_paths.length; i++) {
             // get the newest tree content to avoid the legacy override the newest update
@@ -204,6 +196,14 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             resizeLeftCallback("leftDraggable");
         }
     }, [projInfo,resizeLeftCallback, handleFileTreeUpdate]);
+
+    React.useEffect(() => {
+        if (fileTree && fileTree.length > 0) {
+            handleFileTreeUpdate(fileTree);
+            let defaultFile = fileTree.filter((file: TexFileModel) => file.main_flag === 1);
+            setMainFile(defaultFile[0]);
+        }
+    }, [fileTree, handleFileTreeUpdate]);
 
     const handleHeaderAction = (id: string) => {
         let modal = document.getElementById(id);
