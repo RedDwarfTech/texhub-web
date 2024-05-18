@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import styles from './Previewer.module.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { pdfjs } from 'react-pdf';
-pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.js`;
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import { AppState } from '@/redux/types/AppState';
@@ -19,6 +18,7 @@ import { CompileResultType } from '@/model/proj/compile/CompileResultType';
 import { readConfig } from '@/config/app/config-reader';
 import { BaseMethods } from 'rdjs-wheel';
 import { ProjInfo } from '@/model/proj/ProjInfo';
+pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.js`;
 
 export type PreviwerProps = {
     projectId: string;
@@ -84,11 +84,11 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     }, [queue]);
 
     React.useEffect(() => {
-        if (projAttr.pdfScale == 1 && pdfScale !== 1) {
+        if (projAttr.pdfScale === 1 && pdfScale !== 1) {
             return;
         }
         setPdfScale(projAttr.pdfScale);
-    }, [projAttr]);
+    }, [projAttr, pdfScale]);
 
     React.useEffect(() => {
         setCompStatus(compileStatus);
