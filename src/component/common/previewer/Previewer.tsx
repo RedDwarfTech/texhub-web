@@ -49,7 +49,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
 
     React.useEffect(() => {
         getLatestCompile(projectId);
-    }, []);
+    }, [projectId]);
 
     React.useEffect(() => {
         if (projInfo && Object.keys(projInfo).length > 0) {
@@ -258,6 +258,19 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         );
     }
 
+    function throttle(func: () => void, delay: number) {
+        let canRun = true;
+        return function() {
+          if (canRun) {
+            func();
+            canRun = false;
+            setTimeout(() => {
+              canRun = true;
+            }, delay);
+          }
+        };
+      }
+
     const renderPreviewHeaderAction = () => {
         if (curPreviewTab === "pdfview") {
             return (
@@ -283,7 +296,9 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
                     <button className={styles.previewIconButton}
                         data-bs-toggle="tooltip"
                         title="下载PDF"
-                        onClick={() => { handleDownloadPdf(curPdfUrl) }}>
+                        onClick={() => { throttle(()=>{
+                            handleDownloadPdf(curPdfUrl)},3000); 
+                        }}>
                         <i className="fa-solid fa-download"></i>
                     </button>
                     <button className={styles.previewIconButton}
