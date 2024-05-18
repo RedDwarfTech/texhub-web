@@ -157,9 +157,6 @@ const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): WebsocketProvider => {
         console.error("connection error:" + editorAttr.docId, event);
     });
     wsProvider.on('message', (event: MessageEvent) => {
-        const data: Uint8Array = new Uint8Array(event.data);
-        const decoder = decoding.createDecoder(data)
-        const messageType = decoding.readVarUint(decoder)
     });
     wsProvider.on('status', (event: any) => {
         if (event.status === 'connected') {
