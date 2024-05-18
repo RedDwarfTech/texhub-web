@@ -25,6 +25,13 @@ export type PreviwerProps = {
     viewModel: string;
 };
 
+const options: Options = {
+    cMapUrl: `/pdfjs-dist/${pdfjs.version}/cmaps/`,
+    httpHeaders: {
+        'Authorization': 'Bearer ' + getAccessToken()
+    }
+};
+
 const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
 
     let cachedScale = localStorage.getItem("pdf:scale:" + projectId);
@@ -117,13 +124,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
             });
         }
     }, [streamLogText]);
-
-    const options: Options = {
-        cMapUrl: `/pdfjs-dist/${pdfjs.version}/cmaps/`,
-        httpHeaders: {
-            'Authorization': 'Bearer ' + getAccessToken()
-        }
-    };
 
     const handleDownloadPdf = async (pdfUrl: string) => {
         if (!pdfUrl) {
