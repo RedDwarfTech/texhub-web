@@ -15,6 +15,7 @@ import { ResponseHandler } from "rdjs-wheel";
 import { QuerySnippetReq } from "@/model/request/snippet/query/QuerySnippetReq";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import dayjs from "dayjs";
 
 export type SnippetProps = {};
@@ -49,7 +50,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
       key: "created_time",
       render: (value: number) => {
         const formattedDate = dayjs
-          .unix(value/1000)
+          .unix(value / 1000)
           .format("YYYY-MM-DD HH:mm:ss");
         return formattedDate;
       },
@@ -164,6 +165,12 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
           <SyntaxHighlighter language="latex" style={dark}>
             {previewSnippet}
           </SyntaxHighlighter>
+          <button className="btn btn-primary">
+            <span className="m-1 pb-1 basis-3/4 text-xs">{'复制'}</span>
+            <CopyToClipboard text={previewSnippet} onCopy={() => {toast.info("代码已复制")}}>
+              <i className="fa fa-copy"></i>
+            </CopyToClipboard>
+          </button>
         </div>
       );
     }
