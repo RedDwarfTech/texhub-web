@@ -15,7 +15,7 @@ import { ResponseHandler } from "rdjs-wheel";
 import { QuerySnippetReq } from "@/model/request/snippet/query/QuerySnippetReq";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { CopyToClipboard } from "react-copy-to-clipboard";
 import dayjs from "dayjs";
 
 export type SnippetProps = {};
@@ -28,7 +28,6 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
   const [snippet, setSnippet] = useState<string>("");
   const [previewSnippet, setPreviewSnippet] = useState<string>("");
   const [showAdd, setShowAdd] = useState<boolean>(false);
-  const [showPreview, setShowPreview] = useState<boolean>(false);
 
   React.useEffect(() => {
     getSnippetList({});
@@ -59,11 +58,11 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
       title: "操作",
       dataIndex: "",
       key: "operations",
-      render: (record: any) => {
+      render: (record: TexSnippetModel) => {
         return (
           <div className={styles.oper}>
             <button
-              className="btn btn-primary"
+              className="btn btn-danger"
               onClick={() => {
                 delSnippet(record.id).then((resp) => {
                   if (ResponseHandler.responseSuccess(resp)) {
@@ -77,7 +76,6 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
             <div
               className="btn btn-primary"
               onClick={() => {
-                setShowPreview(showPreview ? false : true);
                 setPreviewSnippet(record.snippet);
               }}
             >
@@ -159,15 +157,20 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
   };
 
   const renderPreview = () => {
-    if (showPreview) {
+    if (previewSnippet) {
       return (
         <div className={styles.codeShow}>
           <SyntaxHighlighter language="latex" style={dark}>
             {previewSnippet}
           </SyntaxHighlighter>
           <button className="btn btn-primary">
-            <span className="m-1 pb-1 basis-3/4 text-xs">{'复制'}</span>
-            <CopyToClipboard text={previewSnippet} onCopy={() => {toast.info("代码已复制")}}>
+            <span className="m-1 pb-1 basis-3/4 text-xs">{"复制"}</span>
+            <CopyToClipboard
+              text={previewSnippet}
+              onCopy={() => {
+                toast.info("代码已复制");
+              }}
+            >
               <i className="fa fa-copy"></i>
             </CopyToClipboard>
           </button>

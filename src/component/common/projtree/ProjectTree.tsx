@@ -43,13 +43,50 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     const [draggedNode, setDraggedNode] = useState<TexFileModel | null>(null);
     const [draggedOverNode, setDraggedOverNode] = useState<TexFileModel | null>(null);
 
-    React.useEffect(() => {
-        if (projInfo && Object.keys(projInfo).length > 0) {
-            handleFileTreeUpdate(projInfo.tree);
-            setMainFile(projInfo.main_file);
-            resizeLeft("leftDraggable");
-        }
-    }, [projInfo]);
+    /**
+    * resize left should put to the app layer
+    * @param resizeBarName 
+    * @param resizeArea 
+    */
+    const resizeLeftCallback = React.useCallback((resizeBarName: string) => {
+        setTimeout(() => {
+            let prevCursorOffset = -1;
+            let resizing = false;
+            const resizeElement: HTMLElement | null = props.divRef.current;
+            if (resizeElement == null || !resizeElement) {
+                console.error("left resize element is null");
+                return;
+            }
+            const resizeBar: HTMLElement | null = document.getElementById(resizeBarName);
+            if (resizeBar == null) {
+                console.error("resize bar is null");
+                return;
+            }
+            resizeBar.addEventListener("mousedown", () => {
+                resizing = true
+            });
+            window.addEventListener("mousemove", handleResizeMenu);
+            window.addEventListener("mouseup", () => {
+                resizing = false
+            });
+            function handleResizeMenu(e: MouseEvent) {
+                const { screenX } = e
+                e.preventDefault()
+                e.stopPropagation()
+                if (!resizing) {
+                    return
+                }
+                if (resizeElement == null) return;
+                if (prevCursorOffset === -1) {
+                    prevCursorOffset = screenX
+                } else if (Math.abs(prevCursorOffset - screenX) >= 5) {
+                    resizeElement.style.flex = `0 0 ${screenX}px`;
+                    resizeElement.style.maxWidth = "100vw";
+                    prevCursorOffset = screenX;
+                }
+            }
+        }, 1500);
+    }, [props.divRef]);
 
     React.useEffect(() => {
         if (srcFocus && srcFocus.length > 0) {
@@ -132,7 +169,19 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         curTabName !== "symbol" ? setCurTabName("symbol") : setCurTabName("tree");
     }
 
-    const handleFileTreeUpdate = (tree: TexFileModel[]) => {
+    const mergeTreeExpand = React.useCallback((newTree: TexFileModel[], cacheTree: TexFileModel[]) => {
+        newTree.forEach(newNode => {
+            let expandStatus = TexFileUtil.searchTreeSingleNode(cacheTree, newNode.file_id);
+            if (expandStatus) {
+                newNode.expand = expandStatus;
+            }
+            if (newNode.children && newNode.children.length > 0) {
+                mergeTreeExpand(newNode.children, cacheTree);
+            }
+        });
+    },[]);
+
+    const handleFileTreeUpdate = React.useCallback((tree: TexFileModel[]) => {
         if (!tree || tree.length === 0) {
             return;
         }
@@ -146,19 +195,15 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             setTexFileTree(tree);
         }
         localStorage.setItem('projTree:' + props.projectId, JSON.stringify(tree));
-    }
+    },[props.projectId, mergeTreeExpand]);
 
-    const mergeTreeExpand = (newTree: TexFileModel[], cacheTree: TexFileModel[]) => {
-        newTree.forEach(newNode => {
-            let expandStatus = TexFileUtil.searchTreeSingleNode(cacheTree, newNode.file_id);
-            if (expandStatus) {
-                newNode.expand = expandStatus;
-            }
-            if (newNode.children && newNode.children.length > 0) {
-                mergeTreeExpand(newNode.children, cacheTree);
-            }
-        });
-    }
+    React.useEffect(() => {
+        if (projInfo && Object.keys(projInfo).length > 0) {
+            handleFileTreeUpdate(projInfo.tree);
+            setMainFile(projInfo.main_file);
+            resizeLeftCallback("leftDraggable");
+        }
+    }, [projInfo,resizeLeftCallback, handleFileTreeUpdate]);
 
     const handleHeaderAction = (id: string) => {
         let modal = document.getElementById(id);
@@ -399,51 +444,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         if (fileItem.file_type !== 0) {
             switchFile(fileItem);
         }
-    }
-
-    /**
-    * resize left should put to the app layer
-    * @param resizeBarName 
-    * @param resizeArea 
-    */
-    const resizeLeft = (resizeBarName: string) => {
-        setTimeout(() => {
-            let prevCursorOffset = -1;
-            let resizing = false;
-            const resizeElement: HTMLElement | null = props.divRef.current;
-            if (resizeElement == null || !resizeElement) {
-                console.error("left resize element is null");
-                return;
-            }
-            const resizeBar: HTMLElement | null = document.getElementById(resizeBarName);
-            if (resizeBar == null) {
-                console.error("resize bar is null");
-                return;
-            }
-            resizeBar.addEventListener("mousedown", () => {
-                resizing = true
-            });
-            window.addEventListener("mousemove", handleResizeMenu);
-            window.addEventListener("mouseup", () => {
-                resizing = false
-            });
-            function handleResizeMenu(e: MouseEvent) {
-                const { screenX } = e
-                e.preventDefault()
-                e.stopPropagation()
-                if (!resizing) {
-                    return
-                }
-                if (resizeElement == null) return;
-                if (prevCursorOffset === -1) {
-                    prevCursorOffset = screenX
-                } else if (Math.abs(prevCursorOffset - screenX) >= 5) {
-                    resizeElement.style.flex = `0 0 ${screenX}px`;
-                    resizeElement.style.maxWidth = "100vw";
-                    prevCursorOffset = screenX;
-                }
-            }
-        }, 1500);
     }
 
     const handleFolderAddConfirm = () => {
