@@ -87,7 +87,14 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "plugins": [
+      "react-hooks"
+    ],
+    "rules": {
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn"
+    }
   },
   "browserslist": {
     "production": [
@@ -106,7 +113,8 @@
     "@types/lodash": "^4.17.4",
     "@types/react-copy-to-clipboard": "^5.0.7",
     "@types/react-syntax-highlighter": "^15.5.13",
-    "@types/redux-logger": "^3.0.13"
+    "@types/redux-logger": "^3.0.13",
+    "eslint-plugin-react-hooks": "^4.6.2"
   },
   "overrides": {},
   "pnpm": {
