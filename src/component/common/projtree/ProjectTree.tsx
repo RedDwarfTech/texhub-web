@@ -97,45 +97,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     [props.divRef]
   );
 
-  const handleCollapseAll = () => {
-    let legacyTree = localStorage.getItem("projTree:" + props.projectId);
-    if (legacyTree == null) {
-      return;
-    }
-    let treeNodes: TexFileModel[] = JSON.parse(legacyTree);
-    collapseRecursive(treeNodes, treeNodes);
-  };
-
-  const collapseRecursive = (
-    fullTree: TexFileModel[],
-    treeNodes: TexFileModel[]
-  ) => {
-    let tempTree = fullTree;
-    for (let i = 0; i < treeNodes.length; i++) {
-      if (
-        treeNodes[i].file_type === TreeFileType.Folder &&
-        treeNodes[i].expand &&
-        treeNodes[i].expand === true
-      ) {
-        let newTree =ProjectTreeFunc.handleAutoExpandFolder(treeNodes[i], tempTree, false);
-        setTexFileTree(newTree!);
-        if (newTree) {
-          /**
-           * make the collapse works with the same levels if directory
-           */
-          tempTree = newTree;
-        }
-        if (
-          newTree &&
-          treeNodes[i].children &&
-          treeNodes[i].children.length > 0
-        ) {
-          collapseRecursive(newTree, treeNodes[i].children);
-        }
-      }
-    }
-  };
-
   const handleFileAdd = () => {
     let modal = document.getElementById("createFileModal");
     if (modal) {
@@ -600,7 +561,8 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             className={styles.menuButton}
             title="折叠"
             onClick={() => {
-              handleCollapseAll();
+              let newTree = ProjectTreeFunc.handleCollapseAll(props.projectId);
+              setTexFileTree(newTree);
             }}
           >
             <i className="fa-solid fa-minus"></i>
