@@ -20,6 +20,8 @@ import React from "react";
 import "jspreadsheet-ce/dist/jspreadsheet.css";
 import { useState } from "react";
 import TexFileUtil from "@/common/TexFileUtil";
+import CopyToClipboard from "react-copy-to-clipboard";
+import { toast } from "react-toastify";
 
 export type TableDesignerProps = {};
 
@@ -73,9 +75,31 @@ const TableDesigner: React.FC<TableDesignerProps> = (
     if (jRef.current) {
       const spreadsheet = jspreadsheet(jRef.current);
       const colNum = spreadsheet.getColumnOptions.length;
-      const latexCode = TexFileUtil.genTeXTableCode(rowsCount,colNum);
+      const latexCode = TexFileUtil.genTeXTableCode(rowsCount, colNum);
       setCode(latexCode);
     }
+  };
+
+  const renderCodePreview = () => {
+    if(code == null || code.length === 0) return;
+    return (
+      <div className={styles.codeShow}>
+        <SyntaxHighlighter language="latex" style={dark}>
+          {code}
+        </SyntaxHighlighter>
+        <button className="btn btn-primary">
+          <span className="m-1 pb-1 basis-3/4 text-xs">{"复制"}</span>
+          <CopyToClipboard
+            text={code}
+            onCopy={() => {
+              toast.info("代码已复制");
+            }}
+          >
+            <i className="fa fa-copy"></i>
+          </CopyToClipboard>
+        </button>
+      </div>
+    );
   };
 
   return (
@@ -193,12 +217,9 @@ const TableDesigner: React.FC<TableDesignerProps> = (
                 生成LaTeX代码
               </button>
             </div>
-            <div className={styles.codeShow}>
-              <SyntaxHighlighter language="latex" style={dark}>
-                {code}
-              </SyntaxHighlighter>
-            </div>
+            {renderCodePreview()}
           </div>
+          
           <div className="modal-footer">
             <button
               type="button"
