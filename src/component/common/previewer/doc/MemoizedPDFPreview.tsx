@@ -45,7 +45,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({
             return;
         }
         setProjAttribute(projAttr);
-    }, [projAttr]);
+    }, [projAttr, cachedScale]);
 
     React.useEffect(() => {
         if (pdfFocus && pdfFocus.length > 0) {

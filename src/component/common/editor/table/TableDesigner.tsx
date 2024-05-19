@@ -19,18 +19,21 @@ import { useRef } from "react";
 import React from "react";
 import "jspreadsheet-ce/dist/jspreadsheet.css";
 import { useState } from "react";
+import TexFileUtil from "@/common/TexFileUtil";
 
 export type TableDesignerProps = {};
+
+const options: JSpreadsheetOptions = {
+  data: [[]],
+  minDimensions: [2, 2],
+};
 
 const TableDesigner: React.FC<TableDesignerProps> = (
   props: TableDesignerProps
 ) => {
-    const [code, setCode] = useState<string>('');
+  const [code, setCode] = useState<string>("");
+  const [rowsCount, setRowsCount] = useState<number>(2);
   const jRef = useRef<JspreadsheetInstanceElement>(null);
-  const options: JSpreadsheetOptions = {
-    data: [[]],
-    minDimensions: [2, 2],
-  };
 
   React.useEffect(() => {
     if (jRef.current) {
@@ -38,17 +41,19 @@ const TableDesigner: React.FC<TableDesignerProps> = (
         jspreadsheet(jRef.current, options);
       }
     }
-  }, [options]);
+  }, []);
 
   const addRow = () => {
     if (jRef.current) {
       jRef.current.jexcel.insertRow();
+      setRowsCount(rowsCount + 1);
     }
   };
 
   const deleteRow = () => {
     if (jRef.current) {
       jRef.current.jexcel.deleteRow();
+      setRowsCount(rowsCount - 1);
     }
   };
 
@@ -66,32 +71,12 @@ const TableDesigner: React.FC<TableDesignerProps> = (
 
   const handleTeXTableCodeGeneration = () => {
     if (jRef.current) {
-        const spreadsheet = jspreadsheet(jRef.current);
-        const colNum = spreadsheet.getColumnOptions.length;
-        const rowNum = spreadsheet.row.length;
-        let latexCode = "\\begin{table}\n";
-        latexCode += "\\centering\n";
-        latexCode += "\\begin{tabular}{";
-        
-        // 添加列对齐方式
-        for (let i = 0; i < colNum; i++) {
-          latexCode += "c";
-        }
-  
-        latexCode += "}\n";
-        latexCode += "\\hline\n";
-        debugger
-        for (let i = 0; i < rowNum; i++) {
-           // const curRowData = data[i]?data[i]:" ";
-          // latexCode += curRowData.join(" & ") + " \\\\ \\hline\n";
-        }
-  
-        latexCode += "\\end{tabular}\n";
-        latexCode += "\\end{table}";
-  
-        setCode(latexCode); 
-      }
-  }
+      const spreadsheet = jspreadsheet(jRef.current);
+      const colNum = spreadsheet.getColumnOptions.length;
+      const latexCode = TexFileUtil.genTeXTableCode(rowsCount,colNum);
+      setCode(latexCode);
+    }
+  };
 
   return (
     <div
@@ -201,8 +186,8 @@ const TableDesigner: React.FC<TableDesignerProps> = (
               <button
                 type="button"
                 className="btn btn-primary"
-                onClick={()=>{
-                    handleTeXTableCodeGeneration();
+                onClick={() => {
+                  handleTeXTableCodeGeneration();
                 }}
               >
                 生成LaTeX代码

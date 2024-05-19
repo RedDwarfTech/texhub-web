@@ -27,6 +27,7 @@ import {
   handleProjSymbol,
   resizeLeft,
 } from "./ProjectTreeHandler";
+import { TeXFileType } from "@/model/enum/TeXFileType";
 
 const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const divRef = props.divRef;
@@ -92,10 +93,10 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   };
 
   const renderIcon = (item: TexFileModel) => {
-    if (item.file_type === 1) {
+    if (item.file_type === TeXFileType.TEX) {
       return <i className="fa-regular fa-file"></i>;
     }
-    if (item.file_type === 0) {
+    if (item.file_type === TeXFileType.FOLDER) {
       return (
         <div className={styles.menuIcons}>
           <i

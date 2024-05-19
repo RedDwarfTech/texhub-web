@@ -296,8 +296,8 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
                     <button className={styles.previewIconButton}
                         data-bs-toggle="tooltip"
                         title="下载PDF"
-                        onClick={() => { throttle(()=>{
-                            handleDownloadPdf(curPdfUrl)},3000); 
+                        onClick={() => {
+                            handleDownloadPdf(curPdfUrl); 
                         }}>
                         <i className="fa-solid fa-download"></i>
                     </button>
