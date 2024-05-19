@@ -1,31 +1,31 @@
 import { useState } from "react";
 import styles from "./ProjectTree.module.css";
-import {
-  addFile,
-  chooseFile,
-  getFileTree,
-  switchFile,
-} from "@/service/file/FileService";
-import { ResponseHandler } from "rdjs-wheel";
+import { addFile, getFileTree } from "@/service/file/FileService";
+import { RdFile, ResponseHandler } from "rdjs-wheel";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import React from "react";
 import * as bootstrap from "bootstrap";
 import { toast } from "react-toastify";
-import TreeUpload from "./upload/TreeUpload";
-import TreeFileMove from "./move/TreeFileMove";
+import TreeUpload from "../upload/TreeUpload";
+import TreeFileMove from "../move/TreeFileMove";
 import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
-import TexFileUtil from "@/common/TexFileUtil";
-import { TreeFileType } from "@/model/file/TreeFileType";
-import ProjFileSearch from "./search/ProjFileSearch";
-import TeXSymbol from "./symbol/TeXSymbol";
+import ProjFileSearch from "../search/ProjFileSearch";
+import TeXSymbol from "../symbol/TeXSymbol";
 import { getProjectInfo } from "@/service/project/ProjectService";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
-import TreeFileRename from "./rename/TreeFileRename";
-import TreeFileDel from "./del/TreeFileDel";
+import TreeFileRename from "../rename/TreeFileRename";
+import TreeFileDel from "../del/TreeFileDel";
 import { TreeProps } from "@/model/props/TreeProps";
-import { ProjectTreeFunc } from "./ProjectTreeFunc";
+import { ProjectTreeFolder } from "./ProjectTreeFolder";
+import {
+  handleExpandFolderEvent,
+  handleFileSelected,
+  handleFileTreeUpdate,
+  resizeLeft,
+} from "./ProjectTreeHandler";
+import { TeXFileType } from "@/model/enum/TeXFileType";
 
 const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const divRef = props.divRef;
@@ -48,55 +48,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     null
   );
 
-  /**
-   * resize left should put to the app layer
-   * @param resizeBarName
-   * @param resizeArea
-   */
-  const resizeLeftCallback = React.useCallback(
-    (resizeBarName: string) => {
-      setTimeout(() => {
-        let prevCursorOffset = -1;
-        let resizing = false;
-        const resizeElement: HTMLElement | null = props.divRef.current;
-        if (resizeElement == null || !resizeElement) {
-          console.error("left resize element is null");
-          return;
-        }
-        const resizeBar: HTMLElement | null =
-          document.getElementById(resizeBarName);
-        if (resizeBar == null) {
-          console.error("resize bar is null");
-          return;
-        }
-        resizeBar.addEventListener("mousedown", () => {
-          resizing = true;
-        });
-        window.addEventListener("mousemove", handleResizeMenu);
-        window.addEventListener("mouseup", () => {
-          resizing = false;
-        });
-        function handleResizeMenu(e: MouseEvent) {
-          const { screenX } = e;
-          e.preventDefault();
-          e.stopPropagation();
-          if (!resizing) {
-            return;
-          }
-          if (resizeElement == null) return;
-          if (prevCursorOffset === -1) {
-            prevCursorOffset = screenX;
-          } else if (Math.abs(prevCursorOffset - screenX) >= 5) {
-            resizeElement.style.flex = `0 0 ${screenX}px`;
-            resizeElement.style.maxWidth = "100vw";
-            prevCursorOffset = screenX;
-          }
-        }
-      }, 1500);
-    },
-    [props.divRef]
-  );
-
   const handleFileAdd = () => {
     let modal = document.getElementById("createFileModal");
     if (modal) {
@@ -113,42 +64,23 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     curTabName !== "symbol" ? setCurTabName("symbol") : setCurTabName("tree");
   };
 
-  const handleFileTreeUpdate = React.useCallback(
-    (tree: TexFileModel[]) => {
-      if (!tree || tree.length === 0) {
-        return;
-      }
-      let legacyTree = localStorage.getItem("projTree:" + props.projectId);
-      if (legacyTree) {
-        // do the tree expand field merge
-        let cacheTree = JSON.parse(legacyTree);
-        ProjectTreeFunc.mergeTreeExpand(tree, cacheTree);
-        setTexFileTree(tree);
-      } else {
-        setTexFileTree(tree);
-      }
-      localStorage.setItem("projTree:" + props.projectId, JSON.stringify(tree));
-    },
-    [props.projectId]
-  );
-
   React.useEffect(() => {
     if (projInfo && Object.keys(projInfo).length > 0) {
-      handleFileTreeUpdate(projInfo.tree);
+      handleFileTreeUpdate(projInfo.tree, props.projectId, setTexFileTree);
       setMainFile(projInfo.main_file);
-      resizeLeftCallback("leftDraggable");
+      resizeLeft(props, "leftDraggable");
     }
-  }, [projInfo, resizeLeftCallback, handleFileTreeUpdate]);
+  }, [projInfo, props.projectId, props]);
 
   React.useEffect(() => {
     if (fileTree && fileTree.length > 0) {
-      handleFileTreeUpdate(fileTree);
+      handleFileTreeUpdate(fileTree, props.projectId, setTexFileTree);
       let defaultFile = fileTree.filter(
         (file: TexFileModel) => file.main_flag === 1
       );
       setMainFile(defaultFile[0]);
     }
-  }, [fileTree, handleFileTreeUpdate]);
+  }, [fileTree, props.projectId]);
 
   const handleHeaderAction = (id: string) => {
     let modal = document.getElementById(id);
@@ -185,7 +117,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       name: createFileName,
       project_id: pid,
       parent: parentId,
-      file_type: 1,
+      file_type: TeXFileType.TEX,
     };
     addFile(params).then((resp) => {
       if (ResponseHandler.responseSuccess(resp)) {
@@ -209,28 +141,13 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
           <i
             className="fa-solid fa-chevron-right"
             onClick={(e: React.MouseEvent<HTMLElement>) => {
-              handleExpandFolder(e, item);
+              handleExpandFolderEvent(e, item, texFileTree, setTexFileTree);
             }}
           ></i>
           <i className="fa-regular fa-folder"></i>
         </div>
       );
     }
-  };
-
-  const handleExpandFolder = (
-    e: React.MouseEvent<HTMLElement>,
-    item: TexFileModel
-  ) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!texFileTree || texFileTree.length === 0) return;
-    const updatedItems = ProjectTreeFunc.handleExpandClick(item.file_id, texFileTree);
-    localStorage.setItem(
-      "projTree:" + item.project_id,
-      JSON.stringify(updatedItems)
-    );
-    setTexFileTree(updatedItems);
   };
 
   const handleDragStart = (
@@ -272,8 +189,13 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     }
   };
 
-  const handleSearchComplete = (paths: string[], projId: string) => {
-    handleExpandFolderCallback(paths, projId);
+  const handleSearchComplete = (paths: string[]) => {
+    ProjectTreeFolder.handleExpandFolder(
+      paths,
+      props,
+      selectedFile,
+      setSelectedFile
+    );
   };
 
   const renderBody = () => {
@@ -311,7 +233,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       return 0;
     });
     sortedData.forEach((item: TexFileModel) => {
-      let expandStatus: boolean = ProjectTreeFunc.getExpandStatus(item);
+      let expandStatus: boolean = ProjectTreeFolder.getExpandStatus(item);
       let marginText = level === 0 ? "6px" : "20px";
       tagList.push(
         <div
@@ -330,8 +252,8 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
               handleTreeItemClick(e, item)
             }
             className={
-              (selectedFile && item.file_id == selectedFile.file_id) ||
-              (draggedOverNode && draggedOverNode.file_id == item.file_id)
+              (selectedFile && item.file_id === selectedFile.file_id) ||
+              (draggedOverNode && draggedOverNode.file_id === item.file_id)
                 ? styles.fileItemSelected
                 : styles.fileItem
             }
@@ -426,21 +348,8 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   ) => {
     e.preventDefault();
     e.stopPropagation();
-    handleFileSelected(fileItem);
+    handleFileSelected(props, fileItem, selectedFile, setSelectedFile);
   };
-
-  const handleFileSelected = React.useCallback(
-    (fileItem: TexFileModel) => {
-      localStorage.setItem("proj-select-file:" + pid, JSON.stringify(fileItem));
-      setSelectedFile(fileItem);
-      if (selectedFile && fileItem.file_id === selectedFile.file_id) return;
-      chooseFile(fileItem);
-      if (fileItem.file_type !== 0) {
-        switchFile(fileItem);
-      }
-    },
-    [pid, selectedFile]
-  );
 
   const handleFolderAddConfirm = () => {
     if (!folderName || folderName.length === 0) {
@@ -486,43 +395,14 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     setCreateFileName(event.target.value);
   };
 
-  const handleExpandFolderCallback = React.useCallback(
-    (name_paths: string[], projId: string) => {
-      for (let i = 0; i < name_paths.length; i++) {
-        // get the newest tree content to avoid the legacy override the newest update
-        let legacyTree = localStorage.getItem("projTree:" + projId);
-        if (legacyTree == null) {
-          return;
-        }
-        let treeNode: TexFileModel[] = JSON.parse(legacyTree);
-        let end_idx = i + 1 === name_paths.length ? i : i + 1;
-        let fPath = name_paths.slice(0, end_idx).join("/");
-        let pathNode = TexFileUtil.searchTreeNodeByName(
-          treeNode,
-          name_paths[i],
-          fPath
-        );
-        if (!pathNode) {
-          continue;
-        }
-        if (pathNode.file_type === TreeFileType.Folder) {
-          ProjectTreeFunc.handleAutoExpandFolder(pathNode, treeNode, true);
-        } else {
-          handleFileSelected(pathNode);
-        }
-      }
-    },
-    [ handleFileSelected]
-  );
-
   React.useEffect(() => {
     // navigate from pdf to source
     if (srcFocus && srcFocus.length > 0) {
       let pos: SrcPosition = srcFocus[0];
       let name_paths = pos.file.split("/");
-      handleExpandFolderCallback(name_paths, props.projectId);
+      ProjectTreeFolder.handleExpandFolder(name_paths, props, selectedFile, setSelectedFile);
     }
-  }, [srcFocus, handleExpandFolderCallback, props.projectId]);
+  }, [srcFocus, props, selectedFile]);
 
   return (
     <div id="projTree" ref={divRef} className={styles.projTree}>
@@ -561,7 +441,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             className={styles.menuButton}
             title="折叠"
             onClick={() => {
-              let newTree = ProjectTreeFunc.handleCollapseAll(props.projectId);
+              let newTree = ProjectTreeFolder.handleCollapseAll(props.projectId);
               setTexFileTree(newTree);
             }}
           >

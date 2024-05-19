@@ -19,7 +19,7 @@ import {
   showPreviewTab,
   updatePdfUrl
 } from '@/service/project/ProjectService';
-import ProjectTree from '@/component/common/projtree/ProjectTree';
+import ProjectTree from '@/component/common/projtree/main/ProjectTree';
 import { TexFileModel } from '@/model/file/TexFileModel';
 import { QueryProjInfo } from '@/model/request/proj/query/QueryProjInfo';
 import { CompileResultType } from '@/model/proj/compile/CompileResultType';

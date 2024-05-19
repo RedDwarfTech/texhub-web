@@ -1,8 +1,10 @@
 import TexFileUtil from "@/common/TexFileUtil";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { TreeFileType } from "@/model/file/TreeFileType";
+import { handleFileSelected } from "./ProjectTreeHandler";
+import { TreeProps } from "@/model/props/TreeProps";
 
-export const ProjectTreeFunc = {
+export const ProjectTreeFolder = {
   getExpandStatus: (item: TexFileModel): boolean => {
     let cachedStatus = localStorage.getItem("projTree:" + item.project_id);
     if (!cachedStatus) return false;
@@ -20,7 +22,7 @@ export const ProjectTreeFunc = {
         newNode.expand = expandStatus;
       }
       if (newNode.children && newNode.children.length > 0) {
-        ProjectTreeFunc.mergeTreeExpand(newNode.children, cacheTree);
+        ProjectTreeFolder.mergeTreeExpand(newNode.children, cacheTree);
       }
     });
   },
@@ -30,7 +32,7 @@ export const ProjectTreeFunc = {
     expandFolder?: boolean
   ): TexFileModel[] => {
     if (!treeNode || treeNode.length === 0) return [];
-    const updatedItems = ProjectTreeFunc.handleExpandClick(
+    const updatedItems = ProjectTreeFolder.handleExpandClick(
       item.file_id,
       treeNode,
       expandFolder
@@ -62,7 +64,7 @@ export const ProjectTreeFunc = {
       } else if (item.children) {
         return {
           ...item,
-          children: ProjectTreeFunc.handleExpandClick(
+          children: ProjectTreeFolder.handleExpandClick(
             itemId,
             item.children,
             expandFolder
@@ -85,7 +87,7 @@ export const ProjectTreeFunc = {
         treeNodes[i].expand &&
         treeNodes[i].expand === true
       ) {
-        let newTree = ProjectTreeFunc.handleAutoExpandFolder(
+        let newTree = ProjectTreeFolder.handleAutoExpandFolder(
           treeNodes[i],
           tempTree,
           false
@@ -101,7 +103,7 @@ export const ProjectTreeFunc = {
           treeNodes[i].children &&
           treeNodes[i].children.length > 0
         ) {
-          tempTree = ProjectTreeFunc.collapseRecursive(
+          tempTree = ProjectTreeFolder.collapseRecursive(
             newTree,
             treeNodes[i].children
           );
@@ -116,6 +118,36 @@ export const ProjectTreeFunc = {
       return [];
     }
     let treeNodes: TexFileModel[] = JSON.parse(legacyTree);
-    return ProjectTreeFunc.collapseRecursive(treeNodes, treeNodes);
+    return ProjectTreeFolder.collapseRecursive(treeNodes, treeNodes);
+  },
+  handleExpandFolder: (
+    name_paths: string[],
+    props: TreeProps,
+    selectedFile: TexFileModel,
+    setSelectedFile: (value: TexFileModel) => void
+  ) => {
+    for (let i = 0; i < name_paths.length; i++) {
+      // get the newest tree content to avoid the legacy override the newest update
+      let legacyTree = localStorage.getItem("projTree:" + props.projectId);
+      if (legacyTree == null) {
+        return;
+      }
+      let treeNode: TexFileModel[] = JSON.parse(legacyTree);
+      let end_idx = i + 1 === name_paths.length ? i : i + 1;
+      let fPath = name_paths.slice(0, end_idx).join("/");
+      let pathNode = TexFileUtil.searchTreeNodeByName(
+        treeNode,
+        name_paths[i],
+        fPath
+      );
+      if (!pathNode) {
+        continue;
+      }
+      if (pathNode.file_type === TreeFileType.Folder) {
+        ProjectTreeFolder.handleAutoExpandFolder(pathNode, treeNode, true);
+      } else {
+        handleFileSelected(props, pathNode, selectedFile, setSelectedFile);
+      }
+    }
   },
 };
