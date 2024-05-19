@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./ProjectTree.module.css";
 import { addFile, getFileTree } from "@/service/file/FileService";
-import { RdFile, ResponseHandler } from "rdjs-wheel";
+import { ResponseHandler } from "rdjs-wheel";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
@@ -13,19 +13,20 @@ import TreeFileMove from "../move/TreeFileMove";
 import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 import ProjFileSearch from "../search/ProjFileSearch";
 import TeXSymbol from "../symbol/TeXSymbol";
-import { getProjectInfo } from "@/service/project/ProjectService";
-import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 import TreeFileRename from "../rename/TreeFileRename";
 import TreeFileDel from "../del/TreeFileDel";
 import { TreeProps } from "@/model/props/TreeProps";
 import { ProjectTreeFolder } from "./ProjectTreeFolder";
 import {
   handleExpandFolderEvent,
+  handleFileAdd,
+  handleFileCreate,
   handleFileSelected,
   handleFileTreeUpdate,
+  handleProjSearch,
+  handleProjSymbol,
   resizeLeft,
 } from "./ProjectTreeHandler";
-import { TeXFileType } from "@/model/enum/TeXFileType";
 
 const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const divRef = props.divRef;
@@ -47,22 +48,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const [draggedOverNode, setDraggedOverNode] = useState<TexFileModel | null>(
     null
   );
-
-  const handleFileAdd = () => {
-    let modal = document.getElementById("createFileModal");
-    if (modal) {
-      var myModal = new bootstrap.Modal(modal);
-      myModal.show();
-    }
-  };
-
-  const handleProjSearch = () => {
-    curTabName !== "search" ? setCurTabName("search") : setCurTabName("tree");
-  };
-
-  const handleProjSymbol = () => {
-    curTabName !== "symbol" ? setCurTabName("symbol") : setCurTabName("tree");
-  };
 
   React.useEffect(() => {
     if (projInfo && Object.keys(projInfo).length > 0) {
@@ -104,31 +89,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       var myModal = new bootstrap.Modal(modal);
       show ? myModal.show() : myModal.hide();
     }
-  };
-
-  const handleOk = () => {
-    if (!selectedFile) {
-      toast.warning("请指定文件创建的位置");
-      return;
-    }
-    let parentId =
-      selectedFile.file_type === 0 ? selectedFile.file_id : selectedFile.parent;
-    let params = {
-      name: createFileName,
-      project_id: pid,
-      parent: parentId,
-      file_type: TeXFileType.TEX,
-    };
-    addFile(params).then((resp) => {
-      if (ResponseHandler.responseSuccess(resp)) {
-        let req: QueryProjInfo = {
-          project_id: pid?.toString(),
-        };
-        getProjectInfo(req);
-      } else {
-        toast.error(resp.msg);
-      }
-    });
   };
 
   const renderIcon = (item: TexFileModel) => {
@@ -451,7 +411,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             className={styles.menuButton}
             title="常用符号"
             onClick={() => {
-              handleProjSymbol();
+              handleProjSymbol(curTabName, setCurTabName);
             }}
           >
             <i className="fa-solid fa-infinity"></i>
@@ -460,7 +420,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             className={styles.menuButton}
             title="搜索"
             onClick={() => {
-              handleProjSearch();
+              handleProjSearch(curTabName, setCurTabName);
             }}
           >
             <i className="fa-solid fa-magnifying-glass"></i>
@@ -513,7 +473,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                 className="btn btn-primary"
                 data-bs-dismiss="modal"
                 onClick={() => {
-                  handleOk();
+                  handleFileCreate(selectedFile,createFileName,pid);
                 }}
               >
                 确定

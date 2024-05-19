@@ -1,7 +1,13 @@
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { TreeProps } from "@/model/props/TreeProps";
-import { chooseFile, switchFile } from "@/service/file/FileService";
+import { addFile, chooseFile, switchFile } from "@/service/file/FileService";
 import { ProjectTreeFolder } from "./ProjectTreeFolder";
+import { toast } from "react-toastify";
+import { TeXFileType } from "@/model/enum/TeXFileType";
+import { ResponseHandler } from "rdjs-wheel";
+import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
+import { getProjectInfo } from "@/service/project/ProjectService";
+import * as bootstrap from "bootstrap";
 
 export function handleFileTreeUpdate(
   tree: TexFileModel[],
@@ -104,5 +110,56 @@ export function handleFileSelected(
   chooseFile(fileItem);
   if (fileItem.file_type !== 0) {
     switchFile(fileItem);
+  }
+}
+
+export function handleFileCreate(
+  selectedFile: TexFileModel,
+  createFileName: string,
+  pid: string
+) {
+  if (!selectedFile) {
+    toast.warning("请指定文件创建的位置");
+    return;
+  }
+  let parentId =
+    selectedFile.file_type === 0 ? selectedFile.file_id : selectedFile.parent;
+  let params = {
+    name: createFileName,
+    project_id: pid,
+    parent: parentId,
+    file_type: TeXFileType.TEX,
+  };
+  addFile(params).then((resp) => {
+    if (ResponseHandler.responseSuccess(resp)) {
+      let req: QueryProjInfo = {
+        project_id: pid?.toString(),
+      };
+      getProjectInfo(req);
+    } else {
+      toast.error(resp.msg);
+    }
+  });
+}
+
+export function handleProjSearch(
+  curTabName: string,
+  setCurTabName: (value: string) => void
+) {
+  curTabName !== "search" ? setCurTabName("search") : setCurTabName("tree");
+}
+
+export function handleProjSymbol(
+  curTabName: string,
+  setCurTabName: (value: string) => void
+) {
+  curTabName !== "symbol" ? setCurTabName("symbol") : setCurTabName("tree");
+}
+
+export function handleFileAdd() {
+  let modal = document.getElementById("createFileModal");
+  if (modal) {
+    var myModal = new bootstrap.Modal(modal);
+    myModal.show();
   }
 }
