@@ -9,23 +9,23 @@ import { ResponseHandler } from "rdjs-wheel";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
 import dayjs from 'dayjs';
-import TeXShare from "./share/TeXShare";
+import TeXShare from "../share/TeXShare";
 import { QueryProjReq } from "@/model/request/proj/query/QueryProjReq";
 import { useTranslation } from "react-i18next";
-import TeXEdit from "./edit/TeXEdit";
-import TeXArchive from "./archive/TeXArchive";
-import TeXTrash from "./trash/TeXTrash";
+import TeXEdit from "../edit/TeXEdit";
+import TeXArchive from "../archive/TeXArchive";
+import TeXTrash from "../trash/TeXTrash";
 import { ProjTabType } from "@/model/proj/config/ProjTabType";
-import TeXRecovery from "./recovery/TeXRecovery";
+import TeXRecovery from "../recovery/TeXRecovery";
 import { QueryDownload } from "@/model/request/proj/query/QueryDownload";
-import TeXBlank from "./new/TeXBlank";
+import TeXBlank from "../new/TeXBlank";
 import { TexProjectFolder } from "@/model/proj/TexProjectFolder";
-import TeXNewFolder from "./new/TeXNewFolder";
-import TeXMoveToFolder from "./edit/TeXMoveToFolder";
-import FolderRename from "./edit/FolderRename";
-import FolderDel from "./edit/FolderDel";
+import TeXNewFolder from "../new/TeXNewFolder";
+import TeXMoveToFolder from "../edit/TeXMoveToFolder";
+import FolderRename from "../edit/FolderRename";
+import FolderDel from "../edit/FolderDel";
 import { FolderModel } from "@/model/proj/folder/FolderModel";
-import TeXProjCopy from "./new/TeXProjCopy";
+import TeXProjCopy from "../new/TeXProjCopy";
 
 const ProjectTab: React.FC = () => {
 
