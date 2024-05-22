@@ -17,6 +17,7 @@ import { ProjHisotry } from "@/model/proj/history/ProjHistory";
 import { TexProjects } from "@/model/proj/TexProjects";
 import { TexSnippetModel } from "@/model/snippet/TexSnippetModel";
 import * as Y from 'yjs';
+import { ProjCollarModel } from "@/model/proj/share/ProjCollarModel";
 
 export interface AppState {
     proj: {
@@ -61,5 +62,8 @@ export interface AppState {
     },
     snippet: {
         snippets: TexSnippetModel[],
+    },
+    projShare: {
+        collar: ProjCollarModel[]
     }
 }
