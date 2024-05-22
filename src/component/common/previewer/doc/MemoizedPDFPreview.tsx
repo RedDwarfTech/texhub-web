@@ -168,7 +168,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(({
         </div>
     );
 }, (prevProps, nextProps) => {
-    let shouldRerender = (prevProps.curPdfUrl === nextProps.curPdfUrl);
+    let shouldRerender = (prevProps.curPdfUrl !== nextProps.curPdfUrl);
     if(shouldRerender) {
         console.warn("pdf will reload: cur:" + prevProps.curPdfUrl + ",next:" + nextProps.curPdfUrl);
     }
