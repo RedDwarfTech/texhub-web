@@ -113,7 +113,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             className="fa-solid fa-chevron-right"
             onClick={(e: React.MouseEvent<HTMLElement>) => {
               handleExpandFolderEvent(e, item, texFileTree, setTexFileTree);
-              chooseFile(item);
             }}
           ></i>
           <i className="fa-regular fa-folder"></i>
