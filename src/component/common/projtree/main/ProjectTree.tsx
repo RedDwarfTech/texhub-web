@@ -376,7 +376,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         selectedFile
       );
     }
-  }, [srcFocus, props, selectedFile]);
+  }, [srcFocus, props]);
 
   return (
     <div id="projTree" ref={divRef} className={styles.projTree}>

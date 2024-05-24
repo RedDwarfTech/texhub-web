@@ -41,7 +41,6 @@ export const ProjectTreeFolder = {
       "projTree:" + item.project_id,
       JSON.stringify(updatedItems)
     );
-    // setTexFileTree(updatedItems);
     return updatedItems;
   },
   handleExpandClick: (
