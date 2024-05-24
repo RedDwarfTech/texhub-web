@@ -37,6 +37,7 @@ export function handleExpandFolderEvent(
 ) {
   e.preventDefault();
   e.stopPropagation();
+  console.warn("trigger expand")
   if (!texFileTree || texFileTree.length === 0) return;
   const updatedItems = ProjectTreeFolder.handleExpandClick(
     item.file_id,

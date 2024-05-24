@@ -49,6 +49,7 @@ export const ProjectTreeFolder = {
     itemList: TexFileModel[],
     expandFolder?: boolean
   ) => {
+    console.warn("expand click");
     const updatedItems: TexFileModel[] = itemList.map((item) => {
       let expand;
       if (expandFolder) {
