@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "./ProjectTree.module.css";
-import { addFile, getFileTree } from "@/service/file/FileService";
+import { addFile, chooseFile, getFileTree } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { AppState } from "@/redux/types/AppState";
@@ -35,7 +35,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const [curTabName, setCurTabName] = useState("tree");
   const [createFileName, setCreateFileName] = useState("");
   const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
-  const { fileTree } = useSelector((state: AppState) => state.file);
+  const { fileTree, selectItem } = useSelector((state: AppState) => state.file);
   const { projInfo, srcFocus } = useSelector((state: AppState) => state.proj);
   const [mainFile, setMainFile] = useState<TexFileModel>();
   const pid = props.projectId;
@@ -49,6 +49,16 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const [draggedOverNode, setDraggedOverNode] = useState<TexFileModel | null>(
     null
   );
+
+  React.useEffect(() => {
+    if (selectItem) {
+      localStorage.setItem(
+        "proj-select-file:" + props.projectId,
+        JSON.stringify(selectItem)
+      );
+      setSelectedFile(selectItem);
+    }
+  }, [selectItem, props.projectId]);
 
   React.useEffect(() => {
     if (projInfo && Object.keys(projInfo).length > 0) {
@@ -102,6 +112,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
           <i
             className="fa-solid fa-chevron-right"
             onClick={(e: React.MouseEvent<HTMLElement>) => {
+              chooseFile(item);
               handleExpandFolderEvent(e, item, texFileTree, setTexFileTree);
             }}
           ></i>
@@ -309,7 +320,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   ) => {
     e.preventDefault();
     e.stopPropagation();
-    handleFileSelected(props, fileItem, selectedFile, setSelectedFile);
+    handleFileSelected(fileItem, selectedFile);
   };
 
   const handleFolderAddConfirm = () => {
@@ -361,7 +372,12 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     if (srcFocus && srcFocus.length > 0) {
       let pos: SrcPosition = srcFocus[0];
       let name_paths = pos.file.split("/");
-      ProjectTreeFolder.handleExpandFolder(name_paths, props, selectedFile, setSelectedFile);
+      ProjectTreeFolder.handleExpandFolder(
+        name_paths,
+        props,
+        selectedFile,
+        setSelectedFile
+      );
     }
   }, [srcFocus, props, selectedFile]);
 
@@ -402,7 +418,9 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
             className={styles.menuButton}
             title="折叠"
             onClick={() => {
-              let newTree = ProjectTreeFolder.handleCollapseAll(props.projectId);
+              let newTree = ProjectTreeFolder.handleCollapseAll(
+                props.projectId
+              );
               setTexFileTree(newTree);
             }}
           >
@@ -474,7 +492,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                 className="btn btn-primary"
                 data-bs-dismiss="modal"
                 onClick={() => {
-                  handleFileCreate(selectedFile,createFileName,pid);
+                  handleFileCreate(selectedFile, createFileName, pid);
                 }}
               >
                 确定

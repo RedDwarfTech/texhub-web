@@ -146,7 +146,7 @@ export const ProjectTreeFolder = {
       if (pathNode.file_type === TreeFileType.Folder) {
         ProjectTreeFolder.handleAutoExpandFolder(pathNode, treeNode, true);
       } else {
-        handleFileSelected(props, pathNode, selectedFile, setSelectedFile);
+        handleFileSelected(pathNode, selectedFile);
       }
     }
   },

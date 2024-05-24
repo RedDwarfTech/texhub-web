@@ -4,7 +4,7 @@ import { addFile, chooseFile, switchFile } from "@/service/file/FileService";
 import { ProjectTreeFolder } from "./ProjectTreeFolder";
 import { toast } from "react-toastify";
 import { TeXFileType } from "@/model/enum/TeXFileType";
-import { ResponseHandler } from "rdjs-wheel";
+import { RdFile, ResponseHandler } from "rdjs-wheel";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 import { getProjectInfo } from "@/service/project/ProjectService";
 import * as bootstrap from "bootstrap";
@@ -96,19 +96,12 @@ export function resizeLeft(props: TreeProps, resizeBarName: string) {
 }
 
 export function handleFileSelected(
-  props: TreeProps,
   fileItem: TexFileModel,
   selectedFile: TexFileModel,
-  setSelectedFile: (value: TexFileModel) => void
 ) {
-  localStorage.setItem(
-    "proj-select-file:" + props.projectId,
-    JSON.stringify(fileItem)
-  );
-  setSelectedFile(fileItem);
   if (selectedFile && fileItem.file_id === selectedFile.file_id) return;
   chooseFile(fileItem);
-  if (fileItem.file_type !== 0) {
+  if (fileItem.file_type !== TeXFileType.FOLDER) {
     switchFile(fileItem);
   }
 }
