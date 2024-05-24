@@ -124,7 +124,6 @@ export const ProjectTreeFolder = {
     name_paths: string[],
     props: TreeProps,
     selectedFile: TexFileModel,
-    setSelectedFile: (value: TexFileModel) => void
   ) => {
     for (let i = 0; i < name_paths.length; i++) {
       // get the newest tree content to avoid the legacy override the newest update

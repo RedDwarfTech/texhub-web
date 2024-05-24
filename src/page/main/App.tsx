@@ -35,9 +35,8 @@ const App: React.FC = () => {
   const pid = params.pid!;
   const { compileResult, latestComp, endSignal, projInfo } = useSelector((state: AppState) => state.proj);
   const { errors } = useSelector((state: any) => state.rdRootReducer.sys);
-  const { activeFile, selectItem } = useSelector((state: AppState) => state.file);
+  const { activeFile } = useSelector((state: AppState) => state.file);
   const [activeFileModel, setActiveFileModel] = useState<TexFileModel>();
-  const [selectedItem, setSelectedItem] = useState<TexFileModel>();
   const [mainFile, setMainFile] = useState<TexFileModel>();
   const projTreeRef = useRef<HTMLDivElement>(null);
 
@@ -79,10 +78,6 @@ const App: React.FC = () => {
   React.useEffect(() => {
     setActiveFileModel(activeFile);
   }, [activeFile]);
-
-  React.useEffect(() => {
-    setSelectedItem(selectItem);
-  }, [selectItem]);
 
   React.useEffect(() => {
     if (latestComp && Object.keys(latestComp).length > 0) {
