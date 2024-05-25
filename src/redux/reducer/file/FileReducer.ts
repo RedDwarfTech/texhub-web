@@ -6,7 +6,7 @@ const initState: AppState["file"] = {
     fileTree: [],
     folderTree: [],
     activeFile: {} as TexFileModel,
-    selectItem: {} as TexFileModel,
+    treeSelectItem: {} as TexFileModel,
     mainFile: {} as TexFileModel
 };
 
@@ -30,7 +30,7 @@ const FileReducer = (state = initState, action: any) => {
         case "CHOOSE_FILE":
             return {
                 ...state,
-                selectItem: action.data
+                treeSelectItem: action.data
             };   
         case "SWITCH_EDITOR_FILE":
             return {

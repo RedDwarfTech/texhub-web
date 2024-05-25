@@ -16,15 +16,15 @@ export type TreeUploadProps = {
 
 const TreeUpload: React.FC<TreeUploadProps> = (props: TreeUploadProps) => {
   const fileInput = React.createRef<HTMLInputElement>();
-  const { selectItem } = useSelector((state: AppState) => state.file);
+  const { treeSelectItem } = useSelector((state: AppState) => state.file);
   const selected = localStorage.getItem("proj-select-file:" + props.projectId);
   const [selectedFile, setSelectedFile] = useState<TexFileModel>(
     selected ? JSON.parse(selected) : null
   );
 
   React.useEffect(() => {
-    setSelectedFile(selectItem);
-  }, [selectItem]);
+    setSelectedFile(treeSelectItem);
+  }, [treeSelectItem]);
 
   const handleOk = () => {
     if (

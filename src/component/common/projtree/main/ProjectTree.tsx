@@ -35,7 +35,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const [curTabName, setCurTabName] = useState("tree");
   const [createFileName, setCreateFileName] = useState("");
   const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
-  const { fileTree, selectItem } = useSelector((state: AppState) => state.file);
+  const { fileTree, treeSelectItem } = useSelector((state: AppState) => state.file);
   const { projInfo, srcFocus } = useSelector((state: AppState) => state.proj);
   const [mainFile, setMainFile] = useState<TexFileModel>();
   const pid = props.projectId;
@@ -51,14 +51,14 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   );
 
   React.useEffect(() => {
-    if (selectItem) {
+    if (treeSelectItem) {
       localStorage.setItem(
         "proj-select-file:" + props.projectId,
-        JSON.stringify(selectItem)
+        JSON.stringify(treeSelectItem)
       );
-      setSelectedFile(selectItem);
+      setSelectedFile(treeSelectItem);
     }
-  }, [selectItem, props.projectId]);
+  }, [treeSelectItem, props.projectId]);
 
   React.useEffect(() => {
     if (projInfo && Object.keys(projInfo).length > 0) {

@@ -2,7 +2,6 @@ import TexFileUtil from "@/common/TexFileUtil";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { TreeFileType } from "@/model/file/TreeFileType";
 import { handleFileSelected } from "./ProjectTreeHandler";
-import { TreeProps } from "@/model/props/TreeProps";
 
 export const ProjectTreeFolder = {
   getExpandStatus: (item: TexFileModel): boolean => {
@@ -125,6 +124,7 @@ export const ProjectTreeFolder = {
     projId: string,
     selectedFile: TexFileModel,
   ) => {
+    console.warn("trigger expand folder");
     for (let i = 0; i < name_paths.length; i++) {
       // get the newest tree content to avoid the legacy override the newest update
       let legacyTree = localStorage.getItem("projTree:" + projId);
