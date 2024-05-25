@@ -25,7 +25,7 @@ import { QueryProjInfo } from '@/model/request/proj/query/QueryProjInfo';
 import { CompileResultType } from '@/model/proj/compile/CompileResultType';
 import { BaseMethods } from 'rdjs-wheel';
 import { ReactComponent as RightDraggable } from '@/assets/icon/right-drag.svg';
-const CollarCodeEditor = React.lazy(() => import('@/component/common/editor/CollarCodeEditor'));
+const CollarCodeEditor = React.lazy(() => import('@/component/common/editor/main/CollarCodeEditor'));
 
 const App: React.FC = () => {
 

@@ -182,17 +182,17 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       localStorage.setItem(key, scrollTop.toString());
     };
 
-    /**
-     * Open pdf's link in the browser new tab
-     * https://github.com/diegomura/react-pdf/issues/645
-     * @param e 
-     */
-    const openPdfUrlLink = (e: React.MouseEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      if ((e.target as HTMLElement).tagName.toLowerCase() === "a") {
-        window.open((e.target as HTMLAnchorElement).href);
-      }
-    };
+/**
+ * Open pdf's link in the browser new tab
+ * https://github.com/diegomura/react-pdf/issues/645
+ * @param e 
+ */
+const openPdfUrlLink = (e: React.MouseEvent<HTMLDivElement>) => {
+  e.preventDefault();
+  if ((e.target as HTMLElement).tagName.toLowerCase() === "a") {
+    window.open((e.target as HTMLAnchorElement).href);
+  }
+};
 
     return (
       <div

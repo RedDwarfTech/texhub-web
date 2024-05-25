@@ -29,10 +29,6 @@ const TeXShare: React.FC<ShareProps> = (props: ShareProps) => {
     let shareLink =
       readConfig("shareBaseUrl") + "?projectId=" + props.projectId;
     setProjShareLink(shareLink);
-    let req: QueryProjCollar = {
-      project_id: props.projectId,
-    };
-    getProjCollarUsers(req);
   }, [props.projectId]);
 
   React.useEffect(() => {
@@ -64,6 +60,11 @@ const TeXShare: React.FC<ShareProps> = (props: ShareProps) => {
     if (clickTab === ProjShareTabType.Link) {
     }
     if (clickTab === ProjShareTabType.Mail) {
+      debugger
+      let req: QueryProjCollar = {
+        project_id: props.projectId,
+      };
+      getProjCollarUsers(req);
     }
   };
 
