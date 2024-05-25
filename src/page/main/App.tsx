@@ -164,7 +164,7 @@ const App: React.FC = () => {
     <div className={styles.container}>
       <EHeader></EHeader>
       <div className={styles.editorBody}>
-        {pid ? <ProjectTree projectId={pid as string} divRef={projTreeRef}></ProjectTree> : <div>Loading...</div>}
+        {pid ? <ProjectTree projectId={pid as string} treeDivRef={projTreeRef}></ProjectTree> : <div>Loading...</div>}
         <div className={styles.leftDraggable} id="leftDraggable">
         </div>
         <div id="editor" className={styles.editor}>

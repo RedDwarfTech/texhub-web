@@ -59,7 +59,7 @@ export function resizeLeft(props: TreeProps, resizeBarName: string) {
   setTimeout(() => {
     let prevCursorOffset = -1;
     let resizing = false;
-    const resizeElement: HTMLElement | null = props.divRef.current;
+    const resizeElement: HTMLElement | null = props.treeDivRef.current;
     if (resizeElement == null || !resizeElement) {
       console.error("left resize element is null");
       return;

@@ -159,22 +159,18 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         }
     }
 
+    /**
+     * get the source location by pdf file position
+     * @returns src position info
+     */
     const handleSrcLocate = () => {
         if (!projectId) {
             toast.info("项目信息为空");
             return;
         }
-        const selected = localStorage.getItem("proj-select-file:" + projectId);
-        if (!selected) {
-            toast.info("请选择文件");
-            return;
-        }
-        const selectFile: TexFileModel = JSON.parse(selected);
         let curPage = localStorage.getItem(readConfig("pdfCurPage") + projectId);
         let req: QuerySrcPos = {
             project_id: projectId,
-            path: selectFile.file_path,
-            file: selectFile.name,
             main_file: curProjInfo?.main_file.name || "main.tex",
             page: Number(curPage) || 1,
             h: 3.565,

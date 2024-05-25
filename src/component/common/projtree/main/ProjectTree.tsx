@@ -30,7 +30,7 @@ import {
 import { TeXFileType } from "@/model/enum/TeXFileType";
 
 const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
-  const divRef = props.divRef;
+  const divRef = props.treeDivRef;
   const [folderName, setFolderName] = useState("");
   const [curTabName, setCurTabName] = useState("tree");
   const [createFileName, setCreateFileName] = useState("");
@@ -163,7 +163,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const handleSearchComplete = (paths: string[]) => {
     ProjectTreeFolder.handleExpandFolder(
       paths,
-      props,
+      props.projectId,
       selectedFile
     );
   };
@@ -372,11 +372,11 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       let name_paths = pos.file.split("/");
       ProjectTreeFolder.handleExpandFolder(
         name_paths,
-        props,
+        props.projectId,
         selectedFile
       );
     }
-  }, [srcFocus, props]);
+  }, [srcFocus, props.projectId]);
 
   return (
     <div id="projTree" ref={divRef} className={styles.projTree}>

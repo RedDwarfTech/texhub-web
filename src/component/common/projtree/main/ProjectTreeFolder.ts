@@ -122,12 +122,12 @@ export const ProjectTreeFolder = {
   },
   handleExpandFolder: (
     name_paths: string[],
-    props: TreeProps,
+    projId: string,
     selectedFile: TexFileModel,
   ) => {
     for (let i = 0; i < name_paths.length; i++) {
       // get the newest tree content to avoid the legacy override the newest update
-      let legacyTree = localStorage.getItem("projTree:" + props.projectId);
+      let legacyTree = localStorage.getItem("projTree:" + projId);
       if (legacyTree == null) {
         return;
       }

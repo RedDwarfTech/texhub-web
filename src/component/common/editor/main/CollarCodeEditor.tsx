@@ -194,10 +194,15 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         toast.info("请选择文件");
         return;
       }
-      const selectFile: TexFileModel = JSON.parse(selected);
+      let selectFile: TexFileModel = JSON.parse(selected);
       if (BaseMethods.isNull(selectFile)) {
-        toast.info("请选择文件");
-        return;
+        // if the select file is null, then try to use the current active file
+        let activeFile = localStorage.getItem(activeKey);
+        if(!activeFile || BaseMethods.isNull(activeFile)) {
+          toast.info("请选择文件");
+          return;
+        }
+        selectFile = JSON.parse(activeFile);
       }
       let req: QueryPdfPos = {
         project_id: props.projectId,

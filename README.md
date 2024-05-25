@@ -4,7 +4,7 @@
 
 This project is the frontend of TeXHub.
 
-## Develope
+## Develop
 
 develop this project：
 
