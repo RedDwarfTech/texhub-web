@@ -11,11 +11,6 @@ const SnippetReducer = (state = initState, action: any) => {
                 ...state,
                 snippets: action.data
             };
-        case "GET_FILE_TREE":
-            return {
-                ...state,
-                fileTree: action.data
-            };
         default:
             break;
     }

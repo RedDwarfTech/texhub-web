@@ -212,16 +212,8 @@ const openPdfUrlLink = (e: React.MouseEvent<HTMLDivElement>) => {
     );
   },
   (prevProps, nextProps) => {
-    let shouldRerender = prevProps.curPdfUrl !== nextProps.curPdfUrl;
-    if (shouldRerender) {
-      console.warn(
-        "pdf will reload: cur:" +
-          prevProps.curPdfUrl +
-          ",next:" +
-          nextProps.curPdfUrl
-      );
-    }
-    return shouldRerender;
+    let arePropsEqual = prevProps.curPdfUrl === nextProps.curPdfUrl;
+    return arePropsEqual;
   }
 );
 

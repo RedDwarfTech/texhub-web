@@ -13,7 +13,6 @@ import { Options } from 'react-pdf/dist/cjs/shared/types';
 import { getAccessToken } from '../cache/Cache';
 import { getLatestCompile, getSrcPosition, setProjAttr } from '@/service/project/ProjectService';
 import { QuerySrcPos } from '@/model/request/proj/query/QuerySrcPos';
-import { TexFileModel } from '@/model/file/TexFileModel';
 import { CompileResultType } from '@/model/proj/compile/CompileResultType';
 import { readConfig } from '@/config/app/config-reader';
 import { BaseMethods } from 'rdjs-wheel';
@@ -254,23 +253,25 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         );
     }
 
-    function throttle(func: () => void, delay: number) {
-        let canRun = true;
-        return function() {
-          if (canRun) {
-            func();
-            canRun = false;
-            setTimeout(() => {
-              canRun = true;
-            }, delay);
-          }
-        };
-      }
+    const changePdfUrl = () => {
+        let url = [
+            "https://tex.poemhub.top/tex/static/proj/2023/9/287ea73d1c78463298e9e5b267cab87f/main.pdf?v=ba9e5b5fda754e72a20e2c1dcdd26263",
+            "https://tex.poemhub.top/tex/static/proj/2024/5/aaeaa9e3e51c49f28a05ea6ce93d897f/main.pdf?v=0127469e65604510abe62dc315ace1f9"
+        ];
+        let idx = Math.floor(Math.random() * 2);
+        setCurPdfUrl(url[idx]);
+    }
 
     const renderPreviewHeaderAction = () => {
         if (curPreviewTab === "pdfview") {
             return (
                 <div className={styles.rightAction}>
+                    <button className={styles.previewIconButton}
+                        data-bs-toggle="tooltip"
+                        title="改变pdf url"
+                        onClick={() => { changePdfUrl() }}>
+                        <i className="fa-brands fa-chrome"></i>
+                    </button>
                     <button className={styles.previewIconButton}
                         data-bs-toggle="tooltip"
                         title="浏览器中打开"

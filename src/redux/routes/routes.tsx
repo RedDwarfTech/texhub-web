@@ -8,7 +8,7 @@ import TemplateDetail from "@/page/template/detail/TemplateDetail";
 import store from "../store/store";
 import { readConfig } from "@/config/app/config-reader";
 import Price from "@/component/common/price/Price";
-import App from "@/page/main/App";
+import App from "@/page/main/app/App";
 import TeXShareRecieved from "@/page/profile/project/share/TexShareRecieved";
 import Settings from "@/page/profile/panel/Settings";
 import FullScreen from "@/component/common/previewer/feat/fullscreen/FullScreen";

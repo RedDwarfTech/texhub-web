@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "./ProjectTree.module.css";
-import { addFile, chooseFile, getFileTree } from "@/service/file/FileService";
+import { addFile, getFileTree } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { AppState } from "@/redux/types/AppState";
