@@ -60,7 +60,6 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         };
         getProjHistoryDetail(hist).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {
-                debugger
                 let snapshot = resp.result.content;
                 replaceTextToEditor(snapshot);
                 /**if(snapshot && curDoc){

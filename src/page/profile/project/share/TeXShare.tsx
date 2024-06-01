@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { ProjCollarModel } from "@/model/proj/share/ProjCollarModel";
 import { CollarType } from "@/model/enum/CollarType";
+import dayjs from "dayjs";
 
 export type ShareProps = {
   projectId: string;
@@ -60,7 +61,6 @@ const TeXShare: React.FC<ShareProps> = (props: ShareProps) => {
     if (clickTab === ProjShareTabType.Link) {
     }
     if (clickTab === ProjShareTabType.Mail) {
-      debugger
       let req: QueryProjCollar = {
         project_id: props.projectId,
       };
@@ -77,7 +77,32 @@ const TeXShare: React.FC<ShareProps> = (props: ShareProps) => {
       title: "用户",
       dataIndex: "nickname",
       key: "nickname",
+      width: 140,
+    },
+    {
+      title: "加入时间",
+      dataIndex: "created_time",
+      key: "created_time",
+      width: 200,
+      render: (value: number) => {
+        const formattedDate = dayjs
+          .unix(value / 1000)
+          .format("YYYY-MM-DD HH:mm:ss");
+        return formattedDate;
+      },
+    },
+    {
+      title: "角色",
+      dataIndex: "role_id",
+      key: "role_id",
       width: 100,
+      render: (value: number) => {
+        if (value === 1) {
+          return (<div>创建者</div>);
+        } else {
+          return (<div>协作者</div>);
+        }
+      },
     },
     {
       title: "协作状态",
@@ -166,7 +191,7 @@ const TeXShare: React.FC<ShareProps> = (props: ShareProps) => {
 
   return (
     <div>
-      <div className="modal" id="sharePrj" tabIndex={-1}>
+      <div className="modal modal-lg" id="sharePrj" tabIndex={-1}>
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">

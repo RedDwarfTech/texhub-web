@@ -17,7 +17,6 @@ export function handleFileTreeUpdate(
   if (!tree || tree.length === 0) {
     return;
   }
-  debugger
   let legacyTree = localStorage.getItem("projTree:" + projectId);
   if (legacyTree) {
     // do the tree expand field merge

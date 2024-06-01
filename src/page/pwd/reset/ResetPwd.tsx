@@ -21,7 +21,6 @@ const ResetPwd: React.FC = () => {
             !passwordInputRef.current ||
             (passwordInputRef.current as HTMLInputElement).value.length === 0
         ) {
-            debugger;
             toast("请输入密码!");
             return;
         }
@@ -29,7 +28,6 @@ const ResetPwd: React.FC = () => {
             !reinputPwdInputRef.current ||
             (reinputPwdInputRef.current as HTMLInputElement).value.length === 0
         ) {
-            debugger;
             toast("请再次输入密码!");
             return;
         }
