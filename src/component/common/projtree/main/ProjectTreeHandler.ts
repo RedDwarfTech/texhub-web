@@ -4,7 +4,7 @@ import { addFile, chooseFile, switchFile } from "@/service/file/FileService";
 import { ProjectTreeFolder } from "./ProjectTreeFolder";
 import { toast } from "react-toastify";
 import { TeXFileType } from "@/model/enum/TeXFileType";
-import { RdFile, ResponseHandler } from "rdjs-wheel";
+import { ResponseHandler } from "rdjs-wheel";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 import { getProjectInfo } from "@/service/project/ProjectService";
 import * as bootstrap from "bootstrap";
@@ -17,6 +17,7 @@ export function handleFileTreeUpdate(
   if (!tree || tree.length === 0) {
     return;
   }
+  debugger
   let legacyTree = localStorage.getItem("projTree:" + projectId);
   if (legacyTree) {
     // do the tree expand field merge

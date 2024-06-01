@@ -66,7 +66,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       setMainFile(projInfo.main_file);
       resizeLeft(props, "leftDraggable");
     }
-  }, [projInfo, props.projectId, props]);
+  }, [projInfo]);
 
   React.useEffect(() => {
     if (fileTree && fileTree.length > 0) {
@@ -76,7 +76,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       );
       setMainFile(defaultFile[0]);
     }
-  }, [fileTree, props.projectId]);
+  }, [fileTree]);
 
   const handleHeaderAction = (id: string) => {
     let modal = document.getElementById(id);
