@@ -55,6 +55,8 @@ const PwdReset: React.FC = () => {
             if(ResponseHandler.responseSuccess(resp)) {
                 toast.success("密码修改成功");
                 UserService.doLoginOut(readConfig("logoutUrl"));
+            }else{
+                toast.warn(resp.msg);
             }
         });
     }
