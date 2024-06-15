@@ -268,12 +268,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
                 <div className={styles.rightAction}>
                     <button className={styles.previewIconButton}
                         data-bs-toggle="tooltip"
-                        title="改变pdf url"
-                        onClick={() => { changePdfUrl() }}>
-                        <i className="fa-brands fa-chrome"></i>
-                    </button>
-                    <button className={styles.previewIconButton}
-                        data-bs-toggle="tooltip"
                         title="浏览器中打开"
                         onClick={() => { handleOpenInBrowser(curPdfUrl) }}>
                         <i className="fa-brands fa-chrome"></i>
