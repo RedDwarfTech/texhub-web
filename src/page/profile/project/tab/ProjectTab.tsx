@@ -162,7 +162,7 @@ const ProjectTab: React.FC = () => {
           <a
             className="dropdown-item"
             data-bs-toggle="modal"
-            href="/#"
+            href="#/"
             data-bs-target="#delFolder"
           >
             删除文件夹
@@ -172,7 +172,7 @@ const ProjectTab: React.FC = () => {
           <a
             className="dropdown-item"
             data-bs-toggle="modal"
-            href="/#"
+            href="#/"
             data-bs-target="#renameFolder"
           >
             重命名文件夹
@@ -202,7 +202,7 @@ const ProjectTab: React.FC = () => {
             <a
               className="dropdown-item"
               data-bs-toggle="modal"
-              href="/#"
+              href="#/"
               onClick={() => {
                 setCurrProject(docItem);
               }}
@@ -215,7 +215,7 @@ const ProjectTab: React.FC = () => {
             <a
               className="dropdown-item"
               data-bs-toggle="modal"
-              href="/#"
+              href="#/"
               onClick={() => {
                 setCurrProject(docItem);
               }}
@@ -231,7 +231,7 @@ const ProjectTab: React.FC = () => {
             <a
               className="dropdown-item"
               data-bs-toggle="modal"
-              href="/#"
+              href="#/"
               onClick={() => {
                 handleProjDownload(docItem);
               }}
@@ -243,7 +243,7 @@ const ProjectTab: React.FC = () => {
             <a
               className="dropdown-item"
               data-bs-toggle="modal"
-              href="/#"
+              href="#/"
               onClick={() => {
                 setCurrProject(docItem);
               }}
@@ -256,7 +256,7 @@ const ProjectTab: React.FC = () => {
             <a
               className="dropdown-item"
               data-bs-toggle="modal"
-              href="/#"
+              href="#/"
               onClick={() => {
                 setCurrProject(docItem);
               }}
@@ -269,7 +269,7 @@ const ProjectTab: React.FC = () => {
             <a
               className="dropdown-item"
               data-bs-toggle="modal"
-              href="/#"
+              href="#/"
               onClick={() => {
                 setCurrProject(docItem);
               }}
@@ -287,7 +287,7 @@ const ProjectTab: React.FC = () => {
             <a
               className="dropdown-item"
               data-bs-toggle="modal"
-              href="/#"
+              href="#/"
               onClick={() => {
                 setCurrProject(docItem);
               }}
@@ -305,7 +305,7 @@ const ProjectTab: React.FC = () => {
             <a
               className="dropdown-item"
               data-bs-toggle="modal"
-              href="/#"
+              href="#/"
               onClick={() => {
                 setCurrProject(docItem);
               }}
@@ -318,7 +318,7 @@ const ProjectTab: React.FC = () => {
             <a
               className="dropdown-item"
               data-bs-toggle="modal"
-              href="/#"
+              href="#/"
               onClick={() => {
                 setCurrProject(docItem);
               }}
@@ -336,7 +336,7 @@ const ProjectTab: React.FC = () => {
             <a
               className="dropdown-item"
               data-bs-toggle="modal"
-              href="/#"
+              href="#/"
               onClick={() => {
                 setCurrProject(docItem);
               }}
@@ -349,7 +349,7 @@ const ProjectTab: React.FC = () => {
             <a
               className="dropdown-item"
               data-bs-toggle="modal"
-              href="/#"
+              href="#/"
               onClick={() => {
                 setCurrProject(docItem);
               }}
@@ -618,7 +618,7 @@ const ProjectTab: React.FC = () => {
             <a
               className="dropdown-item"
               data-bs-toggle="modal"
-              href="/#"
+              href="#/"
               data-bs-target="#newProj"
             >
               创建空白项目
@@ -628,7 +628,7 @@ const ProjectTab: React.FC = () => {
             <a
               className="dropdown-item"
               data-bs-toggle="modal"
-              href="/#"
+              href="#/"
               data-bs-target="#newFolder"
             >
               新建文件夹
@@ -651,7 +651,7 @@ const ProjectTab: React.FC = () => {
                   activeTab === ProjTabType.All ? "nav-link active" : "nav-link"
                 }
                 aria-current="page"
-                href="/#"
+                href="#/"
                 onClick={() => {
                   handleTabClick(1);
                 }}
@@ -666,7 +666,7 @@ const ProjectTab: React.FC = () => {
                     ? "nav-link active"
                     : "nav-link"
                 }
-                href="/#"
+                href="#/"
                 onClick={() => {
                   handleTabClick(2);
                 }}
@@ -696,7 +696,7 @@ const ProjectTab: React.FC = () => {
                     ? "nav-link active"
                     : "nav-link"
                 }
-                href="/#"
+                href="#/"
                 onClick={() => {
                   handleTabClick(4);
                 }}
