@@ -11,7 +11,7 @@ import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 import { getProjectInfo } from "@/service/project/ProjectService";
-import { ResponseHandler } from "rdjs-wheel";
+import { BaseMethods, ResponseHandler } from "rdjs-wheel";
 
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 const { DirectoryTree } = Tree;
@@ -55,14 +55,14 @@ const TreeFileMove: React.FC<TreeFileEditProps> = (props: TreeFileEditProps) => 
         });
     };
 
-    const convertToTreeDataNodeMemoized = useCallback(convertToTreeDataNode, []);
-
     React.useEffect(() => {
-        if (folderTree && folderTree.length > 0) {
-            const treeData: TreeDataNode[] = convertToTreeDataNodeMemoized(folderTree);
+        if (folderTree && !BaseMethods.isNull(folderTree)) {
+            let nodes = [];
+            nodes.push(folderTree);
+            const treeData: TreeDataNode[] = convertToTreeDataNode(nodes);
             setTexFileModel(treeData);
         } 
-    }, [folderTree, convertToTreeDataNodeMemoized]);
+    }, [folderTree]);
 
     const handleOk = () => {
         if (!distFileId) {

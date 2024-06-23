@@ -4,7 +4,7 @@ import { AppState } from "@/redux/types/AppState";
 const initState: AppState["file"] = {
     fileList: [],
     fileTree: [],
-    folderTree: [],
+    folderTree: {} as TexFileModel,
     activeFile: {} as TexFileModel,
     treeSelectItem: {} as TexFileModel,
     mainFile: {} as TexFileModel
@@ -23,6 +23,7 @@ const FileReducer = (state = initState, action: any) => {
                 fileTree: action.data
             };
         case "GET_FOLDER_TREE":
+            debugger
             return {
                 ...state,
                 folderTree: action.data
