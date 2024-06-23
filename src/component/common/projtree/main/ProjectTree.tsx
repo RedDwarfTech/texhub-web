@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "./ProjectTree.module.css";
-import { addFile, getFileTree } from "@/service/file/FileService";
+import { addFile, downloadProjFile, getFileTree } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { AppState } from "@/redux/types/AppState";
@@ -28,6 +28,7 @@ import {
   resizeLeft,
 } from "./ProjectTreeHandler";
 import { TeXFileType } from "@/model/enum/TeXFileType";
+import { DownloadFileReq } from "@/model/request/file/query/DownloadFileReq";
 
 const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const divRef = props.treeDivRef;
@@ -85,6 +86,25 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       myModal.show();
     }
   };
+
+  const handleDownloadFile = async (file: TexFileModel) => {
+    try {
+      let req: DownloadFileReq = {
+        file_id: file.file_id,
+      };
+        downloadProjFile(req).then((resp) => {
+          const blob = new Blob([resp], { type: "application/oct-stream" });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download =  file.name;
+          link.click();
+          window.URL.revokeObjectURL(url);
+        });
+    } catch (error) {
+        console.error('Error downloading PDF:', error);
+    }
+}
 
   const handleModal = (
     e: React.MouseEvent<HTMLDivElement>,
@@ -272,7 +292,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                     <div
                       className="dropdown-item"
                       onClick={(e) => {
-                        handleModal(e, true, "downloadFileModal", item);
+                        handleDownloadFile(item);
                       }}
                     >
                       下载文件

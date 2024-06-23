@@ -6,6 +6,7 @@ export enum FileActionType {
     GET_FOLDER_TREE,
     ADD_FILE,
     MV_FILE,
+    DOWNLOAD_FILE,
     ADD_FILE_HISTORY,
     CHOOSE_FILE,
     GET_MAIN_FILE,
@@ -67,5 +68,10 @@ export interface renameFileAction {
 
 export interface mvFileAction {
     type: FileActionType.MV_FILE;
+    data: any;
+}
+
+export interface downloadFileAction {
+    type: FileActionType.DOWNLOAD_FILE;
     data: any;
 }

@@ -2,6 +2,7 @@ import { TexFileModel } from "@/model/file/TexFileModel";
 import { TexFileVersion } from "@/model/file/TexFileVersion";
 import { MoveFileReq } from "@/model/request/file/edit/MoveFileReq";
 import { RenameFile } from "@/model/request/file/edit/RenameFile";
+import { DownloadFileReq } from "@/model/request/file/query/DownloadFileReq";
 import { FileActionType } from "@/redux/action/file/FileAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
@@ -79,6 +80,17 @@ export function mvFile(params: MoveFileReq) {
         data: JSON.stringify(params)
     };
     const actionTypeString: string = FileActionType[FileActionType.MV_FILE];
+    return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
+export function downloadProjFile(params: DownloadFileReq) {
+    const config: AxiosRequestConfig = {
+        method: 'get',
+        url: '/tex/file/download',
+        data: JSON.stringify(params),
+        responseType: 'arraybuffer'
+    };
+    const actionTypeString: string = FileActionType[FileActionType.DOWNLOAD_FILE];
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
