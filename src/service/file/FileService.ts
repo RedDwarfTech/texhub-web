@@ -83,7 +83,11 @@ export function mvFile(params: MoveFileReq) {
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function downloadProjFile(params: DownloadFileReq) {
+export function downloadProjFile(req: DownloadFileReq) {
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(req)) {
+        params.append(key, value);
+    }
     const config: AxiosRequestConfig = {
         method: 'get',
         url: '/tex/file/download',
