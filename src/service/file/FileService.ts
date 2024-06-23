@@ -87,7 +87,7 @@ export function downloadProjFile(params: DownloadFileReq) {
     const config: AxiosRequestConfig = {
         method: 'get',
         url: '/tex/file/download',
-        data: JSON.stringify(params),
+        params: JSON.stringify(params),
         responseType: 'arraybuffer'
     };
     const actionTypeString: string = FileActionType[FileActionType.DOWNLOAD_FILE];
