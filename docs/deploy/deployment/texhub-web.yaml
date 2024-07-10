@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: texhub-web
+  namespace: reddwarf-pro
+status:
+  observedGeneration: 598
+  replicas: 1
+  updatedReplicas: 1
+  readyReplicas: 1
+  availableReplicas: 1
+  conditions:
+    - type: Available
+      status: 'True'
+      lastUpdateTime: '2024-03-02T12:20:46Z'
+      lastTransitionTime: '2024-03-02T12:20:46Z'
+      reason: MinimumReplicasAvailable
+      message: Deployment has minimum availability.
+    - type: Progressing
+      status: 'True'
+      lastUpdateTime: '2024-06-23T12:36:44Z'
+      lastTransitionTime: '2024-01-10T07:50:01Z'
+      reason: NewReplicaSetAvailable
+      message: ReplicaSet "texhub-web-64794566c8" has successfully progressed.
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: texhub-web
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: texhub-web
+      annotations:
+        kubectl.kubernetes.io/restartedAt: '2024-01-05T12:52:55Z'
+    spec:
+      containers:
+        - name: texhub-web
+          image: >-
+            registry.cn-hongkong.aliyuncs.com/reddwarf-pro/texhub-web:970a3dcde46bad6a6631f305e67fe77d222f8908
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: APOLLO_META
+              valueFrom:
+                configMapKeyRef:
+                  name: pro-apollo-config
+                  key: apollo.meta
+            - name: ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: pro-apollo-config
+                  key: env
+          resources:
+            limits:
+              cpu: 50m
+              memory: 20Mi
+            requests:
+              cpu: 10m
+              memory: 5Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      imagePullSecrets:
+        - name: hongkong-regcred
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

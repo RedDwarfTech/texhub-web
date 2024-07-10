@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: texhub-web-service
+  namespace: reddwarf-pro
+status:
+  loadBalancer: {}
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    app: texhub-web
+  clusterIP: 10.98.133.72
+  clusterIPs:
+    - 10.98.133.72
+  type: ClusterIP
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  internalTrafficPolicy: Cluster
