@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { VerifyReq } from "@/model/request/pwd/VerifyReq";
 import { ResponseHandler } from "rdjs-wheel";
 import CountdownTimer from "./CountdownTimer";
+import { readConfig } from "@/config/app/config-reader";
 
 const VerifyPwd: React.FC = () => {
 
@@ -53,7 +54,8 @@ const VerifyPwd: React.FC = () => {
         }
         let phoneValue = (phoneInputRef.current as HTMLInputElement).value;
         let req: SendVerifyReq = {
-            phone: phoneValue
+            phone: phoneValue,
+            app_id: readConfig("appId")
         };
         sendVerifySMS(req).then((resp) => {
             if (ResponseHandler.responseSuccess(resp)) {

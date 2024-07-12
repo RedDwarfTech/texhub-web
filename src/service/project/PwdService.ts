@@ -9,7 +9,7 @@ import { XHRClient } from "rd-component";
 export function sendVerifySMS(doc: SendVerifyReq) {
     const config: AxiosRequestConfig = {
       method: 'put',
-      url: '/infra/user/pwd/send-verify-code',
+      url: '/infra/user/pwd/send-reset-verify-code',
       data: JSON.stringify(doc)
     };
     const actionTypeString: string = PwdActionType[PwdActionType.SEND_VERIFY_CODE];
