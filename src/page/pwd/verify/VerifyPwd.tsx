@@ -67,7 +67,7 @@ const VerifyPwd: React.FC = () => {
 
   const renderVerifyCodeAction = () => {
     let remainSeconds = localStorage.getItem("sms-remain-seconds");
-    if (showCountDown) {
+    if (showCountDown || (remainSeconds && parseInt(remainSeconds) > 0)) {
       if (remainSeconds && parseInt(remainSeconds) > 0) {
         return (
           <CountdownTimer
