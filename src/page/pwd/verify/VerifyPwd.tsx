@@ -5,9 +5,10 @@ import { SendVerifyReq } from "@/model/request/pwd/SendVerifyReq";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { VerifyReq } from "@/model/request/pwd/VerifyReq";
-import { ResponseHandler } from "rdjs-wheel";
+import { BaseMethods, ResponseHandler } from "rdjs-wheel";
 import CountdownTimer from "./CountdownTimer";
 import { readConfig } from "@/config/app/config-reader";
+import { SmsRemainInfo } from "@/model/user/SmsRemainInfo";
 
 const VerifyPwd: React.FC = () => {
   const phoneInputRef = useRef(null);
@@ -66,15 +67,31 @@ const VerifyPwd: React.FC = () => {
   };
 
   const renderVerifyCodeAction = () => {
-    let remainSeconds = localStorage.getItem("sms-remain-seconds");
-    if (showCountDown || (remainSeconds && parseInt(remainSeconds) > 0)) {
-      if (remainSeconds && parseInt(remainSeconds) > 0) {
-        return (
-          <CountdownTimer
-            seconds={parseInt(remainSeconds)}
-            resetCodeSend={() => resetCodeSend()}
-          />
-        );
+    let remain = localStorage.getItem("sms-remain-seconds");
+    if (showCountDown || !BaseMethods.isNull(remain)) {
+      if (!BaseMethods.isNull(remain)) {
+        let remainObj: SmsRemainInfo = JSON.parse(remain!);
+        if(remainObj.createdTime < Date.now() - 60000) {
+          localStorage.removeItem("sms-remain-seconds");
+          return (
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => {
+                sendverifyCode();
+              }}
+            >
+              获取验证码
+            </button>
+          );
+        }else{
+          return (
+            <CountdownTimer
+              seconds={remainObj.remainSeconds}
+              resetCodeSend={() => resetCodeSend()}
+            />
+          );
+        }
       } else {
         return (
           <CountdownTimer seconds={60} resetCodeSend={() => resetCodeSend()} />

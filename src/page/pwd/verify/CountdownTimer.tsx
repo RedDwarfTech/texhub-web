@@ -14,10 +14,18 @@ const CountdownTimer: React.FC<CountDownProps> = (props: CountDownProps) => {
     if (remainingSeconds > 0) {
       const countdown = setInterval(() => {
         setRemainingSeconds((prevSeconds) => prevSeconds - 1);
-        localStorage.setItem(
-          "sms-remain-seconds",
-          (remainingSeconds - 1).toString()
-        );
+        let remainInfo = localStorage.getItem("sms-remain-seconds");
+        if (remainInfo && remainInfo.length > 0) {
+          let remain = JSON.parse(remainInfo);
+          remain.remainSeconds = remain.remainSeconds - 1;
+          localStorage.setItem("sms-remain-seconds", JSON.stringify(remain));
+        } else {
+          let remain = {
+            createdTime: new Date().getTime(),
+            remainSeconds: remainingSeconds - 1,
+          };
+          localStorage.setItem("sms-remain-seconds", JSON.stringify(remain));
+        }
       }, 1000);
 
       return () => clearInterval(countdown);
