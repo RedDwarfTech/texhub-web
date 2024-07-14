@@ -36,6 +36,7 @@ const CountdownTimer: React.FC<CountDownProps> = (props: CountDownProps) => {
     if (remainingSeconds > 0) {
       return `距离下次发送时间: ${remainingSeconds} 秒`;
     } else {
+      localStorage.removeItem("sms-remain-seconds");
       props.resetCodeSend();
     }
   };
