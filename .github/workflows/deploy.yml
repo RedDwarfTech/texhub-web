@@ -34,7 +34,7 @@ jobs:
           password: ${{ secrets.ALIYUN_DOCKER_REPO_USER_PASSWORD }}
 
       - name: Build image push to aliyun
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           context: .
           tags: ${{ secrets.ALI_DOCKER_HUB_REGISTRY }}/reddwarf-pro/texhub-web:${{ github.sha }} 
