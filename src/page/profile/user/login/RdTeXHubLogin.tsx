@@ -169,16 +169,7 @@ const RdTeXHubLogin: React.FC<ILoginProp> = (props: ILoginProp) => {
             }}
           >
             手机号登录
-          </button>
-          {renderWechatLogins()}
-          <button
-            className={styles.tablinks}
-            onClick={(e) => {
-              userAlipayQrCodeLogin();
-            }}
-          >
-            支付宝扫码登录
-          </button>
+          </button>          
         </div>
         <div id="phone" className={styles.tabcontent}>
           <h5>登录</h5>
