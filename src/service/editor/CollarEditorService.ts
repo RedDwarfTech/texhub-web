@@ -103,8 +103,6 @@ const highlightUnselection = () => {
 
 const handleWsAuth = (event: any, wsProvider: WebsocketProvider, editorAttr: EditorAttr, ydoc: Y.Doc) => {
     if (event.status === 'failed') {
-        debugger
-        toast.error("access token auth failed");
         wsProvider.shouldConnect = false;
         wsProvider.ws?.close()
     }
