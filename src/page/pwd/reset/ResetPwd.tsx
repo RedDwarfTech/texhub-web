@@ -1,11 +1,12 @@
 import { ToastContainer, toast } from "react-toastify";
 import styles from "./ResetPwd.module.css";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { resetPwd } from "@/service/project/PwdService";
 import { ResetPwdReq } from "@/model/request/pwd/ResetPwdReq";
 import { ResponseHandler } from "rdjs-wheel";
 import { useLocation, useNavigate } from "react-router-dom";
 import { readConfig } from "@/config/app/config-reader";
+import React from "react";
 
 const ResetPwd: React.FC = () => {
 
@@ -13,8 +14,17 @@ const ResetPwd: React.FC = () => {
     const reinputPwdInputRef = useRef(null);
     const navigate = useNavigate();
     const location = useLocation();
-    const searchParams = new URLSearchParams(location.search);
+    const [phone, setPhone] = useState<string>('');
+    const [code, setCode] = useState<string>('');
 
+    React.useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const phoneParams = searchParams.get("phone");
+        const codeParams = searchParams.get('code');
+        setPhone(phoneParams!);
+        setCode(codeParams!);
+      }, [location]);
+      
     const handleResetPwd = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (
@@ -38,8 +48,6 @@ const ResetPwd: React.FC = () => {
             return;
         };
         
-        const phone = searchParams.get("phone");
-        const code = searchParams.get('code');
         let resetReq: ResetPwdReq = {
             phone: phone!,
             code: code!,
