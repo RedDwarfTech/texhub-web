@@ -1,6 +1,6 @@
 .loginHaader img{
-    width: 100px;
-    height: 45px;
+    width: 95px;
+    height: 40px;
     margin-top: 18px;
     margin-left: 20px;
     border-radius: 10px;
@@ -8,7 +8,7 @@
 
 .loginHaader img:hover {
     cursor: pointer;
-  }
+}
 
 .loginContainer {
     --login-input-height: 42px;

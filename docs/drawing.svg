@@ -25,7 +25,7 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="1.0339298"
-     inkscape:cx="743.28061"
+     inkscape:cx="689.11833"
      inkscape:cy="567.73678"
      inkscape:window-width="1728"
      inkscape:window-height="966"
@@ -63,12 +63,15 @@
        width="44.014912"
        height="19.448452"
        x="53.227337"
-       y="80.352821" />
+       y="80.352821"
+       inkscape:export-filename="rect357.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
     <text
        xml:space="preserve"
        transform="scale(0.26458333)"
        id="text425"
-       style="white-space:pre;shape-inside:url(#rect427);fill:#ececec" />
+       style="white-space:pre;shape-inside:url(#rect427);display:inline;fill:#ececec" />
     <text
        xml:space="preserve"
        style="font-size:9.87778px;fill:#a02c2c;stroke-width:0.264583"

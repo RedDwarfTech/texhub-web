@@ -9,6 +9,7 @@ import { BaseMethods, ResponseHandler } from "rdjs-wheel";
 import CountdownTimer from "./CountdownTimer";
 import { readConfig } from "@/config/app/config-reader";
 import { SmsRemainInfo } from "@/model/user/SmsRemainInfo";
+import TeXHubLogo from "@/assets/icon/texhub-logo.png";
 
 const VerifyPwd: React.FC = () => {
   const phoneInputRef = useRef(null);
@@ -126,44 +127,53 @@ const VerifyPwd: React.FC = () => {
     }
   };
 
+  const handleClick = () => {
+    navigate("/");
+  };
+
   return (
-    <div className={styles.verifyCodeContainer}>
-      <div id="phone" className={styles.tabcontent}>
-        <h5>找回密码</h5>
-        <form
-          method="post"
-          className={styles.loginElement}
-          onSubmit={(e) => handleNextStep(e)}
-        >
-          <div className={styles.userName}>
-            <select id="countryCode" className={styles.countryCodeSelect}>
-              <option value="+86">+86</option>
-              <option value="+1">+1</option>
-            </select>
-            <input
-              type="text"
-              ref={phoneInputRef}
-              id="phone"
-              placeholder="请输入手机号码"
-            />
-          </div>
-          {renderVerifyCodeAction()}
-          <div className={styles.password}>
-            <input
-              type="text"
-              ref={codeInputRef}
-              placeholder="验证码"
-              name=""
-            ></input>
-          </div>
-          <div className={styles.operate}>
-            <button className={styles.loginButton} type="submit">
-              下一步
-            </button>
-          </div>
-        </form>
+    <div>
+      <div className={styles.loginHaader}>
+        <img alt="logo" onClick={handleClick} src={TeXHubLogo}></img>
       </div>
-      <ToastContainer />
+      <div className={styles.verifyCodeContainer}>
+        <div id="phone" className={styles.tabcontent}>
+          <h5>找回密码</h5>
+          <form
+            method="post"
+            className={styles.loginElement}
+            onSubmit={(e) => handleNextStep(e)}
+          >
+            <div className={styles.userName}>
+              <select id="countryCode" className={styles.countryCodeSelect}>
+                <option value="+86">+86</option>
+                <option value="+1">+1</option>
+              </select>
+              <input
+                type="text"
+                ref={phoneInputRef}
+                id="phone"
+                placeholder="请输入手机号码"
+              />
+            </div>
+            {renderVerifyCodeAction()}
+            <div className={styles.password}>
+              <input
+                type="text"
+                ref={codeInputRef}
+                placeholder="验证码"
+                name=""
+              ></input>
+            </div>
+            <div className={styles.operate}>
+              <button className={styles.loginButton} type="submit">
+                下一步
+              </button>
+            </div>
+          </form>
+        </div>
+        <ToastContainer />
+      </div>
     </div>
   );
 };
