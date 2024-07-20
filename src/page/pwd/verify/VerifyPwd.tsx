@@ -12,7 +12,7 @@ import { SmsRemainInfo } from "@/model/user/SmsRemainInfo";
 
 const VerifyPwd: React.FC = () => {
   const phoneInputRef = useRef(null);
-  const passwordInputRef = useRef(null);
+  const codeInputRef = useRef(null);
   const navigate = useNavigate();
   const [showCountDown, setShowCountDown] = useState<boolean>(false);
 
@@ -20,16 +20,24 @@ const VerifyPwd: React.FC = () => {
     // https://stackoverflow.com/questions/78001281/why-the-react-cllient-axios-send-http-with-an-extended-local-url
     e.preventDefault();
     if (
+      !codeInputRef.current ||
+      (codeInputRef.current as HTMLInputElement).value.length === 0
+    ) {
+      toast("请输入验证码");
+      return;
+    }
+    if (
       !phoneInputRef.current ||
       (phoneInputRef.current as HTMLInputElement).value.length === 0
     ) {
-      toast("请输入用户名!");
+      toast("请输入手机号码");
       return;
     }
+    let codeValue = (codeInputRef.current as HTMLInputElement).value;
     let phoneValue = (phoneInputRef.current as HTMLInputElement).value;
     let req: VerifyReq = {
       phone: phoneValue,
-      verifyCode: "123456",
+      verifyCode: codeValue,
     };
     verifySmsCode(req).then((resp) => {
       if (ResponseHandler.responseSuccess(resp)) {
@@ -137,7 +145,7 @@ const VerifyPwd: React.FC = () => {
           <div className={styles.password}>
             <input
               type="text"
-              ref={passwordInputRef}
+              ref={codeInputRef}
               placeholder="验证码"
               name=""
             ></input>
