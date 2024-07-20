@@ -42,11 +42,11 @@ const VerifyPwd: React.FC = () => {
     verifySmsCode(req).then((resp) => {
       if (ResponseHandler.responseSuccess(resp)) {
         // https://reactrouter.com/en/main/hooks/use-navigate
-        navigate("/userpage/pwd/reset" + phoneValue,{
+        navigate("/userpage/pwd/reset", {
           state: {
             phone: phoneValue,
-            code: codeValue
-          }
+            code: codeValue,
+          },
         });
       } else {
         toast(resp.msg);
@@ -85,7 +85,7 @@ const VerifyPwd: React.FC = () => {
     if (showCountDown || !BaseMethods.isNull(remain)) {
       if (!BaseMethods.isNull(remain)) {
         let remainObj: SmsRemainInfo = JSON.parse(remain!);
-        if(remainObj.createdTime < Date.now() - 60000) {
+        if (remainObj.createdTime < Date.now() - 60000) {
           localStorage.removeItem("sms-remain-seconds");
           return (
             <button
@@ -98,7 +98,7 @@ const VerifyPwd: React.FC = () => {
               获取验证码
             </button>
           );
-        }else{
+        } else {
           return (
             <CountdownTimer
               seconds={remainObj.remainSeconds}
