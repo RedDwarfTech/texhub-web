@@ -18,9 +18,8 @@ const ResetPwd: React.FC = () => {
     const [code, setCode] = useState<string>('');
 
     React.useEffect(() => {
-        const searchParams = new URLSearchParams(location.search);
-        const phoneParams = searchParams.get("phone");
-        const codeParams = searchParams.get('code');
+        const phoneParams = location.state.phone;
+        const codeParams = location.state.code;
         setPhone(phoneParams!);
         setCode(codeParams!);
       }, [location]);
