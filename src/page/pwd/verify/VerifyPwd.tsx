@@ -41,7 +41,13 @@ const VerifyPwd: React.FC = () => {
     };
     verifySmsCode(req).then((resp) => {
       if (ResponseHandler.responseSuccess(resp)) {
-        navigate("/userpage/pwd/reset?phone=" + phoneValue);
+        // https://reactrouter.com/en/main/hooks/use-navigate
+        navigate("/userpage/pwd/reset" + phoneValue,{
+          state: {
+            phone: phoneValue,
+            code: codeValue
+          }
+        });
       } else {
         toast(resp.msg);
       }

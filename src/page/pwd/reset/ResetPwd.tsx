@@ -4,16 +4,16 @@ import { useRef } from "react";
 import { resetPwd } from "@/service/project/PwdService";
 import { ResetPwdReq } from "@/model/request/pwd/ResetPwdReq";
 import { ResponseHandler } from "rdjs-wheel";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { readConfig } from "@/config/app/config-reader";
-import { useSearchParams } from 'react-router-dom';
 
 const ResetPwd: React.FC = () => {
 
     const passwordInputRef = useRef(null);
     const reinputPwdInputRef = useRef(null);
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
 
     const handleResetPwd = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -39,9 +39,10 @@ const ResetPwd: React.FC = () => {
         };
         
         const phone = searchParams.get("phone");
+        const code = searchParams.get('code');
         let resetReq: ResetPwdReq = {
             phone: phone!,
-            code: "123456",
+            code: code!,
             password: reinputValue,
             appId: readConfig("appId")
         };
