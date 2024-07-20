@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.1 (9c6d41e, 2022-07-14)"
+   sodipodi:docname="drawing.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.0339298"
+     inkscape:cx="743.28061"
+     inkscape:cy="567.73678"
+     inkscape:window-width="1728"
+     inkscape:window-height="966"
+     inkscape:window-x="0"
+     inkscape:window-y="38"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <rect
+       x="151.84783"
+       y="271.7786"
+       width="121.86514"
+       height="41.588896"
+       id="rect427" />
+    <rect
+       x="161.71894"
+       y="332.95075"
+       width="275.87348"
+       height="104.64167"
+       id="rect113" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       transform="scale(0.26458333)"
+       id="text111"
+       style="white-space:pre;shape-inside:url(#rect113);display:inline;fill:#005c3e" />
+    <rect
+       style="fill:#ececec;fill-rule:evenodd;stroke-width:0.264583"
+       id="rect357"
+       width="44.014912"
+       height="19.448452"
+       x="53.227337"
+       y="80.352821" />
+    <text
+       xml:space="preserve"
+       transform="scale(0.26458333)"
+       id="text425"
+       style="white-space:pre;shape-inside:url(#rect427);fill:#ececec" />
+    <text
+       xml:space="preserve"
+       style="font-size:9.87778px;fill:#a02c2c;stroke-width:0.264583"
+       x="56.809948"
+       y="92.891937"
+       id="text599"><tspan
+         sodipodi:role="line"
+         id="tspan597"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.87778px;font-family:'Noto Sans Mro';-inkscape-font-specification:'Noto Sans Mro';stroke-width:0.264583;fill:#a02c2c"
+         x="56.809948"
+         y="92.891937">TeXHub</tspan></text>
+  </g>
+</svg>

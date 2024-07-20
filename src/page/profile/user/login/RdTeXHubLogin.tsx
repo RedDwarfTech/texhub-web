@@ -8,6 +8,7 @@ import { ResponseHandler } from "rdjs-wheel";
 import { AnyAction, Store } from "redux";
 import Turnstile from "react-turnstile";
 import { UserService } from "rd-component";
+import TeXHubLogo from "@/assets/icon/texhub-logo.png";
 
 interface ILoginProp {
   appId: string;
@@ -27,7 +28,7 @@ const RdTeXHubLogin: React.FC<ILoginProp> = (props: ILoginProp) => {
 
   const [passwordShown, setPasswordShown] = useState(false);
 
-  const togglePasswordVisibility = (e:React.MouseEvent<HTMLButtonElement>) => {
+  const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setPasswordShown(!passwordShown);
@@ -157,74 +158,83 @@ const RdTeXHubLogin: React.FC<ILoginProp> = (props: ILoginProp) => {
     }
   };
 
+  const handleClick = () => {
+    navigate("/");
+  };
+
   return (
-    <div className={styles.loginContainer}>
-      <div className={styles.loginForm}>
-        <div className={styles.loginTabs}>
-          <button
-            id="phoneTabs"
-            className={styles.tablinks}
-            onClick={(e) => {
-              openCity(e, "phone");
-            }}
-          >
-            手机号登录
-          </button>          
-        </div>
-        <div id="phone" className={styles.tabcontent}>
-          <h5>登录</h5>
-          <form
-            method="post"
-            className={styles.loginElement}
-            onSubmit={(e) => handlePhoneLogin(e)}
-          >
-            <div className={styles.userName}>
-              <select id="countryCode" className={styles.countryCodeSelect}>
-                <option value="+86">+86</option>
-                <option value="+1">+1</option>
-              </select>
-              <input
-                type="text"
-                ref={phoneInputRef}
-                id="phone"
-                placeholder="请输入手机号码"
-              />
-            </div>
-            <div className={styles.pwd}>
-              <input
-                type={passwordShown ? "text" : "password"}
-                ref={passwordInputRef}
-                placeholder="密码"
-                name="p"
-              ></input>
-              <button onClick={togglePasswordVisibility}>
-                {passwordShown ? "👁️" : "🔒"}
-              </button>
-            </div>
-            <div>
-              <Turnstile
-                className={styles.turnstile}
-                sitekey={props.cfSiteKey}
-                onVerify={(token) => {
-                  setCfVerifyToken(token);
-                }}
-              />
-            </div>
-            <div className={styles.operate}>
-              <button className={styles.loginButton} type="submit">
-                登录
-              </button>
-            </div>
-            <div className={styles.handleSituation}>
-              <a href="/user/reg">没有账号，去注册</a>
-              <a href="/userpage/pwd/retrieve">忘记密码？</a>
-            </div>
-          </form>
-        </div>
-        <div id="wechat" className={styles.tabcontent}></div>
-        <div id="alipay" className={styles.tabcontent}></div>
+    <div>
+      <div className={styles.loginHaader}>
+        <img alt="logo" onClick={handleClick} src={TeXHubLogo}></img>
       </div>
-      <ToastContainer />
+      <div className={styles.loginContainer}>
+        <div className={styles.loginForm}>
+          <div className={styles.loginTabs}>
+            <button
+              id="phoneTabs"
+              className={styles.tablinks}
+              onClick={(e) => {
+                openCity(e, "phone");
+              }}
+            >
+              手机号登录
+            </button>
+          </div>
+          <div id="phone" className={styles.tabcontent}>
+            <h5>登录</h5>
+            <form
+              method="post"
+              className={styles.loginElement}
+              onSubmit={(e) => handlePhoneLogin(e)}
+            >
+              <div className={styles.userName}>
+                <select id="countryCode" className={styles.countryCodeSelect}>
+                  <option value="+86">+86</option>
+                  <option value="+1">+1</option>
+                </select>
+                <input
+                  type="text"
+                  ref={phoneInputRef}
+                  id="phone"
+                  placeholder="请输入手机号码"
+                />
+              </div>
+              <div className={styles.pwd}>
+                <input
+                  type={passwordShown ? "text" : "password"}
+                  ref={passwordInputRef}
+                  placeholder="密码"
+                  name="p"
+                ></input>
+                <button onClick={togglePasswordVisibility}>
+                  {passwordShown ? "👁️" : "🔒"}
+                </button>
+              </div>
+              <div>
+                <Turnstile
+                  className={styles.turnstile}
+                  sitekey={props.cfSiteKey}
+                  onVerify={(token) => {
+                    setCfVerifyToken(token);
+                  }}
+                />
+              </div>
+              <div className={styles.operate}>
+                <button className={styles.loginButton} type="submit">
+                  登录
+                </button>
+              </div>
+              <div className={styles.handleSituation}>
+                <a href="/user/reg">没有账号，去注册</a>
+                <a href="/userpage/pwd/retrieve">忘记密码？</a>
+              </div>
+            </form>
+          </div>
+          <div id="wechat" className={styles.tabcontent}></div>
+          <div id="alipay" className={styles.tabcontent}></div>
+        </div>
+        <ToastContainer />
+      </div>
     </div>
   );
 };
