@@ -28,5 +28,15 @@
     "resetPwd": "重置密码",
     "myOrder": "我的订单",
     "nickname": "昵称",
-    "vip_expire": "会员到期日"
+    "vip_expire": "会员到期日",
+    "online_latex": "在线LaTeX",
+    "online_latex_slogan": "开箱即用、在线编译、云端协同，使用LaTeX更容易",
+    "anywhere": "随时随地",
+    "anywhere_slogan": "云端编译、更便捷。",
+    "anywhere_slogan_1": "在线预览最新PDF、更高效。",
+    "morethanpaper": "不止论文",
+    "morethanpaper_slogan": "一切有价值、需要长期保存的内容",
+    "morethanpaper_slogan_1": "乐谱、请帖、信件、笔记、书......",
+    "online_collar": "在线协作",
+    "online_collar_parallel": "同时编辑文档，并行不悖"
 }

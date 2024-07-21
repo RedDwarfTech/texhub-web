@@ -6,9 +6,11 @@ import userProjects from "@/assets/cv/template/user-projects.jpg";
 import onlineCollarboration from "@/assets/cv/template/online-collaboration.jpg";
 import { Footer, UserService } from "rd-component";
 import { toast, ToastContainer } from 'react-toastify';
+import { useTranslation } from "react-i18next";
 
 const Home: React.FC = () => {
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const handleUseReq = () => {
         if(!UserService.isLoggedIn()){
@@ -24,38 +26,38 @@ const Home: React.FC = () => {
             <div className={styles.container}>
                 <div className={styles.overview}>
                     <div className={styles.overviewContent}>
-                        <h1>在线LaTeX</h1>
-                        <h4>开箱即用、在线编译、云端协同，使用LaTeX更容易</h4>
+                        <h1>{t("online_latex")}</h1>
+                        <h4>{t("online_latex_slogan")}</h4>
                         <button className="btn btn-primary" onClick={() => { handleUseReq() }}>立即体验</button>
                     </div>
                 </div>
                 <div className={styles.template}>
                     <div className={styles.opRight}>
-                        <h1>随时随地</h1>
-                        <h4>云端编译、更便捷。</h4>
-                        <h4>在线预览最新PDF、更高效。</h4>
+                        <h1>{t("anywhere")}</h1>
+                        <h4>{t("anywhere_slogan")}</h4>
+                        <h4>{t("anywhere_slogan_1")}</h4>
                     </div>
                     <div className={styles.tplRight}>
-                        <img src={onlineEditor} alt="Image 1" />
+                        <img src={onlineEditor} alt="tpl" />
                     </div>
                 </div>
                 <div className={styles.templateDark}>
                     <div className={styles.tplRight}>
-                        <img src={userProjects} alt="Image 2" />
+                        <img src={userProjects} alt="proj" />
                     </div>
                     <div className={styles.opRight}>
-                        <h1>不止论文</h1>
-                        <h4>一切有价值、需要长期保存的内容</h4>
-                        <h4>乐谱、请帖、信件、笔记、书......</h4>
+                        <h1>{t("morethanpaper")}</h1>
+                        <h4>{t("morethanpaper_slogan")}</h4>
+                        <h4>{t("morethanpaper_slogan_1")}</h4>
                     </div>
                 </div>
                 <div className={styles.template}>
                     <div className={styles.opRight}>
-                        <h1>在线协作</h1>
-                        <h4>同时编辑文档，并行不悖</h4>
+                        <h1>{t("online_collar")}</h1>
+                        <h4>{t("online_collar_parallel")}</h4>
                     </div>
                     <div className={styles.tplRight}>
-                        <img src={onlineCollarboration} alt="Image 2" />
+                        <img src={onlineCollarboration} alt="onlinecollar" />
                     </div>
                 </div>
                 <div className={styles.buttonDiv}>

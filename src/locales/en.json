@@ -28,5 +28,15 @@
     "resetPwd": "Password",
     "myOrder": "Order",
     "nickname": "Nickname",
-    "vip_expire": "Expire"
+    "vip_expire": "Expire",
+    "online_latex": "Online LaTeX",
+    "online_latex_slogan": "Easy to use",
+    "anywhere": "Anytime Anywhere",
+    "anywhere_slogan": "Cloud compile the docuemnt",
+    "anywhere_slogan_1": "Preview online",
+    "morethanpaper": "More than paper",
+    "morethanpaper_slogan": "all things that need to keep",
+    "morethanpaper_slogan_1": "Note Book Paper Letters",
+    "online_collar": "Online collarborate",
+    "online_collar_parallel": "Edit one docuemnt in the same time"
 }
