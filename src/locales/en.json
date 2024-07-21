@@ -25,8 +25,8 @@
     "msg_non_vip_exceed": "become vip too create more project",
     "msg_vip_exceed": "exceed the vip limit",
     "profile": "Profile",
-    "resetPwd": "Password Reset",
-    "myOrder": "My Order",
+    "resetPwd": "Password",
+    "myOrder": "Order",
     "nickname": "Nickname",
-    "vip_expire": "Vip Expire"
+    "vip_expire": "Expire"
 }

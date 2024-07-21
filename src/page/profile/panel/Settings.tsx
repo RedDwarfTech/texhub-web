@@ -110,7 +110,7 @@ const Settings: React.FC = () => {
                                 <div ><button onClick={() => { handleNicknameEdit() }} className="btn btn-primary">设置昵称</button></div>
                             </div>
                             <div className="col">
-                                <div ><span className="user-info">会员到期日:</span></div>
+                                <div ><span className="user-info">{t("vip_expire")}:</span></div>
                                 <div ><span className="user-info">{userInfo ? UserProfile.getVipExpiredTime(userInfo) : "--"}</span></div>
                                 <div ></div>
                             </div>
