@@ -11,6 +11,7 @@ import React from "react";
 import PwdReset from "./pwd/PwdReset";
 import MyOrder from "./order/MyOrder";
 import { readConfig } from "@/config/app/config-reader";
+import { useTranslation } from "react-i18next";
 
 const Settings: React.FC = () => {
 
@@ -18,6 +19,7 @@ const Settings: React.FC = () => {
     const [userInfo, setUserInfo] = useState<UserModel>();
     const [curNickname, setCurNickname] = useState('');
     const { user } = useSelector((state: any) => state.rdRootReducer.user);
+    const { t } = useTranslation();
 
     React.useEffect(() => {
         getUserInfo();
@@ -99,11 +101,11 @@ const Settings: React.FC = () => {
                 <div id="userinfo">
                     <div className="card" style={{ marginBottom: '20px' }}>
                         <div className="card-header">
-                            <h6 className="card-title">基本信息</h6>
+                            <h6 className="card-title">{t("profile")}</h6>
                         </div>
                         <div className="card-body row">
                             <div className="col">
-                                <div><span className="user-info">用户昵称:</span></div>
+                                <div><span className="user-info">{t("nickname")}:</span></div>
                                 <div ><span className="user-info">{userInfo ? userInfo!.nickname : ""}</span></div>
                                 <div ><button onClick={() => { handleNicknameEdit() }} className="btn btn-primary">设置昵称</button></div>
                             </div>
@@ -166,13 +168,13 @@ const Settings: React.FC = () => {
         <div className={styles.panelContainer}>
             <div className={styles.panelMenu}>
                 <div className={styles.menuItem} data-target="userinfo" id="userinfo-menu" onClick={handlePanelSwitch}>
-                    <span>我的信息</span>
+                    <span>{t("profile")}</span>
                 </div>
                 <div className={styles.menuItem} data-target="resetpwd" id="userinfo-menu" onClick={handlePanelSwitch}>
-                    <span>重置密码</span>
+                    <span>{t("resetPwd")}</span>
                 </div>
                 <div className={styles.menuItem} data-target="order" id="userinfo-menu" onClick={handlePanelSwitch}>
-                    <span>我的订单</span>
+                    <span>{t("myOrder")}</span>
                 </div>
                 {/**
                 * <div className={styles.menuItem} data-target="feedback" id="feedback-menu" onClick={handlePanelSwitch}>

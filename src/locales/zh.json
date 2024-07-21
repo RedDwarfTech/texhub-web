@@ -3,7 +3,7 @@
     "template": "模版中心",
     "about": "关于",
     "projects": "个人中心",
-    "setting": "简历设置",
+    "setting": "设置",
     "login": "登录",
     "signup": "注册",
     "price": "订阅",
@@ -23,5 +23,10 @@
     "tab_archived": "已归档",
     "tab_trash": "回收站",
     "msg_non_vip_exceed": "最多创建2个项目，成为VIP创建更多项目",
-    "msg_vip_exceed": "超出数量上限"
+    "msg_vip_exceed": "超出数量上限",
+    "profile": "我的信息",
+    "resetPwd": "重置密码",
+    "myOrder": "我的订单",
+    "nickname": "昵称",
+    "vip_expire": "会员到期日"
 }
