@@ -8,7 +8,7 @@ import { CompletionContext } from "@codemirror/autocomplete";
  * @returns 
  */
 export function texAutoCompletions(context: CompletionContext) {
-    let word = context.matchBefore(/[\\w\\]+/);
+    let word = context.matchBefore(/\w*/)
     if (!word) return null;
     if (word.from === word.to && !context.explicit)
         return null
