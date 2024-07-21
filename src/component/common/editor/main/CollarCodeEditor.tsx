@@ -52,7 +52,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       delProjInfo();
       if (ws) {
         ws.destroy();
-        ws == null;
+        ws = null;
       }
     };
   }, []);

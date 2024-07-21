@@ -21,6 +21,7 @@ import { projHasFile, setCurYDoc } from "../project/ProjectService";
 import { addFileVersion } from "../file/FileService";
 import lodash from 'lodash';
 import { TexFileVersion } from "@/model/file/TexFileVersion";
+import { texAutoCompletions } from "./AutoCompletion";
 export const themeMap: Map<string, Extension> = new Map<string, Extension>();
 themeMap.set('Solarized Light', solarizedLight);
 themeMap.set('Basic Light', basicLight);
@@ -56,8 +57,12 @@ const extensions = [
             backgroundColor: "#A3BE8C"
         },
         '.cm-scroller': {
-
+        
         },
+        '.custom-tooltip': {
+            backgroundColor: "#f0f0f0",
+            color: "#333"
+        }
     }),
     StreamLanguage.define(stex),
     syntaxHighlighting(defaultHighlightStyle),
@@ -168,24 +173,6 @@ const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): WebsocketProvider => {
     return wsProvider;
 }
 
-function myCompletions(context: CompletionContext) {
-    let word = context.matchBefore(/[\\w\\]+/);
-    if (!word) return null;
-    if (word.from === word.to && !context.explicit)
-        return null
-    return {
-        from: word.from,
-        options: [
-            { label: "match", type: "keyword" },
-            { label: "hello", type: "variable", info: "(World)" },
-            { label: "magic", type: "text", apply: "⠁⭒*.✩.*⭒⠁", detail: "macro" },
-            { label: "\\begin{document}", type: "text", apply: "\begin{document}" },
-            { label: "\\section", type: "text", apply: "\section" },
-            { label: "\\subsection", type: "text", apply: "\subsection" },
-        ]
-    }
-}
-
 let history: Uint8Array[] = [];
 var ydoc: Y.Doc;
 export function saveHistory(docId: string) {
@@ -285,14 +272,27 @@ export function initEditor(editorAttr: EditorAttr,
         }
     });
 
-    const state = EditorState.create({
+    /**
+     * https://stackoverflow.com/questions/78775280/how-to-tweak-the-codemirror6-autocompletion-popup-style
+     * https://codemirror.net/docs/ref/#autocomplete.autocompletion^config.tooltipClass
+     * @param state 
+     * @returns 
+     */
+    const ttc = (state: EditorState) => {
+        return "custom-tooltip";
+    }
+
+    const texEditorState = EditorState.create({
         doc: ytext.toString(),
         extensions: [
             basicSetup,
             yCollab(ytext, wsProvider.awareness, { undoManager }),
             extensions,
             themeConfig.of(themeMap.get("Solarized Light")!),
-            autocompletion({ override: [myCompletions] }),
+            autocompletion({ 
+                override: [texAutoCompletions],
+                tooltipClass: ttc
+             }),
             // https://stackoverflow.com/questions/78011822/how-to-fix-the-codemirror-text-infilite-copy
             //highlight_extension
         ],
@@ -301,7 +301,7 @@ export function initEditor(editorAttr: EditorAttr,
         return [undefined, wsProvider];
     }
     const editorView: EditorView = new EditorView({
-        state,
+        state: texEditorState,
         parent: edContainer.current!,
     });
     curEditorView = editorView;
