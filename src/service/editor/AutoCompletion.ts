@@ -8,19 +8,16 @@ import { CompletionContext } from "@codemirror/autocomplete";
  * @returns 
  */
 export function texAutoCompletions(context: CompletionContext) {
-    let word = context.matchBefore(/\w*/)
+    let word = context.matchBefore(/\\[\w\\]*/);
     if (!word) return null;
     if (word.from === word.to && !context.explicit)
         return null
     return {
         from: word.from,
         options: [
-            { label: "match", type: "keyword" },
-            { label: "hello", type: "variable", info: "(World)" },
-            { label: "magic", type: "text", apply: "⠁⭒*.✩.*⭒⠁", detail: "macro" },
-            { label: "\\begin{document}", type: "text", apply: "\begin{document}" },
-            { label: "\\section", type: "text", apply: "\section" },
-            { label: "\\subsection", type: "text", apply: "\subsection" },
+            { label: "\\begin{document}", type: "text", apply: "\\begin{document}" },
+            { label: "\\section", type: "text", apply: "\\section" },
+            { label: "\\subsection", type: "text", apply: "\\subsection" },
         ]
     }
 }
