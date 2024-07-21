@@ -45,7 +45,7 @@ const TexHeader: React.FC = () => {
     const avatarClick = () => {
         const dropdown = document.getElementById("dropdown");
         if (dropdown) {
-            if (dropdown.style.display == "none" || dropdown.style.display == "") {
+            if (dropdown.style.display === "none" || dropdown.style.display === "") {
                 dropdown.style.display = "block";
             } else {
                 dropdown.style.display = "none";
@@ -70,18 +70,18 @@ const TexHeader: React.FC = () => {
             var avatarUrl = localStorage.getItem('avatarUrl');
             return (
                 <a id="user-menu">
-                    {avatarUrl ? <img className={styles.avatarImg} src={avatarUrl} onClick={avatarClick} /> : <img className={styles.avatarImg} src={avatarImg} onClick={avatarClick} ></img>}
+                    {avatarUrl ? <img alt="avatar" className={styles.avatarImg} src={avatarUrl} onClick={avatarClick} /> : <img className={styles.avatarImg} alt="avatar" src={avatarImg} onClick={avatarClick} ></img>}
                     <div id="dropdown" className={styles.dropdownContent}>
                         <div onClick={() => handleMenuClick()}>
                             <i className="fa-solid fa-wallet"></i>
-                            <span>订阅</span>
+                            <span>t("price")</span>
                         </div>
                         <div onClick={showUserProfile}>
                             <i className="fa-solid fa-gear"></i>
-                            <span>控制台</span></div>
+                            <span>t("console")</span></div>
                         <div onClick={() => UserService.doLoginOut(readConfig("logoutUrl"))}>
                             <i className="fa-solid fa-right-from-bracket"></i>
-                            <span>登出</span>
+                            <span>t("logout")</span>
                         </div>
                     </div>
                 </a>
@@ -95,10 +95,10 @@ const TexHeader: React.FC = () => {
         return (
             <div className={styles.loginReg}>
                 <div>
-                    <button className="btn btn-outline-info text-light" onClick={() => { navigate('/user/login') }}>登录</button>
+                    <button className="btn btn-outline-info text-light" onClick={() => { navigate('/user/login') }}>t("login")</button>
                 </div>
                 <div>
-                    <button className="btn btn-outline-info text-light" onClick={() => { navigate('/user/reg') }}>注册</button>
+                    <button className="btn btn-outline-info text-light" onClick={() => { navigate('/user/reg') }}>t("signup")</button>
                 </div>
             </div>
         );
