@@ -74,14 +74,14 @@ const TexHeader: React.FC = () => {
                     <div id="dropdown" className={styles.dropdownContent}>
                         <div onClick={() => handleMenuClick()}>
                             <i className="fa-solid fa-wallet"></i>
-                            <span>t("price")</span>
+                            <span>{t("price")}</span>
                         </div>
                         <div onClick={showUserProfile}>
                             <i className="fa-solid fa-gear"></i>
-                            <span>t("console")</span></div>
+                            <span>{t("console")}</span></div>
                         <div onClick={() => UserService.doLoginOut(readConfig("logoutUrl"))}>
                             <i className="fa-solid fa-right-from-bracket"></i>
-                            <span>t("logout")</span>
+                            <span>{t("logout")}</span>
                         </div>
                     </div>
                 </a>
@@ -95,10 +95,10 @@ const TexHeader: React.FC = () => {
         return (
             <div className={styles.loginReg}>
                 <div>
-                    <button className="btn btn-outline-info text-light" onClick={() => { navigate('/user/login') }}>t("login")</button>
+                    <button className="btn btn-outline-info text-light" onClick={() => { navigate('/user/login') }}>{t("login")}</button>
                 </div>
                 <div>
-                    <button className="btn btn-outline-info text-light" onClick={() => { navigate('/user/reg') }}>t("signup")</button>
+                    <button className="btn btn-outline-info text-light" onClick={() => { navigate('/user/reg') }}>{t("signup")}</button>
                 </div>
             </div>
         );
