@@ -15,9 +15,11 @@ export function texAutoCompletions(context: CompletionContext) {
     return {
         from: word.from,
         options: [
-            { label: "\\begin{document}", type: "text", apply: "\\begin{document}" },
-            { label: "\\section", type: "text", apply: "\\section" },
-            { label: "\\subsection", type: "text", apply: "\\subsection" },
+            { label: "\\begin{document}", type: "text", apply: "\\begin{document}", detail: "doc" },
+            { label: "\\section{}", type: "text", apply: "\\section{}" },
+            { label: "\\subsection{}", type: "text", apply: "\\subsection{}" },
+            { label: "\\usepackage{}", type: "text", apply: "\\usepackage{}" },
+            { label: "\\footnote{}", type: "text", apply: "\\footnote{}" },
         ]
     }
 }
