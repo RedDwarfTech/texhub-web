@@ -21,10 +21,18 @@ interface PDFPreviewProps {
   options: Options;
   viewModel: string;
   setPageNum: (page: number) => void;
+  setCurPageNum: (page: number) => void;
 }
 
 const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
-  ({ curPdfUrl, projId, options, viewModel = "default",setPageNum }) => {
+  ({
+    curPdfUrl,
+    projId,
+    options,
+    viewModel = "default",
+    setPageNum,
+    setCurPageNum,
+  }) => {
     const [numPages, setNumPages] = useState<number>();
     let curPage = localStorage.getItem(readConfig("pdfCurPage") + projId);
     const [currentPage, setCurrentPage] = useState<number>(Number(curPage));
@@ -86,6 +94,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
           if (item.intersectionRatio > 0) {
             let dataPage = item.target.getAttribute("data-page-number");
             setCurrentPage(Number(dataPage));
+            setCurPageNum(Number(dataPage));
             if (!dataPage) return;
             localStorage.setItem(
               readConfig("pdfCurPage") + projId,
@@ -184,17 +193,17 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       localStorage.setItem(key, scrollTop.toString());
     };
 
-/**
- * Open pdf's link in the browser new tab
- * https://github.com/diegomura/react-pdf/issues/645
- * @param e 
- */
-const openPdfUrlLink = (e: React.MouseEvent<HTMLDivElement>) => {
-  e.preventDefault();
-  if ((e.target as HTMLElement).tagName.toLowerCase() === "a") {
-    window.open((e.target as HTMLAnchorElement).href);
-  }
-};
+    /**
+     * Open pdf's link in the browser new tab
+     * https://github.com/diegomura/react-pdf/issues/645
+     * @param e
+     */
+    const openPdfUrlLink = (e: React.MouseEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      if ((e.target as HTMLElement).tagName.toLowerCase() === "a") {
+        window.open((e.target as HTMLAnchorElement).href);
+      }
+    };
 
     return (
       <div

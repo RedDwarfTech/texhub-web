@@ -43,6 +43,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
     const [curCompileQueue, setCurCompileQueue] = useState<CompileQueue>();
     const [numPages, setNumPages] = useState<number>();
+    const [curPages, setCurPages] = useState<number>();
     const {
         pdfUrl,
         streamLogText,
@@ -247,6 +248,10 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         setNumPages(pageNum);
     }
 
+    const setCurNum = (curPageNum: number) => {
+        setCurPages(curPageNum);
+    }
+
     const renderPdfView = () => {
         if (!curPdfUrl || !projectId) return (<div>Loading...</div>);
         return (
@@ -255,6 +260,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
                 projId={projectId}
                 viewModel={viewModel}
                 setPageNum={setPageNum}
+                setCurPageNum = {setCurNum}
                 options={options}></MemoizedPDFPreview>
         );
     }
@@ -326,8 +332,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         }
     }
 
-    let curPage = localStorage.getItem(readConfig("pdfCurPage") + projectId);
-
     return (
         <div id="preview" className={styles.preview}>
             <div className={styles.previewHader}>
@@ -340,7 +344,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
                     </button>
                 </div>
                 <div className={styles.previewPageNav}>
-                        <input value={Number(curPage)}></input>
+                        <input value={curPages}></input>
                         <div>/{numPages}</div>
                 </div>
                 {renderPreviewHeaderAction()}
