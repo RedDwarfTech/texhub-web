@@ -20,10 +20,11 @@ interface PDFPreviewProps {
   projId: string;
   options: Options;
   viewModel: string;
+  setPageNum: (page: number) => void;
 }
 
 const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
-  ({ curPdfUrl, projId, options, viewModel = "default" }) => {
+  ({ curPdfUrl, projId, options, viewModel = "default",setPageNum }) => {
     const [numPages, setNumPages] = useState<number>();
     let curPage = localStorage.getItem(readConfig("pdfCurPage") + projId);
     const [currentPage, setCurrentPage] = useState<number>(Number(curPage));
@@ -133,6 +134,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const onDocumentLoadSuccess = (pdf: DocumentCallback) => {
       const { numPages } = pdf;
       setNumPages(numPages);
+      setPageNum(numPages);
     };
 
     const getDynStyles = (viewModel: string) => {

@@ -42,6 +42,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     const [curPreviewTab, setCurPreviewTab] = useState<string>('pdfview');
     const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
     const [curCompileQueue, setCurCompileQueue] = useState<CompileQueue>();
+    const [numPages, setNumPages] = useState<number>();
     const {
         pdfUrl,
         streamLogText,
@@ -242,6 +243,10 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         );
     }
 
+    const setPageNum = (pageNum: number) => {
+        setNumPages(pageNum);
+    }
+
     const renderPdfView = () => {
         if (!curPdfUrl || !projectId) return (<div>Loading...</div>);
         return (
@@ -249,17 +254,9 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
                 curPdfUrl={curPdfUrl}
                 projId={projectId}
                 viewModel={viewModel}
+                setPageNum={setPageNum}
                 options={options}></MemoizedPDFPreview>
         );
-    }
-
-    const changePdfUrl = () => {
-        let url = [
-            "https://tex.poemhub.top/tex/static/proj/2023/9/287ea73d1c78463298e9e5b267cab87f/main.pdf?v=ba9e5b5fda754e72a20e2c1dcdd26263",
-            "https://tex.poemhub.top/tex/static/proj/2024/5/aaeaa9e3e51c49f28a05ea6ce93d897f/main.pdf?v=0127469e65604510abe62dc315ace1f9"
-        ];
-        let idx = Math.floor(Math.random() * 2);
-        setCurPdfUrl(url[idx]);
     }
 
     const renderPreviewHeaderAction = () => {
@@ -329,6 +326,8 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         }
     }
 
+    let curPage = localStorage.getItem(readConfig("pdfCurPage") + projectId);
+
     return (
         <div id="preview" className={styles.preview}>
             <div className={styles.previewHader}>
@@ -339,6 +338,10 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
                     <button className={styles.previewButton} onClick={() => { setCurPreviewTab("logview") }}>
                         <i className="fa-regular fa-file-lines"></i> 日志 {renderCompiled()}
                     </button>
+                </div>
+                <div className={styles.previewPageNav}>
+                        <input value={Number(curPage)}></input>
+                        <div>/{numPages}</div>
                 </div>
                 {renderPreviewHeaderAction()}
             </div>

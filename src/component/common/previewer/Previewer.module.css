@@ -24,6 +24,20 @@
     border-radius: 3px 3px 0 0;
 }
 
+.previewPageNav {
+    border: none;
+    background-color: rgb(33,41,53);;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.previewPageNav input {
+    width: 45px;
+}
+
 .previewIconButton {
     border: none;
     background-color: rgb(33,41,53);;
