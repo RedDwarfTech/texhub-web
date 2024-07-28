@@ -34,8 +34,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     setCurPageNum,
   }) => {
     const [numPages, setNumPages] = useState<number>();
-    let curPage = localStorage.getItem(readConfig("pdfCurPage") + projId);
-    const [currentPage, setCurrentPage] = useState<number>(Number(curPage));
     let pdfScaleKey = "pdf:scale:" + projId;
     let cachedScale = Number(localStorage.getItem(pdfScaleKey));
     const [projAttribute, setProjAttribute] = useState<ProjAttribute>({
@@ -93,7 +91,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         entries.forEach((item: IntersectionObserverEntry) => {
           if (item.intersectionRatio > 0) {
             let dataPage = item.target.getAttribute("data-page-number");
-            setCurrentPage(Number(dataPage));
+            // pass the current page to parent component
             setCurPageNum(Number(dataPage));
             if (!dataPage) return;
             localStorage.setItem(
