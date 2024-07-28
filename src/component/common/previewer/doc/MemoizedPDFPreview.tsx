@@ -14,6 +14,7 @@ import { ProjInfo } from "@/model/proj/ProjInfo";
 import Highlight from "../feat/highlight/Highlight";
 import { PageViewport } from "pdfjs-dist";
 import { readConfig } from "@/config/app/config-reader";
+import { goPage } from "./PDFPreviewHandle";
 
 interface PDFPreviewProps {
   curPdfUrl: string;
@@ -105,13 +106,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         threshold: 0,
       }
     );
-
-    const goPage = (i: number) => {
-      let element = document.querySelectorAll(`.${styles.pdfPage}`);
-      if (element && element.length > 0 && i) {
-        element[i - 1]!.scrollIntoView({ behavior: "smooth" });
-      }
-    };
 
     const handlePageRenderSuccess = (page: PageCallback) => {
       let elements = document.querySelectorAll(`.${styles.pdfPage}`);

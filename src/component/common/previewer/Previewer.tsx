@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import styles from "./Previewer.module.css";
 import { ToastContainer, toast } from "react-toastify";
 import { pdfjs } from "react-pdf";
@@ -21,6 +21,7 @@ import { CompileResultType } from "@/model/proj/compile/CompileResultType";
 import { readConfig } from "@/config/app/config-reader";
 import { BaseMethods } from "rdjs-wheel";
 import { ProjInfo } from "@/model/proj/ProjInfo";
+import { goPage } from "./doc/PDFPreviewHandle";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.js`;
 
 export type PreviwerProps = {
@@ -378,16 +379,28 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     }
   };
 
+  const handleNavPageChange = (e: any) => {
+    let val = e.target.value;
+    setCurPages(val);
+  };
+
   const renderPageNaviation = () => {
-    if (BaseMethods.isNull(curPages) || BaseMethods.isNull(numPages)) {
-      return;
-    }
-    if (curPages === 0 || numPages === 0) {
-      return;
-    }
     return (
       <div className={styles.previewPageNav}>
-        <input value={curPages}></input>
+        <input
+          value={curPages}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            handleNavPageChange(e);
+          }}
+          onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                const navPage = (event.target as HTMLInputElement).value;
+                goPage(Number(navPage));
+              }
+            
+          }}
+        ></input>
         <div>/</div>
         <div>{numPages}</div>
       </div>
