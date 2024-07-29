@@ -22,7 +22,7 @@ import { readConfig } from "@/config/app/config-reader";
 import { BaseMethods } from "rdjs-wheel";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { goPage } from "./doc/PDFPreviewHandle";
-pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
 
 export type PreviwerProps = {
   projectId: string;
