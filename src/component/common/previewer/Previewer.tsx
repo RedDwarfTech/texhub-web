@@ -394,11 +394,10 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
           }}
           onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
             if (event.key === "Enter" && !event.shiftKey) {
-                event.preventDefault();
-                const navPage = (event.target as HTMLInputElement).value;
-                goPage(Number(navPage));
-              }
-            
+              event.preventDefault();
+              const navPage = (event.target as HTMLInputElement).value;
+              goPage(Number(navPage));
+            }
           }}
         ></input>
         <div>/</div>
@@ -407,9 +406,9 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     );
   };
 
-  return (
-    <div id="preview" className={styles.preview}>
-      <div className={styles.previewHader}>
+  const renderLeftTab = () => {
+    if (viewModel === "fullscreen") {
+      return (
         <div className={styles.leftAction}>
           <button
             className={styles.previewButton}
@@ -419,15 +418,35 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
           >
             <i className="fa-regular fa-file-pdf"></i> 预览
           </button>
-          <button
-            className={styles.previewButton}
-            onClick={() => {
-              setCurPreviewTab("logview");
-            }}
-          >
-            <i className="fa-regular fa-file-lines"></i> 日志 {renderCompiled()}
-          </button>
         </div>
+      );
+    }
+    return (
+      <div className={styles.leftAction}>
+        <button
+          className={styles.previewButton}
+          onClick={() => {
+            setCurPreviewTab("pdfview");
+          }}
+        >
+          <i className="fa-regular fa-file-pdf"></i> 预览
+        </button>
+        <button
+          className={styles.previewButton}
+          onClick={() => {
+            setCurPreviewTab("logview");
+          }}
+        >
+          <i className="fa-regular fa-file-lines"></i> 日志 {renderCompiled()}
+        </button>
+      </div>
+    );
+  };
+
+  return (
+    <div id="preview" className={styles.preview}>
+      <div className={styles.previewHader}>
+        {renderLeftTab()}
         {renderPageNaviation()}
         {renderPreviewHeaderAction()}
       </div>
