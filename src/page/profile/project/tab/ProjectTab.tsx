@@ -621,7 +621,7 @@ const ProjectTab: React.FC = () => {
               href="#/"
               data-bs-target="#newProj"
             >
-              t("create_blank_proj")
+              {t("create_blank_proj")}
             </a>
           </li>
           <li>
@@ -631,7 +631,7 @@ const ProjectTab: React.FC = () => {
               href="#/"
               data-bs-target="#newFolder"
             >
-              t("new_folder")
+              {t("new_folder")}
             </a>
           </li>
         </ul>
