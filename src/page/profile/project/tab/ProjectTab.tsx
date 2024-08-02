@@ -621,7 +621,7 @@ const ProjectTab: React.FC = () => {
               href="#/"
               data-bs-target="#newProj"
             >
-              创建空白项目
+              t("create_blank_proj")
             </a>
           </li>
           <li>
@@ -631,7 +631,7 @@ const ProjectTab: React.FC = () => {
               href="#/"
               data-bs-target="#newFolder"
             >
-              新建文件夹
+              t("new_folder")
             </a>
           </li>
         </ul>
