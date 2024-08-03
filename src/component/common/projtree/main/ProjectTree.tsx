@@ -287,7 +287,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                         handleModal(e, true, "renameFileModal", item);
                       }}
                     >
-                      重命名{t("btn_rename")}
+                      {t("btn_rename")}
                     </div>
                   </li>
                   <li>
@@ -297,7 +297,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                         handleDownloadFile(item);
                       }}
                     >
-                      下载文件
+                      {t("btn_download")}
                     </div>
                   </li>
                   <li>
@@ -307,7 +307,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                         handleModal(e, true, "moveFileModal", item);
                       }}
                     >
-                      移动到文件夹(Beta)
+                      {t("btn_move_to_folder")}
                     </div>
                   </li>
                 </ul>

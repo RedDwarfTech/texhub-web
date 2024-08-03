@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { MoveProjReq } from "@/model/request/proj/edit/MoveProjReq";
 import { TexProjectFolder } from "@/model/proj/TexProjectFolder";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 export type MoveProps = {
     getProjFilter: (query: QueryProjReq) => QueryProjReq;
@@ -21,6 +22,7 @@ const TeXMoveToFolder: React.FC<MoveProps> = (props: MoveProps) => {
     const editProjCancelRef = useRef<HTMLButtonElement>(null);
     const currProject = props.currProject;
     const [currSelectFolderId, setCurrSelectFolderId] = useState<number>(-1);
+    const { t } = useTranslation();
 
     React.useEffect(() => {
         if (props.folders && props.folders.length > 0) {
@@ -78,7 +80,7 @@ const TeXMoveToFolder: React.FC<MoveProps> = (props: MoveProps) => {
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">移动到文件夹</h5>
+                            <h5 className="modal-title">{t("btn_move_to_folder")}</h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">

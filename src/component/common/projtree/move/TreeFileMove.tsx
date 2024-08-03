@@ -1,7 +1,7 @@
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { MoveFileReq } from "@/model/request/file/edit/MoveFileReq";
 import { getFolderTree, mvFile } from "@/service/file/FileService";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import Tree from 'antd/lib/tree';
 import type { GetProps, TreeDataNode } from 'antd';
 import 'antd/lib/tree/style';
@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 import { getProjectInfo } from "@/service/project/ProjectService";
 import { BaseMethods, ResponseHandler } from "rdjs-wheel";
+import { useTranslation } from "react-i18next";
 
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 const { DirectoryTree } = Tree;
@@ -26,6 +27,7 @@ const TreeFileMove: React.FC<TreeFileEditProps> = (props: TreeFileEditProps) => 
     const [texFileModel, setTexFileModel] = useState<TreeDataNode[]>();
     const [distFileId, setDistFileId] = useState<string>();
     const { folderTree } = useSelector((state: AppState) => state.file);
+    const { t } = useTranslation();
 
     React.useEffect(() => {
         const modalElement = document.getElementById('moveFileModal');
@@ -98,7 +100,7 @@ const TreeFileMove: React.FC<TreeFileEditProps> = (props: TreeFileEditProps) => 
             <div className="modal-dialog">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h5 className="modal-title" id="moveModalLabel">移动到文件夹</h5>
+                        <h5 className="modal-title" id="moveModalLabel">{t("btn_move_to_folder")}</h5>
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div className="modal-body">
