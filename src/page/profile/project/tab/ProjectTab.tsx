@@ -143,7 +143,7 @@ const ProjectTab: React.FC = () => {
     e: React.MouseEvent<HTMLButtonElement>,
     docItem: TexProjectModel
   ) => {
-    e.stopPropagation();
+    //e.stopPropagation();
     setCurrProject(docItem);
   };
 
@@ -151,7 +151,7 @@ const ProjectTab: React.FC = () => {
     e: React.MouseEvent<HTMLButtonElement>,
     docItem: TexProjectFolder
   ) => {
-    e.stopPropagation();
+    // e.stopPropagation();
     setCurrFolder(docItem);
   };
 
@@ -185,7 +185,7 @@ const ProjectTab: React.FC = () => {
   const renderMenu = (docItem: TexProjectModel) => {
     if (activeTab === ProjTabType.All) {
       return (
-        <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        <ul className="dropdown-menu" aria-labelledby={"ddb-" + docItem.project_id}>
           <li>
             <div
               className="dropdown-item"
@@ -449,7 +449,7 @@ const ProjectTab: React.FC = () => {
                     }}
                     aria-expanded="false"
                   >
-                    操作
+                    {t("btn_action")}
                   </button>
                   {renderFolderMenu()}
                 </div>
@@ -457,11 +457,11 @@ const ProjectTab: React.FC = () => {
             </div>
             <div className={styles.projAttr}>
               <div>
-                <span>创建时间：</span>
+                <span>{t("label_create_time")}：</span>
                 {projCreatedTime}
               </div>
               <div>
-                <span>更新时间：</span>
+                <span>{t("label_update_time")}：</span>
                 {formattedTime}
               </div>
             </div>
@@ -507,18 +507,18 @@ const ProjectTab: React.FC = () => {
               </div>
             </div>
             <div className={styles.option}>
-              <div className="dropdown">
+              <div className="btn-group">
                 <button
                   className="btn btn-secondary dropdown-toggle"
                   type="button"
-                  id="dropdownMenuButton1"
+                  id={"ddb-" + docItem.project_id}
                   data-bs-toggle="dropdown"
                   onClick={(e) => {
                     handleOperClick(e, docItem);
                   }}
                   aria-expanded="false"
                 >
-                  操作
+                  {t("btn_action")}
                 </button>
                 {renderMenu(docItem)}
               </div>
@@ -526,15 +526,15 @@ const ProjectTab: React.FC = () => {
           </div>
           <div className={styles.projAttr}>
             <div>
-              <span>来自：</span>
+              <span>{t("label_come_from")}：</span>
               {docItem.nickname}
             </div>
             <div>
-              <span>创建时间：</span>
+              <span>{t("label_create_time")}：</span>
               {projCreatedTime}
             </div>
             <div>
-              <span>更新时间：</span>
+              <span>{t("label_update_time")}：</span>
               {formattedTime}
             </div>
           </div>
