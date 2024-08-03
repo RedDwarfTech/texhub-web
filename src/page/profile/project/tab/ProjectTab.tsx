@@ -293,7 +293,7 @@ const ProjectTab: React.FC = () => {
               }}
               data-bs-target="#trashProj"
             >
-              移动到回收站
+              {t("btn_trash_proj")}
             </a>
           </li>
         </ul>
@@ -311,7 +311,7 @@ const ProjectTab: React.FC = () => {
               }}
               data-bs-target="#trashProj"
             >
-              移动到回收站
+              {t("btn_trash_proj")}
             </a>
           </li>
           <li>
@@ -324,7 +324,7 @@ const ProjectTab: React.FC = () => {
               }}
               data-bs-target="#recoveryProj"
             >
-              恢复项目
+              {t("btn_restore_proj")}
             </a>
           </li>
         </ul>
@@ -355,7 +355,7 @@ const ProjectTab: React.FC = () => {
               }}
               data-bs-target="#delPrj"
             >
-              删除
+              {t("btn_del_folder")}
             </a>
           </li>
         </ul>

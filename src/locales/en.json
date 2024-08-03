@@ -23,6 +23,7 @@
     "btn_move_proj": "Move to folder",
     "btn_copy_proj": "Copy project",
     "btn_trash_proj": "Trash",
+    "btn_restore_proj": "Restore",
     "btn_cancel": "Cancel",
     "btn_history": "History",
     "btn_settings": "Setting",
