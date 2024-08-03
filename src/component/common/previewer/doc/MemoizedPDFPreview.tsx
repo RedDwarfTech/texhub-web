@@ -205,7 +205,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         onScroll={(e) => handlePdfScroll(e)}
       >
         <Document
-          options={options}
+          //options={options}
           file={curPdfUrl}
           onLoadSuccess={onDocumentLoadSuccess}
         >

@@ -217,7 +217,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
                   handleSnippetSearch();
                 }}
               >
-                <i className="fa-solid fa-magnifying-glass">搜索</i>
+                <i className="fa-solid fa-magnifying-glass">{t("btn_search")}</i>
               </button>
               <button
                 type="button"
