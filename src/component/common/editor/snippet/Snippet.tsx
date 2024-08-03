@@ -139,7 +139,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
                 });
               }}
             >
-              确定
+              {t("btn_confirm")}
             </button>
             <button
               type="button"
@@ -148,7 +148,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
                 setShowAdd(false);
               }}
             >
-              取消
+              {t("btn_cancel")}
             </button>
           </div>
         </div>
@@ -226,7 +226,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
                   setShowAdd(true);
                 }}
               >
-                添加
+                {t("btn_add")}
               </button>
             </div>
             {renderAddSnippet()}
@@ -241,7 +241,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
               className="btn btn-secondary"
               data-bs-dismiss="modal"
             >
-              取消
+              {t("btn_cancel")}
             </button>
             <button
               type="button"
@@ -249,7 +249,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
               data-bs-dismiss="modal"
               onClick={() => {}}
             >
-              确定
+              {t("btn_confirm")}
             </button>
           </div>
         </div>

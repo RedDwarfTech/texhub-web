@@ -15,7 +15,7 @@ const Home: React.FC = () => {
 
     const handleUseReq = () => {
         if(!UserService.isLoggedIn()){
-            toast.warning("登录后即可体验");
+            toast.warning(t("tips_need_login"));
             return;
         }
         navigate('/doc/tab');

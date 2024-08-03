@@ -4,6 +4,7 @@ import React from "react";
 import { toast } from "react-toastify";
 import { delTreeItem, getFileTree } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
+import { useTranslation } from "react-i18next";
 
 export type TreeFileRenameProps = {
   projectId: string;
@@ -13,6 +14,8 @@ export type TreeFileRenameProps = {
 const TreeFileDel: React.FC<TreeFileRenameProps> = (
   props: TreeFileRenameProps
 ) => {
+  const { t } = useTranslation();
+
   const handleFileDelete = () => {
     if (!props.operFile) {
       toast.error("请先选择要删除的文件");
@@ -39,7 +42,7 @@ const TreeFileDel: React.FC<TreeFileRenameProps> = (
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title" id="deleteModalLabel">
-              删除文件
+              {t("title_del")}
             </h5>
             <button
               type="button"
@@ -50,7 +53,7 @@ const TreeFileDel: React.FC<TreeFileRenameProps> = (
           </div>
           <div className="modal-body">
             <div className="input-group flex-nowrap">
-              删除后数据无法恢复，确定要删除文件吗？
+              {t("tips_delete")}
             </div>
           </div>
           <div className="modal-footer">
@@ -59,7 +62,7 @@ const TreeFileDel: React.FC<TreeFileRenameProps> = (
               className="btn btn-secondary"
               data-bs-dismiss="modal"
             >
-              取消
+              {t("btn_del")}
             </button>
             <button
               type="button"
@@ -69,7 +72,7 @@ const TreeFileDel: React.FC<TreeFileRenameProps> = (
                 handleFileDelete();
               }}
             >
-              确定
+              {t("btn_confirm")}
             </button>
           </div>
         </div>
