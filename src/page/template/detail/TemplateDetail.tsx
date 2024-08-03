@@ -12,6 +12,7 @@ import { ResponseHandler } from "rdjs-wheel";
 import { toast } from "react-toastify";
 import { CreateTplProjReq } from "@/model/request/proj/create/CreateTplProjReq";
 import { UserService } from "rd-component";
+import { useTranslation } from "react-i18next";
 
 const TemplateDetail: React.FC = () => {
 
@@ -20,6 +21,7 @@ const TemplateDetail: React.FC = () => {
     const navigate = useNavigate();
     const { state } = useLocation();
     const { id } = state;
+    const { t } = useTranslation();
 
     React.useEffect(() => {
         getTplDetail(id);
@@ -59,7 +61,9 @@ const TemplateDetail: React.FC = () => {
 
     const renderLoggedInBtn = () => {
         if(UserService.isLoggedIn()){
-            return (<button type="button" className="btn btn-primary" onClick={()=>{createProjByTpl()}}>以此模版创建项目</button>);
+            return (<button type="button" 
+                className="btn btn-primary" 
+                onClick={()=>{createProjByTpl()}}>{t("btn_create_proj_by_tpl")}</button>);
         }
     }
 

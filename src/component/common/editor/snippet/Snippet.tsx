@@ -17,6 +17,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 
 export type SnippetProps = {};
 
@@ -28,6 +29,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
   const [snippet, setSnippet] = useState<string>("");
   const [previewSnippet, setPreviewSnippet] = useState<string>("");
   const [showAdd, setShowAdd] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     getSnippetList({});
@@ -71,7 +73,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
                 });
               }}
             >
-              删除
+              {t("btn_del")}
             </button>
             <div
               className="btn btn-primary"
@@ -79,7 +81,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
                 setPreviewSnippet(record.snippet);
               }}
             >
-              预览
+              {t("btn_preview")}
             </div>
           </div>
         );

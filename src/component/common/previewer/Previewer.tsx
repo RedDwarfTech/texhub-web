@@ -22,6 +22,7 @@ import { readConfig } from "@/config/app/config-reader";
 import { BaseMethods } from "rdjs-wheel";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { goPage } from "./doc/PDFPreviewHandle";
+import { useTranslation } from "react-i18next";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
 
 export type PreviwerProps = {
@@ -61,6 +62,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     latestComp,
     projInfo,
   } = useSelector((state: AppState) => state.proj);
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     getLatestCompile(projectId);
@@ -416,7 +418,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
               setCurPreviewTab("pdfview");
             }}
           >
-            <i className="fa-regular fa-file-pdf"></i> 预览
+            <i className="fa-regular fa-file-pdf"></i> {t("tab_preview")}
           </button>
         </div>
       );
@@ -429,7 +431,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
             setCurPreviewTab("pdfview");
           }}
         >
-          <i className="fa-regular fa-file-pdf"></i> 预览
+          <i className="fa-regular fa-file-pdf"></i> {t("tab_preview")}
         </button>
         <button
           className={styles.previewButton}
