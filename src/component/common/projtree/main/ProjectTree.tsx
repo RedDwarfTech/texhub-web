@@ -29,6 +29,7 @@ import {
 } from "./ProjectTreeHandler";
 import { TeXFileType } from "@/model/enum/TeXFileType";
 import { DownloadFileReq } from "@/model/request/file/query/DownloadFileReq";
+import { useTranslation } from "react-i18next";
 
 const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const divRef = props.treeDivRef;
@@ -50,6 +51,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const [draggedOverNode, setDraggedOverNode] = useState<TexFileModel | null>(
     null
   );
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     if (treeSelectItem) {
@@ -275,7 +277,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                         handleModal(e, true, "deleteFileModal", item);
                       }}
                     >
-                      删除
+                      {t("btn_del")}
                     </div>
                   </li>
                   <li>
@@ -285,7 +287,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                         handleModal(e, true, "renameFileModal", item);
                       }}
                     >
-                      重命名
+                      重命名{t("btn_rename")}
                     </div>
                   </li>
                   <li>
