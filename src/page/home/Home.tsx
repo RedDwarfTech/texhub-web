@@ -28,7 +28,7 @@ const Home: React.FC = () => {
                     <div className={styles.overviewContent}>
                         <h1>{t("online_latex")}</h1>
                         <h4>{t("online_latex_slogan")}</h4>
-                        <button className="btn btn-primary" onClick={() => { handleUseReq() }}>立即体验</button>
+                        <button className="btn btn-primary" onClick={() => { handleUseReq() }}>{t("btn_explore")}</button>
                     </div>
                 </div>
                 <div className={styles.template}>
