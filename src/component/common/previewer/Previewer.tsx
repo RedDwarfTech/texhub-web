@@ -439,7 +439,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
             setCurPreviewTab("logview");
           }}
         >
-          <i className="fa-regular fa-file-lines"></i> 日志 {renderCompiled()}
+          <i className="fa-regular fa-file-lines"></i> {t("tab_log")} {renderCompiled()}
         </button>
       </div>
     );
