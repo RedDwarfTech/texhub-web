@@ -67,5 +67,6 @@
     "tips_delete": "删除后数据无法恢复，确定删除项目？",
     "label_create_time": "创建时间",
     "label_update_time": "更新时间",
-    "label_come_from": "来自"
+    "label_come_from": "来自",
+    "contact_us": "联系我们"
 }

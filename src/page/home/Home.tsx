@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import onlineEditor from "@/assets/cv/template/tex-online-editor-compress.jpg";
 import userProjects from "@/assets/cv/template/user-projects.jpg";
 import onlineCollarboration from "@/assets/cv/template/online-collaboration.jpg";
-import { Footer, UserService } from "rd-component";
+import { UserService } from "rd-component";
 import { toast, ToastContainer } from 'react-toastify';
 import { useTranslation } from "react-i18next";
+import TeXHubFooter from "@/component/footer/TexHubFooter";
 
 const Home: React.FC = () => {
     const navigate = useNavigate();
@@ -64,7 +65,7 @@ const Home: React.FC = () => {
 
                 </div>
             </div>
-            <Footer></Footer>
+            <TeXHubFooter></TeXHubFooter>
             <ToastContainer />
         </div>
     );

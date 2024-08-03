@@ -1,0 +1,45 @@
+.App {
+  text-align: center;
+}
+
+.App-footer-float{
+  margin: 0 auto;
+  width: 100%;
+}
+
+.App-footer{
+  font-size: 0.3rem;
+  position: fixed;
+  bottom: 0;
+  text-align: "center";
+  background: #ffffff;
+  width: 100%;
+}
+
+.App-footer-div{
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  gap: 10px;
+}
+
+.App-footer-divider{
+  border-top: 1px solid #ccc;
+  margin-bottom: 15px;
+}
+
+.contact{
+  height: 10px;
+  width: 10px;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.custom-row {
+  margin-bottom: 10px;
+}

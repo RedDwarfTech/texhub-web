@@ -67,5 +67,6 @@
     "tips_delete": "Deleting this data is irreversible. Are you sure you want to delete the item?",
     "label_create_time": "Create time",
     "label_update_time": "Update time",
-    "label_come_from": "Come from"
+    "label_come_from": "Come from",
+    "contact_us": "Contact us"
 }
