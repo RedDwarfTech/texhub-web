@@ -15,73 +15,102 @@ import { UserService } from "rd-component";
 import { useTranslation } from "react-i18next";
 
 const TemplateDetail: React.FC = () => {
+  const [tpl, setTpl] = useState<TemplateModel>();
+  const { tplDetail } = useSelector((state: AppState) => state.tpl);
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const { id } = state;
+  const { t } = useTranslation();
 
-    const [tpl, setTpl] = useState<TemplateModel>();
-    const { tplDetail } = useSelector((state: AppState) => state.tpl);
-    const navigate = useNavigate();
-    const { state } = useLocation();
-    const { id } = state;
-    const { t } = useTranslation();
+  React.useEffect(() => {
+    getTplDetail(id);
+  }, []);
 
-    React.useEffect(() => {
-        getTplDetail(id);
-    }, []);
+  React.useEffect(() => {
+    setTpl(tplDetail);
+  }, [tplDetail]);
 
-    React.useEffect(() => {
-        setTpl(tplDetail);
-    }, [tplDetail]);
+  if (!tpl) {
+    return <div></div>;
+  }
 
-    if (!tpl) {
-        return (<div></div>);
+  const previewTplPdf = () => {
+    const pdfUrl = readConfig("tplBaseUrl") + "/" + tpl.pdf_name;
+    window.open(pdfUrl, "_blank");
+  };
+
+  const openTplSrc = (tpl: TemplateModel) => {
+    if (!tpl || !tpl.source) return;
+    window.open(tpl.source);
+  };
+
+  const createProjByTpl = () => {
+    let req: CreateTplProjReq = {
+      template_id: tpl.template_id,
     };
+    createProjectFromTpl(req).then((res) => {
+      if (ResponseHandler.responseSuccess(res)) {
+        let proj_id = res.result.project_id;
+        navigate("/editor?pid=" + proj_id);
+      } else {
+        toast.error(res.msg);
+      }
+    });
+  };
 
-    const previewTplPdf = () => {
-        const pdfUrl = readConfig("tplBaseUrl") + "/" + tpl.pdf_name;
-        window.open(pdfUrl, '_blank');
-    };
-
-    const openTplSrc = (tpl: TemplateModel) => {
-        if(!tpl || !tpl.source) return;
-        window.open(tpl.source);
+  const renderLoggedInBtn = () => {
+    if (UserService.isLoggedIn()) {
+      return (
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => {
+            createProjByTpl();
+          }}
+        >
+          {t("btn_create_proj_by_tpl")}
+        </button>
+      );
     }
+  };
 
-    const createProjByTpl = () => {
-        let req:CreateTplProjReq =  {
-            template_id: tpl.template_id
-        };
-        createProjectFromTpl(req).then((res) => {
-            if(ResponseHandler.responseSuccess(res)){
-                let proj_id = res.result.project_id;
-                navigate('/editor?pid=' + proj_id);
-            }else{
-                toast.error(res.msg)
-            }
-        });
-    }
-
-    const renderLoggedInBtn = () => {
-        if(UserService.isLoggedIn()){
-            return (<button type="button" 
-                className="btn btn-primary" 
-                onClick={()=>{createProjByTpl()}}>{t("btn_create_proj_by_tpl")}</button>);
-        }
-    }
-
-    return (
-        <div>
-            <TexHeader></TexHeader>
-            <div className={styles.container}>
-                <h6>模版详情</h6>
-                <div className={styles.intro}>模版简介：<span>{tpl.intro}</span></div>
-                <div className={styles.tplAction}>
-                    {renderLoggedInBtn()}
-                    <button type="button" className="btn btn-primary" onClick={() => { previewTplPdf() }}>预览模版</button>
-                    <button type="button" className="btn btn-primary" onClick={() => {openTplSrc(tpl)}}>模版来源</button>
-                </div>
-                <img src={tpl.preview_url} className={styles.tplDemo}></img>
-            </div>
+  return (
+    <div>
+      <TexHeader></TexHeader>
+      <div className={styles.container}>
+        <h6>{t("title_template_detail")}</h6>
+        <div className={styles.intro}>
+          {t("label_template_intro")}：<span>{tpl.intro}</span>
         </div>
-    );
-}
+        <div className={styles.tplAction}>
+          {renderLoggedInBtn()}
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => {
+              previewTplPdf();
+            }}
+          >
+            {t("btn_preview")}
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => {
+              openTplSrc(tpl);
+            }}
+          >
+            {t("btn_template_source")}
+          </button>
+        </div>
+        <img
+          alt="preview"
+          src={tpl.preview_url}
+          className={styles.tplDemo}
+        ></img>
+      </div>
+    </div>
+  );
+};
 
 export default TemplateDetail;

@@ -1,8 +1,5 @@
-import { projSerach } from "@/service/project/ProjectService";
 import styles from "./ProjFileSearch.module.css";
-import { QueryFile } from "@/model/request/proj/search/QueryFile";
 import { ChangeEvent, useState } from "react";
-import { toast } from "react-toastify";
 import { SearchResult } from "@/model/proj/search/SearchResult";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
@@ -81,7 +78,7 @@ const ProjFileSearch: React.FC<ProjSearchProps> = (props: ProjSearchProps) => {
       </div>
       <div className={styles.search}>
         <input
-          placeholder="输入检索关键字"
+          placeholder={t("tips_enter_keyword")}
           onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
             handleEnterProjSearch(searchWord, props.projectId, e);
           }}

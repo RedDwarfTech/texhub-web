@@ -204,7 +204,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
           <div className="modal-body">
             <div className={styles.search}>
               <input
-                placeholder="输入检索关键字"
+                placeholder={t("tips_enter_keyword")}
                 type="text"
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   handleInputChange(e);
