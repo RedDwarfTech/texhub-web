@@ -13,6 +13,8 @@
     "delete_main_forbidden": "delete main file is not allowed",
     "btn_share": "Share",
     "btn_compile": "Compile",
+    "btn_del": "Delete",
+    "btn_cancel": "Cancel",
     "btn_history": "History",
     "btn_settings": "Setting",
     "btn_new": "New",
@@ -40,5 +42,9 @@
     "online_collar": "Online collarborate",
     "online_collar_parallel": "Simultaneous document editing, without interference.",
     "create_blank_proj": "Create blank project",
-    "new_folder": "New folder"
+    "new_folder": "New folder",
+    "email_help_tips": "If you encounter any issues during use, please send an email to: ",
+    "email_help_tips_handle": ", and we will handle it promptly.",
+    "modal_title_del_proj": "Delete project",
+    "tips_delete": "Deleting this data is irreversible. Are you sure you want to delete the item?"
 }

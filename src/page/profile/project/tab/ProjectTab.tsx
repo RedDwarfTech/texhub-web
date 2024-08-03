@@ -716,11 +716,11 @@ const ProjectTab: React.FC = () => {
             </div>
             <div className={styles.helpTip}>
               <p>
-                如果您在使用过程中遇到问题，可发邮件到：
+                {t("email_help_tips")}
                 <a href="mailto:jiangxiaoqiang@poemhub.top">
                   jiangxiaoqiang@poemhub.top
                 </a>
-                ,我们会第一时间处理
+                {t("email_help_tips_handle")}
               </p>
             </div>
           </div>
@@ -730,7 +730,7 @@ const ProjectTab: React.FC = () => {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">删除项目</h5>
+              <h5 className="modal-title">{t("modal_title_del_proj")}</h5>
               <button
                 type="button"
                 className="btn-close"
@@ -738,7 +738,7 @@ const ProjectTab: React.FC = () => {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body">删除后数据无法恢复，确定删除项目？</div>
+            <div className="modal-body">{t("tips_delete")}</div>
             <div className="modal-footer">
               <button
                 type="button"
@@ -746,7 +746,7 @@ const ProjectTab: React.FC = () => {
                 className="btn btn-secondary"
                 data-bs-dismiss="modal"
               >
-                取消
+                {t("btn_cancel")}
               </button>
               <button
                 type="button"
@@ -755,7 +755,7 @@ const ProjectTab: React.FC = () => {
                   handleProjDel();
                 }}
               >
-                删除
+                {t("btn_del")}
               </button>
             </div>
           </div>
