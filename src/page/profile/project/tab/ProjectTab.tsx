@@ -165,7 +165,7 @@ const ProjectTab: React.FC = () => {
             href="#/"
             data-bs-target="#delFolder"
           >
-            删除文件夹
+            {t("btn_del_folder")}
           </a>
         </li>
         <li>
@@ -175,7 +175,7 @@ const ProjectTab: React.FC = () => {
             href="#/"
             data-bs-target="#renameFolder"
           >
-            重命名文件夹
+            {t("btn_rename_folder")}
           </a>
         </li>
       </ul>
@@ -195,7 +195,7 @@ const ProjectTab: React.FC = () => {
               }}
               data-bs-target="#editPrj"
             >
-              修改项目名称
+              {t("btn_rename_proj")}
             </div>
           </li>
           <li>
