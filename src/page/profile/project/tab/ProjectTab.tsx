@@ -208,7 +208,7 @@ const ProjectTab: React.FC = () => {
               }}
               data-bs-target="#sharePrj"
             >
-              分享项目
+              {t("btn_share_proj")}
             </a>
           </li>
           <li>
@@ -221,7 +221,7 @@ const ProjectTab: React.FC = () => {
               }}
               data-bs-target="#archiveProj"
             >
-              归档项目
+              {t("btn_archive_proj")}
             </a>
           </li>
           <li>
@@ -236,7 +236,7 @@ const ProjectTab: React.FC = () => {
                 handleProjDownload(docItem);
               }}
             >
-              下载项目
+              {t("btn_download_proj")}
             </a>
           </li>
           <li>
@@ -249,7 +249,7 @@ const ProjectTab: React.FC = () => {
               }}
               data-bs-target="#moveProj"
             >
-              移动到文件夹
+              {t("btn_move_proj")}
             </a>
           </li>
           <li>
@@ -262,7 +262,7 @@ const ProjectTab: React.FC = () => {
               }}
               data-bs-target="#copyProject"
             >
-              复制项目
+              {t("btn_copy_proj")}
             </a>
           </li>
           <li>
@@ -275,7 +275,7 @@ const ProjectTab: React.FC = () => {
               }}
               data-bs-target="#trashProj"
             >
-              移动到回收站
+              {t("btn_trash_proj")}
             </a>
           </li>
         </ul>
