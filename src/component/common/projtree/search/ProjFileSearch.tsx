@@ -69,7 +69,7 @@ const ProjFileSearch: React.FC<ProjSearchProps> = (props: ProjSearchProps) => {
   return (
     <div>
       <div className={styles.searchHeader}>
-        <span>在项目中检索</span>
+        <span>{t("title_search_proj")}</span>
         <button
           onClick={() => {
             props.closeSearch();

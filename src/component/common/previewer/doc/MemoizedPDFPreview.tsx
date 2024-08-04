@@ -196,7 +196,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         window.open((e.target as HTMLAnchorElement).href);
       }
     };
-    const pdfFile = React.useMemo(() => ({ url: curPdfUrl }), [curPdfUrl]);
 
     return (
       <div
@@ -207,7 +206,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       >
         <Document
           options={options}
-          file={pdfFile}
+          file={curPdfUrl}
           onLoadSuccess={onDocumentLoadSuccess}
         >
           {renderPages(numPages)}
