@@ -42,6 +42,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   const [shareProj, setShareProj] = useState<boolean>();
+  const [connState, setConnState] = useState<string>("disconnected");
   let editorView: [EditorView | undefined, WebsocketProvider | undefined];
   const activeKey = readConfig("projActiveFile") + props.projectId;
   let ws: WebsocketProvider;
@@ -198,7 +199,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       if (BaseMethods.isNull(selectFile)) {
         // if the select file is null, then try to use the current active file
         let activeFile = localStorage.getItem(activeKey);
-        if(!activeFile || BaseMethods.isNull(activeFile)) {
+        if (!activeFile || BaseMethods.isNull(activeFile)) {
           toast.info("请选择文件");
           return;
         }
@@ -213,6 +214,20 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         column: column,
       };
       getPdfPosition(req);
+    }
+  };
+
+  const renderConnState = (connState: string) => {
+    debugger
+    switch (connState) {
+      case "connected":
+        return <i className={`fa-solid fa-wifi ${styles.stateConnect}`}></i>;
+      case "disconnected":
+        return <i className={`fa-solid fa-wifi ${styles.stateDisconnect}`}></i>;
+      case "connecting":
+        return <i className={`fa-solid fa-wifi ${styles.stateConnecting}`}></i>;
+      default:
+        return <i className={`fa-solid fa-wifi ${styles.stateDisconnect}`}></i>;
     }
   };
 
@@ -279,6 +294,15 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
           }}
         >
           <i className="fa-solid fa-square-root-variable"></i>
+        </button>
+        <button
+          className={styles.menuButton}
+          title="连接状态"
+          data-bs-toggle="modal"
+          data-bs-target=""
+          onClick={() => {}}
+        >
+          {renderConnState(connState)}
         </button>
       </div>
       <div ref={edContainer} className={styles.editorContainer}></div>

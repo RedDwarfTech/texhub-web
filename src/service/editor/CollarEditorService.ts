@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { basicLight } from 'cm6-theme-basic-light';
 import { RefObject } from "react";
-import { projHasFile, setCurYDoc } from "../project/ProjectService";
+import { projHasFile, setCurYDoc, setWsConnState } from "../project/ProjectService";
 import { addFileVersion } from "../file/FileService";
 import lodash from 'lodash';
 import { TexFileVersion } from "@/model/file/TexFileVersion";
@@ -163,11 +163,11 @@ const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): WebsocketProvider => {
     });
     wsProvider.on('status', (event: any) => {
         if (event.status === 'connected') {
-
+            setWsConnState('connected');
         } else if (event.status === 'disconnected' && wsRetryCount < wsMaxRetries) {
-            
+            setWsConnState('disconnected');
         } else {
-            
+            setWsConnState('connecting');
         }
     });
     return wsProvider;

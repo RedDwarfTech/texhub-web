@@ -19,3 +19,15 @@
 .editorContainer{
     height: 100%;
 }
+
+.stateConnect {
+    color: green;
+}
+
+.stateConnecting {
+    color: yellow;
+}
+
+.stateDisconnect {
+    color: red;
+}
