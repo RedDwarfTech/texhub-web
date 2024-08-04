@@ -37,12 +37,11 @@ export type EditorProps = {
 const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<HTMLDivElement>(null);
   const { activeFile } = useSelector((state: AppState) => state.file);
-  const { projInfo, projConf, activeShare, insertContext, replaceContext } =
+  const { projInfo, projConf, activeShare, insertContext, replaceContext, connState } =
     useSelector((state: AppState) => state.proj);
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   const [shareProj, setShareProj] = useState<boolean>();
-  const [connState, setConnState] = useState<string>("disconnected");
   let editorView: [EditorView | undefined, WebsocketProvider | undefined];
   const activeKey = readConfig("projActiveFile") + props.projectId;
   let ws: WebsocketProvider;
@@ -218,7 +217,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   };
 
   const renderConnState = (connState: string) => {
-    debugger
+    debugger;
     switch (connState) {
       case "connected":
         return <i className={`fa-solid fa-wifi ${styles.stateConnect}`}></i>;

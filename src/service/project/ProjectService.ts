@@ -474,6 +474,7 @@ export function setCurYDoc(ydoc: Y.Doc) {
 }
 
 export function setWsConnState(state: string) {
+  debugger
   const actionTypeString: string = ProjectActionType[ProjectActionType.SET_WS_CON_STATE];
   return XHRClient.dispathAction(state, actionTypeString, store);
 }
