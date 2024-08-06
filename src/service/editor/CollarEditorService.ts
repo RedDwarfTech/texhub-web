@@ -7,7 +7,7 @@ import * as decoding from 'lib0/decoding'
 import { Compartment, EditorState, Extension, StateEffect, StateField, Range } from "@codemirror/state";
 import { basicSetup } from "codemirror";
 import { yCollab } from "y-codemirror.next";
-import { CompletionContext, autocompletion } from "@codemirror/autocomplete";
+import { Completion, CompletionContext, autocompletion } from "@codemirror/autocomplete";
 import { StreamLanguage, defaultHighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { stex } from "@codemirror/legacy-modes/mode/stex";
 import { solarizedLight } from 'cm6-theme-solarized-light';
@@ -165,9 +165,9 @@ const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): WebsocketProvider => {
         if (event.status === 'connected') {
             setWsConnState('connected');
         } else if (event.status === 'disconnected' && wsRetryCount < wsMaxRetries) {
-            setWsConnState('disconnected');
-        } else {
             setWsConnState('connecting');
+        } else {
+            setWsConnState('disconnected');
         }
     });
     return wsProvider;
@@ -291,7 +291,10 @@ export function initEditor(editorAttr: EditorAttr,
             themeConfig.of(themeMap.get("Solarized Light")!),
             autocompletion({ 
                 override: [texAutoCompletions],
-                tooltipClass: ttc
+                tooltipClass: ttc,
+                activateOnCompletion: (com: Completion) => {
+                    return true;
+                },
              }),
             // https://stackoverflow.com/questions/78011822/how-to-fix-the-codemirror-text-infilite-copy
             //highlight_extension

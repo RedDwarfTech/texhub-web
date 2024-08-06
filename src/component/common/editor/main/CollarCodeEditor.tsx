@@ -63,6 +63,10 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       const activeFileJson = localStorage.getItem(activeKey);
       if (activeFileJson) {
         const curActiveFile: TexFileModel = JSON.parse(activeFileJson);
+        if(!projInfo.main){
+          console.error('main is null', JSON.stringify(projInfo));
+          return;
+        }
         let contains = projHasFile(
           curActiveFile.file_id,
           projInfo.main.project_id
@@ -217,7 +221,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   };
 
   const renderConnState = (connState: string) => {
-    debugger;
     switch (connState) {
       case "connected":
         return <i className={`fa-solid fa-wifi ${styles.stateConnect}`}></i>;
