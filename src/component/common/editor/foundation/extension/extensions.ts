@@ -9,6 +9,7 @@ import { basicSetup, EditorView } from "codemirror";
 import { yCollab } from "y-codemirror.next";
 import { hightlightSelection, highlightUnselection } from "@/component/common/editor/foundation/extension/highlight/highlight";
 import { themeMap } from "@/component/common/editor/foundation/extension/theme/theme";
+import { language } from './language/language';
 
 let curStart: number = 0;
 let curEnd: number = 0;
@@ -68,6 +69,7 @@ export const createExtensions = (options: Record<string, any>): Extension[] => [
   yCollab(options.ytext, options.wsProvider.awareness, options.undoManager),
   extensions,
   themeConfig.of(themeMap.get("Solarized Light")!),
+  language(options.docName),
   autocompletion({
     override: [texAutoCompletions],
     tooltipClass: ttc,
