@@ -1,30 +1,20 @@
-import { EditorView, Decoration } from "@codemirror/view";
+import { EditorView } from "@codemirror/view";
 // @ts-ignore
 import { WebsocketProvider } from "rdy-websocket";
 import * as Y from 'yjs';
 import * as random from 'lib0/random';
-import * as decoding from 'lib0/decoding'
-import { Compartment, EditorState, Extension, StateEffect, StateField, Range } from "@codemirror/state";
-import { basicSetup } from "codemirror";
-import { yCollab } from "y-codemirror.next";
-import { Completion, CompletionContext, autocompletion } from "@codemirror/autocomplete";
-import { StreamLanguage, defaultHighlightStyle, syntaxHighlighting } from "@codemirror/language";
-import { stex } from "@codemirror/legacy-modes/mode/stex";
-import { solarizedLight } from 'cm6-theme-solarized-light';
+import {createExtensions } from "@/component/common/editor/foundation/extension/extensions";
+import { Compartment, EditorState} from "@codemirror/state";
 import { readConfig } from "@/config/app/config-reader";
 import { RequestHandler, ResponseHandler, UserModel, WheelGlobal } from "rdjs-wheel";
-import { toast } from "react-toastify";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
-import { basicLight } from 'cm6-theme-basic-light';
 import { RefObject } from "react";
 import { projHasFile, setCurYDoc, setWsConnState } from "../project/ProjectService";
 import { addFileVersion } from "../file/FileService";
 import lodash from 'lodash';
 import { TexFileVersion } from "@/model/file/TexFileVersion";
-import { texAutoCompletions } from "./AutoCompletion";
-export const themeMap: Map<string, Extension> = new Map<string, Extension>();
-themeMap.set('Solarized Light', solarizedLight);
-themeMap.set('Basic Light', basicLight);
+
+let curEditorView: EditorView | null = null;
 
 export const usercolors = [
     { color: '#30bced', light: '#30bced33' },
@@ -40,71 +30,7 @@ export const themeConfig = new Compartment()
 export const userColor = usercolors[random.uint32() % usercolors.length];
 const wsMaxRetries = 1;
 let wsRetryCount = 0;
-let curEditorView: EditorView | null = null;
-let curStart: number = 0;
-let curEnd: number = 0;
-let clearCount: number = 0;
-const highlight_effect = StateEffect.define<Range<Decoration>[]>();
-const extensions = [
-    EditorView.contentAttributes.of({ spellcheck: 'true' }),
-    EditorView.lineWrapping,
-    EditorView.theme({
-        "&": { height: "100%" },
-        '.cm-content': {
-            fontSize: '16px'
-        },
-        '.cm-selectionMatch': {
-            backgroundColor: "#A3BE8C"
-        },
-        '.cm-scroller': {
-        
-        },
-        '.custom-tooltip': {
-            backgroundColor: "#f0f0f0",
-            color: "#333"
-        }
-    }),
-    StreamLanguage.define(stex),
-    syntaxHighlighting(defaultHighlightStyle),
-    EditorView.updateListener.of(function (e) {
-        //  input/update/change event
-        let selection = e.state.selection;
-        let start = selection.ranges[0].from;
-        let end = selection.ranges[0].to;
-        if (start < end && (curStart !== start || curEnd !== end)) {
-            clearCount = 0;
-            curStart = start;
-            curEnd = end;
-            hightlightSelection(start, end)
-        }
-        if (start === end && clearCount < 2) {
-            clearCount = clearCount + 1;
-            highlightUnselection();
-        }
-    })
-];
 
-const hightlightSelection = (from: number, to: number) => {
-    if (!curEditorView) {
-        return;
-    }
-    const highlight_decoration = Decoration.mark({
-        attributes: { style: "background-color: yellow" }
-    });
-    curEditorView.dispatch({
-        effects: highlight_effect.of([highlight_decoration.range(from, to)])
-    });
-}
-
-const highlightUnselection = () => {
-    if (!curEditorView) {
-        return;
-    }
-    const filterMarks = StateEffect.define();
-    curEditorView.dispatch({
-        effects: filterMarks.of(null)
-    })
-}
 
 const handleWsAuth = (event: any, wsProvider: WebsocketProvider, editorAttr: EditorAttr, ydoc: Y.Doc) => {
     if (event.status === 'failed') {
@@ -225,7 +151,7 @@ export function initEditor(editorAttr: EditorAttr,
     };
     ydoc = new Y.Doc(docOpt);
     setCurYDoc(ydoc);
-    const ytext = ydoc.getText(editorAttr.docId);
+    const ytext: Y.Text = ydoc.getText(editorAttr.docId);
     const undoManager = new Y.UndoManager(ytext);
     let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr);
     ydoc.on('update', (update, origin) => {
@@ -272,33 +198,13 @@ export function initEditor(editorAttr: EditorAttr,
         }
     });
 
-    /**
-     * https://stackoverflow.com/questions/78775280/how-to-tweak-the-codemirror6-autocompletion-popup-style
-     * https://codemirror.net/docs/ref/#autocomplete.autocompletion^config.tooltipClass
-     * @param state 
-     * @returns 
-     */
-    const ttc = (state: EditorState) => {
-        return "custom-tooltip";
-    }
-
     const texEditorState = EditorState.create({
         doc: ytext.toString(),
-        extensions: [
-            basicSetup,
-            yCollab(ytext, wsProvider.awareness, { undoManager }),
-            extensions,
-            themeConfig.of(themeMap.get("Solarized Light")!),
-            autocompletion({ 
-                override: [texAutoCompletions],
-                tooltipClass: ttc,
-                activateOnCompletion: (com: Completion) => {
-                    return true;
-                },
-             }),
-            // https://stackoverflow.com/questions/78011822/how-to-fix-the-codemirror-text-infilite-copy
-            //highlight_extension
-        ],
+        extensions: createExtensions({
+            ytext,
+            wsProvider,
+            undoManager
+        }),
     });
     if (edContainer.current && edContainer.current.children && edContainer.current.children.length > 0) {
         return [undefined, wsProvider];
@@ -311,17 +217,5 @@ export function initEditor(editorAttr: EditorAttr,
     return [editorView, wsProvider];
 }
 
-const highlight_extension = StateField.define({
-    create() { return Decoration.none },
-    update(value, transaction) {
-        debugger
-        value = value.map(transaction.changes)
-        for (let effect of transaction.effects) {
-            if (effect.is(highlight_effect) && effect.value) {
-                value = value.update({ add: effect.value, sort: true })
-            }
-        }
-        return value
-    },
-    provide: f => EditorView.decorations.from(f)
-});
+
+

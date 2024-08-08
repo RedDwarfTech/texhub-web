@@ -10,8 +10,8 @@ import "react-toastify/dist/ReactToastify.css";
 import {
   initEditor,
   themeConfig,
-  themeMap,
 } from "@/service/editor/CollarEditorService";
+import { themeMap } from "@/component/common/editor/foundation/extension/theme/theme";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import {
   delProjInfo,
