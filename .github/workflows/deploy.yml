@@ -14,10 +14,9 @@ jobs:
           node-version: 18
       - uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 9
       - name: Build React App
         run: |
-          git config --global url.https://github.com/.insteadOf git@github.com:
           pnpm install
           pnpm run build
         env:
