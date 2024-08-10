@@ -13,8 +13,8 @@ export function buildPackageCompletions(
   completions: Completions,
   context: CompletionContext
 ) {
-  const metadata = context.state.field(metadataState, false)
-
+  const metadata = context.state.field(metadataState, false);
+  debugger;
   if (!metadata) {
     return
   }

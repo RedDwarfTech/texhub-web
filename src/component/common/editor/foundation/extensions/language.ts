@@ -42,6 +42,7 @@ const buildExtension = (
   /**
    * 在 CodeMirror 6 中，LanguageDescription 是一个重要的概念，用于定义和管理语言的语法规则和解析行为。
    * 它主要用于配置编辑器如何理解和处理不同编程语言的语法。
+   * matchFilename根据文件扩展名进行匹配
    */
   const languageDescription = LanguageDescription.matchFilename(
     languages,

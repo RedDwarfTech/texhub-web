@@ -23,7 +23,6 @@ const FileReducer = (state = initState, action: any) => {
                 fileTree: action.data
             };
         case "GET_FOLDER_TREE":
-            debugger
             return {
                 ...state,
                 folderTree: action.data

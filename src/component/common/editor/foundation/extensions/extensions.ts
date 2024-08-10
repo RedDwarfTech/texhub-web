@@ -67,7 +67,7 @@ export const createExtensions = (options: Record<string, any>): Extension[] => [
   yCollab(options.ytext, options.wsProvider.awareness, options.undoManager),
   extensions,
   themeConfig.of(themeMap.get("Solarized Light")!),
-  language(options.docName, options.metadata, true),
+  language("a.tex", options.metadata, true),
   // https://stackoverflow.com/questions/78011822/how-to-fix-the-codemirror-text-infilite-copy
   //highlight_extension
 ];

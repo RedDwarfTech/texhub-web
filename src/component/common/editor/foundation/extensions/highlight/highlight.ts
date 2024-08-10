@@ -6,7 +6,6 @@ let curEditorView: EditorView | null = null;
 export const highlight_extension = StateField.define({
     create() { return Decoration.none },
     update(value, transaction) {
-        debugger
         value = value.map(transaction.changes)
         for (let effect of transaction.effects) {
             if (effect.is(highlight_effect) && effect.value) {
