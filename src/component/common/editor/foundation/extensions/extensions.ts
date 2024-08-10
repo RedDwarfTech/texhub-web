@@ -1,15 +1,13 @@
-import { texAutoCompletions } from "@/service/editor/AutoCompletion";
 import { themeConfig } from "@/service/editor/CollarEditorService";
-import { autocompletion, Completion } from "@codemirror/autocomplete";
 import { defaultHighlightStyle, StreamLanguage, syntaxHighlighting } from "@codemirror/language";
 import { stex } from "@codemirror/legacy-modes/mode/stex";
 import { EditorState } from "@codemirror/state";
 import { Extension } from "@codemirror/state";
 import { basicSetup, EditorView } from "codemirror";
 import { yCollab } from "y-codemirror.next";
-import { hightlightSelection, highlightUnselection } from "@/component/common/editor/foundation/extension/highlight/highlight";
-import { themeMap } from "@/component/common/editor/foundation/extension/theme/theme";
-import { language } from './language/language';
+import { hightlightSelection, highlightUnselection } from "@/component/common/editor/foundation/extensions/highlight/highlight";
+import { themeMap } from "@/component/common/editor/foundation/extensions/theme/theme";
+import { language } from './language';
 
 let curStart: number = 0;
 let curEnd: number = 0;
@@ -69,14 +67,7 @@ export const createExtensions = (options: Record<string, any>): Extension[] => [
   yCollab(options.ytext, options.wsProvider.awareness, options.undoManager),
   extensions,
   themeConfig.of(themeMap.get("Solarized Light")!),
-  language(options.docName),
-  autocompletion({
-    override: [texAutoCompletions],
-    tooltipClass: ttc,
-    activateOnCompletion: (com: Completion) => {
-      return true;
-    },
-  }),
+  language(options.docName, options.metadata, true),
   // https://stackoverflow.com/questions/78011822/how-to-fix-the-codemirror-text-infilite-copy
   //highlight_extension
 ];

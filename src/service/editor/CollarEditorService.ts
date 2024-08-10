@@ -3,7 +3,7 @@ import { EditorView } from "@codemirror/view";
 import { WebsocketProvider } from "rdy-websocket";
 import * as Y from "yjs";
 import * as random from "lib0/random";
-import { createExtensions } from "@/component/common/editor/foundation/extension/extensions";
+import { createExtensions } from "@/component/common/editor/foundation/extensions/extensions";
 import { Compartment, EditorState } from "@codemirror/state";
 import { readConfig } from "@/config/app/config-reader";
 import {
@@ -22,6 +22,8 @@ import {
 import { addFileVersion } from "../file/FileService";
 import lodash from "lodash";
 import { TexFileVersion } from "@/model/file/TexFileVersion";
+import { Metadata } from "@/component/common/editor/foundation/extensions/language";
+import { Folder } from '@/types/folder';
 
 let curEditorView: EditorView | null = null;
 
@@ -157,7 +159,7 @@ const base64ToUint8Array = (base64: string): Uint8Array => {
 export function initEditor(
   editorAttr: EditorAttr,
   activeEditorView: EditorView | undefined,
-  edContainer: RefObject<HTMLDivElement>
+  edContainer: RefObject<HTMLDivElement>,
 ): [EditorView | undefined, WebsocketProvider] {
   if (activeEditorView) {
     activeEditorView.destroy();
@@ -217,6 +219,27 @@ export function initEditor(
     }
   });
 
+  const metadata: Metadata ={
+    labels: new Set<string>(['apple', 'banana', 'cherry']),
+    packageNames: new Set<string>(['apple', 'banana', 'cherry']),
+    commands: [
+      {
+        caption: '\\inputencoding{}',
+        snippet: '\\inputencoding{$1}',
+        meta: 'inputenc-cmd',
+        score: 0.0002447047447770061,
+      }
+    ],
+    referenceKeys: new Set<string>(['apple', 'banana', 'cherry']),
+    fileTreeData: {
+      _id: "",
+      name: "",
+      docs: [],
+      folders: [],
+      fileRefs: []
+    }
+  };
+
   const texEditorState = EditorState.create({
     doc: ytext.toString(),
     extensions: createExtensions({
@@ -224,6 +247,7 @@ export function initEditor(
       wsProvider: wsProvider,
       undoManager: undoManager,
       docName: docOpt.guid,
+      metadata: metadata,
     }),
   });
   if (

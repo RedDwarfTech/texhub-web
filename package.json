@@ -5,7 +5,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.4.0",
     "@babel/plugin-transform-class-properties": "^7.24.7",
-    "@codemirror/autocomplete": "^6.17.0",
+    "@codemirror/autocomplete": "github:overleaf/codemirror-autocomplete#main-overleaf",
     "@codemirror/lang-javascript": "^6.2.2",
     "@codemirror/language": "^6.10.2",
     "@codemirror/legacy-modes": "^6.4.0",
@@ -75,7 +75,11 @@
     "vite-plugin-wasm": "^3.3.0",
     "web-vitals": "^2.1.4",
     "y-codemirror.next": "^0.3.5",
-    "yjs": "^13.6.18"
+    "yjs": "^13.6.18",
+    "@lezer/generator": "^1.7.0",
+    "@lezer/common": "^1.2.1",
+    "@overleaf/o-error": "*",
+    "@lezer/lr": "^1.4.1" 
   },
   "scripts": {
     "start": "react-scripts start",
