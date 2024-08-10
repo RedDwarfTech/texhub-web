@@ -1,6 +1,6 @@
 import { buildPackageCompletions } from "./packages";
 import { Completions } from "./types";
-import { CompletionContext } from "@codemirror/autocomplete";
+import { CompletionContext } from "rdcodemirror-autocomplete";
 
 export const buildAllCompletions = (
   completions: Completions,

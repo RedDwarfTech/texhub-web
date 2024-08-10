@@ -1,6 +1,6 @@
 import { LanguageSupport } from "@codemirror/language";
 import { LaTeXLanguage } from './latex-language';
-import { CompletionSource } from "@codemirror/autocomplete";
+import { CompletionSource } from "rdcodemirror-autocomplete";
 import {
     inCommandCompletionSource,
   } from './complete';

@@ -1,4 +1,4 @@
-import { CompletionContext, CompletionSource } from '@codemirror/autocomplete';
+import { CompletionContext, CompletionSource } from 'rdcodemirror-autocomplete';
 import {
     ifInType,
   } from '../../utils/tree-query';

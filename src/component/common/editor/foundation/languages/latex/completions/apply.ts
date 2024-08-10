@@ -4,7 +4,7 @@ import {
   Completion,
   snippet,
   nextChar,
-} from '@codemirror/autocomplete';
+} from 'rdcodemirror-autocomplete';
 import { EditorView } from '@codemirror/view';
 import { prepareSnippetTemplate } from '../snippets';
 import { ancestorNodeOfType } from '../../../utils/tree-query'
