@@ -14,7 +14,6 @@ export function buildPackageCompletions(
   context: CompletionContext
 ) {
   const metadata = context.state.field(metadataState, false);
-  debugger;
   if (!metadata) {
     return
   }

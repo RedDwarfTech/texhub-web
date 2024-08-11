@@ -9,7 +9,7 @@ export const ifInType = (
   source: CompletionSource
 ): CompletionSource => {
   let completionSource: CompletionSource = (context: CompletionContext) => {
-    debugger;
+    // debugger 只在 completionSource 被调用时才会触发。如果函数 ifInType 返回的 completionSource 没有被实际调用，断点不会触发。
     const tree = syntaxTree(context.state);
     let node: SyntaxNode | null = tree.resolveInner(context.pos, -1);
     while (node) {

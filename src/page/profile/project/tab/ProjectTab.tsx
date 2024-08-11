@@ -476,7 +476,7 @@ const ProjectTab: React.FC = () => {
   const renderProj = (userDocList: TexProjectModel[]): JSX.Element[] => {
     if (projLoading) {
       return [
-        <div className={styles.loadingA}>
+        <div key="projloading" className={styles.loadingA}>
           <div className="spinner-border text-primary" role="status">
             <span className="sr-only">Loading...</span>
           </div>

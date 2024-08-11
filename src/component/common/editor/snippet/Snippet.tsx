@@ -62,7 +62,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
       key: "operations",
       render: (record: TexSnippetModel) => {
         return (
-          <div className={styles.oper}>
+          <div key={record.id} className={styles.oper}>
             <button
               className="btn btn-danger"
               onClick={() => {
@@ -231,7 +231,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
             </div>
             {renderAddSnippet()}
             <div className={styles.tableAction}>
-              <Table columns={columns} data={snippetModels} />
+              <Table columns={columns} data={snippetModels} rowKey={"id"}/>
             </div>
             {renderPreview()}
           </div>

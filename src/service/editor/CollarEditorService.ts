@@ -219,20 +219,20 @@ export function initEditor(
   });
 
   const metadata: Metadata ={
-    labels: new Set<string>(['apple', 'banana', 'cherry']),
-    packageNames: new Set<string>(['apple', 'banana', 'cherry']),
+    labels: new Set<string>([]),
+    packageNames: new Set<string>(['xcolor']),
     commands: [
       {
         caption: '\\inputencoding{}',
         snippet: '\\inputencoding{$1}',
         meta: 'inputenc-cmd',
-        score: 0.0002447047447770061,
+        score: 0.2447047447770061,
       }
     ],
-    referenceKeys: new Set<string>(['apple', 'banana', 'cherry']),
+    referenceKeys: new Set<string>(['xolor']),
     fileTreeData: {
-      _id: "",
-      name: "",
+      _id: "1",
+      name: "a.tex",
       docs: [],
       folders: [],
       fileRefs: []

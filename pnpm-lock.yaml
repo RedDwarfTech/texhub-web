@@ -56,6 +56,9 @@ dependencies:
   '@lezer/generator':
     specifier: ^1.7.1
     version: 1.7.1
+  '@lezer/highlight':
+    specifier: ^1.2.0
+    version: 1.2.0
   '@lezer/lr':
     specifier: ^1.4.2
     version: 1.4.2
