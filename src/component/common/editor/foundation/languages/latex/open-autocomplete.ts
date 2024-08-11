@@ -10,7 +10,6 @@ export const openAutocomplete = () => {
       if (
         !update.transactions.some((tr) => tr.annotation(Transaction.remote))
       ) {
-        startCompletion(update.view);
         if (isInEmptyArgumentNodeForAutocomplete(update.state)) {
           startCompletion(update.view);
         }

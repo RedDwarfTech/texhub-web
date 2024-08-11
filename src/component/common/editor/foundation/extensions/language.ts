@@ -14,7 +14,7 @@ export const language = (
   docName: string,
   metadata: Metadata,
   syntaxValidation: boolean
-) => {
+): Extension => {
   /**
    * Compartment 是 CodeMirror 6 中的一个重要概念，用于提供对编辑器的配置进行动态调整的能力。
    * 它允许在运行时为 CodeMirror 编辑器的某些功能和行为提供独立的配置，而不会影响编辑器的其他部分。
