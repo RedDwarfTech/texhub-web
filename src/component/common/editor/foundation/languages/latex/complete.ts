@@ -18,25 +18,54 @@ function blankCompletions(): Completions {
 }
 
 export const inCommandCompletionSource: CompletionSource = ifInType(
-  "$CtrlSeq",
-  (context) => {
-    return commandCompletionSource(context);
+  '$CtrlSeq',
+  context => {
+    return context.explicit ? null : commandCompletionSource(context)
   }
-);
+)
 
-export const commandCompletionSource = (context: CompletionContext) => {
-  let word = context.matchBefore(/\w*/)!;
-  if (word.from === word.to && !context.explicit)
+const commandCompletionSource = (context: CompletionContext) => {
+  debugger;
+  const completionMatches = getCompletionMatches(context)
+
+  if (!completionMatches) {
     return null
-  return {
-    from: word.from,
-    options: [
-      {label: "match", type: "keyword"},
-      {label: "hello", type: "variable", info: "(World)"},
-      {label: "magic", type: "text", apply: "⠁⭒*.✩.*⭒⠁", detail: "macro"}
-    ]
   }
-};
+
+  const { match, matchBefore } = completionMatches
+  if (match) {
+    // We're already in a command argument, bail out
+    return null
+  }
+
+  const completions: Completions = blankCompletions()
+
+  buildAllCompletions(completions, context)
+
+  // Unknown commands
+  const prefixMatcher = /^\\[^{\s]*$/
+  const prefixMatch = matchBefore.text.match(prefixMatcher)
+  if (prefixMatch) {
+    return {
+      from: matchBefore.from,
+      validFor: prefixMatcher,
+      options: [
+        ...completions.commands,
+        //...customCommandCompletions(context, completions.commands),
+        //...customEnvironmentCompletions(context),
+      ],
+    }
+  }
+
+  // anything else (no validFor)
+  return {
+    from: matchBefore.to,
+    options: [
+      ...completions.commands,
+      //...customCommandCompletions(context, completions.commands),
+    ],
+  }
+}
 
 export function getCompletionMatches(context: CompletionContext) {
   // NOTE: [^\\] is needed to match commands inside the parameters of other commands

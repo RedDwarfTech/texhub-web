@@ -5,6 +5,7 @@ import {
   CompletionContext
 } from 'rdcodemirror-autocomplete';
 import { Extension } from "@codemirror/state";
+import { inCommandCompletionSource } from "./complete";
 
 const simpleCompletionSource: CompletionSource = (context: CompletionContext) => {
   const suggestions = [
@@ -28,15 +29,18 @@ const simpleCompletionSource: CompletionSource = (context: CompletionContext) =>
   };
 };
 
-export const openAutocomplete1 = () => simpleCompletionSource;
-
-let autoCompleteExtension: Extension = LaTeXLanguage.data.of({
-  autocomplete: openAutocomplete1(),
-});
+const completionSources: CompletionSource[] = [
+  simpleCompletionSource,
+  inCommandCompletionSource,
+];
 
 export const latex = () => {
   let languageSupport = new LanguageSupport(LaTeXLanguage, [
-    autoCompleteExtension,
+    ...completionSources.map(completionSource =>
+      LaTeXLanguage.data.of({
+        autocomplete: completionSource,
+      })
+    ),
   ]);
   return languageSupport;
 };
