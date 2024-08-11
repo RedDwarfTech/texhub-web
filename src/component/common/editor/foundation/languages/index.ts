@@ -1,4 +1,4 @@
-import { LanguageDescription } from "@codemirror/language";
+import { LanguageDescription, LanguageSupport } from "@codemirror/language";
 
 export const languages: LanguageDescription[] = [
   LanguageDescription.of({
@@ -47,13 +47,12 @@ export const languages: LanguageDescription[] = [
       "ps_tex",
       "ltx",
     ],
-    load: () => {
-      debugger;
+    load: (): Promise<LanguageSupport> => {
       // 根据扩展名匹配成功文件才会进入load方法
-      return import("./latex").then((m) => {
-        debugger;
+      var result = import("./latex").then((m) => {
         return m.latex();
       });
+      return result;
     },
   }),
 ];
