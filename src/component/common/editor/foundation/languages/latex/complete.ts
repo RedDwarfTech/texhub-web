@@ -25,7 +25,6 @@ export const inCommandCompletionSource: CompletionSource = ifInType(
 )
 
 const commandCompletionSource = (context: CompletionContext) => {
-  debugger;
   const completionMatches = getCompletionMatches(context)
 
   if (!completionMatches) {

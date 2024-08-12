@@ -11,7 +11,6 @@ export const ifInType = (
   let completionSource: CompletionSource = (context: CompletionContext) => {
     const tree = syntaxTree(context.state);
     let node: SyntaxNode | null = tree.resolveInner(context.pos, -1);
-    debugger;
     while (node) {
       if (node.type.is(type)) {
         return source(context);
