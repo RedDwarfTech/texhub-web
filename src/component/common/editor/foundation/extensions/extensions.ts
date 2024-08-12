@@ -75,7 +75,7 @@ export const createExtensions = (options: Record<string, any>): Extension[] => [
   extensions,
   themeConfig.of(themeMap.get("Solarized Light")!),
   docName("a.tex"),
-  // autoComplete({ autoComplete: true }),
+  autoComplete({ autoComplete: false }),
   language("a.tex", options.metadata, true),
   // https://stackoverflow.com/questions/78011822/how-to-fix-the-codemirror-text-infilite-copy
   //highlight_extension
