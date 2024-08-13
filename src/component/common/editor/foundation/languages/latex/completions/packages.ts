@@ -1,5 +1,7 @@
 import {
   applySnippet,
+  extendOverUnpairedClosingBrace,
+  extendRequiredParameter,
 } from './apply';
 import { packageNames } from './data/package-names';
 import { Completions } from './types';
@@ -24,7 +26,7 @@ export function buildPackageCompletions(
       type: command.meta,
       label: command.caption,
       apply: applySnippet(command.snippet),
-      // extend: extendOverUnpairedClosingBrace,
+      extend: extendOverUnpairedClosingBrace,
     })
   }
 
@@ -44,7 +46,7 @@ export function buildPackageCompletions(
       completions.packages.push({
         type: 'pkg',
         label: item,
-        //extend: extendRequiredParameter,
+        extend: extendRequiredParameter,
       })
 
       const label = `\\usepackage{${item}}`
@@ -53,7 +55,7 @@ export function buildPackageCompletions(
       completions.commands.push({
         type: 'pkg',
         label,
-        //extend: extendOverUnpairedClosingBrace,
+        extend: extendOverUnpairedClosingBrace,
       })
     }
   }
@@ -64,7 +66,7 @@ export function buildPackageCompletions(
     label: '\\usepackage{}',
     boost: 10,
     apply: applySnippet('\\usepackage{#{}}'),
-    //extend: extendOverUnpairedClosingBrace,
+    extend: extendOverUnpairedClosingBrace,
   })
 }
 

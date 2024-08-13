@@ -2,6 +2,11 @@ import { CompletionContext, CompletionSource } from "rdcodemirror-autocomplete";
 import { ifInType } from "../../utils/tree-query";
 import { Completions } from "./completions/types";
 import { buildAllCompletions } from "./completions";
+import { customCommandCompletions } from './completions/doc-commands'
+import {
+  customEnvironmentCompletions,
+  findEnvironmentsInDoc,
+} from './completions/doc-environments'
 
 function blankCompletions(): Completions {
   return {
@@ -50,8 +55,8 @@ const commandCompletionSource = (context: CompletionContext) => {
       validFor: prefixMatcher,
       options: [
         ...completions.commands,
-        //...customCommandCompletions(context, completions.commands),
-        //...customEnvironmentCompletions(context),
+        ...customCommandCompletions(context, completions.commands),
+        ...customEnvironmentCompletions(context),
       ],
     }
   }
@@ -61,7 +66,7 @@ const commandCompletionSource = (context: CompletionContext) => {
     from: matchBefore.to,
     options: [
       ...completions.commands,
-      //...customCommandCompletions(context, completions.commands),
+      ...customCommandCompletions(context, completions.commands),
     ],
   }
 }

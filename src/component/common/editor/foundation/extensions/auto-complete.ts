@@ -9,6 +9,7 @@ import {
 import { EditorView, keymap } from "@codemirror/view";
 import {
   Compartment,
+  EditorState,
   Extension,
   Prec,
   TransactionSpec,
@@ -27,6 +28,16 @@ export const setAutoComplete = (autoComplete: boolean): TransactionSpec => {
   return {
     effects: autoCompleteConf.reconfigure(autoCompleteLocal),
   };
+};
+
+/**
+ * https://stackoverflow.com/questions/78775280/how-to-tweak-the-codemirror6-autocompletion-popup-style
+ * https://codemirror.net/docs/ref/#autocomplete.autocompletion^config.tooltipClass
+ * @param state
+ * @returns
+ */
+const ttc = (state: EditorState) => {
+  return "custom-tooltip";
 };
 
 const createAutoComplete = (enabled: boolean) => {
@@ -62,6 +73,7 @@ const createAutoComplete = (enabled: boolean) => {
         optionClass: (completion: Completion) => {
           return `ol-cm-completion-${completion.type}`;
         },
+        tooltipClass: ttc,
         interactionDelay: 0,
       }),
       /**

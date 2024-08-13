@@ -22,16 +22,6 @@ let curStart: number = 0;
 let curEnd: number = 0;
 let clearCount: number = 0;
 
-/**
- * https://stackoverflow.com/questions/78775280/how-to-tweak-the-codemirror6-autocompletion-popup-style
- * https://codemirror.net/docs/ref/#autocomplete.autocompletion^config.tooltipClass
- * @param state
- * @returns
- */
-const ttc = (state: EditorState) => {
-  return "custom-tooltip";
-};
-
 const extensions = [
   EditorView.contentAttributes.of({ spellcheck: "true" }),
   EditorView.lineWrapping,
@@ -75,7 +65,7 @@ export const createExtensions = (options: Record<string, any>): Extension[] => [
   extensions,
   themeConfig.of(themeMap.get("Solarized Light")!),
   docName("a.tex"),
-  autoComplete({ autoComplete: false }),
+  autoComplete({ autoComplete: true }),
   language("a.tex", options.metadata, true),
   // https://stackoverflow.com/questions/78011822/how-to-fix-the-codemirror-text-infilite-copy
   //highlight_extension
