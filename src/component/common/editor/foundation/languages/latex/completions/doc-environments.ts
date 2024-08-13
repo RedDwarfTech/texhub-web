@@ -18,7 +18,6 @@ export function customEnvironmentCompletions(context: CompletionContext) {
       completions.push(completion)
     }
   }
-
   return completions
 }
 

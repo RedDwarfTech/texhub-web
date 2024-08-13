@@ -73,7 +73,7 @@ const createAutoComplete = (enabled: boolean) => {
         optionClass: (completion: Completion) => {
           return `ol-cm-completion-${completion.type}`;
         },
-        tooltipClass: ttc,
+        //tooltipClass: ttc,
         interactionDelay: 0,
       }),
       /**

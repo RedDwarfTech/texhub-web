@@ -11,6 +11,7 @@ export const openAutocomplete = () => {
         !update.transactions.some((tr) => tr.annotation(Transaction.remote))
       ) {
         if (isInEmptyArgumentNodeForAutocomplete(update.state)) {
+          debugger
           startCompletion(update.view);
         }
       }

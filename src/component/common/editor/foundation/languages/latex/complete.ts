@@ -55,8 +55,8 @@ const commandCompletionSource = (context: CompletionContext) => {
       validFor: prefixMatcher,
       options: [
         ...completions.commands,
-        ...customCommandCompletions(context, completions.commands),
-        ...customEnvironmentCompletions(context),
+        //...customCommandCompletions(context, completions.commands),
+        //...customEnvironmentCompletions(context),
       ],
     }
   }
@@ -66,7 +66,7 @@ const commandCompletionSource = (context: CompletionContext) => {
     from: matchBefore.to,
     options: [
       ...completions.commands,
-      ...customCommandCompletions(context, completions.commands),
+      //...customCommandCompletions(context, completions.commands),
     ],
   }
 }
