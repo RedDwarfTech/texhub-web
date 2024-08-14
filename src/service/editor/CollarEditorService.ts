@@ -23,7 +23,6 @@ import { addFileVersion } from "../file/FileService";
 import lodash from "lodash";
 import { TexFileVersion } from "@/model/file/TexFileVersion";
 import { Metadata } from "@/component/common/editor/foundation/extensions/language";
-import { Folder } from '@/types/folder';
 
 let curEditorView: EditorView | null = null;
 
@@ -220,16 +219,10 @@ export function initEditor(
 
   const metadata: Metadata ={
     labels: new Set<string>([]),
-    packageNames: new Set<string>(['xcolor']),
+    packageNames: new Set<string>([]),
     commands: [
-      {
-        caption: '\\inputencoding{}',
-        snippet: '\\inputencoding{$1}',
-        meta: 'inputenc-cmd',
-        score: 0.2447047447770061,
-      }
     ],
-    referenceKeys: new Set<string>(['xolor']),
+    referenceKeys: new Set<string>([]),
     fileTreeData: {
       _id: "1",
       name: "a.tex",
