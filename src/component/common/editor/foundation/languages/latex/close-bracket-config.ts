@@ -8,7 +8,7 @@ import {
   CloseBracketConfig,
   nextChar,
   prevChar,
-} from '@codemirrir/autocomplete';
+} from '@codemirror/autocomplete';
 
 export const closeBracketConfig: CloseBracketConfig = {
   brackets: ['$', '$$', '[', '{', '('],

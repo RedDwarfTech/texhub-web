@@ -4,7 +4,7 @@ import {
   Completion,
   snippet,
   nextChar,
-} from '@codemirrir/autocomplete';
+} from '@codemirror/autocomplete';
 import { EditorView } from '@codemirror/view';
 import { prepareSnippetTemplate } from '../snippets';
 import { ancestorNodeOfType } from '../../../utils/tree-query'

@@ -1,4 +1,4 @@
-import { CompletionContext, CompletionSource } from "@codemirrir/autocomplete";
+import { CompletionContext, CompletionSource } from "@codemirror/autocomplete";
 import { ifInType } from "../../utils/tree-query";
 import { Completions } from "./completions/types";
 import { buildAllCompletions } from "./completions";

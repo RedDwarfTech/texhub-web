@@ -1,4 +1,4 @@
-import { CompletionContext, CompletionSource } from "@codemirrir/autocomplete";
+import { CompletionContext, CompletionSource } from "@codemirror/autocomplete";
 import { syntaxTree } from "@codemirror/language";
 import { EditorState } from "@codemirror/state";
 import { SyntaxNode } from "@lezer/common";

@@ -1,3 +1,3 @@
-import { Completion } from '@codemirrir/autocomplete'
+import { Completion } from '@codemirror/autocomplete'
 
 export type Completions = Record<string, Completion[]>

@@ -5,7 +5,7 @@ import {
   moveCompletionSelection,
   startCompletion,
   Completion,
-} from "@codemirrir/autocomplete";
+} from "@codemirror/autocomplete";
 import { EditorView, keymap } from "@codemirror/view";
 import {
   Compartment,

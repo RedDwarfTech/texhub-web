@@ -5,7 +5,7 @@ import {
 } from './apply';
 import { packageNames } from './data/package-names';
 import { Completions } from './types';
-import { CompletionContext } from '@codemirrir/autocomplete';
+import { CompletionContext } from '@codemirror/autocomplete';
 import { metadataState } from '../../../extensions/language';
 
 /**

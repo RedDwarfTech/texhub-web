@@ -3,7 +3,7 @@ import {
   CompletionContext,
   snippet,
   snippetCompletion,
-} from "@codemirrir/autocomplete";
+} from "@codemirror/autocomplete";
 import { EditorView } from "codemirror";
 
 /**
