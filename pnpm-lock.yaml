@@ -146,9 +146,6 @@ dependencies:
   pdfjs-dist:
     specifier: ^4.5.136
     version: 4.5.136
-  prism:
-    specifier: link:react-syntax-highlighter/dist/esm/styles/prism
-    version: link:react-syntax-highlighter/dist/esm/styles/prism
   query-string:
     specifier: ^8.2.0
     version: 8.2.0
@@ -17428,7 +17425,6 @@ packages:
     id: github.com/overleaf/codemirror-autocomplete/2aff95fc5d6cda311537ed62066c9a0afbbbcad8
     name: '@codemirror/autocomplete'
     version: 6.12.0
-    prepare: true
     requiresBuild: true
     peerDependencies:
       '@codemirror/language': ^6.0.0
