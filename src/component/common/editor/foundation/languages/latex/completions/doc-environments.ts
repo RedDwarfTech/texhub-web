@@ -1,5 +1,5 @@
 import { customBeginCompletion } from './environments'
-import { CompletionContext, Completion } from 'rdcodemirror-autocomplete'
+import { CompletionContext, Completion } from '@codemirrir/autocomplete'
 import { documentEnvironmentNames } from '../document-environment-names'
 import { ProjectionResult } from '../../../utils/tree-operations/projection'
 import { EnvironmentName } from '../../../utils/tree-operations/environments'

@@ -1,4 +1,4 @@
-import { CompletionContext, CompletionSource } from "rdcodemirror-autocomplete";
+import { CompletionContext, CompletionSource } from "@codemirrir/autocomplete";
 import { ifInType } from "../../utils/tree-query";
 import { Completions } from "./completions/types";
 import { buildAllCompletions } from "./completions";
@@ -22,9 +22,7 @@ function blankCompletions(): Completions {
   };
 }
 
-export const inCommandCompletionSource: CompletionSource = ifInType(
-  '$CtrlSeq',
-  context => {
+export const inCommandCompletionSource: CompletionSource = ifInType('$CtrlSeq',(context: CompletionContext) => {
     return context.explicit ? null : commandCompletionSource(context)
   }
 )
@@ -49,6 +47,7 @@ const commandCompletionSource = (context: CompletionContext) => {
   // Unknown commands
   const prefixMatcher = /^\\[^{\s]*$/
   const prefixMatch = matchBefore.text.match(prefixMatcher)
+  debugger
   if (prefixMatch) {
     return {
       from: matchBefore.from,

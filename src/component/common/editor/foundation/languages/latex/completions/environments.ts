@@ -1,6 +1,6 @@
 import { environments, snippet } from './data/environments'
 import { applySnippet, extendOverUnpairedClosingBrace } from './apply'
-import { Completion, CompletionContext } from 'rdcodemirror-autocomplete'
+import { Completion, CompletionContext } from '@codemirrir/autocomplete'
 import { Completions } from './types'
 
 /**

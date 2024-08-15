@@ -1,5 +1,5 @@
 import { EditorView } from "@codemirror/view";
-import { startCompletion } from "rdcodemirror-autocomplete";
+import { startCompletion } from "@codemirrir/autocomplete";
 import { Transaction } from "@codemirror/state";
 import { isInEmptyArgumentNodeForAutocomplete } from "../../utils/tree-query";
 

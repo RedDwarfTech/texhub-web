@@ -5,7 +5,7 @@ import {
 } from './apply';
 import { packageNames } from './data/package-names';
 import { Completions } from './types';
-import { CompletionContext } from 'rdcodemirror-autocomplete';
+import { CompletionContext } from '@codemirrir/autocomplete';
 import { metadataState } from '../../../extensions/language';
 
 /**
@@ -22,6 +22,7 @@ export function buildPackageCompletions(
 
   // commands from packages in the project
   for (const command  of metadata.commands) {
+    debugger
     completions.commands.push({
       type: command.meta,
       label: command.caption,

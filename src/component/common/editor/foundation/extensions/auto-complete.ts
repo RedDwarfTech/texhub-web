@@ -5,7 +5,7 @@ import {
   moveCompletionSelection,
   startCompletion,
   Completion,
-} from "rdcodemirror-autocomplete";
+} from "@codemirrir/autocomplete";
 import { EditorView, keymap } from "@codemirror/view";
 import {
   Compartment,
@@ -44,7 +44,7 @@ const createAutoComplete = (enabled: boolean) => {
   if (!enabled) {
     return [];
   }
-
+debugger
   return [
     [
       autocompleteTheme,

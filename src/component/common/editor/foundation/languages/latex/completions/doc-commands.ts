@@ -1,5 +1,5 @@
 import { applySnippet, extendOverUnpairedClosingBrace } from './apply'
-import { Completion, CompletionContext } from 'rdcodemirror-autocomplete';
+import { Completion, CompletionContext } from '@codemirrir/autocomplete';
 import { documentCommands } from '../document-commands';
 import { Command } from '../../../utils/tree-operations/commands'
 import { syntaxTree } from '@codemirror/language'
