@@ -17,9 +17,7 @@ jobs:
           version: 9
       - name: Build React App
         run: |
-          pnpm install
-          pnpm add -g pnpm
-          pnpm run build
+          npm run build
         env:
           CI: false
 
