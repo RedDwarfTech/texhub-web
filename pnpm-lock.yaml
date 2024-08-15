@@ -15,8 +15,8 @@ dependencies:
     specifier: ^7.24.7
     version: 7.24.7(@babel/core@7.25.2)
   '@codemirror/autocomplete':
-    specifier: github:overleaf/codemirror-autocomplete#main-overleaf
-    version: git@github.com+overleaf/codemirror-autocomplete/2aff95fc5d6cda311537ed62066c9a0afbbbcad8(@codemirror/language@6.10.2)(@codemirror/state@6.4.1)(@codemirror/view@6.30.0)(@lezer/common@1.2.1)
+    specifier: github:overleaf/codemirror-autocomplete#v6.12.0-overleaf-2
+    version: github.com/overleaf/codemirror-autocomplete/2aff95fc5d6cda311537ed62066c9a0afbbbcad8(@codemirror/language@6.10.2)(@codemirror/state@6.4.1)(@codemirror/view@6.30.0)(@lezer/common@1.2.1)
   '@codemirror/lang-javascript':
     specifier: ^6.2.2
     version: 6.2.2
@@ -17423,9 +17423,9 @@ packages:
       commander: 9.5.0
     dev: false
 
-  git@github.com+overleaf/codemirror-autocomplete/2aff95fc5d6cda311537ed62066c9a0afbbbcad8(@codemirror/language@6.10.2)(@codemirror/state@6.4.1)(@codemirror/view@6.30.0)(@lezer/common@1.2.1):
-    resolution: {commit: 2aff95fc5d6cda311537ed62066c9a0afbbbcad8, repo: git@github.com:overleaf/codemirror-autocomplete.git, type: git}
-    id: git@github.com+overleaf/codemirror-autocomplete/2aff95fc5d6cda311537ed62066c9a0afbbbcad8
+  github.com/overleaf/codemirror-autocomplete/2aff95fc5d6cda311537ed62066c9a0afbbbcad8(@codemirror/language@6.10.2)(@codemirror/state@6.4.1)(@codemirror/view@6.30.0)(@lezer/common@1.2.1):
+    resolution: {tarball: https://codeload.github.com/overleaf/codemirror-autocomplete/tar.gz/2aff95fc5d6cda311537ed62066c9a0afbbbcad8}
+    id: github.com/overleaf/codemirror-autocomplete/2aff95fc5d6cda311537ed62066c9a0afbbbcad8
     name: '@codemirror/autocomplete'
     version: 6.12.0
     prepare: true
