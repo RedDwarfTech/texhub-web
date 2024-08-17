@@ -1,13 +1,17 @@
-import { configureStore } from '@reduxjs/toolkit';
-import rootReducer from '@/redux/reducer/combineReducer';
+import { configureStore } from "@reduxjs/toolkit";
+import rootReducer from "@/redux/reducer/combineReducer";
 
-const initialState = {};
+const initialState: any = {};
 
 const store = configureStore({
-    reducer: rootReducer,
-    // middleware: [thunk],
-    devTools: process.env.NODE_ENV !== 'production',
-    //preloadedState: initialState
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      immutableCheck: false,
+      serializableCheck: false,
+    }),
+  devTools: process.env.NODE_ENV !== "production",
+  preloadedState: initialState,
 });
 
 export default store;

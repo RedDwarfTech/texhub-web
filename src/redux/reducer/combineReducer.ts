@@ -5,6 +5,7 @@ import tpl from "@/redux/reducer/tpl/TemplateReducer";
 import file from "@/redux/reducer/file/FileReducer";
 import snippet from "@/redux/reducer/snippet/SnippetReducer";
 import projShare from "@/redux/reducer/project/ProjectShareReducer";
+import editor from "@/redux/reducer/project/EditorReducer";
 
 const rootReducer = combineReducers({
     proj,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
     tpl,
     file,
     snippet,
-    projShare
+    projShare,
+    editor
 });
 
 export default rootReducer;

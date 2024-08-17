@@ -7,7 +7,7 @@ const initState: AppState["editor"] = {
   ws: {} as WebsocketProvider
 };
 
-const ProjectReducer = (state = initState, action: any) => {
+const EditorReducer = (state = initState, action: any) => {
   switch (action.type) {
     case "INITIAL_EDITOR":
       return {
@@ -25,4 +25,4 @@ const ProjectReducer = (state = initState, action: any) => {
   return state;
 };
 
-export default ProjectReducer;
+export default EditorReducer;
