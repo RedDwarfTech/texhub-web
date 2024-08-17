@@ -26,6 +26,7 @@ import Snippet from "../snippet/Snippet";
 import EquationDesigner from "../equation/EquationDesigner";
 import { getCursorPos, handleSrcTreeNav } from "./CollarCodeEditorHandler";
 import { BaseMethods } from "rdjs-wheel";
+import { useTranslation } from "react-i18next";
 
 export type EditorProps = {
   projectId: string;
@@ -49,6 +50,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const [wsModel, setWsModel] = useState<WebsocketProvider>();
   const activeKey = readConfig("projActiveFile") + props.projectId;
   let wsProvider: WebsocketProvider;
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     return () => {
@@ -87,12 +89,12 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
           projInfo.main.project_id
         );
         if (contains) {
-          init(curActiveFile);
+          preInitEditor(curActiveFile);
         } else {
-          init(projInfo.main_file);
+          preInitEditor(projInfo.main_file);
         }
       } else {
-        init(projInfo.main_file);
+        preInitEditor(projInfo.main_file);
       }
     }
     return () => {
@@ -133,7 +135,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       if (!contains) {
         return;
       }
-      init(activeFile);
+      preInitEditor(activeFile);
       localStorage.setItem(activeKey, JSON.stringify(activeFile));
     }
     return () => {
@@ -141,7 +143,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     };
   }, [activeFile]);
 
-  const init = (file: TexFileModel) => {
+  const preInitEditor = (file: TexFileModel) => {
     const editorAttr: EditorAttr = {
       projectId: props.projectId,
       docId: file.file_id,
@@ -312,7 +314,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         </button>
         <button
           className={styles.menuButton}
-          title="连接状态"
+          title={t("icon_conn_status")}
           data-bs-toggle="modal"
           data-bs-target=""
           onClick={() => {}}

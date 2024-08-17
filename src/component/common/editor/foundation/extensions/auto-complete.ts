@@ -44,7 +44,6 @@ const createAutoComplete = (enabled: boolean) => {
   if (!enabled) {
     return [];
   }
-debugger
   return [
     [
       autocompleteTheme,

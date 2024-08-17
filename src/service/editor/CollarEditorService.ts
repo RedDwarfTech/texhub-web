@@ -246,5 +246,4 @@ export function initEditor(
   });
   setEditorInstance(editorView);
   setWebsocketProvider(wsProvider);
-  return wsProvider;
 }

@@ -2,7 +2,7 @@ name: tex-web-pro-pnpm
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main-pnpm ]
 
 jobs:
   build:
