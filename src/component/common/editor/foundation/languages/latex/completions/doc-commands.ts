@@ -11,7 +11,6 @@ export function customCommandCompletions(
   context: CompletionContext,
   commandCompletions: Completion[]
 ) {
-  debugger
   const existingCommands = new Set(
     commandCompletions
       .map(item => commandNameFromLabel(item.label))
@@ -33,12 +32,10 @@ export function customCommandCompletions(
       })
     }
   }
-debugger
   return commandCompletions.concat(output)
 }
 
 const countCommandUsage = (context: CompletionContext) => {
-  debugger
   const tree = syntaxTree(context.state)
   const currentNode = tree.resolveInner(context.pos, -1)
 

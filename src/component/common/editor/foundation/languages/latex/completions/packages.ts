@@ -22,7 +22,6 @@ export function buildPackageCompletions(
 
   // commands from packages in the project
   for (const command  of metadata.commands) {
-    debugger
     completions.commands.push({
       type: command.meta,
       label: command.caption,

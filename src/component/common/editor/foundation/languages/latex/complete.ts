@@ -1,4 +1,4 @@
-import { CompletionContext, CompletionSource } from "@codemirror/autocomplete";
+import { CompletionContext, CompletionSource, ifIn } from "@codemirror/autocomplete";
 import { ifInType } from "../../utils/tree-query";
 import { Completions } from "./completions/types";
 import { buildAllCompletions } from "./completions";
@@ -7,6 +7,7 @@ import {
   customEnvironmentCompletions,
   findEnvironmentsInDoc,
 } from './completions/doc-environments'
+import { buildPackageCompletions } from "./completions/packages";
 
 function blankCompletions(): Completions {
   return {
@@ -47,7 +48,6 @@ const commandCompletionSource = (context: CompletionContext) => {
   // Unknown commands
   const prefixMatcher = /^\\[^{\s]*$/
   const prefixMatch = matchBefore.text.match(prefixMatcher)
-  debugger
   if (prefixMatch) {
     return {
       from: matchBefore.from,
@@ -101,3 +101,70 @@ export function getCompletionMatches(context: CompletionContext) {
 
   return { match, matchBefore };
 }
+
+export type CompletionBuilderOptions = {
+  context: CompletionContext
+  completions: Completions
+  match: RegExpMatchArray
+  matchBefore: { from: number; to: number; text: string }
+  existingKeys: string[]
+  from: number
+  validFor: RegExp
+  before: string
+}
+
+const splitExistingKeys = (text: string) =>
+  text
+    .split(',')
+    .map(key => key.trim())
+    .filter(Boolean)
+
+export const makeMultipleArgumentCompletionSource = (
+  ifInSpec: string[],
+  builder: (
+    builderOptions: Pick<
+      CompletionBuilderOptions,
+      'completions' | 'context' | 'existingKeys' | 'from' | 'validFor'
+    >
+  ) => ReturnType<CompletionSource>
+): CompletionSource => {
+  const completionSource: CompletionSource = (context: CompletionContext) => {
+    const token = context.tokenBefore(ifInSpec)
+
+    if (!token) {
+      return null
+    }
+
+    // match multiple comma-separated arguments, up to the last separator
+    const existing = token.text.match(/^\{(.+\s*,\s*)?.*$/)?.[1] ?? ''
+
+    return builder({
+      completions: blankCompletions(),
+      context,
+      existingKeys: splitExistingKeys(existing),
+      from: token.from + 1 + existing.length,
+      validFor: /[^}\s]*/,
+    })
+  }
+  return ifIn(ifInSpec, completionSource)
+}
+
+export const packageArgumentCompletionSource: CompletionSource =
+  makeMultipleArgumentCompletionSource(
+    ['PackageArgument'],
+    ({ completions, context, from, validFor, existingKeys }) => {
+      buildPackageCompletions(completions, context)
+
+      return {
+        from,
+        validFor,
+        options: completions.packages.filter(
+          item => !existingKeys.includes(item.label)
+        ),
+      }
+    }
+  )
+
+  export const argumentCompletionSources: CompletionSource[] = [
+    packageArgumentCompletionSource,
+  ]
