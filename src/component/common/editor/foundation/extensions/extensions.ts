@@ -1,11 +1,8 @@
 import { themeConfig } from "@/service/editor/CollarEditorService";
 import {
   defaultHighlightStyle,
-  StreamLanguage,
   syntaxHighlighting,
 } from "@codemirror/language";
-import { stex } from "@codemirror/legacy-modes/mode/stex";
-import { EditorState } from "@codemirror/state";
 import { Extension } from "@codemirror/state";
 import { basicSetup, EditorView } from "codemirror";
 import { yCollab } from "y-codemirror.next";
@@ -39,7 +36,6 @@ const extensions = [
       color: "#333",
     },
   }),
-  //StreamLanguage.define(stex),
   syntaxHighlighting(defaultHighlightStyle),
   EditorView.updateListener.of(function (e) {
     //  input/update/change event

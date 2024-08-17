@@ -215,7 +215,7 @@ export function initEditor(
     gc: false,
   };
   ydoc = new Y.Doc(docOpt);
-  //setCurYDoc(ydoc);
+  setCurYDoc(ydoc);
   const ytext: Y.Text = ydoc.getText(editorAttr.docId);
   const undoManager = new Y.UndoManager(ytext);
   let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr);

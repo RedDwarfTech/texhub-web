@@ -22,6 +22,7 @@ import { useState } from "react";
 import TexFileUtil from "@/common/TexFileUtil";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export type TableDesignerProps = {};
 
@@ -36,6 +37,7 @@ const TableDesigner: React.FC<TableDesignerProps> = (
   const [code, setCode] = useState<string>("");
   const [rowsCount, setRowsCount] = useState<number>(2);
   const jRef = useRef<JspreadsheetInstanceElement>(null);
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     if (jRef.current) {
@@ -88,7 +90,7 @@ const TableDesigner: React.FC<TableDesignerProps> = (
           {code}
         </SyntaxHighlighter>
         <button className="btn btn-primary">
-          <span className="m-1 pb-1 basis-3/4 text-xs">{"复制"}</span>
+          <span className="m-1 pb-1 basis-3/4 text-xs">{t("btn_copy")}</span>
           <CopyToClipboard
             text={code}
             onCopy={() => {
@@ -113,7 +115,7 @@ const TableDesigner: React.FC<TableDesignerProps> = (
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title" id="tableDesignerLabel">
-              表格设计器
+              {t("title_table_designer")}
             </h5>
             <button
               type="button"
@@ -214,7 +216,7 @@ const TableDesigner: React.FC<TableDesignerProps> = (
                   handleTeXTableCodeGeneration();
                 }}
               >
-                生成LaTeX代码
+                {t("btn_generate")}
               </button>
             </div>
             {renderCodePreview()}
@@ -226,7 +228,7 @@ const TableDesigner: React.FC<TableDesignerProps> = (
               className="btn btn-secondary"
               data-bs-dismiss="modal"
             >
-              取消
+              {t("btn_cancel")}
             </button>
             <button
               type="button"
@@ -234,7 +236,7 @@ const TableDesigner: React.FC<TableDesignerProps> = (
               data-bs-dismiss="modal"
               onClick={() => {}}
             >
-              确定
+              {t("btn_confirm")}
             </button>
           </div>
         </div>
