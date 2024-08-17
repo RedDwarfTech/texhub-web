@@ -24,10 +24,12 @@
     "noEmit": true,
     "jsx": "react-jsx",
     //"types": ["vite/client"]
+    "types": ["vite-plugin-svgr/client"]
   },
   "include": [
     "src",
     // https://stackoverflow.com/questions/21247278/about-d-ts-in-typescript
-    "./src/model//types/th.d.ts"
+    "./src/model//types/th.d.ts",
+    "./src/model//types/vite-env.d.ts",
   ]
 }

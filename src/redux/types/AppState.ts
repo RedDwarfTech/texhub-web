@@ -18,6 +18,8 @@ import { TexProjects } from "@/model/proj/TexProjects";
 import { TexSnippetModel } from "@/model/snippet/TexSnippetModel";
 import * as Y from 'yjs';
 import { ProjCollarModel } from "@/model/proj/share/ProjCollarModel";
+import { EditorView } from "codemirror";
+import { WebsocketProvider } from "rdy-websocket";
 
 export interface AppState {
     proj: {
@@ -66,5 +68,9 @@ export interface AppState {
     },
     projShare: {
         collar: ProjCollarModel[]
+    },
+    editor: {
+        editor: EditorView,
+        ws: WebsocketProvider
     }
 }

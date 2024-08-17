@@ -23,8 +23,8 @@ import { addFileVersion } from "../file/FileService";
 import lodash from "lodash";
 import { TexFileVersion } from "@/model/file/TexFileVersion";
 import { Metadata } from "@/component/common/editor/foundation/extensions/language";
-
-let curEditorView: EditorView | null = null;
+import { base64ToUint8Array } from "@/common/ConvertUtil";
+import { setEditorInstance, setWebsocketProvider } from "../project/editor/EditorService";
 
 export const usercolors = [
   { color: "#30bced", light: "#30bced33" },
@@ -138,27 +138,73 @@ export function restoreFromHistory(version: number, docId: string) {
   }
 }
 
+const handleYDocUpdate = (editorAttr: EditorAttr, ytext: Y.Text) => {
+  try {
+    let snapshot: Y.Snapshot = Y.snapshot(ydoc);
+    let snap: Uint8Array = Y.encodeSnapshot(snapshot);
+    // https://discuss.yjs.dev/t/save-the-yjs-snapshot-to-database/2317
+    let content = String.fromCharCode(...new Uint8Array(snap));
+    let snapBase64 = btoa(content);
+    let lastsnapshot = localStorage.getItem("lastsnapshot");
+    if (snapBase64 === lastsnapshot) {
+      // never run into this
+      return;
+    }
+    if (lastsnapshot) {
+      let cached = base64ToUint8Array(lastsnapshot);
+      const decoded = Y.decodeSnapshot(cached);
+      let equal = Y.equalSnapshots(decoded, snapshot);
+      if (equal) {
+        // never run into this
+        return;
+      }
+    }
+    let editorText = ytext.toString();
+    let lasteditortext = localStorage.getItem("lasteditortext");
+    if (lasteditortext === editorText) {
+      // will run into this
+      return;
+    }
+    let params: TexFileVersion = {
+      file_id: editorAttr.docId,
+      name: editorAttr.name,
+      project_id: editorAttr.projectId,
+      content: editorText,
+      action: 1,
+      snapshot: snapBase64,
+    };
+    // https://discuss.yjs.dev/t/is-it-possible-to-detect-the-document-changed-or-not/2453
+    localStorage.setItem("lastsnapshot", snapBase64);
+    localStorage.setItem("lasteditortext", editorText);
+    throttledFn(params);
+  } catch (e) {
+    console.error(e);
+  }
+};
+
 const throttledFn = lodash.throttle((params: any) => {
   addFileVersion(params);
 }, 10000);
 
-const base64ToUint8Array = (base64: string): Uint8Array => {
-  const binaryString = atob(base64);
-  const length = binaryString.length;
-  const uint8Array = new Uint8Array(length);
-
-  for (let i = 0; i < length; i++) {
-    uint8Array[i] = binaryString.charCodeAt(i);
-  }
-
-  return uint8Array;
+const metadata: Metadata = {
+  labels: new Set<string>([]),
+  packageNames: new Set<string>([]),
+  commands: [],
+  referenceKeys: new Set<string>([]),
+  fileTreeData: {
+    _id: "1",
+    name: "a.tex",
+    docs: [],
+    folders: [],
+    fileRefs: [],
+  },
 };
 
 export function initEditor(
   editorAttr: EditorAttr,
   activeEditorView: EditorView | undefined,
-  edContainer: RefObject<HTMLDivElement>,
-): [EditorView | undefined, WebsocketProvider] {
+  edContainer: RefObject<HTMLDivElement>
+) {
   if (activeEditorView) {
     activeEditorView.destroy();
   }
@@ -174,63 +220,8 @@ export function initEditor(
   const undoManager = new Y.UndoManager(ytext);
   let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr);
   ydoc.on("update", (update, origin) => {
-    try {
-      let snapshot: Y.Snapshot = Y.snapshot(ydoc);
-      let snap: Uint8Array = Y.encodeSnapshot(snapshot);
-      // https://discuss.yjs.dev/t/save-the-yjs-snapshot-to-database/2317
-      let content = String.fromCharCode(...new Uint8Array(snap));
-      let snapBase64 = btoa(content);
-      let lastsnapshot = localStorage.getItem("lastsnapshot");
-      if (snapBase64 === lastsnapshot) {
-        // never run into this
-        return;
-      }
-      if (lastsnapshot) {
-        let cached = base64ToUint8Array(lastsnapshot);
-        const decoded = Y.decodeSnapshot(cached);
-        let equal = Y.equalSnapshots(decoded, snapshot);
-        if (equal) {
-          // never run into this
-          return;
-        }
-      }
-      let editorText = ytext.toString();
-      let lasteditortext = localStorage.getItem("lasteditortext");
-      if (lasteditortext === editorText) {
-        // will run into this
-        return;
-      }
-      let params: TexFileVersion = {
-        file_id: editorAttr.docId,
-        name: editorAttr.name,
-        project_id: editorAttr.projectId,
-        content: editorText,
-        action: 1,
-        snapshot: snapBase64,
-      };
-      // https://discuss.yjs.dev/t/is-it-possible-to-detect-the-document-changed-or-not/2453
-      localStorage.setItem("lastsnapshot", snapBase64);
-      localStorage.setItem("lasteditortext", editorText);
-      throttledFn(params);
-    } catch (e) {
-      console.log(e);
-    }
+    handleYDocUpdate(editorAttr, ytext);
   });
-
-  const metadata: Metadata ={
-    labels: new Set<string>([]),
-    packageNames: new Set<string>([]),
-    commands: [
-    ],
-    referenceKeys: new Set<string>([]),
-    fileTreeData: {
-      _id: "1",
-      name: "a.tex",
-      docs: [],
-      folders: [],
-      fileRefs: []
-    }
-  };
 
   const texEditorState = EditorState.create({
     doc: ytext.toString(),
@@ -247,12 +238,13 @@ export function initEditor(
     edContainer.current.children &&
     edContainer.current.children.length > 0
   ) {
-    return [undefined, wsProvider];
+    return;
   }
   const editorView: EditorView = new EditorView({
     state: texEditorState,
     parent: edContainer.current!,
   });
-  curEditorView = editorView;
-  return [editorView, wsProvider];
+  setEditorInstance(editorView);
+  setWebsocketProvider(wsProvider);
+  return wsProvider;
 }

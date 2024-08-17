@@ -3,14 +3,11 @@ import { EditorView } from "@codemirror/view";
 import styles from "./CollarCodeEditor.module.css";
 import React from "react";
 // @ts-ignore
-import { WebsocketProvider } from "y-websocket";
+import { WebsocketProvider } from "rdy-websocket";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import {
-  initEditor,
-  themeConfig,
-} from "@/service/editor/CollarEditorService";
+import { initEditor, themeConfig } from "@/service/editor/CollarEditorService";
 import { themeMap } from "@/component/common/editor/foundation/extensions/theme/theme";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import {
@@ -37,24 +34,43 @@ export type EditorProps = {
 const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<HTMLDivElement>(null);
   const { activeFile } = useSelector((state: AppState) => state.file);
-  const { projInfo, projConf, activeShare, insertContext, replaceContext, connState } =
-    useSelector((state: AppState) => state.proj);
+  const {
+    projInfo,
+    projConf,
+    activeShare,
+    insertContext,
+    replaceContext,
+    connState,
+  } = useSelector((state: AppState) => state.proj);
+  const { editor,ws } = useSelector((state: AppState) => state.editor);
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
-  const [shareProj, setShareProj] = useState<boolean>();
-  let editorView: [EditorView | undefined, WebsocketProvider | undefined];
+  const [shareProj,setShareProj] = useState<boolean>();
+  const [wsModel, setWsModel] = useState<WebsocketProvider>();
   const activeKey = readConfig("projActiveFile") + props.projectId;
-  let ws: WebsocketProvider;
+  let wsProvider: WebsocketProvider;
 
   React.useEffect(() => {
     return () => {
       // try to delete the last state project info to avoid websocket connect to previous project through main file id
       delProjInfo();
-      if (ws) {
-        ws.destroy();
+      if (wsProvider) {
+        wsProvider.destroy();
       }
     };
   }, []);
+
+  React.useEffect(() => {
+    if (editor) {
+      setActiveEditorView(editor);
+    }
+  }, [editor]);
+
+  React.useEffect(() => {
+    if (ws) {
+      setWsModel(ws);
+    }
+  }, [ws]);
 
   React.useEffect(() => {
     if (projInfo && Object.keys(projInfo).length > 0) {
@@ -62,8 +78,8 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       const activeFileJson = localStorage.getItem(activeKey);
       if (activeFileJson) {
         const curActiveFile: TexFileModel = JSON.parse(activeFileJson);
-        if(!projInfo.main){
-          console.error('main is null', JSON.stringify(projInfo));
+        if (!projInfo.main) {
+          console.error("main is null", JSON.stringify(projInfo));
           return;
         }
         let contains = projHasFile(
@@ -132,9 +148,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       name: file.name,
       theme: themeMap.get("Solarized Light")!,
     };
-    editorView = initEditor(editorAttr, activeEditorView, edContainer);
-    setActiveEditorView(editorView[0]);
-    ws = editorView[1]!;
+    initEditor(editorAttr, activeEditorView, edContainer);
   };
 
   const destroy = () => {
@@ -240,7 +254,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
           data-bs-toggle="tooltip"
           title="导航到目录树"
           onClick={() => {
-            handleSrcTreeNav(editorView);
+            // handleSrcTreeNav(editorView);
           }}
         >
           <i className="fa-solid fa-arrow-left"></i>

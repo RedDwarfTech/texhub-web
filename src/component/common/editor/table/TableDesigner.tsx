@@ -1,13 +1,13 @@
-import { ReactComponent as PlusColumnBefore } from "@/assets/icon/table-column-plus-before.svg";
-import { ReactComponent as PlusColumnAfter } from "@/assets/icon/table-column-plus-after.svg";
-import { ReactComponent as PlusColumnRemove } from "@/assets/icon/table-column-remove.svg";
-import { ReactComponent as PlusRowBefore } from "@/assets/icon/table-row-plus-before.svg";
-import { ReactComponent as PlusRowAfter } from "@/assets/icon/table-row-plus-after.svg";
-import { ReactComponent as PlusRowRemove } from "@/assets/icon/table-row-remove.svg";
-import { ReactComponent as BorderBottom } from "@/assets/icon/border-bottom.svg";
-import { ReactComponent as BorderTop } from "@/assets/icon/border-top.svg";
-import { ReactComponent as BorderLeft } from "@/assets/icon/border-left.svg";
-import { ReactComponent as BorderRight } from "@/assets/icon/border-right.svg";
+import PlusColumnBefore from "@/assets/icon/table-column-plus-before.svg?react";
+import PlusColumnAfter from "@/assets/icon/table-column-plus-after.svg?react";
+import PlusColumnRemove from "@/assets/icon/table-column-remove.svg?react";
+import PlusRowBefore from "@/assets/icon/table-row-plus-before.svg?react";
+import PlusRowAfter from "@/assets/icon/table-row-plus-after.svg?react";
+import PlusRowRemove from "@/assets/icon/table-row-remove.svg?react";
+import BorderBottom from "@/assets/icon/border-bottom.svg?react";
+import BorderTop from "@/assets/icon/border-top.svg?react";
+import BorderLeft from "@/assets/icon/border-left.svg?react";
+import BorderRight from "@/assets/icon/border-right.svg?react";
 import styles from "./TableDesigner.module.css";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
@@ -81,7 +81,7 @@ const TableDesigner: React.FC<TableDesignerProps> = (
   };
 
   const renderCodePreview = () => {
-    if(code == null || code.length === 0) return;
+    if (code == null || code.length === 0) return;
     return (
       <div className={styles.codeShow}>
         <SyntaxHighlighter language="latex" style={dark}>
@@ -219,7 +219,7 @@ const TableDesigner: React.FC<TableDesignerProps> = (
             </div>
             {renderCodePreview()}
           </div>
-          
+
           <div className="modal-footer">
             <button
               type="button"
