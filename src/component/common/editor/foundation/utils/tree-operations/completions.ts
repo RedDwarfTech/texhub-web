@@ -24,7 +24,8 @@ export const ifInType = (
       return null;
     } else {
       let auto = JSON.parse(autoCompleteCache!.toString());
-      if(auto.count === 1 && new Date().getTime() - Number(auto.triggerTime) < 10 ){
+      let durationTime = new Date().getTime() - Number(auto.triggerTime);
+      if(auto.count === 1 &&  durationTime < 10){
 
       }else{
         let triggerInfo = {
