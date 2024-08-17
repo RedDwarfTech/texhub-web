@@ -10,32 +10,6 @@ export const ifInType = (
   source: CompletionSource
 ): CompletionSource => {
   let completionSource: CompletionSource = (context: CompletionContext) => {
-    /**
-     * 代码自动完成触发了2次，只让第二次生效
-     * 暂时还未找到是什么原因导致
-     */
-    let autoCompleteCache = localStorage.getItem("autocomplete");
-    if (BaseMethods.isNull(autoCompleteCache)) {
-      let triggerInfo = {
-        count: 1,
-        triggerTime: new Date().getTime(),
-      };
-      localStorage.setItem("autocomplete", JSON.stringify(triggerInfo));
-      return null;
-    } else {
-      let auto = JSON.parse(autoCompleteCache!.toString());
-      let durationTime = new Date().getTime() - Number(auto.triggerTime);
-      if(auto.count === 1 &&  durationTime < 10){
-
-      }else{
-        let triggerInfo = {
-          count: 1,
-          triggerTime: new Date().getTime(),
-        };
-        localStorage.setItem("autocomplete", JSON.stringify(triggerInfo));
-        return null;
-      }
-    }
     const tree = syntaxTree(context.state);
     let node: SyntaxNode | null = tree.resolveInner(context.pos, -1);
     while (node) {
