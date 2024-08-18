@@ -43,10 +43,10 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     replaceContext,
     connState,
   } = useSelector((state: AppState) => state.proj);
-  const { editor,ws } = useSelector((state: AppState) => state.editor);
+  const { editor, ws } = useSelector((state: AppState) => state.editor);
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
-  const [shareProj,setShareProj] = useState<boolean>();
+  const [shareProj, setShareProj] = useState<boolean>();
   const [wsModel, setWsModel] = useState<WebsocketProvider>();
   const activeKey = readConfig("projActiveFile") + props.projectId;
   let wsProvider: WebsocketProvider;
@@ -129,6 +129,13 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }, [projConf]);
 
   React.useEffect(() => {
+    initByActiveFile(activeFile);
+    return () => {
+      destroy();
+    };
+  }, [activeFile]);
+
+  const initByActiveFile = (activeFile: TexFileModel) => {
     if (!activeFile || !activeFile.file_id) return;
     if (activeFile && activeFile.file_type !== TreeFileType.Folder) {
       let contains = projHasFile(activeFile.file_id, props.projectId);
@@ -138,10 +145,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       preInitEditor(activeFile);
       localStorage.setItem(activeKey, JSON.stringify(activeFile));
     }
-    return () => {
-      destroy();
-    };
-  }, [activeFile]);
+  };
 
   const preInitEditor = (file: TexFileModel) => {
     const editorAttr: EditorAttr = {
@@ -248,6 +252,27 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     }
   };
 
+  /**
+   * if the websocket connect disconnected
+   * Try to reconnect the editor websocket
+   */
+  const tryReconnect = (connState: string) => {
+    switch (connState) {
+      case "connected":
+        break;
+      case "disconnected":
+        toast.info("try to reconnecting...");
+        initByActiveFile(activeFile);
+        break;
+      case "connecting":
+        toast.info("try to reconnecting...");
+        initByActiveFile(activeFile);
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.editorHeader}>
@@ -317,7 +342,9 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
           title={t("icon_conn_status")}
           data-bs-toggle="modal"
           data-bs-target=""
-          onClick={() => {}}
+          onClick={() => {
+            tryReconnect();
+          }}
         >
           {renderConnState(connState)}
         </button>
