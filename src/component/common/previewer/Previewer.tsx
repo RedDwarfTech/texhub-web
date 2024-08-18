@@ -292,7 +292,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
           <button
             className={styles.previewIconButton}
             data-bs-toggle="tooltip"
-            title="浏览器中打开"
+            title={t("btn_open_in_broswer")}
             onClick={() => {
               handleOpenInBrowser(curPdfUrl);
             }}
@@ -302,7 +302,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
           <button
             className={styles.previewIconButton}
             data-bs-toggle="tooltip"
-            title="滚动到顶部"
+            title={t("btn_scroll_top")}
             onClick={() => {
               handleScrollTop();
             }}
@@ -312,7 +312,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
           <button
             className={styles.previewIconButton}
             data-bs-toggle="tooltip"
-            title="导航到源码"
+            title={t("btn_nav_src")}
             onClick={() => {
               handleSrcLocate();
             }}
@@ -322,7 +322,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
           <button
             className={styles.previewIconButton}
             data-bs-toggle="tooltip"
-            title="下载PDF"
+            title={t("btn_download_pdf")}
             onClick={() => {
               handleDownloadPdf(curPdfUrl);
             }}
@@ -332,7 +332,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
           <button
             className={styles.previewIconButton}
             data-bs-toggle="tooltip"
-            title="放大"
+            title={t("btn_zoomin")}
             id="zoominbutton"
             onClick={() => {
               handleZoomIn();
@@ -343,7 +343,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
           <button
             className={styles.previewIconButton}
             data-bs-toggle="tooltip"
-            title="缩小"
+            title={t("btn_zoomout")}
             id="zoomoutbutton"
             onClick={() => {
               handleZoomOut();
@@ -354,7 +354,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
           <button
             className={styles.previewIconButton}
             data-bs-toggle="tooltip"
-            title="全屏"
+            title={t("btn_fullscreen")}
             id="fullscreenbutton"
             onClick={() => {
               handleFullScreen();
