@@ -4,12 +4,34 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TeXHub-走进TeX的世界</title>
+    <title id="title">TeXHub-Enter the World of TeX</title>
     <link href="/css/viewer.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="/fontawesome-free-6.5.1-web/css/all.min.css">
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/index.tsx"></script>
+    <script>
+    const lang = navigator.language || 'en';
+    const translations = {
+      en: {
+        title: "TeXHub - Enter the World of TeX",
+        favicon: "/favicon-en.ico",
+        stylesheet: "/css/viewer-en.css"
+      },
+      zh: {
+        title: "TeXHub-走进TeX的世界",
+        favicon: "/favicon-en.ico",
+        stylesheet: "/css/viewer-en.css"
+      },
+      fr: {
+        title: "TeXHub - Entrez dans le Monde de TeX",
+        favicon: "/favicon-fr.ico",
+        stylesheet: "/css/viewer-fr.css"
+      }
+    };
+    const { title } = translations[lang] || translations.en;
+    document.getElementById('title').textContent = title;
+    </script>
   </body>
 </html>
