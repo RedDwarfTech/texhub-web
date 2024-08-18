@@ -254,7 +254,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         <button
           className={styles.menuButton}
           data-bs-toggle="tooltip"
-          title="导航到目录树"
+          title={t("btn_nav_tree")}
           onClick={() => {
             // handleSrcTreeNav(editorView);
           }}
@@ -263,7 +263,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         </button>
         <button
           className={styles.menuButton}
-          title="导航到PDF"
+          title={t("btn_nav_pdf")}
           onClick={() => {
             handlePdfLocate();
           }}
@@ -272,7 +272,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         </button>
         <button
           className={styles.menuButton}
-          title="插入图片"
+          title={t("btn_insert_image")}
           onClick={() => {
             handleImageAdd();
           }}
@@ -281,7 +281,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         </button>
         <button
           className={styles.menuButton}
-          title="表格设计器"
+          title={t("title_table_designer")}
           data-bs-toggle="modal"
           data-bs-target="#tableDesignerModal"
           onClick={() => {
@@ -292,7 +292,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         </button>
         <button
           className={styles.menuButton}
-          title="代码片段"
+          title={t("title_snippet")}
           data-bs-toggle="modal"
           data-bs-target="#snippetModal"
           onClick={() => {
@@ -303,7 +303,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         </button>
         <button
           className={styles.menuButton}
-          title="公式设计器"
+          title={t("title_equation_designer")}
           data-bs-toggle="modal"
           data-bs-target="#equationDesignerModal"
           onClick={() => {
