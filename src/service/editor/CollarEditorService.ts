@@ -19,12 +19,9 @@ import {
   setCurYDoc,
   setWsConnState,
 } from "../project/ProjectService";
-import { addFileVersion } from "../file/FileService";
-import lodash from "lodash";
-import { TexFileVersion } from "@/model/file/TexFileVersion";
 import { Metadata } from "@/component/common/editor/foundation/extensions/language";
-import { base64ToUint8Array } from "@/common/ConvertUtil";
 import { setEditorInstance, setWebsocketProvider } from "../project/editor/EditorService";
+import { handleYDocUpdate } from "@/component/common/collar/ver/YjsEvent";
 
 export const usercolors = [
   { color: "#30bced", light: "#30bced33" },
@@ -138,54 +135,6 @@ export function restoreFromHistory(version: number, docId: string) {
   }
 }
 
-const handleYDocUpdate = (editorAttr: EditorAttr, ytext: Y.Text) => {
-  try {
-    let snapshot: Y.Snapshot = Y.snapshot(ydoc);
-    let snap: Uint8Array = Y.encodeSnapshot(snapshot);
-    // https://discuss.yjs.dev/t/save-the-yjs-snapshot-to-database/2317
-    let content = String.fromCharCode(...new Uint8Array(snap));
-    let snapBase64 = btoa(content);
-    let lastsnapshot = localStorage.getItem("lastsnapshot");
-    if (snapBase64 === lastsnapshot) {
-      // never run into this
-      return;
-    }
-    if (lastsnapshot) {
-      let cached = base64ToUint8Array(lastsnapshot);
-      const decoded = Y.decodeSnapshot(cached);
-      let equal = Y.equalSnapshots(decoded, snapshot);
-      if (equal) {
-        // never run into this
-        return;
-      }
-    }
-    let editorText = ytext.toString();
-    let lasteditortext = localStorage.getItem("lasteditortext");
-    if (lasteditortext === editorText) {
-      // will run into this
-      return;
-    }
-    let params: TexFileVersion = {
-      file_id: editorAttr.docId,
-      name: editorAttr.name,
-      project_id: editorAttr.projectId,
-      content: editorText,
-      action: 1,
-      snapshot: snapBase64,
-    };
-    // https://discuss.yjs.dev/t/is-it-possible-to-detect-the-document-changed-or-not/2453
-    localStorage.setItem("lastsnapshot", snapBase64);
-    localStorage.setItem("lasteditortext", editorText);
-    throttledFn(params);
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-const throttledFn = lodash.throttle((params: any) => {
-  addFileVersion(params);
-}, 10000);
-
 const metadata: Metadata = {
   labels: new Set<string>([]),
   packageNames: new Set<string>([]),
@@ -220,7 +169,7 @@ export function initEditor(
   const undoManager = new Y.UndoManager(ytext);
   let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr);
   ydoc.on("update", (update, origin) => {
-    handleYDocUpdate(editorAttr, ytext);
+    handleYDocUpdate(editorAttr, ytext, ydoc);
   });
 
   const texEditorState = EditorState.create({
