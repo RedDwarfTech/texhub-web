@@ -343,7 +343,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
           data-bs-toggle="modal"
           data-bs-target=""
           onClick={() => {
-            tryReconnect();
+            tryReconnect(connState);
           }}
         >
           {renderConnState(connState)}
