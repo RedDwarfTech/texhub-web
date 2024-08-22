@@ -6,7 +6,7 @@ import { encodeStateVector } from "yjs";
 import { applyUpdate } from "yjs";
 import { Doc } from "yjs";
 
-const snapshotOrigin = 'snapshot-origin';
+const snapshotOrigin = "snapshot-origin";
 
 export const createDocFromSnapshot = (snapshotBase64: string): Y.Doc => {
   // Decode the Base64 snapshot
@@ -18,6 +18,20 @@ export const createDocFromSnapshot = (snapshotBase64: string): Y.Doc => {
   //ydoc.loadSnapshot(snapshot);
   return ydoc;
 };
+
+export function getDocDiff(ydoc: Y.Doc, decoded: Y.Snapshot) {
+  try {
+    const doc = new Y.Doc({ gc: false });
+    const docRestored = Y.createDocFromSnapshot(doc, decoded);
+    const stateVector = Y.encodeStateVector(docRestored);
+    const diff: Uint8Array = Y.encodeStateAsUpdate(ydoc, stateVector);
+    if (diff.length > 0) {
+      let content = String.fromCharCode(...new Uint8Array(diff));
+      console.log("diff content", content);
+      debugger;
+    }
+  } catch (e) {}
+}
 
 /**
  * https://discuss.yjs.dev/t/how-to-recover-to-the-specified-version/2301/7

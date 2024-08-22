@@ -4,6 +4,8 @@ import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { addFileVersion } from "@/service/file/FileService";
 import lodash from "lodash";
 import * as Y from "yjs";
+import { getDocDiff } from "@/component/common/collar/ver/YjsFunc";
+
 
 export const handleYDocUpdate = (
   editorAttr: EditorAttr,
@@ -11,10 +13,8 @@ export const handleYDocUpdate = (
   ydoc: Y.Doc
 ) => {
   try {
-    debugger;
     let snapshot: Y.Snapshot = Y.snapshot(ydoc);
     let snap: Uint8Array = Y.encodeSnapshot(snapshot);
-    // const stateVector = Y.encodeStateVector(_historyDoc);
     // https://discuss.yjs.dev/t/save-the-yjs-snapshot-to-database/2317
     let content = String.fromCharCode(...new Uint8Array(snap));
     let snapBase64 = btoa(content);
@@ -26,15 +26,7 @@ export const handleYDocUpdate = (
     if (lastsnapshot) {
       let cached: Uint8Array = base64ToUint8Array(lastsnapshot);
       const decoded: Y.Snapshot = Y.decodeSnapshot(cached);
-      const doc = new Y.Doc({ gc: false });
-      const docRestored = Y.createDocFromSnapshot(doc, decoded);
-      const stateVector = Y.encodeStateVector(docRestored);
-      const diff:Uint8Array = Y.encodeStateAsUpdate(ydoc, stateVector);
-      if (diff.length > 0) {
-        let content = String.fromCharCode(...new Uint8Array(diff));
-        console.log("diff content", content);
-        debugger;
-      }
+      getDocDiff(ydoc,decoded);
       let equal = Y.equalSnapshots(decoded, snapshot);
       if (equal) {
         // never run into this
@@ -92,3 +84,5 @@ export const handleYDocUpdateDiff = (
 const throttledFn = lodash.throttle((params: any) => {
   addFileVersion(params);
 }, 10000);
+export { getDocDiff };
+
