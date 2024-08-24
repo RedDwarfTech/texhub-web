@@ -8,6 +8,9 @@ import {
   findEnvironmentsInDoc,
 } from './completions/doc-environments'
 import { buildPackageCompletions } from "./completions/packages";
+import { syntaxTree } from "@codemirror/language";
+import { applySnippet, extendOverUnpairedClosingBrace } from "./completions/apply";
+import { snippet } from './completions/data/environments'
 
 function blankCompletions(): Completions {
   return {
@@ -27,6 +30,10 @@ export const inCommandCompletionSource: CompletionSource = ifInType('$CtrlSeq',(
     return context.explicit ? null : commandCompletionSource(context)
   }
 )
+
+export const explicitCommandCompletionSource: CompletionSource = context => {
+  return context.explicit ? commandCompletionSource(context) : null
+}
 
 const commandCompletionSource = (context: CompletionContext) => {
   const completionMatches = getCompletionMatches(context)
@@ -168,3 +175,57 @@ export const packageArgumentCompletionSource: CompletionSource =
   export const argumentCompletionSources: CompletionSource[] = [
     packageArgumentCompletionSource,
   ]
+
+  /**
+ * An additional completion source that handles two situations:
+ *
+ * 1. Typing the environment name within an already-complete `\begin{…}` command.
+ * 2. After typing the closing brace of a complete `\begin{foo}` command, where the environment
+ * isn't previously known, leaving the cursor after the closing brace.
+ */
+export const beginEnvironmentCompletionSource: CompletionSource = context => {
+  const beginEnvToken = context.tokenBefore(['BeginEnv'])
+  if (!beginEnvToken) {
+    return null
+  }
+
+  const beginEnv = syntaxTree(context.state).resolveInner(
+    beginEnvToken.from,
+    1
+  ).parent
+  if (!beginEnv?.type.is('BeginEnv')) {
+    return null
+  }
+
+  const envNameGroup = beginEnv.getChild('EnvNameGroup')
+  if (!envNameGroup) {
+    return null
+  }
+
+  const envName = envNameGroup.getChild('$EnvName')
+  if (!envName) {
+    return null
+  }
+
+  const name = context.state.sliceDoc(envName.from, envName.to)
+
+  // if not directly after `\begin{…}`, exclude known environments
+  if (context.pos !== envNameGroup.to) {
+    const existingEnvironmentNames = findEnvironmentsInDoc(context)
+    if (existingEnvironmentNames.has(name)) {
+      return null
+    }
+  }
+
+  const completion = {
+    label: `\\begin{${name}} …`,
+    apply: applySnippet(snippet(name)),
+    extend: extendOverUnpairedClosingBrace,
+    boost: -99,
+  }
+
+  return {
+    from: beginEnvToken.from,
+    options: [completion],
+  }
+}

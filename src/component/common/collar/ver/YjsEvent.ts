@@ -81,7 +81,12 @@ export const handleYDocUpdateDiff = (
   }
 };
 
-const throttledFn = lodash.throttle((params: any) => {
+/**
+ * 创建一个节流函数，在 wait 秒内最多执行 func 一次的函数。
+ * 首次调用执行一次，一定时间内再次调用，不再执行。
+ * debounce （函数去抖） 多次触发，只在最后一次触发时，执行目标函数。
+ */
+const throttledFn = lodash.throttle((params: TexFileVersion) => {
   addFileVersion(params);
 }, 10000);
 export { getDocDiff };
