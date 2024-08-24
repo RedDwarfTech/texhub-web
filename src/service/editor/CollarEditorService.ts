@@ -7,6 +7,7 @@ import { createExtensions } from "@/component/common/editor/foundation/extension
 import { Compartment, EditorState } from "@codemirror/state";
 import { readConfig } from "@/config/app/config-reader";
 import {
+  BaseMethods,
   RequestHandler,
   ResponseHandler,
   UserModel,
@@ -154,7 +155,7 @@ export function initEditor(
   activeEditorView: EditorView | undefined,
   edContainer: RefObject<HTMLDivElement>
 ) {
-  if (activeEditorView) {
+  if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
     activeEditorView.destroy();
   }
   let docOpt = {
