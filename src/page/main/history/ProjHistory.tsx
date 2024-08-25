@@ -79,7 +79,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
                             >{t("btn_detail")}</button>
                         </div>
                         <div>
-                            <button className="btn btn-primary" onClick={() => { restoreProjHistories(item.id) }}>还原</button>
+                            <button className="btn btn-primary" onClick={() => { restoreProjHistories(item.id) }}>{t("btn_restore")}</button>
                         </div>
                     </div>
                     <ProjHistoryDetail projectId={props.projectId}></ProjHistoryDetail>
