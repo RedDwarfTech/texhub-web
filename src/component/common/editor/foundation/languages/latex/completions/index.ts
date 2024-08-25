@@ -1,3 +1,5 @@
+import { buildClassCompletions } from "./classes";
+import { buildEnvironmentCompletions } from "./environments";
 import { buildPackageCompletions } from "./packages";
 import { buildSnippetCompletions } from "./snippets";
 import { Completions } from "./types";
@@ -7,7 +9,9 @@ export const buildAllCompletions = (
   completions: Completions,
   context: CompletionContext
 ) => {
-  buildSnippetCompletions(completions)
+  buildSnippetCompletions(completions);
+  buildEnvironmentCompletions(completions);
+  buildClassCompletions(completions);
   buildPackageCompletions(completions, context);
   return completions;
 };
