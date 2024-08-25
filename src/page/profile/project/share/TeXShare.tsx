@@ -126,7 +126,7 @@ const TeXShare: React.FC<ShareProps> = (props: ShareProps) => {
       render: () => {
         return (
           <div className={styles.oper}>
-            <button className="btn btn-primary">删除</button>
+            <button className="btn btn-primary">{t("btn_del")}</button>
           </div>
         );
       },
@@ -174,7 +174,7 @@ const TeXShare: React.FC<ShareProps> = (props: ShareProps) => {
                 handleShareLinkCopy();
               }}
             >
-              拷贝
+              {t("btn_copy")}
             </button>
           </div>
         </div>
@@ -195,7 +195,7 @@ const TeXShare: React.FC<ShareProps> = (props: ShareProps) => {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">分享项目</h5>
+              <h5 className="modal-title">{t("title_share_proj")}</h5>
               <button
                 type="button"
                 className="btn-close"
@@ -215,7 +215,7 @@ const TeXShare: React.FC<ShareProps> = (props: ShareProps) => {
                   onClick={() => {
                     handleTabClick(1);
                   }}
-                  href="#"
+                  href="#/"
                 >
                   {t("tab_proj_share")}
                 </a>
@@ -227,7 +227,7 @@ const TeXShare: React.FC<ShareProps> = (props: ShareProps) => {
                       ? "nav-link active"
                       : "nav-link"
                   }
-                  href="#"
+                  href="#/"
                   onClick={() => {
                     handleTabClick(2);
                   }}
