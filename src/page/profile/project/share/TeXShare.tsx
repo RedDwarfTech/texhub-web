@@ -14,6 +14,7 @@ import { AppState } from "@/redux/types/AppState";
 import { ProjCollarModel } from "@/model/proj/share/ProjCollarModel";
 import { CollarType } from "@/model/enum/CollarType";
 import dayjs from "dayjs";
+import { BaseMethods } from "rdjs-wheel";
 
 export type ShareProps = {
   projectId: string;
@@ -181,6 +182,9 @@ const TeXShare: React.FC<ShareProps> = (props: ShareProps) => {
       );
     }
     if (activeTab === 2) {
+      if(BaseMethods.isNull(curCollar)){
+        return;
+      }
       return (
         <div className={styles.sharedAdminTable}>
           <Table columns={columns} data={curCollar} />
