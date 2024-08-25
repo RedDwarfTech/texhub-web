@@ -3,8 +3,7 @@ import styles from "./ProjHistory.module.css";
 import { AppState } from "@/redux/types/AppState";
 import React, { useState } from "react";
 import { ProjHisotry } from "@/model/proj/history/ProjHistory";
-import { getProjHistoryDetail, projHistoryPage, replaceTextToEditor } from "@/service/project/ProjectService";
-import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
+import { getProjHistoryDetail, replaceTextToEditor } from "@/service/project/ProjectService";
 import dayjs from "dayjs";
 import { QueryHistoryDetail } from "@/model/request/proj/query/QueryHistoryDetail";
 import { ResponseHandler } from "rdjs-wheel";
@@ -42,18 +41,6 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         getProjHistoryDetail(hist);
     }
 
-    const base64ToUint8Array = (base64: string): Uint8Array => {
-        const binaryString = atob(base64);
-        const length = binaryString.length;
-        const uint8Array = new Uint8Array(length);
-
-        for (let i = 0; i < length; i++) {
-            uint8Array[i] = binaryString.charCodeAt(i);
-        }
-
-        return uint8Array;
-    }
-
     const restoreProjHistories = (snapId: number) => {
         const hist: QueryHistoryDetail = {
             id: snapId
@@ -81,15 +68,15 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         histories.forEach((item: ProjHisotry) => {
             tagList.push(
                 <div key={item.id} className={styles.hiscard}>
-                    <div>文件名：{item.name}</div>
-                    <div>时间：{dayjs(item.updated_time).format('YYYY-MM-DD HH:mm:ss')}</div>
+                    <div>{t("label_file_name")}：{item.name}</div>
+                    <div>{t("label_time")}：{dayjs(item.updated_time).format('YYYY-MM-DD HH:mm:ss')}</div>
                     <div className={styles.footer}>
                         <div>
                             <button className="btn btn-primary"
                                 data-bs-toggle="modal"
                                 data-bs-target="#projHistoryDetail"
                                 onClick={() => { getHistoryDetail(item.id) }}
-                            >详情</button>
+                            >{t("btn_detail")}</button>
                         </div>
                         <div>
                             <button className="btn btn-primary" onClick={() => { restoreProjHistories(item.id) }}>还原</button>
@@ -106,7 +93,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         <div>
             <div className="offcanvas offcanvas-end" tab-index="-1" id="projHistory" aria-labelledby="offcanvasExampleLabel">
                 <div className="offcanvas-header">
-                    <h6 className="offcanvas-title" id="projHistoryLabel">项目历史</h6>
+                    <h6 className="offcanvas-title" id="projHistoryLabel">{t("title_history")}</h6>
                     <button type="button"
                         className="btn-close text-reset"
                         data-bs-dismiss="offcanvas"
