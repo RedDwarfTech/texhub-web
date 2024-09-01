@@ -9,6 +9,7 @@ import { AnyAction, Store } from "redux";
 import Turnstile from "react-turnstile";
 import { UserService } from "rd-component";
 import TeXHubLogo from "@/assets/icon/texhub-logo.png";
+import { useTranslation } from "react-i18next";
 
 interface ILoginProp {
   appId: string;
@@ -25,6 +26,7 @@ const RdTeXHubLogin: React.FC<ILoginProp> = (props: ILoginProp) => {
   const phoneInputRef = useRef(null);
   const passwordInputRef = useRef(null);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [passwordShown, setPasswordShown] = useState(false);
 
@@ -181,7 +183,7 @@ const RdTeXHubLogin: React.FC<ILoginProp> = (props: ILoginProp) => {
             </button>
           </div>
           <div id="phone" className={styles.tabcontent}>
-            <h5>登录</h5>
+            <h5>{t("title_login")}</h5>
             <form
               method="post"
               className={styles.loginElement}
@@ -221,7 +223,7 @@ const RdTeXHubLogin: React.FC<ILoginProp> = (props: ILoginProp) => {
               </div>
               <div className={styles.operate}>
                 <button className={styles.loginButton} type="submit">
-                  登录
+                  {t("btn_login")}
                 </button>
               </div>
               <div className={styles.handleSituation}>
