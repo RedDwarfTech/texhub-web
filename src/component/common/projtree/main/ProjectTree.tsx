@@ -4,7 +4,6 @@ import {
   addFile,
   downloadProjFile,
   getFileTree,
-  setCurFileTree,
 } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
 import { TexFileModel } from "@/model/file/TexFileModel";
@@ -35,6 +34,7 @@ import {
 import { TeXFileType } from "@/model/enum/TeXFileType";
 import { DownloadFileReq } from "@/model/request/file/query/DownloadFileReq";
 import { useTranslation } from "react-i18next";
+import { ProjInfo } from "@/model/proj/ProjInfo";
 
 const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const divRef = props.treeDivRef;
@@ -80,7 +80,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
 
   React.useEffect(() => {
     if (curFileTree && Object.keys(curFileTree).length > 0) {
-      setCurFileTree(curFileTree);
+      handleFileTreeUpdate(curFileTree, props.projectId, setTexFileTree);
     }
   }, [curFileTree]);
 

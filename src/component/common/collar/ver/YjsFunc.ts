@@ -28,7 +28,6 @@ export function getDocDiff(ydoc: Y.Doc, decoded: Y.Snapshot) {
     if (diff.length > 0) {
       let content = String.fromCharCode(...new Uint8Array(diff));
       console.log("diff content", content);
-      debugger;
     }
   } catch (e) {}
 }

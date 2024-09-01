@@ -91,10 +91,24 @@ export const TexFileUtil = {
     }
     return false;
   },
+  searchTreeAndReturnNode: <
+    T extends { expand: boolean; file_id: string; children?: T[] }
+  >(
+    cachedItems: T[],
+    fid: string
+  ): T | null => {
+    for (const item of cachedItems) {
+      let nodes = TexFileUtil.searchNodeByFileId(item, fid);
+      if (nodes != null) {
+        return nodes;
+      }
+    }
+    return null;
+  },
   genTeXTableCode: (rows: number, columns: number) => {
     let latexCode = "\\begin{table}[]\n";
     latexCode += "\t\\centering\n";
-    latexCode += "\t\\begin{tabular}{|" + "c|".repeat(columns) + "}\n";;
+    latexCode += "\t\\begin{tabular}{|" + "c|".repeat(columns) + "}\n";
     latexCode += "\t\\hline\n";
 
     for (let i = 0; i < rows; i++) {

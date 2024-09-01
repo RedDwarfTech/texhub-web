@@ -2,6 +2,8 @@ import TexFileUtil from "@/common/TexFileUtil";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { TreeFileType } from "@/model/file/TreeFileType";
 import { handleFileSelected } from "./ProjectTreeHandler";
+import { BaseMethods } from "rdjs-wheel";
+import { setCurFileTree } from "@/service/file/FileService";
 
 export const ProjectTreeFolder = {
   getExpandStatus: (item: TexFileModel): boolean => {
@@ -47,7 +49,7 @@ export const ProjectTreeFolder = {
     itemList: TexFileModel[],
     expandFolder?: boolean
   ) => {
-    console.warn("expand click");
+    if (BaseMethods.isNull(itemList)) return [];
     const updatedItems: TexFileModel[] = itemList.map((item) => {
       let expand;
       if (expandFolder) {
@@ -122,9 +124,9 @@ export const ProjectTreeFolder = {
   handleExpandFolder: (
     name_paths: string[],
     projId: string,
-    selectedFile: TexFileModel,
+    selectedFile: TexFileModel
   ) => {
-    console.warn("trigger expand folder");
+    debugger;
     for (let i = 0; i < name_paths.length; i++) {
       // get the newest tree content to avoid the legacy override the newest update
       let legacyTree = localStorage.getItem("projTree:" + projId);
@@ -143,10 +145,33 @@ export const ProjectTreeFolder = {
         continue;
       }
       if (pathNode.file_type === TreeFileType.Folder) {
-        ProjectTreeFolder.handleAutoExpandFolder(pathNode, treeNode, true);
+        let upatedItems = ProjectTreeFolder.handleAutoExpandFolder(
+          pathNode,
+          treeNode,
+          true
+        );
+        setCurFileTree(upatedItems);
       } else {
         handleFileSelected(pathNode, selectedFile);
       }
     }
+  },
+  getNamePaths: (projId: string, fileId: string): string[] => {
+    let legacyTree = localStorage.getItem("projTree:" + projId);
+    if (legacyTree == null) {
+      // get from server
+      return [];
+    }
+    let cachedItems: TexFileModel[] = JSON.parse(legacyTree);
+    const result: TexFileModel | null = TexFileUtil.searchTreeAndReturnNode(
+      cachedItems,
+      fileId
+    );
+    if (BaseMethods.isNull(result)) {
+      return [];
+    }
+    let namePaths = result!.file_path.split("/").filter(Boolean);
+    namePaths.push(result!.name);
+    return namePaths;
   },
 };

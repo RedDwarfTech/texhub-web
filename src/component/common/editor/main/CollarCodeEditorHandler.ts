@@ -5,8 +5,9 @@ import { BaseMethods } from "rdjs-wheel";
 import { EditorProps } from "./CollarCodeEditor";
 import { toast } from "react-toastify";
 import { getPdfPosition } from "@/service/project/ProjectService";
+import { handleSrcLocate } from "../../previewer/PreviewerHandler";
+import { ProjInfo } from "@/model/proj/ProjInfo";
 import { ProjectTreeFolder } from "../../projtree/main/ProjectTreeFolder";
-import { setCurFileTree } from "@/service/file/FileService";
 
 export const getCursorPos = (
   editor: EditorView
@@ -28,28 +29,23 @@ export const getCursorPos = (
 };
 
 export const handleSrcTreeNav = (
-  editor: EditorView | undefined,
   props: EditorProps,
-  activeFile: TexFileModel
+  curProjInfo: ProjInfo,
+  selectedFile: TexFileModel
 ) => {
-  if (!editor) {
+  if (BaseMethods.isNull(props)) {
     return;
   }
-  let legacyTree = localStorage.getItem("projTree:" + props.projectId);
-  if (legacyTree == null) {
-    return [];
+  if (BaseMethods.isNull(curProjInfo)) {
+    return;
   }
-  let treeNodes: TexFileModel[] = JSON.parse(legacyTree);
-
-  const updatedItems: TexFileModel[] = ProjectTreeFolder.handleExpandClick(
-    activeFile.file_id,
-    treeNodes
+  let name_paths = ProjectTreeFolder.getNamePaths(props.projectId, selectedFile.file_id);
+  debugger;
+  ProjectTreeFolder.handleExpandFolder(
+    name_paths,
+    props.projectId,
+    selectedFile
   );
-  localStorage.setItem(
-    "projTree:" + props.projectId,
-    JSON.stringify(updatedItems)
-  );
-  setCurFileTree(updatedItems);
 };
 
 export const handlePdfLocate = (

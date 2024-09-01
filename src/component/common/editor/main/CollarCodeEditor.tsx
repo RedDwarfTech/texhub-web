@@ -21,6 +21,7 @@ import Snippet from "../snippet/Snippet";
 import EquationDesigner from "../equation/EquationDesigner";
 import { handlePdfLocate, handleSrcTreeNav } from "./CollarCodeEditorHandler";
 import { useTranslation } from "react-i18next";
+import { ProjInfo } from "@/model/proj/ProjInfo";
 
 export type EditorProps = {
   projectId: string;
@@ -34,6 +35,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const { editor } = useSelector((state: AppState) => state.editor);
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
+  const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
   const activeKey = readConfig("projActiveFile") + props.projectId;
   let wsProvider: WebsocketProvider;
   const { t } = useTranslation();
@@ -56,6 +58,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   React.useEffect(() => {
     if (projInfo && Object.keys(projInfo).length > 0) {
+      setCurProjInfo(projInfo);
       setMainFileModel(projInfo.main_file);
       const activeFileJson = localStorage.getItem(activeKey);
       if (activeFileJson) {
@@ -225,7 +228,13 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
           data-bs-toggle="tooltip"
           title={t("btn_nav_tree")}
           onClick={() => {
-            handleSrcTreeNav(activeEditorView, props, activeFile);
+            if (curProjInfo) {
+              let activeFileJson = localStorage.getItem(activeKey);
+              if (activeFileJson) {
+                let activeFile: TexFileModel = JSON.parse(activeFileJson);
+                handleSrcTreeNav(props, curProjInfo, activeFile);
+              }
+            }
           }}
         >
           <i className="fa-solid fa-arrow-left"></i>

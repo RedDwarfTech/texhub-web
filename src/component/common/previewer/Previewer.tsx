@@ -23,6 +23,7 @@ import { BaseMethods } from "rdjs-wheel";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { goPage } from "./doc/PDFPreviewHandle";
 import { useTranslation } from "react-i18next";
+import { handleSrcLocate } from "./PreviewerHandler";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
 
 export type PreviwerProps = {
@@ -175,26 +176,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     }
   };
 
-  /**
-   * get the source location by pdf file position
-   * @returns src position info
-   */
-  const handleSrcLocate = () => {
-    if (!projectId) {
-      toast.info("项目信息为空");
-      return;
-    }
-    let curPage = localStorage.getItem(readConfig("pdfCurPage") + projectId);
-    let req: QuerySrcPos = {
-      project_id: projectId,
-      main_file: curProjInfo?.main_file.name || "main.tex",
-      page: Number(curPage) || 1,
-      h: 3.565,
-      v: 4.563,
-    };
-    getSrcPosition(req);
-  };
-
   const handleZoomIn = async () => {
     if (!projectId) {
       toast.warn("未找到当前项目信息");
@@ -314,7 +295,9 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
             data-bs-toggle="tooltip"
             title={t("btn_nav_src")}
             onClick={() => {
-              handleSrcLocate();
+              if (!BaseMethods.isNull(curProjInfo)) {
+                handleSrcLocate(projectId, curProjInfo!);
+              }
             }}
           >
             <i className="fa-solid fa-arrow-left"></i>
@@ -439,7 +422,8 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
             setCurPreviewTab("logview");
           }}
         >
-          <i className="fa-regular fa-file-lines"></i> {t("tab_log")} {renderCompiled()}
+          <i className="fa-regular fa-file-lines"></i> {t("tab_log")}{" "}
+          {renderCompiled()}
         </button>
       </div>
     );
