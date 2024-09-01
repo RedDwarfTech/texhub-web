@@ -48,7 +48,7 @@ export interface AppState {
         curYDoc: Y.Doc,
         replaceContext: string,
         curHistory: ProjHisotry,
-        connState: string
+        connState: string,
     },
     tpl: {
         tplList: TemplateModel[],
@@ -58,6 +58,7 @@ export interface AppState {
     file: {
         fileList: TexFileModel[],
         fileTree: TexFileModel[],
+        curFileTree: TexFileModel[]
         folderTree: TexFileModel,
         activeFile: TexFileModel,
         treeSelectItem: TexFileModel,

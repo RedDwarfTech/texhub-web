@@ -7,7 +7,8 @@ const initState: AppState["file"] = {
     folderTree: {} as TexFileModel,
     activeFile: {} as TexFileModel,
     treeSelectItem: {} as TexFileModel,
-    mainFile: {} as TexFileModel
+    mainFile: {} as TexFileModel,
+    curFileTree: [] as TexFileModel[]
 };
 
 const FileReducer = (state = initState, action: any) => {
@@ -46,6 +47,11 @@ const FileReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 mainFile: action.data
+            };
+        case "SET_CUR_FILE_TREE":
+            return {
+                ...state,
+                curFileTree: action.data
             };
         default:
             break;

@@ -10,12 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { initEditor, themeConfig } from "@/service/editor/CollarEditorService";
 import { themeMap } from "@/component/common/editor/foundation/extensions/theme/theme";
 import { TexFileModel } from "@/model/file/TexFileModel";
-import {
-  delProjInfo,
-  getPdfPosition,
-  projHasFile,
-} from "@/service/project/ProjectService";
-import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
+import { delProjInfo, projHasFile } from "@/service/project/ProjectService";
 import { toast } from "react-toastify";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { ProjConfType } from "@/model/proj/config/ProjConfType";
@@ -24,8 +19,7 @@ import { TreeFileType } from "@/model/file/TreeFileType";
 import TableDesigner from "../table/TableDesigner";
 import Snippet from "../snippet/Snippet";
 import EquationDesigner from "../equation/EquationDesigner";
-import { getCursorPos, handleSrcTreeNav } from "./CollarCodeEditorHandler";
-import { BaseMethods } from "rdjs-wheel";
+import { handlePdfLocate, handleSrcTreeNav } from "./CollarCodeEditorHandler";
 import { useTranslation } from "react-i18next";
 
 export type EditorProps = {
@@ -35,19 +29,11 @@ export type EditorProps = {
 const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<HTMLDivElement>(null);
   const { activeFile } = useSelector((state: AppState) => state.file);
-  const {
-    projInfo,
-    projConf,
-    activeShare,
-    insertContext,
-    replaceContext,
-    connState,
-  } = useSelector((state: AppState) => state.proj);
-  const { editor, ws } = useSelector((state: AppState) => state.editor);
+  const { projInfo, projConf, insertContext, replaceContext, connState } =
+    useSelector((state: AppState) => state.proj);
+  const { editor } = useSelector((state: AppState) => state.editor);
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
-  const [shareProj, setShareProj] = useState<boolean>();
-  const [wsModel, setWsModel] = useState<WebsocketProvider>();
   const activeKey = readConfig("projActiveFile") + props.projectId;
   let wsProvider: WebsocketProvider;
   const { t } = useTranslation();
@@ -67,12 +53,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       setActiveEditorView(editor);
     }
   }, [editor]);
-
-  React.useEffect(() => {
-    if (ws) {
-      setWsModel(ws);
-    }
-  }, [ws]);
 
   React.useEffect(() => {
     if (projInfo && Object.keys(projInfo).length > 0) {
@@ -101,10 +81,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       destroy();
     };
   }, [projInfo]);
-
-  React.useEffect(() => {
-    setShareProj(activeShare);
-  }, [activeShare]);
 
   React.useEffect(() => {
     handleInsertText(insertContext);
@@ -207,38 +183,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   const handleTables = () => {};
 
-  const handlePdfLocate = () => {
-    if (mainFileModel && mainFileModel.name && activeEditorView) {
-      let { line, column } = getCursorPos(activeEditorView);
-      const selected = localStorage.getItem(
-        "proj-select-file:" + props.projectId
-      );
-      if (!selected) {
-        toast.info("请选择文件");
-        return;
-      }
-      let selectFile: TexFileModel = JSON.parse(selected);
-      if (BaseMethods.isNull(selectFile)) {
-        // if the select file is null, then try to use the current active file
-        let activeFile = localStorage.getItem(activeKey);
-        if (!activeFile || BaseMethods.isNull(activeFile)) {
-          toast.info("请选择文件");
-          return;
-        }
-        selectFile = JSON.parse(activeFile);
-      }
-      let req: QueryPdfPos = {
-        project_id: props.projectId,
-        path: selectFile.file_path,
-        file: selectFile.name,
-        main_file: mainFileModel.name,
-        line: line,
-        column: column,
-      };
-      getPdfPosition(req);
-    }
-  };
-
   const renderConnState = (connState: string) => {
     switch (connState) {
       case "connected":
@@ -281,7 +225,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
           data-bs-toggle="tooltip"
           title={t("btn_nav_tree")}
           onClick={() => {
-            // handleSrcTreeNav(editorView);
+            handleSrcTreeNav(activeEditorView, props, activeFile);
           }}
         >
           <i className="fa-solid fa-arrow-left"></i>
@@ -290,7 +234,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
           className={styles.menuButton}
           title={t("btn_nav_pdf")}
           onClick={() => {
-            handlePdfLocate();
+            handlePdfLocate(mainFileModel, activeEditorView, props, activeKey);
           }}
         >
           <i className="fa-solid fa-arrow-right"></i>

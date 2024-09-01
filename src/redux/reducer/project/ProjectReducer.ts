@@ -13,6 +13,7 @@ import { SearchResult } from "@/model/proj/search/SearchResult";
 import { ProjHisotry as ProjHistory } from "@/model/proj/history/ProjHistory";
 import { TexProjects } from "@/model/proj/TexProjects";
 import * as Y from 'yjs';
+import { TexFileModel } from "@/model/file/TexFileModel";
 
 const initState: AppState["proj"] = {
     projList: {} as TexProjects,
@@ -48,7 +49,7 @@ const initState: AppState["proj"] = {
     curYDoc: new Y.Doc(),
     replaceContext: "",
     curHistory: {} as ProjHistory,
-    connState: "",
+    connState: ""
 };
 
 const ProjectReducer = (state = initState, action: any) => {

@@ -1,6 +1,11 @@
 import { useState } from "react";
 import styles from "./ProjectTree.module.css";
-import { addFile, downloadProjFile, getFileTree } from "@/service/file/FileService";
+import {
+  addFile,
+  downloadProjFile,
+  getFileTree,
+  setCurFileTree,
+} from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { AppState } from "@/redux/types/AppState";
@@ -37,7 +42,9 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const [curTabName, setCurTabName] = useState("tree");
   const [createFileName, setCreateFileName] = useState("");
   const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
-  const { fileTree, treeSelectItem } = useSelector((state: AppState) => state.file);
+  const { fileTree, treeSelectItem, curFileTree } = useSelector(
+    (state: AppState) => state.file
+  );
   const { projInfo, srcFocus } = useSelector((state: AppState) => state.proj);
   const [mainFile, setMainFile] = useState<TexFileModel>();
   const pid = props.projectId;
@@ -72,6 +79,12 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   }, [projInfo]);
 
   React.useEffect(() => {
+    if (curFileTree && Object.keys(curFileTree).length > 0) {
+      setCurFileTree(curFileTree);
+    }
+  }, [curFileTree]);
+
+  React.useEffect(() => {
     if (fileTree && fileTree.length > 0) {
       handleFileTreeUpdate(fileTree, props.projectId, setTexFileTree);
       let defaultFile = fileTree.filter(
@@ -94,19 +107,19 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       let req: DownloadFileReq = {
         file_id: file.file_id,
       };
-        downloadProjFile(req).then((resp) => {
-          const blob = new Blob([resp], { type: "application/oct-stream" });
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download =  file.name;
-          link.click();
-          window.URL.revokeObjectURL(url);
-        });
+      downloadProjFile(req).then((resp) => {
+        const blob = new Blob([resp], { type: "application/oct-stream" });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = file.name;
+        link.click();
+        window.URL.revokeObjectURL(url);
+      });
     } catch (error) {
-        console.error('Error downloading PDF:', error);
+      console.error("Error downloading PDF:", error);
     }
-}
+  };
 
   const handleModal = (
     e: React.MouseEvent<HTMLDivElement>,
@@ -183,11 +196,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   };
 
   const handleSearchComplete = (paths: string[]) => {
-    ProjectTreeFolder.handleExpandFolder(
-      paths,
-      props.projectId,
-      selectedFile
-    );
+    ProjectTreeFolder.handleExpandFolder(paths, props.projectId, selectedFile);
   };
 
   const renderBody = () => {

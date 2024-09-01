@@ -1,5 +1,12 @@
+import { TexFileModel } from "@/model/file/TexFileModel";
+import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
 import { EditorView } from "codemirror";
-import { WebsocketProvider } from "rdy-websocket";
+import { BaseMethods } from "rdjs-wheel";
+import { EditorProps } from "./CollarCodeEditor";
+import { toast } from "react-toastify";
+import { getPdfPosition } from "@/service/project/ProjectService";
+import { ProjectTreeFolder } from "../../projtree/main/ProjectTreeFolder";
+import { setCurFileTree } from "@/service/file/FileService";
 
 export const getCursorPos = (
   editor: EditorView
@@ -20,7 +27,64 @@ export const getCursorPos = (
   }
 };
 
-export const handleSrcTreeNav = (editor: [EditorView | undefined, WebsocketProvider | undefined]) => {
+export const handleSrcTreeNav = (
+  editor: EditorView | undefined,
+  props: EditorProps,
+  activeFile: TexFileModel
+) => {
+  if (!editor) {
+    return;
+  }
+  let legacyTree = localStorage.getItem("projTree:" + props.projectId);
+  if (legacyTree == null) {
+    return [];
+  }
+  let treeNodes: TexFileModel[] = JSON.parse(legacyTree);
 
+  const updatedItems: TexFileModel[] = ProjectTreeFolder.handleExpandClick(
+    activeFile.file_id,
+    treeNodes
+  );
+  localStorage.setItem(
+    "projTree:" + props.projectId,
+    JSON.stringify(updatedItems)
+  );
+  setCurFileTree(updatedItems);
+};
 
-}
+export const handlePdfLocate = (
+  mainFileModel: TexFileModel | undefined,
+  activeEditorView: EditorView | undefined,
+  props: EditorProps,
+  activeKey: string
+) => {
+  if (mainFileModel && mainFileModel.name && activeEditorView) {
+    let { line, column } = getCursorPos(activeEditorView);
+    const selected = localStorage.getItem(
+      "proj-select-file:" + props.projectId
+    );
+    if (!selected) {
+      toast.info("请选择文件");
+      return;
+    }
+    let selectFile: TexFileModel = JSON.parse(selected);
+    if (BaseMethods.isNull(selectFile)) {
+      // if the select file is null, then try to use the current active file
+      let activeFile = localStorage.getItem(activeKey);
+      if (!activeFile || BaseMethods.isNull(activeFile)) {
+        toast.info("请选择文件");
+        return;
+      }
+      selectFile = JSON.parse(activeFile);
+    }
+    let req: QueryPdfPos = {
+      project_id: props.projectId,
+      path: selectFile.file_path,
+      file: selectFile.name,
+      main_file: mainFileModel.name,
+      line: line,
+      column: column,
+    };
+    getPdfPosition(req);
+  }
+};
