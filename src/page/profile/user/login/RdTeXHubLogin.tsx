@@ -78,14 +78,14 @@ const RdTeXHubLogin: React.FC<ILoginProp> = (props: ILoginProp) => {
       !phoneInputRef.current ||
       (phoneInputRef.current as HTMLInputElement).value.length === 0
     ) {
-      toast("请输入用户名!");
+      toast(t("tips_input_username"));
       return;
     }
     if (
       !passwordInputRef.current ||
       (passwordInputRef.current as HTMLInputElement).value.length === 0
     ) {
-      toast("请输入密码!");
+      toast(t("tips_input_pwd"));
       return;
     }
     let values = {
@@ -205,7 +205,7 @@ const RdTeXHubLogin: React.FC<ILoginProp> = (props: ILoginProp) => {
                 <input
                   type={passwordShown ? "text" : "password"}
                   ref={passwordInputRef}
-                  placeholder="密码"
+                  placeholder={t("tips_password")}
                   name="p"
                 ></input>
                 <button onClick={togglePasswordVisibility}>
