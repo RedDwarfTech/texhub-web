@@ -179,7 +179,7 @@ const RdTeXHubLogin: React.FC<ILoginProp> = (props: ILoginProp) => {
                 openCity(e, "phone");
               }}
             >
-              手机号登录
+              {t("btn_login")}
             </button>
           </div>
           <div id="phone" className={styles.tabcontent}>
@@ -198,7 +198,7 @@ const RdTeXHubLogin: React.FC<ILoginProp> = (props: ILoginProp) => {
                   type="text"
                   ref={phoneInputRef}
                   id="phone"
-                  placeholder="请输入手机号码"
+                  placeholder={t("tips_type_phone")}
                 />
               </div>
               <div className={styles.pwd}>
@@ -227,8 +227,8 @@ const RdTeXHubLogin: React.FC<ILoginProp> = (props: ILoginProp) => {
                 </button>
               </div>
               <div className={styles.handleSituation}>
-                <a href="/user/reg">没有账号，去注册</a>
-                <a href="/userpage/pwd/retrieve">忘记密码？</a>
+                <a href="/user/reg">{t("tips_register_welcome")}</a>
+                <a href="/userpage/pwd/retrieve">{t("tips_forget_pwd")}</a>
               </div>
             </form>
           </div>
