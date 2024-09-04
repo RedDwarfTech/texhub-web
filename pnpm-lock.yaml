@@ -110,6 +110,9 @@ dependencies:
   bootstrap-table:
     specifier: ^1.23.2
     version: 1.23.2(jquery@3.7.1)
+  bowser:
+    specifier: ^2.11.0
+    version: 2.11.0
   chai:
     specifier: ^5.1.1
     version: 5.1.1
@@ -6246,6 +6249,10 @@ packages:
       '@popperjs/core': ^2.11.6
     dependencies:
       '@popperjs/core': 2.11.8
+    dev: false
+
+  /bowser@2.11.0:
+    resolution: {integrity: sha512-AlcaJBi/pqqJBIQ8U9Mcpc9i8Aqxn88Skv5d+xBX006BY5u8N3mGLHa5Lgppa7L/HfwgwLgZ6NYs+Ag6uUmJRA==}
     dev: false
 
   /bplist-parser@0.2.0:

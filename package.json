@@ -38,6 +38,7 @@
     "axios": "^1.7.5",
     "bootstrap": "5.3.0-alpha1",
     "bootstrap-table": "^1.23.2",
+    "bowser": "^2.11.0",
     "chai": "^5.1.1",
     "clipboard-polyfill": "^4.1.0",
     "cm6-theme-basic-light": "^0.2.0",

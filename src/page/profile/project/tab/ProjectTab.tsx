@@ -31,6 +31,7 @@ import FolderRename from "../edit/FolderRename";
 import FolderDel from "../edit/FolderDel";
 import { FolderModel } from "@/model/proj/folder/FolderModel";
 import TeXProjCopy from "../new/TeXProjCopy";
+import Bowser from "bowser";
 
 const ProjectTab: React.FC = () => {
   const [userDocList, setUserDocList] = useState<TexProjectModel[]>([]);
@@ -185,7 +186,10 @@ const ProjectTab: React.FC = () => {
   const renderMenu = (docItem: TexProjectModel) => {
     if (activeTab === ProjTabType.All) {
       return (
-        <ul className="dropdown-menu" aria-labelledby={"ddb-" + docItem.project_id}>
+        <ul
+          className="dropdown-menu"
+          aria-labelledby={"ddb-" + docItem.project_id}
+        >
           <li>
             <div
               className="dropdown-item"
@@ -364,6 +368,33 @@ const ProjectTab: React.FC = () => {
   };
 
   const handleProjNameClick = (docItem: TexProjectModel) => {
+    /**
+     * check the browser version
+     * the pdf.js need the safari version greater than 17.2
+     * the google chrome version greater than 119
+     * https://caniuse.com/?search=romise.withResolvers
+     * https://github.com/mozilla/pdf.js/issues/18006
+     * https://stackoverflow.com/questions/78949231/promise-withresolvers-is-not-a-function-when-using-pdf-js-4-4-168
+     **/
+    const browser = Bowser.getParser(window.navigator.userAgent);
+    let info = browser.getBrowser();
+    if (info.name === "Chrome") {
+    }
+    if (info.name === "Safari" && info.version && info.version < "17.2") {
+      let versions = info.version.split(".").map(Number);
+      if (versions[0] < 17) {
+        toast.warn(
+          "Your browser version is outdated. Please update your browser for the best experience."
+        );
+        return;
+      }
+      if (versions[0] === 17 && versions[1] <= 4) {
+        toast.warn(
+          "Your browser version is outdated. Please update your browser for the best experience."
+        );
+        return;
+      }
+    }
     if (activeTab === ProjTabType.Archived) {
       toast.info("项目已归档");
       return;
@@ -681,7 +712,7 @@ const ProjectTab: React.FC = () => {
                     ? "nav-link active"
                     : "nav-link"
                 }
-                href="#"
+                href="#/"
                 onClick={() => {
                   handleTabClick(3);
                 }}
