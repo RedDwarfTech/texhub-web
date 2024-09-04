@@ -13,10 +13,8 @@ import { Options } from "react-pdf/dist/cjs/shared/types";
 import { getAccessToken } from "../cache/Cache";
 import {
   getLatestCompile,
-  getSrcPosition,
   setProjAttr,
 } from "@/service/project/ProjectService";
-import { QuerySrcPos } from "@/model/request/proj/query/QuerySrcPos";
 import { CompileResultType } from "@/model/proj/compile/CompileResultType";
 import { readConfig } from "@/config/app/config-reader";
 import { BaseMethods } from "rdjs-wheel";
@@ -24,7 +22,7 @@ import { ProjInfo } from "@/model/proj/ProjInfo";
 import { goPage } from "./doc/PDFPreviewHandle";
 import { useTranslation } from "react-i18next";
 import { handleSrcLocate } from "./PreviewerHandler";
-pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
+pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/legacy/pdf.worker.min.mjs`;
 
 export type PreviwerProps = {
   projectId: string;
