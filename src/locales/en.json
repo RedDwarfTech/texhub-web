@@ -93,6 +93,8 @@
     "tips_password": "Password",
     "tips_input_pwd": "Please enter password",
     "tips_input_username": "Please enter username",
+    "tips_proj_archived": "Project archived",
+    "tips_choose_proj": "Choose project to delete",
     "title_del": "Delete",
     "title_template_detail": "Template detail",
     "title_search_proj": "Search project",

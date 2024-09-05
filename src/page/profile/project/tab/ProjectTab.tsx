@@ -91,7 +91,7 @@ const ProjectTab: React.FC = () => {
 
   const handleProjDel = () => {
     if (!currProject) {
-      toast.info("请选择删除项目");
+      toast.info(t("tips_choose_proj"));
     }
     let proj = {
       project_id: currProject?.project_id,
@@ -396,7 +396,7 @@ const ProjectTab: React.FC = () => {
       }
     }
     if (activeTab === ProjTabType.Archived) {
-      toast.info("项目已归档");
+      toast.info(t("tips_proj_archived"));
       return;
     }
     navigate("/editor?pid=" + docItem.project_id);
