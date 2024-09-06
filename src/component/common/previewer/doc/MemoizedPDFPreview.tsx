@@ -35,6 +35,8 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     setCurPageNum,
   }) => {
     const [numPages, setNumPages] = useState<number>();
+    const [pageNumber, setPageNumber] = useState(1);
+    const [renderedPageNumber, setRenderedPageNumber] = useState<number>();
     let pdfScaleKey = "pdf:scale:" + projId;
     let cachedScale = Number(localStorage.getItem(pdfScaleKey));
     const [projAttribute, setProjAttribute] = useState<ProjAttribute>({
@@ -107,7 +109,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
     );
 
-    const handlePageRenderSuccess = (page: PageCallback) => {
+    const handlePageRenderSuccess = (page: PageCallback, curPage: number) => {
       let elements = document.querySelectorAll(`.${styles.pdfPage}`);
       if (elements && elements.length > 0) {
         elements.forEach((box) => pageObserve.observe(box));
@@ -115,12 +117,12 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
       let viewport: PageViewport = page.getViewport({ scale: cachedScale });
       setViewport(viewport);
+      setRenderedPageNumber(curPage);
     };
 
     const restorePdfPosition = () => {
       const key = readConfig("pdfScrollKey") + projId;
       const scrollPosition = localStorage.getItem(key);
-      console.log("滚动高度：" + scrollPosition);
       if (scrollPosition) {
         setTimeout(() => {
           const pdfContainerDiv = document.getElementById("pdfContainer");
@@ -152,29 +154,62 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const renderPages = (totalPageNum: number | undefined) => {
       if (!totalPageNum || totalPageNum < 1) return;
       const tagList: JSX.Element[] = [];
-      for (let i = 1; i <= totalPageNum; i++) {
-        tagList.push(
-          <Page
-            key={i}
-            className={styles.pdfPage}
-            scale={projAttribute.pdfScale}
-            onLoad={handlePageChange}
-            canvasRef={(element) => updateRefArray(i, element)}
-            onChange={handlePageChange}
-            onRenderSuccess={handlePageRenderSuccess}
-            pageNumber={i}
-          >
-            {curPdfPosition && viewport ? (
-              <Highlight
-                position={curPdfPosition}
-                pageNumber={i}
-                viewport={viewport}
-              ></Highlight>
-            ) : (
-              <div></div>
-            )}
-          </Page>
-        );
+      for (let curPageNo = 1; curPageNo <= totalPageNum; curPageNo++) {
+        if(isLoading && renderedPageNumber){
+          setPageNumber(curPageNo);
+          tagList.push(
+            <Page
+              key={curPageNo}
+              className="prevPage"
+              scale={projAttribute.pdfScale}
+              onLoad={handlePageChange}
+              canvasRef={(element) => updateRefArray(curPageNo, element)}
+              onChange={handlePageChange}
+              onRenderSuccess={(page: PageCallback)=>{
+                handlePageRenderSuccess(page, curPageNo)
+              }
+              }
+              pageNumber={curPageNo}
+            >
+              {curPdfPosition && viewport ? (
+                <Highlight
+                  position={curPdfPosition}
+                  pageNumber={curPageNo}
+                  viewport={viewport}
+                ></Highlight>
+              ) : (
+                <div></div>
+              )}
+            </Page>
+          );
+        }else{
+          tagList.push(
+            <Page
+              key={curPageNo}
+              className={styles.pdfPage}
+              scale={projAttribute.pdfScale}
+              onLoad={handlePageChange}
+              canvasRef={(element) => updateRefArray(curPageNo, element)}
+              onChange={handlePageChange}
+              onRenderSuccess={(page: PageCallback)=>{
+                handlePageRenderSuccess(page, curPageNo)
+              }
+              }
+              pageNumber={curPageNo}
+            >
+              {curPdfPosition && viewport ? (
+                <Highlight
+                  position={curPdfPosition}
+                  pageNumber={curPageNo}
+                  viewport={viewport}
+                ></Highlight>
+              ) : (
+                <div></div>
+              )}
+            </Page>
+          );
+        }
+       
       }
       return tagList;
     };
@@ -196,6 +231,8 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         window.open((e.target as HTMLAnchorElement).href);
       }
     };
+
+    const isLoading = renderedPageNumber !== pageNumber;
 
     return (
       <div
