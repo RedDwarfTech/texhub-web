@@ -37,6 +37,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const [numPages, setNumPages] = useState<number>();
     const [pageNumber, setPageNumber] = useState(1);
     const [renderedPageNumber, setRenderedPageNumber] = useState<number>();
+    const [renderedScale, setRenderedScale] = useState(null);
     let pdfScaleKey = "pdf:scale:" + projId;
     let cachedScale = Number(localStorage.getItem(pdfScaleKey));
     const [projAttribute, setProjAttribute] = useState<ProjAttribute>({
@@ -155,21 +156,14 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       if (!totalPageNum || totalPageNum < 1) return;
       const tagList: JSX.Element[] = [];
       for (let curPageNo = 1; curPageNo <= totalPageNum; curPageNo++) {
-        if(isLoading && renderedPageNumber){
-          setPageNumber(curPageNo);
+        if(isLoading && renderedPageNumber && renderedScale){
           tagList.push(
             <Page
-              key={curPageNo}
+            key={renderedPageNumber + "@" + renderedScale}
               className="prevPage"
-              scale={projAttribute.pdfScale}
-              onLoad={handlePageChange}
-              canvasRef={(element) => updateRefArray(curPageNo, element)}
-              onChange={handlePageChange}
-              onRenderSuccess={(page: PageCallback)=>{
-                handlePageRenderSuccess(page, curPageNo)
-              }
-              }
-              pageNumber={curPageNo}
+              //scale={projAttribute.pdfScale}
+              scale={renderedScale}
+              pageNumber={renderedPageNumber}
             >
               {curPdfPosition && viewport ? (
                 <Highlight
@@ -185,7 +179,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         }else{
           tagList.push(
             <Page
-              key={curPageNo}
+              key={pageNumber + "@" + projAttribute.pdfScale}
               className={styles.pdfPage}
               scale={projAttribute.pdfScale}
               onLoad={handlePageChange}
@@ -232,7 +226,8 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
     };
 
-    const isLoading = renderedPageNumber !== pageNumber;
+    const isLoading =
+    renderedPageNumber !== pageNumber || renderedScale !== projAttribute.pdfScale;
 
     return (
       <div
