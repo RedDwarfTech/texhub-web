@@ -50,7 +50,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const canvasArray = useRef<
       Array<React.MutableRefObject<HTMLCanvasElement | null>>
     >([]);
-    const [legacyRendered, setLegacyRendered] = useState<Map<string, boolean>>();
+    const [legacyRendered, setLegacyRendered] = useState<Map<string, boolean>>(new Map<string, boolean>());
 
     React.useEffect(() => {
       setCurProjInfo(projInfo);
