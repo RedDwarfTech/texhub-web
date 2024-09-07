@@ -165,6 +165,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       for (let curPageNo = 1; curPageNo <= totalPageNum; curPageNo++) {
         let legacyRenderedKey = curPageNo + "@" + projAttribute.legacyPdfScale;
         let legacyPage = legacyRendered.get(legacyRenderedKey);
+        debugger
         if (legacyPage && projAttribute.legacyPdfScale) {
           // if the new page did not rendered
           // show the legacy page
