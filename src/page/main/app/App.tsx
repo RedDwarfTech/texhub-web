@@ -85,7 +85,7 @@ const App: React.FC = () => {
       if (latestComp.path && latestComp.path.length > 0) {
         let pdfUrl = BaseMethods.joinUrl(readConfig("compileBaseUrl"), latestComp.path);
         let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + pid + "&access_token=" + getAccessToken()
-        updatePdfUrl(newPdfUrl);
+        updatePdfUrl(pdfUrl);
       } else {
         compile(pid.toString());
       }
@@ -102,7 +102,7 @@ const App: React.FC = () => {
       let file_without_ext = mainFile?.name.replace(/\.[^/.]+$/, '');
       const pdfUrl = readConfig("compileBaseUrl") + "/" + proj_id + "/" + file_without_ext + ".pdf";
       let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + pid + "&access_token=" + getAccessToken()
-      updatePdfUrl(newPdfUrl);
+      updatePdfUrl(pdfUrl);
     }
   }, [compileResult]);
 
