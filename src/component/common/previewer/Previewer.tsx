@@ -80,7 +80,8 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
           readConfig("compileBaseUrl"),
           latestComp.path
         );
-        setCurPdfUrl(combinedPdfUrl);
+        let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + projectId
+        setCurPdfUrl(newPdfUrl);
       }
     }
   }, [latestComp]);
