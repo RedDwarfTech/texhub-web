@@ -39,7 +39,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     let cachedScale = Number(localStorage.getItem(pdfScaleKey));
     const [projAttribute, setProjAttribute] = useState<ProjAttribute>({
       pdfScale: cachedScale,
-      legacyPdfScale: cachedScale
+      legacyPdfScale: cachedScale,
     });
     const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
     const [viewport, setViewport] = useState<PageViewport>();
@@ -50,7 +50,9 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const canvasArray = useRef<
       Array<React.MutableRefObject<HTMLCanvasElement | null>>
     >([]);
-    const [legacyRendered, setLegacyRendered] = useState<Map<string, boolean>>(new Map<string, boolean>());
+    const [legacyRendered, setLegacyRendered] = useState<Map<string, boolean>>(
+      new Map<string, boolean>()
+    );
 
     React.useEffect(() => {
       setCurProjInfo(projInfo);
@@ -169,12 +171,12 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       for (let curPageNo = 1; curPageNo <= totalPageNum; curPageNo++) {
         let legacyRenderedKey = curPageNo + "@" + projAttribute.legacyPdfScale;
         let legacyPage = legacyRendered?.get(legacyRenderedKey);
-        debugger
+        debugger;
         if (legacyPage && projAttribute.legacyPdfScale) {
           // if the new page did not rendered
           // show the legacy page
           // https://github.com/wojtekmaj/react-pdf/issues/875
-          debugger
+          debugger;
           tagList.push(
             <Page
               key={legacyRenderedKey}
@@ -193,32 +195,31 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
               )}
             </Page>
           );
-        } else {
-          tagList.push(
-            <Page
-              key={curPageNo + "@" + projAttribute.pdfScale}
-              className={styles.pdfPage}
-              scale={projAttribute.pdfScale}
-              onLoad={handlePageChange}
-              canvasRef={(element) => updateRefArray(curPageNo, element)}
-              onChange={handlePageChange}
-              onRenderSuccess={(page: PageCallback) => {
-                handlePageRenderSuccess(page, curPageNo, legacyRenderedKey);
-              }}
-              pageNumber={curPageNo}
-            >
-              {curPdfPosition && viewport ? (
-                <Highlight
-                  position={curPdfPosition}
-                  pageNumber={curPageNo}
-                  viewport={viewport}
-                ></Highlight>
-              ) : (
-                <div></div>
-              )}
-            </Page>
-          );
         }
+        tagList.push(
+          <Page
+            key={curPageNo + "@" + projAttribute.pdfScale}
+            className={styles.pdfPage}
+            scale={projAttribute.pdfScale}
+            onLoad={handlePageChange}
+            canvasRef={(element) => updateRefArray(curPageNo, element)}
+            onChange={handlePageChange}
+            onRenderSuccess={(page: PageCallback) => {
+              handlePageRenderSuccess(page, curPageNo, legacyRenderedKey);
+            }}
+            pageNumber={curPageNo}
+          >
+            {curPdfPosition && viewport ? (
+              <Highlight
+                position={curPdfPosition}
+                pageNumber={curPageNo}
+                viewport={viewport}
+              ></Highlight>
+            ) : (
+              <div></div>
+            )}
+          </Page>
+        );
       }
       return tagList;
     };
