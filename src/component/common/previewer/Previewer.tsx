@@ -180,11 +180,19 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
       return;
     }
     let curScale = pdfScale + 0.1;
-    setProjAttr({ 
+    setProjAttr({
       pdfScale: curScale,
-      legacyPdfScale: pdfScale
-     });
+      legacyPdfScale: pdfScale,
+    });
     localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
+    // change the scroll value
+    const key = readConfig("pdfScrollKey") + projectId;
+    const scrollPosition = localStorage.getItem(key);
+    if (scrollPosition) {
+      let scroll = parseInt(scrollPosition);
+      let newScrollPosition = scroll + scroll * (curScale - pdfScale);
+      localStorage.setItem(key, newScrollPosition.toString());
+    }
   };
 
   const handleZoomOut = async () => {
@@ -193,8 +201,16 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
       return;
     }
     let curScale = pdfScale - 0.1;
-    setProjAttr({ pdfScale: curScale, legacyPdfScale: pdfScale});
+    setProjAttr({ pdfScale: curScale, legacyPdfScale: pdfScale });
     localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
+    // change the scroll value
+    const key = readConfig("pdfScrollKey") + projectId;
+    const scrollPosition = localStorage.getItem(key);
+    if (scrollPosition) {
+      let scroll = parseInt(scrollPosition);
+      let newScrollPosition = scroll + scroll * (curScale - pdfScale);
+      localStorage.setItem(key, newScrollPosition.toString());
+    }
   };
 
   const handleFullScreen = async () => {
