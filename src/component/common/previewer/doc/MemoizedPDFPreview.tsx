@@ -50,7 +50,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const canvasArray = useRef<
       Array<React.MutableRefObject<HTMLCanvasElement | null>>
     >([]);
-    let legacyRendered = new Map<string, boolean>();
+    const [legacyRendered, setLegacyRendered] = useState<Map<string, boolean>>();
 
     React.useEffect(() => {
       setCurProjInfo(projInfo);
@@ -122,10 +122,14 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       let viewport: PageViewport = page.getViewport({ scale: cachedScale });
       setViewport(viewport);
       // remove legacy indicator
-      legacyRendered.delete(legacyRenderedKey);
+      // legacyRendered.delete(legacyRenderedKey);
+      let prev = legacyRendered;
+      prev?.delete(legacyRenderedKey);
+      setLegacyRendered(prev);
       // insert new indicator
       let newRenderedKey = curPage + "@" + projAttribute.pdfScale;
-      legacyRendered.set(newRenderedKey, true);
+      prev?.set(newRenderedKey, true);
+      setLegacyRendered(prev);
     };
 
     const restorePdfPosition = () => {
