@@ -180,7 +180,10 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
       return;
     }
     let curScale = pdfScale + 0.1;
-    setProjAttr({ pdfScale: curScale });
+    setProjAttr({ 
+      pdfScale: curScale,
+      legacyPdfScale: pdfScale
+     });
     localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
   };
 
@@ -190,7 +193,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
       return;
     }
     let curScale = pdfScale - 0.1;
-    setProjAttr({ pdfScale: curScale });
+    setProjAttr({ pdfScale: curScale, legacyPdfScale: pdfScale});
     localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
   };
 

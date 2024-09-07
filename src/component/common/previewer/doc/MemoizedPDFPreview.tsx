@@ -35,13 +35,11 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     setCurPageNum,
   }) => {
     const [numPages, setNumPages] = useState<number>();
-    const [pageNumber, setPageNumber] = useState(1);
-    const [renderedPageNumber, setRenderedPageNumber] = useState<number>();
-    const [renderedScale, setRenderedScale] = useState(null);
     let pdfScaleKey = "pdf:scale:" + projId;
     let cachedScale = Number(localStorage.getItem(pdfScaleKey));
     const [projAttribute, setProjAttribute] = useState<ProjAttribute>({
       pdfScale: cachedScale,
+      legacyPdfScale: cachedScale
     });
     const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
     const [viewport, setViewport] = useState<PageViewport>();
@@ -52,6 +50,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const canvasArray = useRef<
       Array<React.MutableRefObject<HTMLCanvasElement | null>>
     >([]);
+    let legacyRendered = new Map<string, boolean>();
 
     React.useEffect(() => {
       setCurProjInfo(projInfo);
@@ -110,7 +109,11 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
     );
 
-    const handlePageRenderSuccess = (page: PageCallback, curPage: number) => {
+    const handlePageRenderSuccess = (
+      page: PageCallback,
+      curPage: number,
+      legacyRenderedKey: string
+    ) => {
       let elements = document.querySelectorAll(`.${styles.pdfPage}`);
       if (elements && elements.length > 0) {
         elements.forEach((box) => pageObserve.observe(box));
@@ -118,7 +121,11 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
       let viewport: PageViewport = page.getViewport({ scale: cachedScale });
       setViewport(viewport);
-      setRenderedPageNumber(curPage);
+      // remove legacy indicator
+      legacyRendered.delete(legacyRenderedKey);
+      // insert new indicator
+      let newRenderedKey = curPage + "@" + projAttribute.pdfScale;
+      legacyRendered.set(newRenderedKey, true);
     };
 
     const restorePdfPosition = () => {
@@ -156,14 +163,18 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       if (!totalPageNum || totalPageNum < 1) return;
       const tagList: JSX.Element[] = [];
       for (let curPageNo = 1; curPageNo <= totalPageNum; curPageNo++) {
-        if(isLoading && renderedPageNumber && renderedScale){
+        let legacyRenderedKey = curPageNo + "@" + projAttribute.legacyPdfScale;
+        let legacyPage = legacyRendered.get(legacyRenderedKey);
+        if (legacyPage && projAttribute.legacyPdfScale) {
+          // if the new page did not rendered
+          // show the legacy page
+          // https://github.com/wojtekmaj/react-pdf/issues/875
           tagList.push(
             <Page
-            key={renderedPageNumber + "@" + renderedScale}
+              key={legacyRenderedKey}
               className="prevPage"
-              //scale={projAttribute.pdfScale}
-              scale={renderedScale}
-              pageNumber={renderedPageNumber}
+              scale={projAttribute.legacyPdfScale}
+              pageNumber={curPageNo}
             >
               {curPdfPosition && viewport ? (
                 <Highlight
@@ -176,19 +187,18 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
               )}
             </Page>
           );
-        }else{
+        } else {
           tagList.push(
             <Page
-              key={pageNumber + "@" + projAttribute.pdfScale}
+              key={curPageNo + "@" + projAttribute.pdfScale}
               className={styles.pdfPage}
               scale={projAttribute.pdfScale}
               onLoad={handlePageChange}
               canvasRef={(element) => updateRefArray(curPageNo, element)}
               onChange={handlePageChange}
-              onRenderSuccess={(page: PageCallback)=>{
-                handlePageRenderSuccess(page, curPageNo)
-              }
-              }
+              onRenderSuccess={(page: PageCallback) => {
+                handlePageRenderSuccess(page, curPageNo, legacyRenderedKey);
+              }}
               pageNumber={curPageNo}
             >
               {curPdfPosition && viewport ? (
@@ -203,7 +213,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             </Page>
           );
         }
-       
       }
       return tagList;
     };
@@ -225,9 +234,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         window.open((e.target as HTMLAnchorElement).href);
       }
     };
-
-    const isLoading =
-    renderedPageNumber !== pageNumber || renderedScale !== projAttribute.pdfScale;
 
     return (
       <div
