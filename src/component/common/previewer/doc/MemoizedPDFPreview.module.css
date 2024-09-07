@@ -24,3 +24,8 @@
     margin-bottom: 5px;
     max-width: 100%;
 }
+
+.react-pdf__Page.prevPage {
+    position: absolute !important;
+    z-index: 1;
+}

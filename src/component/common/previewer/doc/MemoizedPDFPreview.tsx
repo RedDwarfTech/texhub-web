@@ -172,7 +172,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
           tagList.push(
             <Page
               key={legacyRenderedKey}
-              className="prevPage"
+              className={styles.reactPdfPagePrevPage}
               scale={projAttribute.legacyPdfScale}
               pageNumber={curPageNo}
             >

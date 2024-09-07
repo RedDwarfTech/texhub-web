@@ -108,7 +108,3 @@
     margin-top: 200px;
 }
 
-.react-pdf__Page.prevPage {
-    position: absolute !important;
-    z-index: 1;
-  }

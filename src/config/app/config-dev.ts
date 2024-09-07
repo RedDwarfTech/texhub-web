@@ -12,7 +12,7 @@ let devConfigMap = new Map([
     ["password","12345678"],
     ["deviceName","dolphin's macbook pro"],
     ["refreshUserUrl","/infra/user/current-user"],
-    ["compileBaseUrl","http://dev-tex.poemhub.top/tex/static/proj"],
+    ["compileBaseUrl","https://tex.poemhub.top/tex/static/proj"],
     ["tplBaseUrl","http://dev-tex.poemhub.top/tex/static/tpl"],
     ["shareBaseUrl","http://dev-tex.poemhub.top/proj/share"],
     ["pdfScaleKey",""],
