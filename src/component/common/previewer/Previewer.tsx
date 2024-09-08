@@ -39,6 +39,8 @@ const options: Options = {
   // if want to load the whole pdf by default
   // set this value to true
   disableRange: false,
+  // just fetch the needed slice
+  disableAutoFetch: true
 };
 
 const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
