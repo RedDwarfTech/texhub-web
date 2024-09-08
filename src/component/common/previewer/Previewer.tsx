@@ -34,6 +34,11 @@ const options: Options = {
   httpHeaders: {
     Authorization: "Bearer " + getAccessToken(),
   },
+  // open the range request
+  // the default value was false
+  // if want to load the whole pdf by default
+  // set this value to true
+  disableRange: false,
 };
 
 const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
