@@ -29,21 +29,6 @@ export type PreviwerProps = {
   viewModel: string;
 };
 
-const options: Options = {
-  cMapUrl: `/pdfjs-dist/${pdfjs.version}/cmaps/`,
-  httpHeaders: {
-    Authorization: "Bearer " + getAccessToken(),
-  },
-  // open the range request
-  // the default value was false
-  // if want to load the whole pdf by default
-  // set this value to true
-  disableRange: false,
-  // just fetch the needed slice
-  disableAutoFetch: true,
-  rangeChunkSize: 65536 * 5
-};
-
 const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   let cachedScale = localStorage.getItem("pdf:scale:" + projectId);
   let scaleNum = Number(cachedScale ?? 1);
@@ -70,6 +55,21 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     projInfo,
   } = useSelector((state: AppState) => state.proj);
   const { t } = useTranslation();
+
+  const options: Options = {
+    cMapUrl: `/pdfjs-dist/${pdfjs.version}/cmaps/`,
+    httpHeaders: {
+      Authorization: "Bearer " + getAccessToken(),
+    },
+    // open the range request
+    // the default value was false
+    // if want to load the whole pdf by default
+    // set this value to true
+    disableRange: false,
+    // just fetch the needed slice
+    disableAutoFetch: true,
+    rangeChunkSize: 65536 * 5
+  };
 
   React.useEffect(() => {
     getLatestCompile(projectId);
