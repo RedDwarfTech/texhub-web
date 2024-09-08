@@ -171,29 +171,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       for (let curPageNo = 1; curPageNo <= totalPageNum; curPageNo++) {
         let legacyRenderedKey = curPageNo + "@" + projAttribute.legacyPdfScale;
         let legacyPage = legacyRendered?.get(legacyRenderedKey);
-        if (legacyPage && projAttribute.legacyPdfScale && projAttribute.legacyPdfScale !== projAttribute.pdfScale) {
-          // if the new page did not rendered
-          // show the legacy page
-          // https://github.com/wojtekmaj/react-pdf/issues/875
-          tagList.push(
-            <Page
-              key={legacyRenderedKey}
-              className={styles.reactPdfPagePrevPage}
-              scale={projAttribute.legacyPdfScale}
-              pageNumber={curPageNo}
-            >
-              {curPdfPosition && viewport ? (
-                <Highlight
-                  position={curPdfPosition}
-                  pageNumber={curPageNo}
-                  viewport={viewport}
-                ></Highlight>
-              ) : (
-                <div></div>
-              )}
-            </Page>
-          );
-        }
         tagList.push(
           <Page
             key={curPageNo + "@" + projAttribute.pdfScale}
