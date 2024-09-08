@@ -125,13 +125,13 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       setViewport(viewport);
       // remove legacy indicator
       // legacyRendered.delete(legacyRenderedKey);
-      let prev = legacyRendered;
-      prev?.delete(legacyRenderedKey);
-      setLegacyRendered(prev);
+      // let prev = legacyRendered;
+      // prev?.delete(legacyRenderedKey);
+      // setLegacyRendered(prev);
       // insert new indicator
-      let newRenderedKey = curPage + "@" + projAttribute.pdfScale;
-      prev?.set(newRenderedKey, true);
-      setLegacyRendered(prev);
+      // let newRenderedKey = curPage + "@" + projAttribute.pdfScale;
+      // prev?.set(newRenderedKey, true);
+      // setLegacyRendered(prev);
     };
 
     const restorePdfPosition = () => {
