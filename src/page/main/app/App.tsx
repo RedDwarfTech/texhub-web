@@ -84,7 +84,7 @@ const App: React.FC = () => {
     if (latestComp && Object.keys(latestComp).length > 0) {
       if (latestComp.path && latestComp.path.length > 0) {
         let pdfUrl = BaseMethods.joinUrl(readConfig("compileBaseUrl"), latestComp.path);
-        let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + pid + "&access_token=" + getAccessToken()
+        let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + pid
         updatePdfUrl(newPdfUrl);
       } else {
         compile(pid.toString());

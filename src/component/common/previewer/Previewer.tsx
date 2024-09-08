@@ -41,6 +41,7 @@ const options: Options = {
   disableRange: false,
   // just fetch the needed slice
   disableAutoFetch: true,
+  rangeChunkSize: 65536 * 5
 };
 
 const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
