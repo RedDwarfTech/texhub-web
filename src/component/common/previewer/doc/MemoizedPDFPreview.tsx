@@ -50,9 +50,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const canvasArray = useRef<
       Array<React.MutableRefObject<HTMLCanvasElement | null>>
     >([]);
-    const [legacyRendered, setLegacyRendered] = useState<Map<string, boolean>>(
-      new Map<string, boolean>()
-    );
 
     React.useEffect(() => {
       setCurProjInfo(projInfo);
@@ -113,8 +110,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
 
     const handlePageRenderSuccess = (
       page: PageCallback,
-      curPage: number,
-      legacyRenderedKey: string
     ) => {
       let elements = document.querySelectorAll(`.${styles.pdfPage}`);
       if (elements && elements.length > 0) {
@@ -123,15 +118,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
       let viewport: PageViewport = page.getViewport({ scale: cachedScale });
       setViewport(viewport);
-      // remove legacy indicator
-      // legacyRendered.delete(legacyRenderedKey);
-      // let prev = legacyRendered;
-      // prev?.delete(legacyRenderedKey);
-      // setLegacyRendered(prev);
-      // insert new indicator
-      // let newRenderedKey = curPage + "@" + projAttribute.pdfScale;
-      // prev?.set(newRenderedKey, true);
-      // setLegacyRendered(prev);
     };
 
     const restorePdfPosition = () => {
@@ -169,8 +155,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       if (!totalPageNum || totalPageNum < 1) return;
       const tagList: JSX.Element[] = [];
       for (let curPageNo = 1; curPageNo <= totalPageNum; curPageNo++) {
-        let legacyRenderedKey = curPageNo + "@" + projAttribute.legacyPdfScale;
-        let legacyPage = legacyRendered?.get(legacyRenderedKey);
         tagList.push(
           <Page
             key={curPageNo + "@" + projAttribute.pdfScale}
@@ -180,7 +164,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             canvasRef={(element) => updateRefArray(curPageNo, element)}
             onChange={handlePageChange}
             onRenderSuccess={(page: PageCallback) => {
-              handlePageRenderSuccess(page, curPageNo, legacyRenderedKey);
+              handlePageRenderSuccess(page);
             }}
             pageNumber={curPageNo}
           >

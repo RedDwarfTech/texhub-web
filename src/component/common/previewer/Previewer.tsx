@@ -40,7 +40,7 @@ const options: Options = {
   // set this value to true
   disableRange: false,
   // just fetch the needed slice
-  disableAutoFetch: true
+  disableAutoFetch: true,
 };
 
 const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
