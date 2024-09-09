@@ -96,7 +96,13 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({ index, style, projId}) => {
         return tagList;
       };
 
-    return (<div style={style}>Row {index}</div>);
+    return (<div style={style}>
+        <Page
+          onRenderSuccess={handlePageRenderSuccess}
+          pageIndex={index}
+          width={400}
+        />
+      </div>);
 }
 
 export default TeXPDFPage;
