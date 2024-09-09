@@ -17,7 +17,7 @@ import { readConfig } from "@/config/app/config-reader";
 import { goPage } from "./PDFPreviewHandle";
 import { VariableSizeList as List } from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
-import  TeXPDFPage  from "./TeXPDFPage";
+import TeXPDFPage from "./TeXPDFPage";
 
 interface PDFPreviewProps {
   curPdfUrl: string;
@@ -48,14 +48,12 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       legacyPdfScale: cachedScale,
     });
     const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
-    const [viewport, setViewport] = useState<PageViewport>();
+
     const { projAttr, pdfFocus, projInfo } = useSelector(
       (state: AppState) => state.proj
     );
     const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
-    const canvasArray = useRef<
-      Array<React.MutableRefObject<HTMLCanvasElement | null>>
-    >([]);
+
     const [pdf, setPdf] = useState<DocumentCallback>();
     const [pageViewports, setPageViewports] = useState<any>();
 
@@ -109,60 +107,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
     }, [pdfFocus]);
 
-    const updateRefArray = (
-      index: number,
-      element: HTMLCanvasElement | null
-    ) => {
-      if (element) {
-        canvasArray.current[index] = { current: element };
-      }
-    };
-
     const handlePageChange = (page: any) => {};
-
-    var pageObserve = new IntersectionObserver(
-      (entries: IntersectionObserverEntry[]) => {
-        entries.forEach((item: IntersectionObserverEntry) => {
-          if (item.intersectionRatio > 0) {
-            let dataPage = item.target.getAttribute("data-page-number");
-            // pass the current page to parent component
-            setCurPageNum(Number(dataPage));
-            if (!dataPage) return;
-            localStorage.setItem(
-              readConfig("pdfCurPage") + projId,
-              dataPage.toString()
-            );
-          }
-        });
-      },
-      {
-        threshold: 0,
-      }
-    );
-
-    const handlePageRenderSuccess = (page: PageCallback) => {
-      let elements = document.querySelectorAll(`.${styles.pdfPage}`);
-      if (elements && elements.length > 0) {
-        elements.forEach((box) => pageObserve.observe(box));
-        restorePdfPosition();
-      }
-      let viewport: PageViewport = page.getViewport({ scale: cachedScale });
-      setViewport(viewport);
-    };
-
-    const restorePdfPosition = () => {
-      const key = readConfig("pdfScrollKey") + projId;
-      const scrollPosition = localStorage.getItem(key);
-      if (scrollPosition) {
-        setTimeout(() => {
-          const pdfContainerDiv = document.getElementById("pdfContainer");
-          if (pdfContainerDiv) {
-            let scroll = parseInt(scrollPosition);
-            pdfContainerDiv.scrollTop = scroll;
-          }
-        }, 0);
-      }
-    };
 
     const onDocumentLoadSuccess = (pdf: DocumentCallback) => {
       const { numPages } = pdf;
@@ -180,38 +125,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         default:
           return styles.previewBody;
       }
-    };
-
-    const renderPages = (totalPageNum: number | undefined) => {
-      if (!totalPageNum || totalPageNum < 1) return;
-      const tagList: JSX.Element[] = [];
-      for (let curPageNo = 1; curPageNo <= totalPageNum; curPageNo++) {
-        tagList.push(
-          <Page
-            key={curPageNo + "@" + projAttribute.pdfScale}
-            className={styles.pdfPage}
-            scale={projAttribute.pdfScale}
-            onLoad={handlePageChange}
-            canvasRef={(element) => updateRefArray(curPageNo, element)}
-            onChange={handlePageChange}
-            onRenderSuccess={(page: PageCallback) => {
-              handlePageRenderSuccess(page);
-            }}
-            pageNumber={curPageNo}
-          >
-            {curPdfPosition && viewport ? (
-              <Highlight
-                position={curPdfPosition}
-                pageNumber={curPageNo}
-                viewport={viewport}
-              ></Highlight>
-            ) : (
-              <div></div>
-            )}
-          </Page>
-        );
-      }
-      return tagList;
     };
 
     const handlePdfScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -268,7 +181,9 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
               itemCount={pdf.numPages}
               itemSize={getPageHeight}
             >
-              {TeXPDFPage}
+              {({ index, style }: { index: any; style: any }) => (
+                <TeXPDFPage index={index} style={style} projId={projId} />
+              )}
             </List>
           ) : null}
         </Document>
