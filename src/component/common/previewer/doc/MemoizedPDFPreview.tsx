@@ -15,6 +15,8 @@ import Highlight from "../feat/highlight/Highlight";
 import { PageViewport } from "pdfjs-dist";
 import { readConfig } from "@/config/app/config-reader";
 import { goPage } from "./PDFPreviewHandle";
+import { VariableSizeList as List } from "react-window";
+import { asyncMap } from "@wojtekmaj/async-array-utils";
 
 interface PDFPreviewProps {
   curPdfUrl: string;
@@ -24,6 +26,9 @@ interface PDFPreviewProps {
   setPageNum: (page: number) => void;
   setCurPageNum: (page: number) => void;
 }
+
+const width = 500;
+const height = width * 1.5;
 
 const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
   ({
@@ -50,6 +55,32 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const canvasArray = useRef<
       Array<React.MutableRefObject<HTMLCanvasElement | null>>
     >([]);
+    const [pdf, setPdf] = useState<DocumentCallback>();
+    const [pageViewports, setPageViewports] = useState<any>();
+
+    React.useEffect(() => {
+      setPageViewports(undefined);
+
+      if (!pdf) {
+        return;
+      }
+
+      (async () => {
+        const pageNumbers = Array.from(new Array(pdf.numPages)).map(
+          (_, index) => index + 1
+        );
+
+        const nextPageViewports: Promise<PageViewport[]> = await asyncMap(
+          pageNumbers,
+          (pageNumber: number) =>
+            pdf
+              .getPage(pageNumber)
+              .then((page) => page.getViewport({ scale: 1 }))
+        );
+
+        setPageViewports(nextPageViewports);
+      })();
+    });
 
     React.useEffect(() => {
       setCurProjInfo(projInfo);
@@ -108,9 +139,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
     );
 
-    const handlePageRenderSuccess = (
-      page: PageCallback,
-    ) => {
+    const handlePageRenderSuccess = (page: PageCallback) => {
       let elements = document.querySelectorAll(`.${styles.pdfPage}`);
       if (elements && elements.length > 0) {
         elements.forEach((box) => pageObserve.observe(box));
@@ -138,6 +167,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       const { numPages } = pdf;
       setNumPages(numPages);
       setPageNum(numPages);
+      setPdf(pdf);
     };
 
     const getDynStyles = (viewModel: string) => {
@@ -189,6 +219,18 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       localStorage.setItem(key, scrollTop.toString());
     };
 
+    const getPageHeight = (pageIndex: number) => {
+      if (!pageViewports) {
+        throw new Error("getPageHeight() called too early");
+      }
+
+      const pageViewport = pageViewports[pageIndex];
+      const scale = width / pageViewport.width;
+      const actualHeight = pageViewport.height * scale;
+
+      return actualHeight;
+    };
+
     /**
      * Open pdf's link in the browser new tab
      * https://github.com/diegomura/react-pdf/issues/645
@@ -213,7 +255,17 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
           file={curPdfUrl}
           onLoadSuccess={onDocumentLoadSuccess}
         >
-          {renderPages(numPages)}
+          {pdf && pageViewports ? (
+            <List
+              width={width}
+              height={height}
+              estimatedItemSize={height}
+              itemCount={pdf.numPages}
+              itemSize={getPageHeight}
+            >
+              {renderPages(numPages)}
+            </List>
+          ) : null}
         </Document>
       </div>
     );
