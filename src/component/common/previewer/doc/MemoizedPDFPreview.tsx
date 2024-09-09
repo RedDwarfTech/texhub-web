@@ -17,6 +17,7 @@ import { readConfig } from "@/config/app/config-reader";
 import { goPage } from "./PDFPreviewHandle";
 import { VariableSizeList as List } from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
+import  TeXPDFPage  from "./TeXPDFPage";
 
 interface PDFPreviewProps {
   curPdfUrl: string;
@@ -70,7 +71,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
           (_, index) => index + 1
         );
 
-        const nextPageViewports: Promise<PageViewport[]> = await asyncMap(
+        const nextPageViewports = await asyncMap(
           pageNumbers,
           (pageNumber: number) =>
             pdf
@@ -243,6 +244,10 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
     };
 
+    const Row = ({ index, style }: { index: any; style: any }) => (
+      <div style={style}>Row</div>
+    );
+
     return (
       <div
         id="pdfContainer"
@@ -263,7 +268,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
               itemCount={pdf.numPages}
               itemSize={getPageHeight}
             >
-              {renderPages(numPages)}
+              {TeXPDFPage}
             </List>
           ) : null}
         </Document>
