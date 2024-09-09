@@ -34,6 +34,7 @@
     "@types/react-redux": "^7.1.33",
     "@types/uuid": "^9.0.8",
     "@vitejs/plugin-react": "^4.3.1",
+    "@wojtekmaj/async-array-utils": "^1.8.1",
     "antd": "^5.20.6",
     "axios": "^1.7.7",
     "bootstrap": "5.3.0-alpha1",

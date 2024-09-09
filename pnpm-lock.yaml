@@ -98,6 +98,9 @@ dependencies:
   '@vitejs/plugin-react':
     specifier: ^4.3.1
     version: 4.3.1(vite@5.4.3)
+  '@wojtekmaj/async-array-utils':
+    specifier: ^1.8.1
+    version: 1.8.1
   antd:
     specifier: ^5.20.6
     version: 5.20.6(react-dom@18.3.1)(react@18.3.1)
@@ -5326,6 +5329,10 @@ packages:
     dependencies:
       '@webassemblyjs/ast': 1.12.1
       '@xtuc/long': 4.2.2
+    dev: false
+
+  /@wojtekmaj/async-array-utils@1.8.1:
+    resolution: {integrity: sha512-SpX9q/fkna6RJL7WoxatbWe72YUVB7uAoL0bxNMnSJuY+8xHDSe6aEnosand+1cpnEmZnHrtdyjOmptvrbkjig==}
     dev: false
 
   /@xtuc/ieee754@1.2.0:
