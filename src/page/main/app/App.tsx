@@ -25,7 +25,6 @@ import { QueryProjInfo } from '@/model/request/proj/query/QueryProjInfo';
 import { CompileResultType } from '@/model/proj/compile/CompileResultType';
 import { BaseMethods } from 'rdjs-wheel';
 import RightDraggable from '@/assets/icon/right-drag.svg?react';
-import { getAccessToken } from '@/component/common/cache/Cache';
 const CollarCodeEditor = React.lazy(() => import('@/component/common/editor/main/CollarCodeEditor'));
 
 const App: React.FC = () => {
@@ -101,7 +100,7 @@ const App: React.FC = () => {
     if (proj_id && vid) {
       let file_without_ext = mainFile?.name.replace(/\.[^/.]+$/, '');
       const pdfUrl = readConfig("compileBaseUrl") + "/" + proj_id + "/" + file_without_ext + ".pdf";
-      let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + pid + "&access_token=" + getAccessToken()
+      let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + pid
       updatePdfUrl(newPdfUrl);
     }
   }, [compileResult]);

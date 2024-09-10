@@ -76,10 +76,9 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
               .getPage(pageNumber)
               .then((page) => page.getViewport({ scale: 1 }))
         );
-
         setPageViewports(nextPageViewports);
       })();
-    });
+    }, [pdf]);
 
     React.useEffect(() => {
       setCurProjInfo(projInfo);
@@ -161,6 +160,26 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       <div style={style}>Row</div>
     );
 
+    const renderPdfList = () => {
+      if (pdf && pageViewports) {
+        return (
+          <List
+            width={width}
+            height={height}
+            estimatedItemSize={height}
+            itemCount={pdf.numPages}
+            itemSize={getPageHeight}
+          >
+            {({ index, style }: { index: number; style: any }) => (
+              <TeXPDFPage index={index} style={style} projId={projId} />
+            )}
+          </List>
+        );
+      } else {
+        return <div>loading...</div>;
+      }
+    };
+
     return (
       <div
         id="pdfContainer"
@@ -173,19 +192,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
           file={curPdfUrl}
           onLoadSuccess={onDocumentLoadSuccess}
         >
-          {pdf && pageViewports ? (
-            <List
-              width={width}
-              height={height}
-              estimatedItemSize={height}
-              itemCount={pdf.numPages}
-              itemSize={getPageHeight}
-            >
-              {({ index, style }: { index: any; style: any }) => (
-                <TeXPDFPage index={index} style={style} projId={projId} />
-              )}
-            </List>
-          ) : null}
+          {renderPdfList()}
         </Document>
       </div>
     );

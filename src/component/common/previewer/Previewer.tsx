@@ -29,6 +29,8 @@ export type PreviwerProps = {
   viewModel: string;
 };
 
+
+
 const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   let cachedScale = localStorage.getItem("pdf:scale:" + projectId);
   let scaleNum = Number(cachedScale ?? 1);
@@ -57,19 +59,19 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   const { t } = useTranslation();
 
   const options: Options = {
-    cMapUrl: `/pdfjs-dist/${pdfjs.version}/cmaps/`,
-    httpHeaders: {
-      Authorization: "Bearer " + getAccessToken(),
-    },
-    // open the range request
-    // the default value was false
-    // if want to load the whole pdf by default
-    // set this value to true
-    disableRange: false,
-    // just fetch the needed slice
-    disableAutoFetch: true,
-    rangeChunkSize: 65536 * 5
-  };
+  cMapUrl: `/pdfjs-dist/${pdfjs.version}/cmaps/`,
+  httpHeaders: {
+    Authorization: "Bearer " + getAccessToken(),
+  },
+  // open the range request
+  // the default value was false
+  // if want to load the whole pdf by default
+  // set this value to true
+  disableRange: false,
+  // just fetch the needed slice
+  disableAutoFetch: true,
+  rangeChunkSize: 65536 * 5
+};
 
   React.useEffect(() => {
     getLatestCompile(projectId);
@@ -88,7 +90,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
           readConfig("compileBaseUrl"),
           latestComp.path
         );
-        let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + projectId + "&access_token=" + getAccessToken()
+        let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + projectId
         setCurPdfUrl(newPdfUrl);
       }
     }

@@ -12,7 +12,7 @@ interface PDFPageProps {
 }
 
 const TeXPDFPage: React.FC<PDFPageProps> = ({ index, style, projId}) => {
-    debugger
+    
     const [viewport, setViewport] = useState<PageViewport>();
     const canvasArray = useRef<
       Array<React.MutableRefObject<HTMLCanvasElement | null>>
@@ -95,7 +95,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({ index, style, projId}) => {
         }
         return tagList;
       };
-
+      
     return (<div style={style}>
         <Page
           onRenderSuccess={handlePageRenderSuccess}
