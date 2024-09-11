@@ -18,6 +18,7 @@ import { goPage } from "./PDFPreviewHandle";
 import { VariableSizeList } from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
 import TeXPDFPage from "./TeXPDFPage";
+import AutoSizer from "react-virtualized-auto-sizer";
 
 interface PDFPreviewProps {
   curPdfUrl: string;
@@ -27,8 +28,6 @@ interface PDFPreviewProps {
   setPageNum: (page: number) => void;
   setCurPageNum: (page: number) => void;
 }
-
-const height = 650;
 
 const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
   ({
@@ -56,7 +55,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const [pdf, setPdf] = useState<DocumentCallback>();
     const [pageViewports, setPageViewports] = useState<any>();
     const [width, setWidth] = useState(window.innerWidth);
-
 
     React.useEffect(() => {
       setPageViewports(undefined);
@@ -158,17 +156,24 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const renderPdfList = () => {
       if (pdf && pageViewports) {
         return (
-          <VariableSizeList
-            width="100%"
-            height="100%"
-            estimatedItemSize={100}
-            itemCount={pdf.numPages}
-            itemSize={getPageHeight}
-          >
-            {({ index, style }: { index: number; style: any }) => (
-              <TeXPDFPage index={index} style={style} projId={projId} projAttribute={projAttribute} />
-            )}
-          </VariableSizeList>
+          
+              <VariableSizeList
+                width={900}
+                height={1200}
+                estimatedItemSize={50}
+                itemCount={pdf.numPages}
+                itemSize={getPageHeight}
+              >
+                {({ index, style }: { index: number; style: any }) => (
+                  <TeXPDFPage
+                    index={index}
+                    style={style}
+                    projId={projId}
+                    projAttribute={projAttribute}
+                  />
+                )}
+              </VariableSizeList>
+          
         );
       } else {
         return <div>loading...</div>;

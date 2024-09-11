@@ -79,7 +79,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     <div style={style}>
       <Page
         key={index}
-        className={styles.pdfPage}
+        //className={styles.pdfPage}
         scale={projAttribute.pdfScale}
         onLoad={handlePageChange}
         canvasRef={(element) => updateRefArray(index, element)}
