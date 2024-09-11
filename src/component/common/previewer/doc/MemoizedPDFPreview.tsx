@@ -15,7 +15,7 @@ import Highlight from "../feat/highlight/Highlight";
 import { PageViewport } from "pdfjs-dist";
 import { readConfig } from "@/config/app/config-reader";
 import { goPage } from "./PDFPreviewHandle";
-import { VariableSizeList as List } from "react-window";
+import { VariableSizeList } from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
 import TeXPDFPage from "./TeXPDFPage";
 
@@ -28,8 +28,7 @@ interface PDFPreviewProps {
   setCurPageNum: (page: number) => void;
 }
 
-const width = 500;
-const height = width * 1.5;
+const height = 650;
 
 const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
   ({
@@ -56,6 +55,8 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
 
     const [pdf, setPdf] = useState<DocumentCallback>();
     const [pageViewports, setPageViewports] = useState<any>();
+    const [width, setWidth] = useState(window.innerWidth);
+
 
     React.useEffect(() => {
       setPageViewports(undefined);
@@ -106,8 +107,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
     }, [pdfFocus]);
 
-    const handlePageChange = (page: any) => {};
-
     const onDocumentLoadSuccess = (pdf: DocumentCallback) => {
       const { numPages } = pdf;
       setNumPages(numPages);
@@ -156,24 +155,20 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
     };
 
-    const Row = ({ index, style }: { index: any; style: any }) => (
-      <div style={style}>Row</div>
-    );
-
     const renderPdfList = () => {
       if (pdf && pageViewports) {
         return (
-          <List
-            width={width}
-            height={height}
-            estimatedItemSize={height}
+          <VariableSizeList
+            width="100%"
+            height="100%"
+            estimatedItemSize={100}
             itemCount={pdf.numPages}
             itemSize={getPageHeight}
           >
             {({ index, style }: { index: number; style: any }) => (
-              <TeXPDFPage index={index} style={style} projId={projId} />
+              <TeXPDFPage index={index} style={style} projId={projId} projAttribute={projAttribute} />
             )}
-          </List>
+          </VariableSizeList>
         );
       } else {
         return <div>loading...</div>;
