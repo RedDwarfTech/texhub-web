@@ -11,6 +11,7 @@ interface PDFPageProps {
   style: React.CSSProperties;
   projId: string;
   projAttribute: ProjAttribute;
+  width: number;
 }
 
 const TeXPDFPage: React.FC<PDFPageProps> = ({
@@ -18,6 +19,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   style,
   projId,
   projAttribute,
+  width
 }) => {
   const [viewport, setViewport] = useState<PageViewport>();
   const canvasArray = useRef<
@@ -86,6 +88,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
         onChange={handlePageChange}
         onRenderSuccess={handlePageRenderSuccess}
         pageNumber={index}
+        width={width}
       ></Page>
     </div>
   );

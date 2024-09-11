@@ -1,24 +1,17 @@
-import React, { useRef, useState } from "react";
-import { Document, Page } from "react-pdf";
+import React, { useState } from "react";
+import { Document } from "react-pdf";
 import styles from "./MemoizedPDFPreview.module.css";
-import {
-  DocumentCallback,
-  Options,
-  PageCallback,
-} from "react-pdf/dist/cjs/shared/types";
+import { DocumentCallback, Options } from "react-pdf/dist/cjs/shared/types";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { ProjInfo } from "@/model/proj/ProjInfo";
-import Highlight from "../feat/highlight/Highlight";
-import { PageViewport } from "pdfjs-dist";
 import { readConfig } from "@/config/app/config-reader";
 import { goPage } from "./PDFPreviewHandle";
 import { VariableSizeList } from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
 import TeXPDFPage from "./TeXPDFPage";
-import AutoSizer from "react-virtualized-auto-sizer";
 
 interface PDFPreviewProps {
   curPdfUrl: string;
@@ -133,11 +126,9 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       if (!pageViewports) {
         throw new Error("getPageHeight() called too early");
       }
-
       const pageViewport = pageViewports[pageIndex];
       const scale = width / pageViewport.width;
       const actualHeight = pageViewport.height * scale;
-
       return actualHeight;
     };
 
@@ -153,27 +144,31 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
     };
 
+    /**
+     * https://codesandbox.io/p/sandbox/react-pdf-react-window-forked-rcw56x?file=%2Fsrc%2FApp.js%3A81%2C35
+     *
+     * @returns
+     */
     const renderPdfList = () => {
       if (pdf && pageViewports) {
         return (
-          
-              <VariableSizeList
+          <VariableSizeList
+            width={1100}
+            height={1200}
+            estimatedItemSize={50}
+            itemCount={pdf.numPages}
+            itemSize={getPageHeight}
+          >
+            {({ index, style }: { index: number; style: any }) => (
+              <TeXPDFPage
+                index={index}
                 width={900}
-                height={1200}
-                estimatedItemSize={50}
-                itemCount={pdf.numPages}
-                itemSize={getPageHeight}
-              >
-                {({ index, style }: { index: number; style: any }) => (
-                  <TeXPDFPage
-                    index={index}
-                    style={style}
-                    projId={projId}
-                    projAttribute={projAttribute}
-                  />
-                )}
-              </VariableSizeList>
-          
+                style={style}
+                projId={projId}
+                projAttribute={projAttribute}
+              />
+            )}
+          </VariableSizeList>
         );
       } else {
         return <div>loading...</div>;
