@@ -49,7 +49,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const [pdf, setPdf] = useState<DocumentCallback>();
     const [pageViewports, setPageViewports] = useState<any>();
     const [width, setWidth] = useState(window.innerWidth);
-    const divRef = useRef<HTMLButtonElement>(null);
+    const divRef = useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
       const handleResize = () => {
@@ -182,7 +182,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       if (pdf && pageViewports) {
         return (
           <AutoSizer onResize={onResize}>
-            {({ width, height }) => (
+            {({ width, height }:{width: number, height: number}) => (
               <VariableSizeList
                 width={width}
                 height={height}
