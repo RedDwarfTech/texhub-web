@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Document } from "react-pdf";
 import styles from "./MemoizedPDFPreview.module.css";
 import { DocumentCallback, Options } from "react-pdf/dist/cjs/shared/types";
@@ -12,6 +12,7 @@ import { goPage } from "./PDFPreviewHandle";
 import { VariableSizeList } from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
 import TeXPDFPage from "./TeXPDFPage";
+import AutoSizer from "react-virtualized-auto-sizer";
 
 interface PDFPreviewProps {
   curPdfUrl: string;
@@ -48,6 +49,34 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const [pdf, setPdf] = useState<DocumentCallback>();
     const [pageViewports, setPageViewports] = useState<any>();
     const [width, setWidth] = useState(window.innerWidth);
+    const divRef = useRef(null);
+
+    React.useEffect(() => {
+      const handleResize = () => {
+        
+        if (divRef.current) {
+          debugger
+          let divWidth = divRef.current.offsetWidth;
+          debugger
+          console.warn("width:");
+          console.warn("width:" + divWidth);
+          setWidth(divWidth);
+        }else{
+
+        }
+      };
+  
+      const resizeObserver = new ResizeObserver(handleResize);
+      
+      if (divRef.current) {
+        resizeObserver.observe(divRef.current);
+      }
+  
+      // Cleanup observer on component unmount
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }, []);
 
     React.useEffect(() => {
       setPageViewports(undefined);
@@ -152,26 +181,36 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const renderPdfList = () => {
       if (pdf && pageViewports) {
         return (
-          <VariableSizeList
-            width={1100}
-            height={1200}
-            estimatedItemSize={50}
-            itemCount={pdf.numPages}
-            itemSize={getPageHeight}
-          >
-            {({ index, style }: { index: number; style: any }) => (
-              <TeXPDFPage
-                index={index}
-                width={900}
-                style={style}
-                projId={projId}
-                projAttribute={projAttribute}
-              />
+          <AutoSizer onResize={onResize}>
+            {({ width, height }) => (
+              <VariableSizeList
+                width={width}
+                height={height}
+                estimatedItemSize={50}
+                itemCount={pdf.numPages}
+                itemSize={getPageHeight}
+              >
+                {({ index, style }: { index: number; style: any }) => (
+                  <TeXPDFPage
+                    index={index}
+                    width={900}
+                    style={style}
+                    projId={projId}
+                    projAttribute={projAttribute}
+                  />
+                )}
+              </VariableSizeList>
             )}
-          </VariableSizeList>
+          </AutoSizer>
         );
       } else {
         return <div>loading...</div>;
+      }
+    };
+    const gridRef = React.createRef();
+    const onResize = (...args) => {
+      if (gridRef.current != null) {
+        gridRef.current.resetAfterColumnIndex(0);
       }
     };
 
@@ -185,9 +224,24 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         <Document
           options={options}
           file={curPdfUrl}
+          // className={styles.pdfDocument}
           onLoadSuccess={onDocumentLoadSuccess}
         >
-          {renderPdfList()}
+          <div
+            id="documentDiv"
+            ref={divRef}
+            style={{
+              height: "100vh",
+              width: "100vw",
+              display: "flex",
+              flexDirection: "column",
+              overflowX: "hidden",
+              overflowY: "scroll",
+              flex: 1,
+            }}
+          >
+            {renderPdfList()}
+          </div>
         </Document>
       </div>
     );
