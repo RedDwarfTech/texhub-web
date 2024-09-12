@@ -49,7 +49,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const [pdf, setPdf] = useState<DocumentCallback>();
     const [pageViewports, setPageViewports] = useState<any>();
     const [width, setWidth] = useState(window.innerWidth);
-    const divRef = useRef(null);
+    const divRef = useRef<HTMLButtonElement>(null);
 
     React.useEffect(() => {
       const handleResize = () => {
@@ -207,10 +207,10 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         return <div>loading...</div>;
       }
     };
-    const gridRef = React.createRef();
-    const onResize = (...args) => {
+    const gridRef = React.createRef<HTMLButtonElement>();
+    const onResize = (...args: any[]) => {
       if (gridRef.current != null) {
-        gridRef.current.resetAfterColumnIndex(0);
+        //gridRef.current.resetAfterColumnIndex(0);
       }
     };
 
