@@ -77,6 +77,8 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   };
   const handlePageChange = (page: any) => {};
 
+  debugger
+
   return (
     <div style={style}>
       <Page

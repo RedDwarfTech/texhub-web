@@ -53,25 +53,23 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
 
     React.useEffect(() => {
       const handleResize = () => {
-        
         if (divRef.current) {
-          debugger
+          debugger;
           let divWidth = divRef.current.offsetWidth;
-          debugger
+          debugger;
           console.warn("width:");
           console.warn("width:" + divWidth);
           setWidth(divWidth);
-        }else{
-
+        } else {
         }
       };
-  
+
       const resizeObserver = new ResizeObserver(handleResize);
-      
+
       if (divRef.current) {
         resizeObserver.observe(divRef.current);
       }
-  
+
       // Cleanup observer on component unmount
       return () => {
         resizeObserver.disconnect();
@@ -182,7 +180,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       if (pdf && pageViewports) {
         return (
           <AutoSizer onResize={onResize}>
-            {({ width, height }:{width: number, height: number}) => (
+            {({ width, height }: { width: number; height: number }) => (
               <VariableSizeList
                 width={width}
                 height={height}
@@ -193,7 +191,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
                 {({ index, style }: { index: number; style: any }) => (
                   <TeXPDFPage
                     index={index}
-                    width={900}
+                    width={width}
                     style={style}
                     projId={projId}
                     projAttribute={projAttribute}
@@ -215,35 +213,30 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     };
 
     return (
-      <div
-        id="pdfContainer"
-        className={getDynStyles(viewModel)}
-        onClick={openPdfUrlLink}
-        onScroll={(e) => handlePdfScroll(e)}
+      <Document
+        options={options}
+        file={curPdfUrl}
+        // className={styles.pdfDocument}
+        onLoadSuccess={onDocumentLoadSuccess}
       >
-        <Document
-          options={options}
-          file={curPdfUrl}
-          // className={styles.pdfDocument}
-          onLoadSuccess={onDocumentLoadSuccess}
+        <div
+          id="pdfContainer"
+          ref={divRef}
+          //className={getDynStyles(viewModel)}
+          style={{
+            height: "100vh",
+            width: "100vw",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+            flex: 1,
+          }}
+          onClick={openPdfUrlLink}
+          onScroll={(e) => handlePdfScroll(e)}
         >
-          <div
-            id="documentDiv"
-            ref={divRef}
-            style={{
-              height: "100vh",
-              width: "100vw",
-              display: "flex",
-              flexDirection: "column",
-              overflowX: "hidden",
-              overflowY: "scroll",
-              flex: 1,
-            }}
-          >
-            {renderPdfList()}
-          </div>
-        </Document>
-      </div>
+          {renderPdfList()}
+        </div>
+      </Document>
     );
   },
   (prevProps, nextProps) => {
