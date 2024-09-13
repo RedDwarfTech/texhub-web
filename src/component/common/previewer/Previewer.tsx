@@ -29,7 +29,7 @@ export type PreviwerProps = {
   viewModel: string;
 };
 
-const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {  
+const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   const [curPdfUrl, setCurPdfUrl] = useState<string>("");
   const [compStatus, setCompStatus] = useState<CompileStatus>(
     CompileStatus.COMPLETE
@@ -53,19 +53,19 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   const { t } = useTranslation();
 
   const options: Options = {
-  cMapUrl: `/pdfjs-dist/${pdfjs.version}/cmaps/`,
-  httpHeaders: {
-    Authorization: "Bearer " + getAccessToken(),
-  },
-  // open the range request
-  // the default value was false
-  // if want to load the whole pdf by default
-  // set this value to true
-  disableRange: false,
-  // just fetch the needed slice
-  disableAutoFetch: true,
-  rangeChunkSize: 65536 * 5
-};
+    cMapUrl: `/pdfjs-dist/${pdfjs.version}/cmaps/`,
+    httpHeaders: {
+      Authorization: "Bearer " + getAccessToken(),
+    },
+    // open the range request
+    // the default value was false
+    // if want to load the whole pdf by default
+    // set this value to true
+    disableRange: false,
+    // just fetch the needed slice
+    disableAutoFetch: true,
+    rangeChunkSize: 65536 * 5,
+  };
 
   React.useEffect(() => {
     getLatestCompile(projectId);
@@ -84,7 +84,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
           readConfig("compileBaseUrl"),
           latestComp.path
         );
-        let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + projectId
+        let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + projectId;
         setCurPdfUrl(newPdfUrl);
       }
     }
@@ -178,7 +178,13 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
       return;
     }
     let cachedScale = localStorage.getItem("pdf:scale:" + projectId);
-    let curScale = Number(cachedScale) + 0.1;
+    let numberScale = Number(cachedScale);
+    let curScale;
+    if (numberScale > 5) {
+      curScale = 5;
+    } else {
+      curScale = numberScale + 0.1;
+    }
     setProjAttr({
       pdfScale: curScale,
       legacyPdfScale: Number(cachedScale),
@@ -192,7 +198,13 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
       return;
     }
     let cachedScale = localStorage.getItem("pdf:scale:" + projectId);
-    let curScale = Number(cachedScale) - 0.1;
+    let numberScale = Number(cachedScale);
+    let curScale;
+    if (numberScale < 0.2) {
+      curScale = 0.2;
+    } else {
+      curScale = numberScale - 0.1;
+    }
     localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
     setProjAttr({ pdfScale: curScale, legacyPdfScale: Number(cachedScale) });
   };

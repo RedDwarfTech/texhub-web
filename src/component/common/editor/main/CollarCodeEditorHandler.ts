@@ -40,7 +40,6 @@ export const handleSrcTreeNav = (
     return;
   }
   let name_paths = ProjectTreeFolder.getNamePaths(props.projectId, selectedFile.file_id);
-  debugger;
   ProjectTreeFolder.handleExpandFolder(
     name_paths,
     props.projectId,

@@ -126,7 +126,6 @@ export const ProjectTreeFolder = {
     projId: string,
     selectedFile: TexFileModel
   ) => {
-    debugger;
     for (let i = 0; i < name_paths.length; i++) {
       // get the newest tree content to avoid the legacy override the newest update
       let legacyTree = localStorage.getItem("projTree:" + projId);
