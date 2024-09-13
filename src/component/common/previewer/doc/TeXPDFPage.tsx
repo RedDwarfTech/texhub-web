@@ -5,12 +5,13 @@ import { PageCallback } from "react-pdf/dist/cjs/shared/types";
 import { readConfig } from "@/config/app/config-reader";
 import { PageViewport } from "pdfjs-dist";
 import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
+import { useSelector } from "react-redux";
+import { AppState } from "@/redux/types/AppState";
 
 interface PDFPageProps {
   index: number;
   style: React.CSSProperties;
   projId: string;
-  projAttribute: ProjAttribute;
   width: number;
 }
 
@@ -18,19 +19,31 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   index,
   style,
   projId,
-  projAttribute,
-  width
+  width,
 }) => {
+  let pdfScaleKey = "pdf:scale:" + projId;
+  let cachedScale = Number(localStorage.getItem(pdfScaleKey));
+  const { projAttr } = useSelector((state: AppState) => state.proj);
   const [viewport, setViewport] = useState<PageViewport>();
   const canvasArray = useRef<
     Array<React.MutableRefObject<HTMLCanvasElement | null>>
   >([]);
-
+  const [projAttribute, setProjAttribute] = useState<ProjAttribute>({
+    pdfScale: cachedScale,
+    legacyPdfScale: cachedScale,
+  });
   const updateRefArray = (index: number, element: HTMLCanvasElement | null) => {
     if (element) {
       canvasArray.current[index] = { current: element };
     }
   };
+
+  React.useEffect(() => {
+    if (projAttr.pdfScale === 1 && cachedScale) {
+      return;
+    }
+    setProjAttribute(projAttr);
+  }, [projAttr, cachedScale]);
 
   var pageObserve = new IntersectionObserver(
     (entries: IntersectionObserverEntry[]) => {
@@ -76,8 +89,6 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     }
   };
   const handlePageChange = (page: any) => {};
-
-  debugger
 
   return (
     <div style={style}>

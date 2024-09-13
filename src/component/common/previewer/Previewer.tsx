@@ -29,12 +29,7 @@ export type PreviwerProps = {
   viewModel: string;
 };
 
-
-
-const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
-  let cachedScale = localStorage.getItem("pdf:scale:" + projectId);
-  let scaleNum = Number(cachedScale ?? 1);
-  const [pdfScale, setPdfScale] = useState<number>(scaleNum ?? 1);
+const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {  
   const [curPdfUrl, setCurPdfUrl] = useState<string>("");
   const [compStatus, setCompStatus] = useState<CompileStatus>(
     CompileStatus.COMPLETE
@@ -52,7 +47,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     tabName,
     compileStatus,
     queue,
-    projAttr,
     latestComp,
     projInfo,
   } = useSelector((state: AppState) => state.proj);
@@ -105,13 +99,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   React.useEffect(() => {
     setCurCompileQueue(queue);
   }, [queue]);
-
-  React.useEffect(() => {
-    if (projAttr.pdfScale === 1 && pdfScale !== 1) {
-      return;
-    }
-    setPdfScale(projAttr.pdfScale);
-  }, [projAttr, pdfScale]);
 
   React.useEffect(() => {
     setCompStatus(compileStatus);
@@ -190,10 +177,11 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
       toast.warn("未找到当前项目信息");
       return;
     }
-    let curScale = pdfScale + 0.1;
+    let cachedScale = localStorage.getItem("pdf:scale:" + projectId);
+    let curScale = Number(cachedScale) + 0.1;
     setProjAttr({
       pdfScale: curScale,
-      legacyPdfScale: pdfScale,
+      legacyPdfScale: Number(cachedScale),
     });
     localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
   };
@@ -203,9 +191,10 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
       toast.warn("未找到当前项目信息");
       return;
     }
-    let curScale = pdfScale - 0.1;
-    setProjAttr({ pdfScale: curScale, legacyPdfScale: pdfScale });
+    let cachedScale = localStorage.getItem("pdf:scale:" + projectId);
+    let curScale = Number(cachedScale) - 0.1;
     localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
+    setProjAttr({ pdfScale: curScale, legacyPdfScale: Number(cachedScale) });
   };
 
   const handleFullScreen = async () => {
