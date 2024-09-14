@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
 import styles from "./Previewer.module.css";
 import { ToastContainer, toast } from "react-toastify";
 import { pdfjs } from "react-pdf";
@@ -19,9 +19,10 @@ import { CompileResultType } from "@/model/proj/compile/CompileResultType";
 import { readConfig } from "@/config/app/config-reader";
 import { BaseMethods } from "rdjs-wheel";
 import { ProjInfo } from "@/model/proj/ProjInfo";
-import { goPage } from "./doc/PDFPreviewHandle";
+import { scrollToPage } from "./doc/PDFPreviewHandle";
 import { useTranslation } from "react-i18next";
 import { handleSrcLocate } from "./PreviewerHandler";
+import { VariableSizeList } from "react-window";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/legacy/pdf.worker.min.mjs`;
 
 export type PreviwerProps = {
@@ -51,6 +52,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     projInfo,
   } = useSelector((state: AppState) => state.proj);
   const { t } = useTranslation();
+  const virtualListRef = useRef<VariableSizeList>(null);
 
   const options: Options = {
     cMapUrl: `/pdfjs-dist/${pdfjs.version}/cmaps/`,
@@ -275,6 +277,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         setPageNum={setPageNum}
         setCurPageNum={setCurNum}
         options={options}
+        virtualListRef={virtualListRef}
       ></MemoizedPDFPreview>
     );
   };
@@ -394,7 +397,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
             if (event.key === "Enter" && !event.shiftKey) {
               event.preventDefault();
               const navPage = (event.target as HTMLInputElement).value;
-              goPage(Number(navPage));
+              scrollToPage(Number(navPage), virtualListRef);
             }
           }}
         ></input>

@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { readConfig } from "@/config/app/config-reader";
-import { goPage } from "./PDFPreviewHandle";
+import { scrollToPage } from "./PDFPreviewHandle";
 import { VariableSizeList } from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
 import TeXPDFPage from "./TeXPDFPage";
@@ -20,6 +20,7 @@ interface PDFPreviewProps {
   viewModel: string;
   setPageNum: (page: number) => void;
   setCurPageNum: (page: number) => void;
+  virtualListRef: React.RefObject<VariableSizeList>;
 }
 
 const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
@@ -29,7 +30,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     options,
     viewModel = "default",
     setPageNum,
-    setCurPageNum,
+    virtualListRef,
   }) => {
     const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
     const { pdfFocus, projInfo } = useSelector((state: AppState) => state.proj);
@@ -96,7 +97,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
           readConfig("pdfCurPage") + curProjInfo?.main.project_id,
           pageNum.toString()
         );
-        goPage(pageNum);
+        scrollToPage(pageNum, virtualListRef);
         setTimeout(() => {
           setCurPdfPosition([]);
         }, 5000);
@@ -159,6 +160,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
           <AutoSizer onResize={onResize}>
             {({ width, height }: { width: number; height: number }) => (
               <VariableSizeList
+                ref={virtualListRef}
                 width={width}
                 height={height}
                 estimatedItemSize={50}
