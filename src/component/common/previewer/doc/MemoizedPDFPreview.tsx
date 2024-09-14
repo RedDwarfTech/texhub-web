@@ -127,6 +127,18 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       localStorage.setItem(key, scrollTop.toString());
     };
 
+    const getInitialScrollOffset = (height: number) => {
+      // go to the last pdf position
+      let cachedPage = localStorage.getItem(
+        readConfig("pdfCurPage") + curProjInfo?.main.project_id
+      );
+      if (cachedPage && Number(cachedPage)) {
+        return Number(cachedPage) * height;
+      } else {
+        return 0;
+      }
+    };
+
     const getPageHeight = (pageIndex: number, width: number) => {
       if (!pageViewports) {
         throw new Error("getPageHeight() called too early");
@@ -164,6 +176,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
                 width={width}
                 height={height}
                 estimatedItemSize={50}
+                initialScrollOffset={getInitialScrollOffset(height)}
                 itemCount={pdf.numPages}
                 itemSize={(pageIndex) => getPageHeight(pageIndex, width)}
               >
