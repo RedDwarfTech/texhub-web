@@ -12,6 +12,7 @@ import { VariableSizeList } from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
 import TeXPDFPage from "./TeXPDFPage";
 import AutoSizer from "react-virtualized-auto-sizer";
+import { BaseMethods } from "rdjs-wheel";
 
 interface PDFPreviewProps {
   curPdfUrl: string;
@@ -128,6 +129,9 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     };
 
     const getInitialScrollOffset = (height: number) => {
+      if (BaseMethods.isNull(curProjInfo)) {
+        return 0;
+      }
       // go to the last pdf position
       let cachedPage = localStorage.getItem(
         readConfig("pdfCurPage") + curProjInfo?.main.project_id
