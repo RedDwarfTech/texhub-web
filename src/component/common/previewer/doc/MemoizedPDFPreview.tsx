@@ -32,7 +32,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     virtualListRef,
   }) => {
     const { pdfFocus } = useSelector((state: AppState) => state.proj);
-    const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
     const [pdf, setPdf] = useState<DocumentCallback>();
     const [pageViewports, setPageViewports] = useState<any>();
     const divRef = useRef<HTMLDivElement>(null);
@@ -86,12 +85,8 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     React.useEffect(() => {
       if (pdfFocus && pdfFocus.length > 0) {
         let pageNum = pdfFocus[0].page;
-        setCurPdfPosition(pdfFocus);
         setCurPdfPage(pageNum, projId);
         scrollToPage(pageNum, virtualListRef);
-        setTimeout(() => {
-          setCurPdfPosition([]);
-        }, 5000);
       }
     }, [pdfFocus]);
 

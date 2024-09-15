@@ -37,6 +37,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
       canvasArray.current[index] = { current: element };
     }
   };
+  const [renderedPageNumber, setRenderedPageNumber] = useState<number>(-1);
 
   React.useEffect(() => {
     if (projAttr.pdfScale === 1 && cachedScale) {
@@ -53,7 +54,6 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
           // pass the current page to parent component
           // setCurPageNum(Number(dataPage));
           if (!dataPage) return;
-          
         }
       });
     },
@@ -70,6 +70,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     }
     let viewport: PageViewport = page.getViewport({ scale: 1 });
     setViewport(viewport);
+    setRenderedPageNumber(page.pageNumber);
   };
 
   const restorePdfPosition = () => {
@@ -87,10 +88,51 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   };
   const handlePageChange = (page: any) => {};
 
+  /**
+   * to avoid the pdf page flashing & flicking when zoom the pdf
+   * keep the legacy page before the new pdf page rendered success
+   * https://github.com/wojtekmaj/react-pdf/issues/875
+   * https://github.com/wojtekmaj/react-pdf/issues/418
+   *
+   * @param page
+   */
+  const renderLegacyPage = (pageNumber: number, width: number) => {
+    if (isLoading) {
+      // debugger;
+      return (
+        <Page
+          /**
+           * IMPORTANT: Keys are necessary so that React will know which Page component
+           * instances to use.
+           * Without keys, on page number update, React would replace the page number
+           * in 1st and 2nd page components. This may cause previously rendered page
+           * to render again, thus causing a flash.
+           * With keys, React, will add prevPage className to previously rendered page,
+           * and mount new Page component instance for the new page.
+           */
+          key={pageNumber + "@" + projAttribute.legacyPdfScale}
+          className="prevPage"
+          scale={projAttribute.pdfScale}
+          pageNumber={pageNumber}
+          onLoad={handlePageChange}
+          onChange={handlePageChange}
+          canvasRef={(element) => updateRefArray(index, element)}
+          // onRenderSuccess={handlePageRenderSuccess}
+          width={width}
+        />
+      );
+    } else {
+      return null;
+    }
+  };
+
+  const isLoading = renderedPageNumber !== index;
+
   return (
     <div style={style}>
+      {renderLegacyPage(index, width)}
       <Page
-        key={index}
+        key={index + "@" + projAttribute.pdfScale}
         className={styles.pdfPage}
         scale={projAttribute.pdfScale}
         onLoad={handlePageChange}
