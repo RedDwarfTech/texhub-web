@@ -24,7 +24,6 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   let pdfScaleKey = "pdf:scale:" + projId;
   let cachedScale = Number(localStorage.getItem(pdfScaleKey));
   const { projAttr } = useSelector((state: AppState) => state.proj);
-  const [viewport, setViewport] = useState<PageViewport>();
   const canvasArray = useRef<
     Array<React.MutableRefObject<HTMLCanvasElement | null>>
   >([]);
@@ -63,13 +62,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   );
 
   const handlePageRenderSuccess = (page: PageCallback) => {
-    let elements = document.querySelectorAll(`.${styles.pdfPage}`);
-    if (elements && elements.length > 0) {
-      elements.forEach((box) => pageObserve.observe(box));
-      // restorePdfPosition();
-    }
-    let viewport: PageViewport = page.getViewport({ scale: 1 });
-    setViewport(viewport);
+    
     setRenderedPageNumber(page.pageNumber);
   };
 
@@ -117,7 +110,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
           pageNumber={pageNumber}
           // onLoad={handlePageChange}
           onChange={handlePageChange}
-          canvasRef={(element) => updateRefArray(index, element)}
+          //canvasRef={(element) => updateRefArray(index, element)}
           // onRenderSuccess={handlePageRenderSuccess}
           width={width}
         />

@@ -4,7 +4,6 @@ import styles from "./MemoizedPDFPreview.module.css";
 import { DocumentCallback, Options } from "react-pdf/dist/cjs/shared/types";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
-import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { readConfig } from "@/config/app/config-reader";
 import { scrollToPage } from "./PDFPreviewHandle";
 import { ListOnScrollProps, VariableSizeList } from "react-window";
@@ -38,13 +37,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
 
     React.useEffect(() => {
       const handleResize = () => {
-        if (divRef.current) {
-          let divWidth = divRef.current.offsetWidth;
-          console.warn("width:");
-          console.warn("width:" + divWidth);
-          //setWidth(divWidth);
-        } else {
-        }
+        
       };
 
       const resizeObserver = new ResizeObserver(handleResize);
