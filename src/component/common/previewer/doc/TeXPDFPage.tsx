@@ -45,40 +45,11 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     setProjAttribute(projAttr);
   }, [projAttr, cachedScale]);
 
-  var pageObserve = new IntersectionObserver(
-    (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((item: IntersectionObserverEntry) => {
-        if (item.intersectionRatio > 0) {
-          let dataPage = item.target.getAttribute("data-page-number");
-          // pass the current page to parent component
-          // setCurPageNum(Number(dataPage));
-          if (!dataPage) return;
-        }
-      });
-    },
-    {
-      threshold: 0,
-    }
-  );
-
   const handlePageRenderSuccess = (page: PageCallback) => {
     
     setRenderedPageNumber(page.pageNumber);
   };
 
-  const restorePdfPosition = () => {
-    const key = readConfig("pdfScrollKey") + projId;
-    const scrollPosition = localStorage.getItem(key);
-    if (scrollPosition) {
-      setTimeout(() => {
-        const pdfContainerDiv = document.getElementById("pdfContainer");
-        if (pdfContainerDiv) {
-          let scroll = parseInt(scrollPosition);
-          pdfContainerDiv.scrollTop = scroll;
-        }
-      }, 0);
-    }
-  };
   const handlePageChange = (page: any) => {};
 
   /**

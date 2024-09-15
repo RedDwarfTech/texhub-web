@@ -155,6 +155,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
                 estimatedItemSize={50}
                 initialScrollOffset={getInitialScrollOffset()}
                 itemCount={pdf.numPages}
+                overscanCount={1}
                 onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
                 itemSize={(pageIndex) => getPageHeight(pageIndex, width)}
               >
