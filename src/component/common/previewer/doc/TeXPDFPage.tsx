@@ -98,6 +98,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
    */
   const renderLegacyPage = (pageNumber: number, width: number) => {
     if (isLoading) {
+      console.log("page" + pageNumber + " not rendered. using the legacy page");
       // debugger;
       return (
         <Page
@@ -112,9 +113,9 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
            */
           key={pageNumber + "@" + projAttribute.legacyPdfScale}
           className="prevPage"
-          scale={projAttribute.pdfScale}
+          scale={projAttribute.legacyPdfScale}
           pageNumber={pageNumber}
-          onLoad={handlePageChange}
+          // onLoad={handlePageChange}
           onChange={handlePageChange}
           canvasRef={(element) => updateRefArray(index, element)}
           // onRenderSuccess={handlePageRenderSuccess}
@@ -122,6 +123,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
         />
       );
     } else {
+      console.log("page" + pageNumber + " has rendered");
       return null;
     }
   };
