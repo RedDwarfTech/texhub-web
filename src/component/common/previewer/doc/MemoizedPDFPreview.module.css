@@ -26,18 +26,3 @@
     flexDirection: column;
     flex: 1;
 }
-
-.pdfPage {
-    margin-bottom: 5px;
-    max-width: 100%;
-}
-
-.react-pdf__Page.prevPage {
-    position: absolute !important;
-    z-index: 1;
-}
-
-.pdfDocument {
-    height: "100vh";
-    width: "100vw";
-}

@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Page } from "react-pdf";
-import styles from "./MemoizedPDFPreview.module.css";
+import styles from "./TeXPDFPage.module.css";
 import { PageCallback } from "react-pdf/dist/cjs/shared/types";
 import { readConfig } from "@/config/app/config-reader";
 import { PageViewport } from "pdfjs-dist";

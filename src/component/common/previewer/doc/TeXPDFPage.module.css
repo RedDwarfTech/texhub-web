@@ -1,0 +1,9 @@
+.react-pdf__Page.prevPage {
+    position: absolute !important;
+    z-index: 1;
+}
+
+.pdfPage {
+    margin-bottom: 5px;
+    max-width: 100%;
+}

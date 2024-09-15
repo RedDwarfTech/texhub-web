@@ -182,24 +182,20 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
     };
 
-    const gridRef = React.createRef<HTMLButtonElement>();
     const onResize = (...args: any[]) => {
-      if (gridRef.current != null) {
-        //gridRef.current.resetAfterColumnIndex(0);
-      }
+      
     };
 
     return (
       <Document
         options={options}
         file={curPdfUrl!}
-        // className={styles.pdfDocument}
         onLoadSuccess={onDocumentLoadSuccess}
       >
         <div
           id="pdfContainer"
           ref={divRef}
-          //className={getDynStyles(viewModel)}
+          // className={getDynStyles(viewModel)}
           style={{
             height: "100vh",
             width: "100vw",
@@ -209,7 +205,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             flex: 1,
           }}
           onClick={openPdfUrlLink}
-          // onScroll={(e) => handlePdfScroll(e)}
         >
           {renderPdfList()}
         </div>
