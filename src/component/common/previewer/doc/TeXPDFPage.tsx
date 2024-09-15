@@ -53,10 +53,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
           // pass the current page to parent component
           // setCurPageNum(Number(dataPage));
           if (!dataPage) return;
-          localStorage.setItem(
-            readConfig("pdfCurPage") + projId,
-            dataPage.toString()
-          );
+          
         }
       });
     },
@@ -69,7 +66,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     let elements = document.querySelectorAll(`.${styles.pdfPage}`);
     if (elements && elements.length > 0) {
       elements.forEach((box) => pageObserve.observe(box));
-      restorePdfPosition();
+      // restorePdfPosition();
     }
     let viewport: PageViewport = page.getViewport({ scale: 1 });
     setViewport(viewport);

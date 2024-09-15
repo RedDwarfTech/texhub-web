@@ -16,13 +16,13 @@ import {
   setProjAttr,
 } from "@/service/project/ProjectService";
 import { CompileResultType } from "@/model/proj/compile/CompileResultType";
-import { readConfig } from "@/config/app/config-reader";
 import { BaseMethods } from "rdjs-wheel";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { scrollToPage } from "./doc/PDFPreviewHandle";
 import { useTranslation } from "react-i18next";
 import { handleSrcLocate } from "./PreviewerHandler";
 import { VariableSizeList } from "react-window";
+import { getCurPdfPage, setCurPdfPage } from "@/service/project/preview/PreviewService";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/legacy/pdf.worker.min.mjs`;
 
 export type PreviwerProps = {
@@ -41,6 +41,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   const [curCompileQueue, setCurCompileQueue] = useState<CompileQueue>();
   const [numPages, setNumPages] = useState<number>();
   const [curPages, setCurPages] = useState<number>();
+  const { curPage } = useSelector((state: AppState) => state.preview);
   const {
     pdfUrl,
     streamLogText,
@@ -74,6 +75,15 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   }, [projectId]);
 
   React.useEffect(() => {
+    if(curPage && curPage >= 0){
+      setCurPages(curPage);
+    }else{
+      let cp = getCurPdfPage(projectId);
+      setCurPages(cp);
+    }
+  }, [curPage]);
+
+  React.useEffect(() => {
     if (projInfo && Object.keys(projInfo).length > 0) {
       setCurProjInfo(projInfo);
     }
@@ -82,10 +92,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   React.useEffect(() => {
     if (latestComp && Object.keys(latestComp).length > 0) {
       if (latestComp.path && latestComp.path.length > 0) {
-        let combinedPdfUrl = BaseMethods.joinUrl(
-          readConfig("compileBaseUrl"),
-          latestComp.path
-        );
         let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + projectId;
         setCurPdfUrl(newPdfUrl);
       }
@@ -263,10 +269,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     setNumPages(pageNum);
   };
 
-  const setCurNum = (curPageNum: number) => {
-    setCurPages(curPageNum);
-  };
-
   const renderPdfView = () => {
     if (!curPdfUrl || !projectId) return <div>Loading...</div>;
     return (
@@ -275,7 +277,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         projId={projectId}
         viewModel={viewModel}
         setPageNum={setPageNum}
-        setCurPageNum={setCurNum}
         options={options}
         virtualListRef={virtualListRef}
       ></MemoizedPDFPreview>
@@ -382,7 +383,8 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
 
   const handleNavPageChange = (e: any) => {
     let val = e.target.value;
-    setCurPages(val);
+    debugger;
+    setCurPdfPage(val, projectId);
   };
 
   const renderPageNaviation = () => {

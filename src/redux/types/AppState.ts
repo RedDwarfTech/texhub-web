@@ -73,5 +73,8 @@ export interface AppState {
     editor: {
         editor: EditorView,
         ws: WebsocketProvider
+    },
+    preview: {
+        curPage: number,
     }
 }

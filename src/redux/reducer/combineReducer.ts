@@ -6,6 +6,7 @@ import file from "@/redux/reducer/file/FileReducer";
 import snippet from "@/redux/reducer/snippet/SnippetReducer";
 import projShare from "@/redux/reducer/project/ProjectShareReducer";
 import editor from "@/redux/reducer/project/EditorReducer";
+import preview from "@/redux/reducer/project/preview/PreviewReducer";
 
 const rootReducer = combineReducers({
     proj,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
     file,
     snippet,
     projShare,
-    editor
+    editor,
+    preview
 });
 
 export default rootReducer;

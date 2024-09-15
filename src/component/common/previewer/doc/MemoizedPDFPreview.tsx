@@ -5,14 +5,13 @@ import { DocumentCallback, Options } from "react-pdf/dist/cjs/shared/types";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
-import { ProjInfo } from "@/model/proj/ProjInfo";
 import { readConfig } from "@/config/app/config-reader";
 import { scrollToPage } from "./PDFPreviewHandle";
-import { VariableSizeList } from "react-window";
+import { ListOnScrollProps, VariableSizeList } from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
 import TeXPDFPage from "./TeXPDFPage";
 import AutoSizer from "react-virtualized-auto-sizer";
-import { BaseMethods } from "rdjs-wheel";
+import { getCurPdfScrollOffset, setCurPdfPage, setCurPdfScrollOffset } from "@/service/project/preview/PreviewService";
 
 interface PDFPreviewProps {
   curPdfUrl: string;
@@ -20,7 +19,6 @@ interface PDFPreviewProps {
   options: Options;
   viewModel: string;
   setPageNum: (page: number) => void;
-  setCurPageNum: (page: number) => void;
   virtualListRef: React.RefObject<VariableSizeList>;
 }
 
@@ -33,8 +31,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     setPageNum,
     virtualListRef,
   }) => {
-    const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
-    const { pdfFocus, projInfo } = useSelector((state: AppState) => state.proj);
+    const { pdfFocus } = useSelector((state: AppState) => state.proj);
     const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
     const [pdf, setPdf] = useState<DocumentCallback>();
     const [pageViewports, setPageViewports] = useState<any>();
@@ -87,17 +84,10 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     }, [pdf]);
 
     React.useEffect(() => {
-      setCurProjInfo(projInfo);
-    }, [projInfo]);
-
-    React.useEffect(() => {
       if (pdfFocus && pdfFocus.length > 0) {
         let pageNum = pdfFocus[0].page;
         setCurPdfPosition(pdfFocus);
-        localStorage.setItem(
-          readConfig("pdfCurPage") + curProjInfo?.main.project_id,
-          pageNum.toString()
-        );
+        setCurPdfPage(pageNum, projId);
         scrollToPage(pageNum, virtualListRef);
         setTimeout(() => {
           setCurPdfPosition([]);
@@ -128,19 +118,14 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       localStorage.setItem(key, scrollTop.toString());
     };
 
-    const getInitialScrollOffset = (height: number) => {
-      if (BaseMethods.isNull(curProjInfo)) {
-        return 0;
-      }
-      // go to the last pdf position
-      let cachedPage = localStorage.getItem(
-        readConfig("pdfCurPage") + curProjInfo?.main.project_id
-      );
-      if (cachedPage && Number(cachedPage)) {
-        return Number(cachedPage) * height;
-      } else {
-        return 0;
-      }
+    const handleWindowPdfScroll = (e: ListOnScrollProps) => {
+      const scrollOffset = e.scrollOffset;
+      setCurPdfScrollOffset(scrollOffset, projId);
+    };
+
+    const getInitialScrollOffset = () => {
+      let offset = getCurPdfScrollOffset(projId);
+      return offset;
     };
 
     const getPageHeight = (pageIndex: number, width: number) => {
@@ -180,8 +165,9 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
                 width={width}
                 height={height}
                 estimatedItemSize={50}
-                initialScrollOffset={getInitialScrollOffset(height)}
+                initialScrollOffset={getInitialScrollOffset()}
                 itemCount={pdf.numPages}
+                onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
                 itemSize={(pageIndex) => getPageHeight(pageIndex, width)}
               >
                 {({ index, style }: { index: number; style: any }) => (
@@ -228,7 +214,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             flex: 1,
           }}
           onClick={openPdfUrlLink}
-          onScroll={(e) => handlePdfScroll(e)}
+          // onScroll={(e) => handlePdfScroll(e)}
         >
           {renderPdfList()}
         </div>
