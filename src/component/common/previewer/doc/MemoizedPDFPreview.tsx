@@ -1,11 +1,11 @@
-import React, { CSSProperties, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Document } from "react-pdf";
 import styles from "./MemoizedPDFPreview.module.css";
 import { DocumentCallback, Options } from "react-pdf/dist/cjs/shared/types";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import { readConfig } from "@/config/app/config-reader";
-import { scrollToPage } from "./PDFPreviewHandle";
+import { openPdfUrlLink, scrollToPage } from "./PDFPreviewHandle";
 import { ListOnScrollProps, VariableSizeList } from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
 import TeXPDFPage from "./TeXPDFPage";
@@ -67,6 +67,9 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         return;
       }
       setProjAttribute(projAttr);
+      if (virtualListRef.current) {
+        virtualListRef.current.resetAfterIndex(0, true);
+      }
     }, [projAttr, cachedScale]);
 
     React.useEffect(() => {
@@ -139,20 +142,9 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
       const pageViewport = pageViewports[pageIndex];
       const scale = width / pageViewport.width;
-      const actualHeight = pageViewport.height * scale;
+      const actualHeight = pageViewport.height * scale * projAttribute.pdfScale;
+      console.log("page height:" + actualHeight);
       return actualHeight;
-    };
-
-    /**
-     * Open pdf's link in the browser new tab
-     * https://github.com/diegomura/react-pdf/issues/645
-     * @param e
-     */
-    const openPdfUrlLink = (e: React.MouseEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      if ((e.target as HTMLElement).tagName.toLowerCase() === "a") {
-        window.open((e.target as HTMLAnchorElement).href);
-      }
     };
 
     /**
@@ -168,7 +160,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
               <VariableSizeList
                 ref={virtualListRef}
                 width={width}
-                height={height * pdf.numPages}
+                height={height}
                 estimatedItemSize={50}
                 initialScrollOffset={getInitialScrollOffset()}
                 itemCount={pdf.numPages}
@@ -183,12 +175,12 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
                   index: number;
                   style: React.CSSProperties;
                 }) => (
-                    <TeXPDFPage
-                      index={index + 1}
-                      width={width}
-                      style={style}
-                      projId={projId}
-                    />
+                  <TeXPDFPage
+                    index={index + 1}
+                    width={width}
+                    style={style}
+                    projId={projId}
+                  />
                 )}
               </VariableSizeList>
             )}
@@ -200,8 +192,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     };
 
     const onResize = (size: Size) => {
-      console.log('Width:', size);
-
+      console.log("Width:", size);
     };
 
     return (
@@ -216,12 +207,13 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
           // className={getDynStyles(viewModel)}
           style={{
             height: "100vh",
-            width: "100vw",
+            // do not setting the width to make it auto fit
+            //width: "100vw",
             display: "flex",
             flexDirection: "column",
             overflow: "hidden",
             flex: 1,
-            backgroundColor: "#ededed"
+            backgroundColor: "#ededed",
           }}
           onClick={openPdfUrlLink}
         >
