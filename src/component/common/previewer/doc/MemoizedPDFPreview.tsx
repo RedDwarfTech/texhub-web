@@ -9,12 +9,13 @@ import { scrollToPage } from "./PDFPreviewHandle";
 import { ListOnScrollProps, VariableSizeList } from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
 import TeXPDFPage from "./TeXPDFPage";
-import AutoSizer from "react-virtualized-auto-sizer";
+import AutoSizer, { Size } from "react-virtualized-auto-sizer";
 import {
   getCurPdfScrollOffset,
   setCurPdfPage,
   setCurPdfScrollOffset,
 } from "@/service/project/preview/PreviewService";
+import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
 
 interface PDFPreviewProps {
   curPdfUrl: string;
@@ -34,10 +35,17 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     setPageNum,
     virtualListRef,
   }) => {
+    let pdfScaleKey = "pdf:scale:" + projId;
+    let cachedScale = Number(localStorage.getItem(pdfScaleKey));
     const { pdfFocus } = useSelector((state: AppState) => state.proj);
     const [pdf, setPdf] = useState<DocumentCallback>();
     const [pageViewports, setPageViewports] = useState<any>();
     const divRef = useRef<HTMLDivElement>(null);
+    const { projAttr } = useSelector((state: AppState) => state.proj);
+    const [projAttribute, setProjAttribute] = useState<ProjAttribute>({
+      pdfScale: cachedScale,
+      legacyPdfScale: cachedScale,
+    });
 
     React.useEffect(() => {
       const handleResize = () => {};
@@ -53,6 +61,13 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         resizeObserver.disconnect();
       };
     }, []);
+
+    React.useEffect(() => {
+      if (projAttr.pdfScale === 1 && cachedScale) {
+        return;
+      }
+      setProjAttribute(projAttr);
+    }, [projAttr, cachedScale]);
 
     React.useEffect(() => {
       setPageViewports(undefined);
@@ -153,13 +168,13 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
               <VariableSizeList
                 ref={virtualListRef}
                 width={width}
-                height={height}
+                height={height * pdf.numPages}
                 estimatedItemSize={50}
                 initialScrollOffset={getInitialScrollOffset()}
                 itemCount={pdf.numPages}
                 overscanCount={0}
                 onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
-                itemSize={(pageIndex) => getPageHeight(pageIndex, width-900)}
+                itemSize={(pageIndex) => getPageHeight(pageIndex, width)}
               >
                 {({
                   index,
@@ -168,28 +183,12 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
                   index: number;
                   style: React.CSSProperties;
                 }) => (
-                  <div id={"virtual-list-item-" + (index + 1)}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  >
                     <TeXPDFPage
                       index={index + 1}
                       width={width}
                       style={style}
                       projId={projId}
                     />
-                    <div
-                      id="pageGap"
-                      style={{
-                        ...style,
-                        height: 10,
-                        backgroundColor: "lightgray",
-                        width: "100%",
-                      }}
-                    />
-                  </div>
                 )}
               </VariableSizeList>
             )}
@@ -200,7 +199,10 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
     };
 
-    const onResize = (...args: any[]) => {};
+    const onResize = (size: Size) => {
+      console.log('Width:', size);
+
+    };
 
     return (
       <Document
@@ -219,7 +221,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             flexDirection: "column",
             overflow: "hidden",
             flex: 1,
-            //background: "light-grey",
+            backgroundColor: "lightgray"
           }}
           onClick={openPdfUrlLink}
         >
