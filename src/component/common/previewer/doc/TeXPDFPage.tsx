@@ -37,6 +37,8 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     }
   };
   const [renderedPageNumber, setRenderedPageNumber] = useState<number>(-1);
+  const [renderedScale, setRenderedScale] = useState(1);
+
 
   React.useEffect(() => {
     if (projAttr.pdfScale === 1 && cachedScale) {
@@ -46,7 +48,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   }, [projAttr, cachedScale]);
 
   const handlePageRenderSuccess = (page: PageCallback) => {
-    
+    setRenderedScale(projAttribute.pdfScale);
     setRenderedPageNumber(page.pageNumber);
   };
 
@@ -92,11 +94,16 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     }
   };
 
-  const isLoading = renderedPageNumber !== index;
+  const isLoading = renderedPageNumber !== index || renderedScale !== projAttribute.pdfScale;
 
   return (
-    <div style={style}>
-      {renderLegacyPage(index, width)}
+    <div style={{
+      ...style,
+      paddingLeft: '60px',
+      paddingRight: '60px',
+      boxSizing: 'border-box',
+      backgroundColor: 'lightgrey'
+      }}>
       <Page
         key={index + "@" + projAttribute.pdfScale}
         className={styles.pdfPage}
@@ -107,7 +114,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
         onRenderSuccess={handlePageRenderSuccess}
         pageNumber={index}
         width={width}
-      ></Page>
+      ></Page> 
     </div>
   );
 };

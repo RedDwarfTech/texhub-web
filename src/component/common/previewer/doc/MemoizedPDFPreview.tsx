@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { CSSProperties, useRef, useState } from "react";
 import { Document } from "react-pdf";
 import styles from "./MemoizedPDFPreview.module.css";
 import { DocumentCallback, Options } from "react-pdf/dist/cjs/shared/types";
@@ -10,7 +10,11 @@ import { ListOnScrollProps, VariableSizeList } from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
 import TeXPDFPage from "./TeXPDFPage";
 import AutoSizer from "react-virtualized-auto-sizer";
-import { getCurPdfScrollOffset, setCurPdfPage, setCurPdfScrollOffset } from "@/service/project/preview/PreviewService";
+import {
+  getCurPdfScrollOffset,
+  setCurPdfPage,
+  setCurPdfScrollOffset,
+} from "@/service/project/preview/PreviewService";
 
 interface PDFPreviewProps {
   curPdfUrl: string;
@@ -36,9 +40,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const divRef = useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
-      const handleResize = () => {
-        
-      };
+      const handleResize = () => {};
 
       const resizeObserver = new ResizeObserver(handleResize);
 
@@ -155,17 +157,39 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
                 estimatedItemSize={50}
                 initialScrollOffset={getInitialScrollOffset()}
                 itemCount={pdf.numPages}
-                overscanCount={1}
+                overscanCount={0}
                 onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
-                itemSize={(pageIndex) => getPageHeight(pageIndex, width)}
+                itemSize={(pageIndex) => getPageHeight(pageIndex, width-900)}
               >
-                {({ index, style }: { index: number; style: any }) => (
-                  <TeXPDFPage
-                    index={index + 1}
-                    width={width}
-                    style={style}
-                    projId={projId}
-                  />
+                {({
+                  index,
+                  style,
+                }: {
+                  index: number;
+                  style: React.CSSProperties;
+                }) => (
+                  <div id={"virtual-list-item-" + (index + 1)}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  }}
+                  >
+                    <TeXPDFPage
+                      index={index + 1}
+                      width={width}
+                      style={style}
+                      projId={projId}
+                    />
+                    <div
+                      id="pageGap"
+                      style={{
+                        ...style,
+                        height: 10,
+                        backgroundColor: "lightgray",
+                        width: "100%",
+                      }}
+                    />
+                  </div>
                 )}
               </VariableSizeList>
             )}
@@ -176,9 +200,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
     };
 
-    const onResize = (...args: any[]) => {
-      
-    };
+    const onResize = (...args: any[]) => {};
 
     return (
       <Document
@@ -197,6 +219,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             flexDirection: "column",
             overflow: "hidden",
             flex: 1,
+            //background: "light-grey",
           }}
           onClick={openPdfUrlLink}
         >
