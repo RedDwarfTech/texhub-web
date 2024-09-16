@@ -99,11 +99,12 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   return (
     <div style={{
       ...style,
-      paddingLeft: '60px',
-      paddingRight: '60px',
       boxSizing: 'border-box',
-      backgroundColor: 'lightgrey',
       transform: `scale(${projAttribute.pdfScale})`,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center"
       }}>
       <Page
         key={index + "@" + projAttribute.pdfScale}

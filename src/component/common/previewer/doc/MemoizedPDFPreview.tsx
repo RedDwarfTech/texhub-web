@@ -221,7 +221,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             flexDirection: "column",
             overflow: "hidden",
             flex: 1,
-            backgroundColor: "lightgray"
+            backgroundColor: "#ededed"
           }}
           onClick={openPdfUrlLink}
         >
