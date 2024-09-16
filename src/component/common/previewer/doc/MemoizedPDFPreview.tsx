@@ -89,7 +89,9 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
           (pageNumber: number) =>
             pdf
               .getPage(pageNumber)
-              .then((page) => page.getViewport({ scale: 1 }))
+              .then((page) =>
+                page.getViewport({ scale: projAttr.pdfScale || 1 })
+              )
         );
         setPageViewports(nextPageViewports);
       })();
@@ -143,8 +145,17 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       const pageViewport = pageViewports[pageIndex];
       const scale = width / pageViewport.width;
       const actualHeight = pageViewport.height * scale * projAttribute.pdfScale;
-      console.log("page height:" + actualHeight);
-      return actualHeight;
+      console.log(
+        "actual height:" +
+          actualHeight +
+          ",width:" +
+          width +
+          ", pageIndex:" +
+          pageIndex +
+          ",pdfScale:" +
+          projAttribute.pdfScale
+      );
+      return actualHeight + 10;
     };
 
     /**
@@ -152,16 +163,14 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
      *
      * @returns
      */
-    const renderPdfList = () => {
+    const renderPdfList = (width: number, height: number) => {
       if (pdf && pageViewports) {
         return (
-          <AutoSizer onResize={onResize}>
-            {({ width, height }: { width: number; height: number }) => (
               <VariableSizeList
                 ref={virtualListRef}
                 width={width}
                 height={height}
-                estimatedItemSize={50}
+                estimatedItemSize={500}
                 initialScrollOffset={getInitialScrollOffset()}
                 itemCount={pdf.numPages}
                 overscanCount={0}
@@ -174,52 +183,51 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
                 }: {
                   index: number;
                   style: React.CSSProperties;
-                }) => (
-                  <TeXPDFPage
-                    index={index + 1}
-                    width={width}
-                    style={style}
-                    projId={projId}
-                  />
-                )}
+                }) => {
+                  return (
+                    <TeXPDFPage
+                      index={index + 1}
+                      width={width}
+                      style={style}
+                      projId={projId}
+                    />
+                  );
+                }}
               </VariableSizeList>
             )}
-          </AutoSizer>
-        );
-      } else {
-        return <div>loading...</div>;
-      }
     };
 
-    const onResize = (size: Size) => {
-      console.log("Width:", size);
-    };
+    const onResize = (size: Size) => {};
 
     return (
-      <Document
-        options={options}
-        file={curPdfUrl!}
-        onLoadSuccess={onDocumentLoadSuccess}
-      >
-        <div
-          id="pdfContainer"
-          ref={divRef}
-          // className={getDynStyles(viewModel)}
-          style={{
-            height: "100vh",
-            // do not setting the width to make it auto fit
-            //width: "100vw",
-            display: "flex",
-            flexDirection: "column",
-            overflow: "hidden",
-            flex: 1,
-            backgroundColor: "#ededed",
-          }}
-          onClick={openPdfUrlLink}
-        >
-          {renderPdfList()}
-        </div>
-      </Document>
+      <AutoSizer onResize={onResize}>
+        {({ width, height }: { width: number; height: number }) => (
+          <Document
+            options={options}
+            file={curPdfUrl!}
+            onLoadSuccess={onDocumentLoadSuccess}
+          >
+            <div
+              id="pdfContainer"
+              ref={divRef}
+              // className={getDynStyles(viewModel)}
+              style={{
+                height: "100vh",
+                // do not setting the width to make it auto fit
+                width: "100vw",
+                display: "flex",
+                flexDirection: "column",
+                overflow: "hidden",
+                flex: 1,
+                backgroundColor: "#ededed",
+              }}
+              onClick={openPdfUrlLink}
+            >
+              {renderPdfList(width, height)}
+            </div>
+          </Document>
+        )}
+      </AutoSizer>
     );
   },
   (prevProps, nextProps) => {

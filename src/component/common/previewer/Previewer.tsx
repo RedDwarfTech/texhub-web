@@ -383,7 +383,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
 
   const handleNavPageChange = (e: any) => {
     let val = e.target.value;
-    debugger;
     setCurPdfPage(val, projectId);
   };
 

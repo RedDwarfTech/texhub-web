@@ -2,8 +2,6 @@ import React, { useRef, useState } from "react";
 import { Page } from "react-pdf";
 import styles from "./TeXPDFPage.module.css";
 import { PageCallback } from "react-pdf/dist/cjs/shared/types";
-import { readConfig } from "@/config/app/config-reader";
-import { PageViewport } from "pdfjs-dist";
 import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
@@ -101,7 +99,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
       style={{
         ...style,
         boxSizing: "border-box",
-        transform: `scale(${projAttribute.pdfScale})`,
+        // transform: `scale(${projAttribute.pdfScale})`,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -110,7 +108,6 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     >
       <Page
         key={index + "@" + projAttribute.pdfScale}
-        //className={styles.pdfPage}
         scale={projAttribute.pdfScale}
         onLoad={handlePageChange}
         canvasRef={(element) => updateRefArray(index, element)}
