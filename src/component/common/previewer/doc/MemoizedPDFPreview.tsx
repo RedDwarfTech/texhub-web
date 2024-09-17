@@ -117,12 +117,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
     };
 
-    const handlePdfScroll = (e: React.UIEvent<HTMLDivElement>) => {
-      const scrollTop = e.currentTarget.scrollTop;
-      const key = readConfig("pdfScrollKey") + projId;
-      localStorage.setItem(key, scrollTop.toString());
-    };
-
     const handleWindowPdfScroll = (e: ListOnScrollProps) => {
       const scrollOffset = e.scrollOffset;
       setCurPdfScrollOffset(scrollOffset, projId);
