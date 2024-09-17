@@ -198,7 +198,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
       legacyPdfScale: Number(cachedScale),
     });
     localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
-    scaleCurPdfScrollOffset(curScale, projectId);
   };
 
   const handleZoomOut = async () => {
@@ -216,7 +215,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     }
     localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
     setProjAttr({ pdfScale: curScale, legacyPdfScale: Number(cachedScale) });
-    scaleCurPdfScrollOffset(curScale, projectId);
   };
 
   const handleFullScreen = async () => {

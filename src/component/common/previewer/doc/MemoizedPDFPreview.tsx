@@ -46,9 +46,12 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       pdfScale: cachedScale,
       legacyPdfScale: cachedScale,
     });
+    const [scrollOffset, setScrollOffset] = useState(0);
 
     React.useEffect(() => {
-      const handleResize = () => {};
+      const handleResize = () => {
+        // debugger;
+      };
 
       const resizeObserver = new ResizeObserver(handleResize);
 
@@ -144,6 +147,8 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
       const pageViewport = pageViewports[pageIndex];
       const scale = width / pageViewport.width;
+      // we need to change the height of the pdf page when scale
+      // the pdf content will override each other when scale the page
       const actualHeight = pageViewport.height * scale * projAttribute.pdfScale;
       console.log(
         "actual height:" +
@@ -155,6 +160,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
           ",pdfScale:" +
           projAttribute.pdfScale
       );
+      // margin 10px for each pdf pages
       return actualHeight + 10;
     };
 
@@ -166,38 +172,47 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const renderPdfList = (width: number, height: number) => {
       if (pdf && pageViewports) {
         return (
-              <VariableSizeList
-                ref={virtualListRef}
-                width={width}
-                height={height}
-                estimatedItemSize={500}
-                initialScrollOffset={getInitialScrollOffset()}
-                itemCount={pdf.numPages}
-                overscanCount={0}
-                onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
-                itemSize={(pageIndex) => getPageHeight(pageIndex, width)}
-              >
-                {({
-                  index,
-                  style,
-                }: {
-                  index: number;
-                  style: React.CSSProperties;
-                }) => {
-                  return (
-                    <TeXPDFPage
-                      index={index + 1}
-                      width={width}
-                      style={style}
-                      projId={projId}
-                    />
-                  );
-                }}
-              </VariableSizeList>
-            )}
+          <VariableSizeList
+            ref={virtualListRef}
+            width={width}
+            height={height}
+            estimatedItemSize={500}
+            initialScrollOffset={getInitialScrollOffset()}
+            itemCount={pdf.numPages}
+            overscanCount={0}
+            onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
+            itemSize={(pageIndex) => getPageHeight(pageIndex, width)}
+          >
+            {({
+              index,
+              style,
+            }: {
+              index: number;
+              style: React.CSSProperties;
+            }) => {
+              return (
+                <TeXPDFPage
+                  index={index + 1}
+                  width={width}
+                  style={style}
+                  projId={projId}
+                />
+              );
+            }}
+          </VariableSizeList>
+        );
+      }
     };
 
-    const onResize = (size: Size) => {};
+    const onResize = (size: Size) => {
+      if (virtualListRef.current) {
+        // 恢复滚动位置
+        virtualListRef.current.scrollTo(scrollOffset)
+        //const scrollOffset = getCurPdfScrollOffset(projId) * projAttribute.pdfScale;
+        //virtualListRef.current.resetAfterIndex(0, true);
+        //virtualListRef.current.scrollTo(scrollOffset);
+      }
+    };
 
     return (
       <AutoSizer onResize={onResize}>
