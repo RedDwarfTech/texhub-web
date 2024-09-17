@@ -32,6 +32,17 @@ export function setCurPdfScrollOffset(scrollOffset: number, projId: string) {
   localStorage.setItem(key, scrollOffset.toString());
 }
 
+export function scaleCurPdfScrollOffset(scale: number, projId: string) {
+  const key = readConfig("pdfScrollKey") + projId;
+  let offset = localStorage.getItem(key);
+  if (offset) {
+    let newOffset = Number(offset) * scale;
+    localStorage.setItem(key, newOffset.toString()); 
+  } else {
+    return 0;
+  }
+}
+
 export function getCurPdfScrollOffset(projId: string) {
   const key = readConfig("pdfScrollKey") + projId;
   let offset = localStorage.getItem(key);

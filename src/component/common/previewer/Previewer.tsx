@@ -22,7 +22,7 @@ import { scrollToPage } from "./doc/PDFPreviewHandle";
 import { useTranslation } from "react-i18next";
 import { handleSrcLocate } from "./PreviewerHandler";
 import { VariableSizeList } from "react-window";
-import { getCurPdfPage, setCurPdfPage } from "@/service/project/preview/PreviewService";
+import { getCurPdfPage, scaleCurPdfScrollOffset, setCurPdfPage } from "@/service/project/preview/PreviewService";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/legacy/pdf.worker.min.mjs`;
 
 export type PreviwerProps = {
@@ -198,6 +198,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
       legacyPdfScale: Number(cachedScale),
     });
     localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
+    scaleCurPdfScrollOffset(curScale, projectId);
   };
 
   const handleZoomOut = async () => {
@@ -215,6 +216,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     }
     localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
     setProjAttr({ pdfScale: curScale, legacyPdfScale: Number(cachedScale) });
+    scaleCurPdfScrollOffset(curScale, projectId);
   };
 
   const handleFullScreen = async () => {
