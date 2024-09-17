@@ -1,30 +1,22 @@
 import React, { useRef, useState } from "react";
 import { Document } from "react-pdf";
 import styles from "./MemoizedPDFPreview.module.css";
-import { DocumentCallback, Options } from "react-pdf/dist/cjs/shared/types";
+import { DocumentCallback } from "react-pdf/dist/cjs/shared/types";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import { readConfig } from "@/config/app/config-reader";
 import { openPdfUrlLink, scrollToPage } from "./PDFPreviewHandle";
 import { ListOnScrollProps, VariableSizeList } from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
-import TeXPDFPage from "./TeXPDFPage";
 import AutoSizer, { Size } from "react-virtualized-auto-sizer";
+import { PDFPreviewProps } from "@/model/props/proj/pdf/PDFPreviewProps";
 import {
   getCurPdfScrollOffset,
   setCurPdfPage,
   setCurPdfScrollOffset,
 } from "@/service/project/preview/PreviewService";
 import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
-
-interface PDFPreviewProps {
-  curPdfUrl: string;
-  projId: string;
-  options: Options;
-  viewModel: string;
-  setPageNum: (page: number) => void;
-  virtualListRef: React.RefObject<VariableSizeList>;
-}
+import TeXPDFPage from "./TeXPDFPage";
 
 const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
   ({

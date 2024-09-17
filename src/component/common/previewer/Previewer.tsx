@@ -7,6 +7,7 @@ import "react-pdf/dist/Page/AnnotationLayer.css";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import MemoizedPDFPreview from "./doc/MemoizedPDFPreview";
+import MemoPDFPreview from "./doc/MemoPDFPreview";
 import { CompileStatus } from "@/model/proj/compile/CompileStatus";
 import { CompileQueue } from "@/model/proj/CompileQueue";
 import { Options } from "react-pdf/dist/cjs/shared/types";

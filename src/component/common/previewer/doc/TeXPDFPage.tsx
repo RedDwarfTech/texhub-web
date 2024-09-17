@@ -113,7 +113,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
            * With keys, React, will add prevPage className to previously rendered page,
            * and mount new Page component instance for the new page.
            */
-          key={pageNumber + "@" + projAttribute.legacyPdfScale}
+          key={pageNumber + "@legacy-" + projAttribute.legacyPdfScale}
           className="prevPage"
           scale={projAttribute.legacyPdfScale}
           pageNumber={pageNumber}
@@ -141,9 +141,11 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
         justifyContent: "center",
       }}
     >
-      {isLoading?renderLegacyPage(index,width):null}
+      {isLoading && renderedPageNumber && renderedScale
+        ? renderLegacyPage(index, width)
+        : null}
       <Page
-        key={index + "@" + projAttribute.pdfScale}
+        key={index + "@new-" + projAttribute.pdfScale}
         scale={projAttribute.pdfScale}
         className={styles.pdfPage}
         onLoad={handlePageChange}
