@@ -5,12 +5,11 @@ import { readConfig } from "@/config/app/config-reader";
 import { BaseMethods } from "rdjs-wheel";
 
 export function setCurPdfPage(pageNo: number, projId: string) {
-  debugger;
   const actionTypeString: string =
     PreviewActionType[PreviewActionType.SET_CUR_PAGE];
   localStorage.setItem(readConfig("pdfCurPage") + projId, pageNo.toString());
   if (pageNo < 100) {
-    debugger;
+    
   }
   return XHRClient.dispathAction(pageNo, actionTypeString, store);
 }

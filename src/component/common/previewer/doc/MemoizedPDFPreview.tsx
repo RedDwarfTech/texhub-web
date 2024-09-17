@@ -206,11 +206,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
 
     const onResize = (size: Size) => {
       if (virtualListRef.current) {
-        // 恢复滚动位置
-        virtualListRef.current.scrollTo(scrollOffset)
-        //const scrollOffset = getCurPdfScrollOffset(projId) * projAttribute.pdfScale;
-        //virtualListRef.current.resetAfterIndex(0, true);
-        //virtualListRef.current.scrollTo(scrollOffset);
+        
       }
     };
 

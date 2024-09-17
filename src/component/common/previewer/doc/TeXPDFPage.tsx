@@ -5,6 +5,7 @@ import { PageCallback } from "react-pdf/dist/cjs/shared/types";
 import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
+import { readConfig } from "@/config/app/config-reader";
 
 interface PDFPageProps {
   index: number;
@@ -44,9 +45,48 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     setProjAttribute(projAttr);
   }, [projAttr, cachedScale]);
 
+  const restorePdfPosition = () => {
+    const key = readConfig("pdfScrollKey") + projId;
+    const scrollPosition = localStorage.getItem(key);
+    if (scrollPosition) {
+      setTimeout(() => {
+        const pdfContainerDiv = document.getElementById("pdfContainer");
+        if (pdfContainerDiv) {
+          // let scroll = parseInt(scrollPosition);
+          // pdfContainerDiv.scrollTop = scroll;
+        }
+      }, 0);
+    }
+  };
+
+  var pageObserve = new IntersectionObserver(
+    (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((item: IntersectionObserverEntry) => {
+        if (item.intersectionRatio > 0) {
+          let dataPage = item.target.getAttribute("data-page-number");
+          // pass the current page to parent component
+          // setCurPageNum(Number(dataPage));
+          if (!dataPage) return;
+          localStorage.setItem(
+            readConfig("pdfCurPage") + projId,
+            dataPage.toString()
+          );
+        }
+      });
+    },
+    {
+      threshold: 0,
+    }
+  );
+
   const handlePageRenderSuccess = (page: PageCallback) => {
     setRenderedScale(projAttribute.pdfScale);
     setRenderedPageNumber(page.pageNumber);
+    let elements = document.querySelectorAll(`.${styles.pdfPage}`);
+    if (elements && elements.length > 0) {
+      elements.forEach((box) => pageObserve.observe(box));
+      // restorePdfPosition();
+    }
   };
 
   const handlePageChange = (page: any) => {};
@@ -101,9 +141,11 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
         justifyContent: "center",
       }}
     >
+      {isLoading?renderLegacyPage(index,width):null}
       <Page
         key={index + "@" + projAttribute.pdfScale}
         scale={projAttribute.pdfScale}
+        className={styles.pdfPage}
         onLoad={handlePageChange}
         canvasRef={(element) => updateRefArray(index, element)}
         onChange={handlePageChange}

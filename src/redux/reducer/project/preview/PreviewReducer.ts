@@ -7,7 +7,6 @@ const initState: AppState["preview"] = {
 const PreviewReducer = (state = initState, action: any) => {
   switch (action.type) {
     case "SET_CUR_PAGE":
-      debugger;
       return {
         ...state,
         curPage: action.data,
