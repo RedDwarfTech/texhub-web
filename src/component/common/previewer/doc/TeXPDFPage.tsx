@@ -113,6 +113,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
 
   return (
     <div
+      id={"page-" + index}
       style={{
         ...style,
         boxSizing: "border-box",
@@ -120,6 +121,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
+        transform: `scale(${projAttribute.pdfScale},1.0)`,
       }}
     >
       {isLoading && renderedPageNumber && renderedScale
@@ -128,7 +130,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
       <Page
         key={index + "@new-" + projAttribute.pdfScale}
         scale={projAttribute.pdfScale}
-        className={styles.pdfPage}
+        //className={styles.pdfPage}
         onLoad={handlePageChange}
         canvasRef={(element) => updateRefArray(index, element)}
         onChange={handlePageChange}
