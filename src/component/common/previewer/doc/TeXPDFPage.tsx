@@ -121,7 +121,9 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        transform: `scale(${projAttribute.pdfScale},1.0)`,
+        //transform: `scale(${projAttribute.pdfScale},1.0)`,
+        width: `${projAttribute.pdfScale * width}`,
+        left :`${(width - projAttribute.pdfScale * width)*100/(2*width)}%`
       }}
     >
       {isLoading && renderedPageNumber && renderedScale

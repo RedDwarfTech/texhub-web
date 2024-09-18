@@ -207,7 +207,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             <div
               id="pdfContainer"
               ref={divRef}
-              //className={getDynStyles(viewModel)}
+              className={getDynStyles(viewModel)}
               style={{
                 height: "100vh",
                 // do not setting the width to make it auto fit
