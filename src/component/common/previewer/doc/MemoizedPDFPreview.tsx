@@ -11,6 +11,7 @@ import { asyncMap } from "@wojtekmaj/async-array-utils";
 import AutoSizer, { Size } from "react-virtualized-auto-sizer";
 import { PDFPreviewProps } from "@/model/props/proj/pdf/PDFPreviewProps";
 import {
+  getCurPdfPage,
   getCurPdfScrollOffset,
   setCurPdfPage,
   setCurPdfScrollOffset,
@@ -29,6 +30,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
   }) => {
     let pdfScaleKey = "pdf:scale:" + projId;
     let cachedScale = Number(localStorage.getItem(pdfScaleKey));
+    let cachedPdfOffset = getCurPdfScrollOffset(projId);
     const { pdfFocus } = useSelector((state: AppState) => state.proj);
     const [pdf, setPdf] = useState<DocumentCallback>();
     const [pageViewports, setPageViewports] = useState<any>();
@@ -37,13 +39,11 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const [projAttribute, setProjAttribute] = useState<ProjAttribute>({
       pdfScale: cachedScale,
       legacyPdfScale: cachedScale,
+      pdfOffset: cachedPdfOffset,
     });
-    const [scrollOffset, setScrollOffset] = useState(0);
 
     React.useEffect(() => {
-      const handleResize = () => {
-        // debugger;
-      };
+      const handleResize = () => {};
 
       const resizeObserver = new ResizeObserver(handleResize);
 
@@ -65,6 +65,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       if (virtualListRef.current) {
         virtualListRef.current.resetAfterIndex(0, true);
       }
+      setCurPdfScrollOffset(projAttr.pdfScale, projId);
     }, [projAttr, cachedScale]);
 
     React.useEffect(() => {
@@ -122,11 +123,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       setCurPdfScrollOffset(scrollOffset, projId);
     };
 
-    const getInitialScrollOffset = () => {
-      let offset = getCurPdfScrollOffset(projId);
-      return offset;
-    };
-
     const getPageHeight = (pageIndex: number, width: number) => {
       if (!pageViewports) {
         throw new Error("getPageHeight() called too early");
@@ -150,6 +146,12 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       return actualHeight + 10;
     };
 
+    const getOffset = (height: number) => {
+      let page = getCurPdfPage(projId);
+      let offset = height * page + 10 * page;
+      return offset * projAttribute.pdfScale;
+    };
+
     /**
      * https://codesandbox.io/p/sandbox/react-pdf-react-window-forked-rcw56x?file=%2Fsrc%2FApp.js%3A81%2C35
      *
@@ -163,7 +165,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             width={width}
             height={height}
             estimatedItemSize={500}
-            initialScrollOffset={getInitialScrollOffset()}
+            initialScrollOffset={getOffset(height)}
             itemCount={pdf.numPages}
             overscanCount={0}
             onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
@@ -192,7 +194,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
 
     const onResize = (size: Size) => {
       if (virtualListRef.current) {
-        
       }
     };
 

@@ -23,7 +23,11 @@ import { scrollToPage } from "./doc/PDFPreviewHandle";
 import { useTranslation } from "react-i18next";
 import { handleSrcLocate } from "./PreviewerHandler";
 import { VariableSizeList } from "react-window";
-import { getCurPdfPage, scaleCurPdfScrollOffset, setCurPdfPage } from "@/service/project/preview/PreviewService";
+import {
+  getCurPdfPage,
+  setCurPdfPage,
+} from "@/service/project/preview/PreviewService";
+import { getCurPdfScrollOffset } from "@/service/project/preview/PreviewService";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/legacy/pdf.worker.min.mjs`;
 
 export type PreviwerProps = {
@@ -76,9 +80,9 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   }, [projectId]);
 
   React.useEffect(() => {
-    if(curPage && curPage >= 0){
+    if (curPage && curPage >= 0) {
       setCurPages(curPage);
-    }else{
+    } else {
       let cp = getCurPdfPage(projectId);
       setCurPages(cp);
     }
@@ -194,9 +198,13 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     } else {
       curScale = numberScale + 0.1;
     }
+    let offset = getCurPdfScrollOffset(projectId);
+    let newOffset =
+      Number(offset) + (curScale - Number(cachedScale)) * Number(offset);
     setProjAttr({
       pdfScale: curScale,
       legacyPdfScale: Number(cachedScale),
+      pdfOffset: newOffset
     });
     localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
   };
@@ -215,7 +223,14 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
       curScale = numberScale - 0.1;
     }
     localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
-    setProjAttr({ pdfScale: curScale, legacyPdfScale: Number(cachedScale) });
+    let offset = getCurPdfScrollOffset(projectId);
+    let newOffset =
+      Number(offset) + (curScale - Number(cachedScale)) * Number(offset);
+    setProjAttr({ 
+      pdfScale: curScale, 
+      legacyPdfScale: Number(cachedScale),
+      pdfOffset: newOffset
+     });
   };
 
   const handleFullScreen = async () => {

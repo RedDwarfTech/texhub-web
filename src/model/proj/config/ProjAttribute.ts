@@ -1,4 +1,5 @@
 export interface ProjAttribute { 
     pdfScale: number;
-    legacyPdfScale: number
+    legacyPdfScale: number;
+    pdfOffset: number;
 }

@@ -6,7 +6,7 @@ import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { readConfig } from "@/config/app/config-reader";
-import { setCurPdfPage } from "@/service/project/preview/PreviewService";
+import { getCurPdfScrollOffset, setCurPdfPage } from "@/service/project/preview/PreviewService";
 
 interface PDFPageProps {
   index: number;
@@ -23,6 +23,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
 }) => {
   let pdfScaleKey = "pdf:scale:" + projId;
   let cachedScale = Number(localStorage.getItem(pdfScaleKey));
+  let pdfOffset = getCurPdfScrollOffset(projId);
   const { projAttr } = useSelector((state: AppState) => state.proj);
   const canvasArray = useRef<
     Array<React.MutableRefObject<HTMLCanvasElement | null>>
@@ -30,6 +31,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   const [projAttribute, setProjAttribute] = useState<ProjAttribute>({
     pdfScale: cachedScale,
     legacyPdfScale: cachedScale,
+    pdfOffset: pdfOffset
   });
   const updateRefArray = (index: number, element: HTMLCanvasElement | null) => {
     if (element) {
@@ -121,9 +123,10 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        //transform: `scale(${projAttribute.pdfScale},1.0)`,
         width: `${projAttribute.pdfScale * width}`,
-        left :`${(width - projAttribute.pdfScale * width)*100/(2*width)}%`
+        left: `${
+          ((width - projAttribute.pdfScale * width) * 100) / (2 * width)
+        }%`,
       }}
     >
       {isLoading && renderedPageNumber && renderedScale
