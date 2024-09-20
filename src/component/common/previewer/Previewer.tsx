@@ -225,7 +225,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
     let offset = getCurPdfScrollOffset(projectId);
     let newOffset =
-      Number(offset) + (curScale - Number(cachedScale)) * Number(offset);
+      Number(offset) + (curScale - Number(cachedScale)) * Number(offset) - getCurPdfPage(projectId) * 10;
     setProjAttr({ 
       pdfScale: curScale, 
       legacyPdfScale: Number(cachedScale),

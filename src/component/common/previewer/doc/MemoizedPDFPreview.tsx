@@ -65,7 +65,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       if (virtualListRef.current) {
         virtualListRef.current.resetAfterIndex(0, true);
       }
-      setCurPdfScrollOffset(projAttr.pdfScale, projId);
+      setCurPdfScrollOffset(projAttr.pdfOffset, projId);
     }, [projAttr, cachedScale]);
 
     React.useEffect(() => {
@@ -147,9 +147,8 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     };
 
     const getOffset = (height: number) => {
-      let page = getCurPdfPage(projId);
-      let offset = height * page + 10 * page;
-      return offset * projAttribute.pdfScale;
+      let page = projAttribute.pdfOffset;
+      return page;
     };
 
     /**
