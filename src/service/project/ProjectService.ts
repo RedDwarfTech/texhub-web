@@ -3,7 +3,7 @@ import { TexFileModel } from "@/model/file/TexFileModel";
 import { CompileQueue } from "@/model/proj/CompileQueue";
 import { LatestCompile } from "@/model/proj/LatestCompile";
 import { CompileStatus } from "@/model/proj/compile/CompileStatus";
-import { PreviewPdfAttribute } from "@/model/proj/config/ProjAttribute";
+import { PreviewPdfAttribute } from "@/model/proj/config/PreviewPdfAttribute";
 import { ProjConf } from "@/model/proj/config/ProjConf";
 import { CompileProjLog } from "@/model/request/proj/CompileProjLog";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";

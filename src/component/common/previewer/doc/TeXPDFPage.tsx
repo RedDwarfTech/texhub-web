@@ -2,10 +2,9 @@ import React, { useRef, useState } from "react";
 import { Page } from "react-pdf";
 import styles from "./TeXPDFPage.module.css";
 import { PageCallback } from "react-pdf/dist/cjs/shared/types";
-import { PreviewPdfAttribute } from "@/model/proj/config/ProjAttribute";
+import { PreviewPdfAttribute } from "@/model/proj/config/PreviewPdfAttribute";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
-import { readConfig } from "@/config/app/config-reader";
 import { getCurPdfScrollOffset, setCurPdfPage } from "@/service/project/preview/PreviewService";
 
 interface PDFPageProps {

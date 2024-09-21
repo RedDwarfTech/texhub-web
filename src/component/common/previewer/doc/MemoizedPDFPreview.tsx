@@ -16,7 +16,7 @@ import {
   setCurPdfPage,
   setCurPdfScrollOffset,
 } from "@/service/project/preview/PreviewService";
-import { PreviewPdfAttribute } from "@/model/proj/config/ProjAttribute";
+import { PreviewPdfAttribute } from "@/model/proj/config/PreviewPdfAttribute";
 import TeXPDFPage from "./TeXPDFPage";
 
 const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(

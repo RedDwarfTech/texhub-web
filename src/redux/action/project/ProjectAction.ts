@@ -1,5 +1,5 @@
 import { CompileStatus } from "@/model/proj/compile/CompileStatus";
-import { PreviewPdfAttribute } from "@/model/proj/config/ProjAttribute";
+import { PreviewPdfAttribute } from "@/model/proj/config/PreviewPdfAttribute";
 
 export type projectAction = saveDocAction | getDocListAction | compileProjAction | getLatestCompileAction | renderLogAction | clearCompLogAction | addQueueCompileAction | getCompQueueStatusAction | texCompEndAction | getProjInfoAction | delProjInfoAction | uploadProjFileAction | getHisPageAction;
 

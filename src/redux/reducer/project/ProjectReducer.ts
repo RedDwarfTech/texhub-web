@@ -5,7 +5,7 @@ import { JoinResult } from "@/model/proj/JoinResult";
 import { CompileQueue } from "@/model/proj/CompileQueue";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { CompileStatus } from "@/model/proj/compile/CompileStatus";
-import { PreviewPdfAttribute } from "@/model/proj/config/ProjAttribute";
+import { PreviewPdfAttribute } from "@/model/proj/config/PreviewPdfAttribute";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 import { ProjConf } from "@/model/proj/config/ProjConf";
