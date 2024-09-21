@@ -5,7 +5,7 @@ import { JoinResult } from "@/model/proj/JoinResult";
 import { CompileQueue } from "@/model/proj/CompileQueue";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { CompileStatus } from "@/model/proj/compile/CompileStatus";
-import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
+import { PreviewPdfAttribute } from "@/model/proj/config/ProjAttribute";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 import { ProjConf } from "@/model/proj/config/ProjConf";
@@ -31,7 +31,7 @@ const initState: AppState["proj"] = {
     compileStatus: {} as CompileStatus,
     projAttr: {
         pdfScale: 1
-    } as ProjAttribute,
+    } as PreviewPdfAttribute,
     pdfFocus: [] as PdfPosition[],
     srcFocus: [] as SrcPosition[],
     projConf: {} as ProjConf,
@@ -131,7 +131,7 @@ const ProjectReducer = (state = initState, action: any) => {
                 compileStatus: action.data
             };
         case "PROJ_ATTR":
-            const newObject: ProjAttribute = { ...state.projAttr, ...action.data };
+            const newObject: PreviewPdfAttribute = { ...state.projAttr, ...action.data };
             return {
                 ...state,
                 projAttr: newObject

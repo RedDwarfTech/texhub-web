@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { Page } from "react-pdf";
 import styles from "./TeXPDFPage.module.css";
 import { PageCallback } from "react-pdf/dist/cjs/shared/types";
-import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
+import { PreviewPdfAttribute } from "@/model/proj/config/ProjAttribute";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { readConfig } from "@/config/app/config-reader";
@@ -28,7 +28,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   const canvasArray = useRef<
     Array<React.MutableRefObject<HTMLCanvasElement | null>>
   >([]);
-  const [projAttribute, setProjAttribute] = useState<ProjAttribute>({
+  const [projAttribute, setProjAttribute] = useState<PreviewPdfAttribute>({
     pdfScale: cachedScale,
     legacyPdfScale: cachedScale,
     pdfOffset: pdfOffset
@@ -135,7 +135,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
       <Page
         key={index + "@new-" + projAttribute.pdfScale}
         scale={projAttribute.pdfScale}
-        //className={styles.pdfPage}
+        className={styles.pdfPage}
         onLoad={handlePageChange}
         canvasRef={(element) => updateRefArray(index, element)}
         onChange={handlePageChange}

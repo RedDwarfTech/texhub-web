@@ -3,7 +3,7 @@ import { TexFileModel } from "@/model/file/TexFileModel";
 import { CompileQueue } from "@/model/proj/CompileQueue";
 import { LatestCompile } from "@/model/proj/LatestCompile";
 import { CompileStatus } from "@/model/proj/compile/CompileStatus";
-import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
+import { PreviewPdfAttribute } from "@/model/proj/config/ProjAttribute";
 import { ProjConf } from "@/model/proj/config/ProjConf";
 import { CompileProjLog } from "@/model/request/proj/CompileProjLog";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
@@ -363,7 +363,7 @@ export function replaceTextToEditor(text: string) {
   return XHRClient.dispathAction(text, actionTypeString, store);
 }
 
-export function setProjAttr(data: ProjAttribute) {
+export function setProjAttr(data: PreviewPdfAttribute) {
   const actionTypeString: string = ProjectActionType[ProjectActionType.PROJ_ATTR];
   return XHRClient.dispathAction(data, actionTypeString, store);
 }

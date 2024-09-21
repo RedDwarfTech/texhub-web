@@ -16,7 +16,7 @@ import {
   setCurPdfPage,
   setCurPdfScrollOffset,
 } from "@/service/project/preview/PreviewService";
-import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
+import { PreviewPdfAttribute } from "@/model/proj/config/ProjAttribute";
 import TeXPDFPage from "./TeXPDFPage";
 
 const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
@@ -36,7 +36,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const [pageViewports, setPageViewports] = useState<any>();
     const divRef = useRef<HTMLDivElement>(null);
     const { projAttr } = useSelector((state: AppState) => state.proj);
-    const [projAttribute, setProjAttribute] = useState<ProjAttribute>({
+    const [projAttribute, setProjAttribute] = useState<PreviewPdfAttribute>({
       pdfScale: cachedScale,
       legacyPdfScale: cachedScale,
       pdfOffset: cachedPdfOffset,
@@ -156,7 +156,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
      * @param projAttribute
      * @returns
      */
-    const getInitialOffset = (projAttribute: ProjAttribute) => {
+    const getInitialOffset = (projAttribute: PreviewPdfAttribute) => {
       let page = projAttribute.pdfOffset;
       return page;
     };
@@ -216,7 +216,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             <div
               id="pdfContainer"
               ref={divRef}
-              className={getDynStyles(viewModel)}
+              //className={getDynStyles(viewModel)}
               style={{
                 height: "100vh",
                 // do not setting the width to make it auto fit

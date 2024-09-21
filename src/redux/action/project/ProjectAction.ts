@@ -1,5 +1,5 @@
 import { CompileStatus } from "@/model/proj/compile/CompileStatus";
-import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
+import { PreviewPdfAttribute } from "@/model/proj/config/ProjAttribute";
 
 export type projectAction = saveDocAction | getDocListAction | compileProjAction | getLatestCompileAction | renderLogAction | clearCompLogAction | addQueueCompileAction | getCompQueueStatusAction | texCompEndAction | getProjInfoAction | delProjInfoAction | uploadProjFileAction | getHisPageAction;
 
@@ -146,7 +146,7 @@ export interface uploadProjFileAction {
 
 export interface setProjAttrAction {
     type: ProjectActionType.PROJ_ATTR;
-    data: ProjAttribute;
+    data: PreviewPdfAttribute;
 }
 
 export interface getPdfPositionAction {

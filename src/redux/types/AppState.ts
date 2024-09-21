@@ -7,7 +7,7 @@ import { JoinResult } from "@/model/proj/JoinResult";
 import { CompileQueue } from "@/model/proj/CompileQueue";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { CompileStatus } from "@/model/proj/compile/CompileStatus";
-import { ProjAttribute } from "@/model/proj/config/ProjAttribute";
+import { PreviewPdfAttribute } from "@/model/proj/config/ProjAttribute";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { EntityList } from "rdjs-wheel";
 import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
@@ -36,7 +36,7 @@ export interface AppState {
         streamLogText: string,
         projInfo: ProjInfo,
         compileStatus: CompileStatus,
-        projAttr: ProjAttribute,
+        projAttr: PreviewPdfAttribute,
         pdfFocus: PdfPosition[],
         srcFocus: SrcPosition[],
         projConf: ProjConf,
