@@ -327,7 +327,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
             title={t("btn_nav_src")}
             onClick={() => {
               if (!BaseMethods.isNull(curProjInfo)) {
-                handleSrcLocate(projectId, curProjInfo!);
+                handleSrcLocate(projectId, curProjInfo!, t("msg_empty_proj_info"));
               }
             }}
           >

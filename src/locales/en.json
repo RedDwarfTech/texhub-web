@@ -64,6 +64,7 @@
     "tab_log": "Log",
     "msg_non_vip_exceed": "become vip too create more project",
     "msg_vip_exceed": "exceed the vip limit",
+    "msg_empty_proj_info": "The project info is empty",
     "profile": "Profile",
     "resetPwd": "Password",
     "myOrder": "Order",

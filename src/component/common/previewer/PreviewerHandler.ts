@@ -1,19 +1,20 @@
-import { readConfig } from "@/config/app/config-reader";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { QuerySrcPos } from "@/model/request/proj/query/QuerySrcPos";
+import { getCurPdfPage } from "@/service/project/preview/PreviewService";
 import { getSrcPosition } from "@/service/project/ProjectService";
 import { toast } from "react-toastify";
 
 /**
  * get the source location by pdf file position
+ * 
  * @returns src position info
  */
-export const handleSrcLocate = (projectId: string, curProjInfo: ProjInfo) => {
+export const handleSrcLocate = (projectId: string, curProjInfo: ProjInfo, msg: string) => {
   if (!projectId) {
-    toast.info("项目信息为空");
+    toast.info(msg);
     return;
   }
-  let curPage = localStorage.getItem(readConfig("pdfCurPage") + projectId);
+  let curPage = getCurPdfPage(projectId);
   let req: QuerySrcPos = {
     project_id: projectId,
     main_file: curProjInfo?.main_file.name || "main.tex",

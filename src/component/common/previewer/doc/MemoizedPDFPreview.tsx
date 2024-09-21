@@ -4,7 +4,6 @@ import styles from "./MemoizedPDFPreview.module.css";
 import { DocumentCallback } from "react-pdf/dist/cjs/shared/types";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
-import { readConfig } from "@/config/app/config-reader";
 import { openPdfUrlLink, scrollToPage } from "./PDFPreviewHandle";
 import { ListOnScrollProps, VariableSizeList } from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
@@ -66,10 +65,10 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         virtualListRef.current.resetAfterIndex(0, true);
       }
       setCurPdfScrollOffset(projAttr.pdfOffset, projId);
-      if (virtualListRef.current) {
-        let pdfPage = getCurPdfPage(projId);
-        virtualListRef.current.scrollToItem(pdfPage-1);
-      }
+if (virtualListRef.current) {
+  let pdfPage = getCurPdfPage(projId);
+  virtualListRef.current.scrollToItem(pdfPage-1);
+}
     }, [projAttr, cachedScale]);
 
     React.useEffect(() => {

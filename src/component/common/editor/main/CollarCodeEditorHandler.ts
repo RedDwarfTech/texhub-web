@@ -5,7 +5,6 @@ import { BaseMethods } from "rdjs-wheel";
 import { EditorProps } from "./CollarCodeEditor";
 import { toast } from "react-toastify";
 import { getPdfPosition } from "@/service/project/ProjectService";
-import { handleSrcLocate } from "../../previewer/PreviewerHandler";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { ProjectTreeFolder } from "../../projtree/main/ProjectTreeFolder";
 
