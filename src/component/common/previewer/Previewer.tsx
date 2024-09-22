@@ -7,11 +7,8 @@ import "react-pdf/dist/Page/AnnotationLayer.css";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import MemoizedPDFPreview from "./doc/MemoizedPDFPreview";
-import MemoPDFPreview from "./doc/MemoPDFPreview";
 import { CompileStatus } from "@/model/proj/compile/CompileStatus";
 import { CompileQueue } from "@/model/proj/CompileQueue";
-import { Options } from "react-pdf/dist/cjs/shared/types";
-import { getAccessToken } from "../cache/Cache";
 import {
   getLatestCompile,
   setProjAttr,
@@ -21,13 +18,14 @@ import { BaseMethods } from "rdjs-wheel";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { scrollToPage } from "./doc/PDFPreviewHandle";
 import { useTranslation } from "react-i18next";
-import { handleSrcLocate } from "./PreviewerHandler";
+import { handleDownloadPdf, handleOpenInBrowser, handleSrcLocate } from "./PreviewerHandler";
 import { VariableSizeList } from "react-window";
 import {
   getCurPdfPage,
   setCurPdfPage,
 } from "@/service/project/preview/PreviewService";
 import { getCurPdfScrollOffset } from "@/service/project/preview/PreviewService";
+import { pdfjsOptions } from "@/config/pdf/PdfJsConfig";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/legacy/pdf.worker.min.mjs`;
 
 export type PreviwerProps = {
@@ -59,21 +57,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   } = useSelector((state: AppState) => state.proj);
   const { t } = useTranslation();
   const virtualListRef = useRef<VariableSizeList>(null);
-
-  const options: Options = {
-    cMapUrl: `/pdfjs-dist/${pdfjs.version}/cmaps/`,
-    httpHeaders: {
-      Authorization: "Bearer " + getAccessToken(),
-    },
-    // open the range request
-    // the default value was false
-    // if want to load the whole pdf by default
-    // set this value to true
-    disableRange: false,
-    // just fetch the needed slice
-    disableAutoFetch: true,
-    rangeChunkSize: 65536 * 5,
-  };
 
   React.useEffect(() => {
     getLatestCompile(projectId);
@@ -151,26 +134,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     }
   }, [streamLogText]);
 
-  const handleDownloadPdf = async (pdfUrl: string) => {
-    if (!pdfUrl) {
-      toast.error("PDF文件Url为空");
-      return;
-    }
-    try {
-      const response = await fetch(pdfUrl);
-      const blob = await response.blob();
-      const downloadUrl = window.URL.createObjectURL(new Blob([blob]));
-      const link = document.createElement("a");
-      link.href = downloadUrl;
-      link.setAttribute("download", new Date().getTime() + ".pdf");
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error("Error downloading PDF:", error);
-    }
-  };
-
   const handleScrollTop = () => {
     const pdfContainerDiv = document.getElementById("pdfContainer");
     if (pdfContainerDiv) {
@@ -178,16 +141,9 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     }
   };
 
-  const handleOpenInBrowser = (curPdfUrl: string) => {
-    const pdfContainerDiv = document.getElementById("pdfContainer");
-    if (pdfContainerDiv) {
-      window.open(curPdfUrl, "_blank");
-    }
-  };
-
   const handleZoomIn = async () => {
     if (!projectId) {
-      toast.warn("未找到当前项目信息");
+      toast.warn(t("msg_empty_proj_info"));
       return;
     }
     let cachedScale = localStorage.getItem("pdf:scale:" + projectId);
@@ -203,14 +159,14 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     setProjAttr({
       pdfScale: curScale,
       legacyPdfScale: Number(cachedScale),
-      pdfOffset: newOffset
+      pdfOffset: newOffset,
     });
     localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
   };
 
   const handleZoomOut = async () => {
     if (!projectId) {
-      toast.warn("未找到当前项目信息");
+      toast.warn(t("msg_empty_proj_info"));
       return;
     }
     let cachedScale = localStorage.getItem("pdf:scale:" + projectId);
@@ -224,16 +180,16 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
     let offset = getCurPdfScrollOffset(projectId);
     let newOffset = Number(cachedScale) * Number(offset);
-    setProjAttr({ 
-      pdfScale: curScale, 
+    setProjAttr({
+      pdfScale: curScale,
       legacyPdfScale: Number(cachedScale),
-      pdfOffset: newOffset
-     });
+      pdfOffset: newOffset,
+    });
   };
 
   const handleFullScreen = async () => {
     if (!projectId) {
-      toast.warn("未找到当前项目信息");
+      toast.warn(t("msg_empty_proj_info"));
       return;
     }
     let url = "/preview/fullscreen?projId=" + projectId;
@@ -291,7 +247,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         projId={projectId}
         viewModel={viewModel}
         setPageNum={setPageNum}
-        options={options}
+        options={pdfjsOptions}
         virtualListRef={virtualListRef}
       ></MemoizedPDFPreview>
     );
@@ -306,7 +262,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
             data-bs-toggle="tooltip"
             title={t("btn_open_in_broswer")}
             onClick={() => {
-              handleOpenInBrowser(curPdfUrl);
+              handleOpenInBrowser(projectId);
             }}
           >
             <i className="fa-brands fa-chrome"></i>
@@ -327,7 +283,11 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
             title={t("btn_nav_src")}
             onClick={() => {
               if (!BaseMethods.isNull(curProjInfo)) {
-                handleSrcLocate(projectId, curProjInfo!, t("msg_empty_proj_info"));
+                handleSrcLocate(
+                  projectId,
+                  curProjInfo!,
+                  t("msg_empty_proj_info")
+                );
               }
             }}
           >

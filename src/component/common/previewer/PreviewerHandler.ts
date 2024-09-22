@@ -3,6 +3,7 @@ import { QuerySrcPos } from "@/model/request/proj/query/QuerySrcPos";
 import { getCurPdfPage } from "@/service/project/preview/PreviewService";
 import { getSrcPosition } from "@/service/project/ProjectService";
 import { toast } from "react-toastify";
+import { getAccessToken } from "../cache/Cache";
 
 /**
  * get the source location by pdf file position
@@ -23,4 +24,46 @@ export const handleSrcLocate = (projectId: string, curProjInfo: ProjInfo, msg: s
     v: 4.563,
   };
   getSrcPosition(req);
+};
+
+export const handleOpenInBrowser = (projectId: string) => {
+  if (projectId) {
+    let accessToken = getAccessToken();
+    let url = "/tex/file/pdf/full?proj_id=" + projectId;
+    fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + accessToken,
+      },
+    })
+      .then((response) => response.blob())
+      .then((blob) => {
+        var _url = window.URL.createObjectURL(blob);
+        window.open(_url, "_blank")!.focus();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+};
+
+export const handleDownloadPdf = async (pdfUrl: string) => {
+  if (!pdfUrl) {
+    toast.error("PDF文件Url为空");
+    return;
+  }
+  try {
+    const response = await fetch(pdfUrl);
+    const blob = await response.blob();
+    const downloadUrl = window.URL.createObjectURL(new Blob([blob]));
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.setAttribute("download", new Date().getTime() + ".pdf");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error("Error downloading PDF:", error);
+  }
 };
