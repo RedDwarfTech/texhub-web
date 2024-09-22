@@ -5,7 +5,7 @@ import { PageCallback } from "react-pdf/dist/cjs/shared/types";
 import { PreviewPdfAttribute } from "@/model/proj/config/PreviewPdfAttribute";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
-import { getCurPdfScrollOffset, setCurPdfPage } from "@/service/project/preview/PreviewService";
+import { setCurPdfPage } from "@/service/project/preview/PreviewService";
 
 interface PDFPageProps {
   index: number;
@@ -22,15 +22,13 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
 }) => {
   let pdfScaleKey = "pdf:scale:" + projId;
   let cachedScale = Number(localStorage.getItem(pdfScaleKey));
-  let pdfOffset = getCurPdfScrollOffset(projId);
   const { projAttr } = useSelector((state: AppState) => state.proj);
   const canvasArray = useRef<
     Array<React.MutableRefObject<HTMLCanvasElement | null>>
   >([]);
   const [projAttribute, setProjAttribute] = useState<PreviewPdfAttribute>({
     pdfScale: cachedScale,
-    legacyPdfScale: cachedScale,
-    pdfOffset: pdfOffset
+    legacyPdfScale: cachedScale
   });
   const updateRefArray = (index: number, element: HTMLCanvasElement | null) => {
     if (element) {

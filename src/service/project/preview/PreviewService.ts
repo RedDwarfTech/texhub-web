@@ -9,25 +9,33 @@ export function setCurPdfPage(pageNo: number, projId: string) {
     PreviewActionType[PreviewActionType.SET_CUR_PAGE];
   localStorage.setItem(readConfig("pdfCurPage") + projId, pageNo.toString());
   if (pageNo < 100) {
-    
   }
   return XHRClient.dispathAction(pageNo, actionTypeString, store);
 }
 
 export function getCurPdfPage(projId: string) {
-  if(BaseMethods.isNull(projId)) {
+  if (BaseMethods.isNull(projId)) {
     return 0;
   }
   let curPage = localStorage.getItem(readConfig("pdfCurPage") + projId);
   if (curPage) {
     return Number(curPage);
-  }else{
+  } else {
     return 0;
   }
 }
 
-export function setCurPdfScrollOffset(scrollOffset: number, projId: string) {
-  const key = readConfig("pdfScrollKey") + projId;
+/**
+ *
+ * @param scrollOffset
+ * @param projId
+ */
+export function setCurPdfScrollOffset(
+  scrollOffset: number,
+  projId: string,
+  viewModel: string
+) {
+  const key = viewModel + ":" + readConfig("pdfScrollKey") + projId;
   localStorage.setItem(key, scrollOffset.toString());
 }
 
@@ -36,14 +44,14 @@ export function scaleCurPdfScrollOffset(scale: number, projId: string) {
   let offset = localStorage.getItem(key);
   if (offset) {
     let newOffset = Number(offset) * scale;
-    localStorage.setItem(key, newOffset.toString()); 
+    localStorage.setItem(key, newOffset.toString());
   } else {
     return 0;
   }
 }
 
-export function getCurPdfScrollOffset(projId: string) {
-  const key = readConfig("pdfScrollKey") + projId;
+export function getCurPdfScrollOffset(projId: string, viewModel: string) {
+  const key = viewModel + ":" + readConfig("pdfScrollKey") + projId;
   let offset = localStorage.getItem(key);
   if (offset) {
     return Number(offset);

@@ -29,7 +29,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
   }) => {
     let pdfScaleKey = "pdf:scale:" + projId;
     let cachedScale = Number(localStorage.getItem(pdfScaleKey));
-    let cachedPdfOffset = getCurPdfScrollOffset(projId);
     const { pdfFocus } = useSelector((state: AppState) => state.proj);
     const [pdf, setPdf] = useState<DocumentCallback>();
     const [pageViewports, setPageViewports] = useState<any>();
@@ -38,7 +37,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const [projAttribute, setProjAttribute] = useState<PreviewPdfAttribute>({
       pdfScale: cachedScale,
       legacyPdfScale: cachedScale,
-      pdfOffset: cachedPdfOffset,
     });
 
     React.useEffect(() => {
@@ -64,11 +62,10 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       if (virtualListRef.current) {
         virtualListRef.current.resetAfterIndex(0, true);
       }
-      setCurPdfScrollOffset(projAttr.pdfOffset, projId);
-if (virtualListRef.current) {
-  let pdfPage = getCurPdfPage(projId);
-  virtualListRef.current.scrollToItem(pdfPage-1);
-}
+      if (virtualListRef.current) {
+        let pdfPage = getCurPdfPage(projId);
+        virtualListRef.current.scrollToItem(pdfPage - 1);
+      }
     }, [projAttr, cachedScale]);
 
     React.useEffect(() => {
@@ -123,7 +120,7 @@ if (virtualListRef.current) {
 
     const handleWindowPdfScroll = (e: ListOnScrollProps) => {
       const scrollOffset = e.scrollOffset;
-      setCurPdfScrollOffset(scrollOffset, projId);
+      setCurPdfScrollOffset(scrollOffset, projId, viewModel);
     };
 
     const getPageHeight = (pageIndex: number, width: number) => {
@@ -155,8 +152,8 @@ if (virtualListRef.current) {
      * @param projAttribute
      * @returns
      */
-    const getInitialOffset = (projAttribute: PreviewPdfAttribute) => {
-      let page = projAttribute.pdfOffset;
+    const getInitialOffset = () => {
+      let page = getCurPdfScrollOffset(projId, viewModel);
       return page;
     };
 
@@ -173,7 +170,7 @@ if (virtualListRef.current) {
             width={width}
             height={height}
             estimatedItemSize={500}
-            initialScrollOffset={getInitialOffset(projAttribute)}
+            initialScrollOffset={getInitialOffset()}
             itemCount={pdf.numPages}
             overscanCount={0}
             onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
@@ -200,9 +197,7 @@ if (virtualListRef.current) {
       }
     };
 
-    const onResize = (size: Size) => {
-      
-    };
+    const onResize = (size: Size) => {};
 
     return (
       <AutoSizer onResize={onResize}>
@@ -215,7 +210,7 @@ if (virtualListRef.current) {
             <div
               id="pdfContainer"
               ref={divRef}
-              //className={getDynStyles(viewModel)}
+              className={getDynStyles(viewModel)}
               style={{
                 height: "100vh",
                 // do not setting the width to make it auto fit

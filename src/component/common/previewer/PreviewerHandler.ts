@@ -28,23 +28,23 @@ export const handleSrcLocate = (projectId: string, curProjInfo: ProjInfo, msg: s
 
 export const handleOpenInBrowser = (projectId: string) => {
   if (projectId) {
-    let accessToken = getAccessToken();
-    let url = "/tex/file/pdf/full?proj_id=" + projectId;
-    fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + accessToken,
-      },
-    })
-      .then((response) => response.blob())
-      .then((blob) => {
-        var _url = window.URL.createObjectURL(blob);
-        window.open(_url, "_blank")!.focus();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+let accessToken = getAccessToken();
+let url = "/tex/file/pdf/full?proj_id=" + projectId;
+fetch(url, {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "Bearer " + accessToken,
+  },
+})
+  .then((response) => response.blob())
+  .then((blob) => {
+    var _url = window.URL.createObjectURL(blob);
+    window.open(_url, "_blank")!.focus();
+  })
+  .catch((err) => {
+    console.log(err);
+  });
   }
 };
 

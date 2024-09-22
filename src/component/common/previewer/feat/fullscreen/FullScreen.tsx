@@ -1,13 +1,29 @@
+import React from "react";
 import Previewer from "../../Previewer";
+import { VariableSizeList } from "react-window";
 
 const FullScreen: React.FC = ({}) => {
-    const params = new URLSearchParams(window.location.search);
-    const projId = params.get("projId");
-    if(!projId){
-        return (<div>Loading...</div>);
-    }
+  const virtualListRef = React.useRef<VariableSizeList>(null);
+  const params = new URLSearchParams(window.location.search);
+  const projId = params.get("projId");
 
-    return (<div><Previewer projectId={projId} viewModel={"fullscreen"}></Previewer></div>);
-}
+  React.useEffect(() => {
+    return () => {};
+  }, []);
+
+  if (!projId) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div>
+      <Previewer
+        projectId={projId}
+        viewModel={"fullscreen"}
+        virtualListRef={virtualListRef}
+      ></Previewer>
+    </div>
+  );
+};
 
 export default FullScreen;

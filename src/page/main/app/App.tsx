@@ -25,6 +25,7 @@ import { QueryProjInfo } from '@/model/request/proj/query/QueryProjInfo';
 import { CompileResultType } from '@/model/proj/compile/CompileResultType';
 import { BaseMethods } from 'rdjs-wheel';
 import RightDraggable from '@/assets/icon/right-drag.svg?react';
+import { VariableSizeList } from 'react-window';
 const CollarCodeEditor = React.lazy(() => import('@/component/common/editor/main/CollarCodeEditor'));
 
 const App: React.FC = () => {
@@ -39,6 +40,7 @@ const App: React.FC = () => {
   const [activeFileModel, setActiveFileModel] = useState<TexFileModel>();
   const [mainFile, setMainFile] = useState<TexFileModel>();
   const projTreeRef = useRef<HTMLDivElement>(null);
+  const virtualListRef = React.useRef<VariableSizeList>(null);
 
   React.useEffect(() => {
     resizeRight("rightDraggable", "editor");
@@ -180,7 +182,10 @@ const App: React.FC = () => {
         <div className={styles.rightDraggable} id="rightDraggable">
           <RightDraggable className={styles.rightDraggableIcon}></RightDraggable>
         </div>
-        <Previewer projectId={pid as string} viewModel={'default'}></Previewer>
+        <Previewer projectId={pid as string} 
+        viewModel={'default'}
+        virtualListRef={virtualListRef}
+        ></Previewer>
       </div>
       <ToastContainer />
     </div>

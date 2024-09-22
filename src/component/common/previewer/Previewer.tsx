@@ -24,16 +24,16 @@ import {
   getCurPdfPage,
   setCurPdfPage,
 } from "@/service/project/preview/PreviewService";
-import { getCurPdfScrollOffset } from "@/service/project/preview/PreviewService";
 import { pdfjsOptions } from "@/config/pdf/PdfJsConfig";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/legacy/pdf.worker.min.mjs`;
 
 export type PreviwerProps = {
   projectId: string;
   viewModel: string;
+  virtualListRef: React.RefObject<VariableSizeList>;
 };
 
-const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
+const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel,virtualListRef }) => {
   const [curPdfUrl, setCurPdfUrl] = useState<string>("");
   const [compStatus, setCompStatus] = useState<CompileStatus>(
     CompileStatus.COMPLETE
@@ -56,7 +56,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     projInfo,
   } = useSelector((state: AppState) => state.proj);
   const { t } = useTranslation();
-  const virtualListRef = useRef<VariableSizeList>(null);
 
   React.useEffect(() => {
     getLatestCompile(projectId);
@@ -154,14 +153,11 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     } else {
       curScale = numberScale + 0.1;
     }
-    let offset = getCurPdfScrollOffset(projectId);
-    let newOffset = Number(cachedScale) * Number(offset);
+    localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
     setProjAttr({
       pdfScale: curScale,
-      legacyPdfScale: Number(cachedScale),
-      pdfOffset: newOffset,
-    });
-    localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
+      legacyPdfScale: Number(cachedScale)
+    }); 
   };
 
   const handleZoomOut = async () => {
@@ -178,12 +174,9 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
       curScale = numberScale - 0.1;
     }
     localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
-    let offset = getCurPdfScrollOffset(projectId);
-    let newOffset = Number(cachedScale) * Number(offset);
     setProjAttr({
       pdfScale: curScale,
-      legacyPdfScale: Number(cachedScale),
-      pdfOffset: newOffset,
+      legacyPdfScale: Number(cachedScale)
     });
   };
 
