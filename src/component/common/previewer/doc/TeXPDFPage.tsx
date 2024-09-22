@@ -7,13 +7,16 @@ import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { setCurPdfPage } from "@/service/project/preview/PreviewService";
 import { PageViewport } from "pdfjs-dist";
+import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
+import Highlight from "../feat/highlight/Highlight";
 
 interface PDFPageProps {
   index: number;
   style: React.CSSProperties;
   projId: string;
   width: number;
-  viewPort: PageViewport
+  viewPort: PageViewport;
+  curPdfPosition: PdfPosition[] | undefined;
 }
 
 const TeXPDFPage: React.FC<PDFPageProps> = ({
@@ -21,7 +24,8 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   style,
   projId,
   width,
-  viewPort
+  viewPort,
+  curPdfPosition
 }) => {
   let pdfScaleKey = "pdf:scale:" + projId;
   let cachedScale = Number(localStorage.getItem(pdfScaleKey));
@@ -31,7 +35,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   >([]);
   const [projAttribute, setProjAttribute] = useState<PreviewPdfAttribute>({
     pdfScale: cachedScale,
-    legacyPdfScale: cachedScale
+    legacyPdfScale: cachedScale,
   });
   const updateRefArray = (index: number, element: HTMLCanvasElement | null) => {
     if (element) {
@@ -143,15 +147,15 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
         pageNumber={index}
         width={width}
       >
-        {curPdfPosition && viewport ? (
-              <Highlight
-                position={curPdfPosition}
-                pageNumber={curPageNo}
-                viewport={viewport}
-              ></Highlight>
-            ) : (
-              <div></div>
-            )}
+        {curPdfPosition && viewPort ? (
+          <Highlight
+            position={curPdfPosition}
+            pageNumber={index}
+            viewport={viewPort}
+          ></Highlight>
+        ) : (
+          <div></div>
+        )}
       </Page>
     </div>
   );

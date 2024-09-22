@@ -17,6 +17,7 @@ import {
 } from "@/service/project/preview/PreviewService";
 import { PreviewPdfAttribute } from "@/model/proj/config/PreviewPdfAttribute";
 import TeXPDFPage from "./TeXPDFPage";
+import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 
 const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
   ({
@@ -38,6 +39,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       pdfScale: cachedScale,
       legacyPdfScale: cachedScale,
     });
+    const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
 
     React.useEffect(() => {
       const handleResize = () => {};
@@ -97,7 +99,11 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       if (pdfFocus && pdfFocus.length > 0) {
         let pageNum = pdfFocus[0].page;
         setCurPdfPage(pageNum, projId);
+        setCurPdfPosition(pdfFocus);
         scrollToPage(pageNum, virtualListRef);
+        setTimeout(() => {
+          setCurPdfPosition([]);
+        }, 5000);
       }
     }, [pdfFocus]);
 
@@ -189,6 +195,8 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
                   width={width}
                   style={style}
                   projId={projId}
+                  viewPort={pageViewports[index]}
+                  curPdfPosition= {curPdfPosition}
                 />
               );
             }}
