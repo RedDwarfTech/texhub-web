@@ -6,12 +6,14 @@ import { PreviewPdfAttribute } from "@/model/proj/config/PreviewPdfAttribute";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
 import { setCurPdfPage } from "@/service/project/preview/PreviewService";
+import { PageViewport } from "pdfjs-dist";
 
 interface PDFPageProps {
   index: number;
   style: React.CSSProperties;
   projId: string;
   width: number;
+  viewPort: PageViewport
 }
 
 const TeXPDFPage: React.FC<PDFPageProps> = ({
@@ -19,6 +21,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   style,
   projId,
   width,
+  viewPort
 }) => {
   let pdfScaleKey = "pdf:scale:" + projId;
   let cachedScale = Number(localStorage.getItem(pdfScaleKey));
@@ -139,7 +142,17 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
         onRenderSuccess={handlePageRenderSuccess}
         pageNumber={index}
         width={width}
-      ></Page>
+      >
+        {curPdfPosition && viewport ? (
+              <Highlight
+                position={curPdfPosition}
+                pageNumber={curPageNo}
+                viewport={viewport}
+              ></Highlight>
+            ) : (
+              <div></div>
+            )}
+      </Page>
     </div>
   );
 };
