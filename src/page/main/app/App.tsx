@@ -7,7 +7,6 @@ import { ResponseHandler } from 'rdjs-wheel';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EHeader from '@/component/header/editor/EHeader';
-import { readConfig } from '@/config/app/config-reader';
 import queryString from 'query-string';
 import Previewer from '@/component/common/previewer/Previewer';
 import {
@@ -23,7 +22,6 @@ import ProjectTree from '@/component/common/projtree/main/ProjectTree';
 import { TexFileModel } from '@/model/file/TexFileModel';
 import { QueryProjInfo } from '@/model/request/proj/query/QueryProjInfo';
 import { CompileResultType } from '@/model/proj/compile/CompileResultType';
-import { BaseMethods } from 'rdjs-wheel';
 import RightDraggable from '@/assets/icon/right-drag.svg?react';
 import { VariableSizeList } from 'react-window';
 const CollarCodeEditor = React.lazy(() => import('@/component/common/editor/main/CollarCodeEditor'));
@@ -34,11 +32,10 @@ const App: React.FC = () => {
   const search = location.search;
   const params = queryString.parse(search);
   const pid = params.pid!;
-  const { compileResult, latestComp, endSignal, projInfo } = useSelector((state: AppState) => state.proj);
+  const { compileResult, latestComp, endSignal } = useSelector((state: AppState) => state.proj);
   const { errors } = useSelector((state: any) => state.rdRootReducer.sys);
   const { activeFile } = useSelector((state: AppState) => state.file);
   const [activeFileModel, setActiveFileModel] = useState<TexFileModel>();
-  const [mainFile, setMainFile] = useState<TexFileModel>();
   const projTreeRef = useRef<HTMLDivElement>(null);
   const virtualListRef = React.useRef<VariableSizeList>(null);
 
@@ -72,19 +69,12 @@ const App: React.FC = () => {
   }, [endSignal]);
 
   React.useEffect(() => {
-    if (projInfo && Object.keys(projInfo).length > 0) {
-      setMainFile(projInfo.main_file);
-    }
-  }, [projInfo]);
-
-  React.useEffect(() => {
     setActiveFileModel(activeFile);
   }, [activeFile]);
 
   React.useEffect(() => {
     if (latestComp && Object.keys(latestComp).length > 0) {
       if (latestComp.path && latestComp.path.length > 0) {
-        let pdfUrl = BaseMethods.joinUrl(readConfig("compileBaseUrl"), latestComp.path);
         let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + pid
         updatePdfUrl(newPdfUrl);
       } else {
@@ -100,8 +90,6 @@ const App: React.FC = () => {
     let proj_id = compileResult.project_id;
     let vid = compileResult.out_path;
     if (proj_id && vid) {
-      let file_without_ext = mainFile?.name.replace(/\.[^/.]+$/, '');
-      const pdfUrl = readConfig("compileBaseUrl") + "/" + proj_id + "/" + file_without_ext + ".pdf";
       let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + pid
       updatePdfUrl(newPdfUrl);
     }

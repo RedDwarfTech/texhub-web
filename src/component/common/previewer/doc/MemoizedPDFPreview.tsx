@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { openPdfUrlLink, scrollToPage } from "./PDFPreviewHandle";
 import { ListOnScrollProps, VariableSizeList } from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
+import { getPdfjsOptions } from "@/config/pdf/PdfJsConfig";
 import AutoSizer, { Size } from "react-virtualized-auto-sizer";
 import { PDFPreviewProps } from "@/model/props/proj/pdf/PDFPreviewProps";
 import {
@@ -23,7 +24,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
   ({
     curPdfUrl,
     projId,
-    options,
     viewModel = "default",
     setPageNum,
     virtualListRef,
@@ -211,7 +211,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       <AutoSizer onResize={onResize}>
         {({ width, height }: { width: number; height: number }) => (
           <Document
-            options={options}
+            options={getPdfjsOptions()}
             file={curPdfUrl!}
             onLoadSuccess={onDocumentLoadSuccess}
           >

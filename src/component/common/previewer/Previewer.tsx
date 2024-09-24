@@ -24,7 +24,6 @@ import {
   getCurPdfPage,
   setCurPdfPage,
 } from "@/service/project/preview/PreviewService";
-import { pdfjsOptions } from "@/config/pdf/PdfJsConfig";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/legacy/pdf.worker.min.mjs`;
 
 export type PreviwerProps = {
@@ -240,7 +239,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel,virtualListRe
         projId={projectId}
         viewModel={viewModel}
         setPageNum={setPageNum}
-        options={pdfjsOptions}
         virtualListRef={virtualListRef}
       ></MemoizedPDFPreview>
     );

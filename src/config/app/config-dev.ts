@@ -2,7 +2,7 @@ let devConfigMap = new Map([
     //["wssUrl", "ws://127.0.0.1:1234"],
     ["wssUrl","wss://ws.poemhub.top"],
     ["logoutUrl", "http://dev-tex.poemhub.top"],
-    ["baseAuthUrl","https://tex.poemhub.top"],
+    ["baseAuthUrl","http://192.168.10.106:3003"],
     ["loginUrl", "/infra/user/login"],
     ["regUrl", "/infra/user/reg"],
     ["accessTokenUrlPath","/infra/auth/access-token/refresh"],
