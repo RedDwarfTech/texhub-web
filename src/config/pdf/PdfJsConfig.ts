@@ -40,13 +40,11 @@ export const getPdfjsOptionsLegacy = (): Options => {
   };
 };
 
-
-
 let cachedOptions: Options | null = null;
-
 
 export const getPdfjsOptions = (): Options => {
   // 检查缓存是否已存在并且 token 是否有效
+  // https://stackoverflow.com/questions/79019061/how-to-get-the-newest-access-token-everytime-when-using-pdf-js-to-fetch-pdf
   if (cachedOptions && cachedOptions.httpHeaders 
     && cachedOptions.httpHeaders.hasOwnProperty('Authorization') 
     && getAuthorization(cachedOptions.httpHeaders) === "Bearer " + getAccessToken()) {
