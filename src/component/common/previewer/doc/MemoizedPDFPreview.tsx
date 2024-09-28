@@ -12,6 +12,7 @@ import AutoSizer, { Size } from "react-virtualized-auto-sizer";
 import { PDFPreviewProps } from "@/model/props/proj/pdf/PDFPreviewProps";
 import {
   getCurPdfPage,
+  getCurPdfScale,
   getCurPdfScrollOffset,
   setCurPdfPage,
   setCurPdfScrollOffset,
@@ -28,8 +29,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     setPageNum,
     virtualListRef,
   }) => {
-    let pdfScaleKey = "pdf:scale:" + projId;
-    let cachedScale = Number(localStorage.getItem(pdfScaleKey));
+    let cachedScale = getCurPdfScale(projId, viewModel);
     const { pdfFocus } = useSelector((state: AppState) => state.proj);
     const [pdf, setPdf] = useState<DocumentCallback>();
     const [pageViewports, setPageViewports] = useState<any>();
@@ -197,6 +197,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
                   projId={projId}
                   viewPort={pageViewports[index]}
                   curPdfPosition= {curPdfPosition}
+                  viewModel={viewModel}
                 />
               );
             }}

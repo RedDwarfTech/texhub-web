@@ -18,11 +18,17 @@ import { BaseMethods } from "rdjs-wheel";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { scrollToPage } from "./doc/PDFPreviewHandle";
 import { useTranslation } from "react-i18next";
-import { handleDownloadPdf, handleOpenInBrowser, handleSrcLocate } from "./PreviewerHandler";
+import {
+  handleDownloadPdf,
+  handleOpenInBrowser,
+  handleSrcLocate,
+} from "./PreviewerHandler";
 import { VariableSizeList } from "react-window";
 import {
   getCurPdfPage,
+  getCurPdfScale,
   setCurPdfPage,
+  setCurPdfScale,
 } from "@/service/project/preview/PreviewService";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/legacy/pdf.worker.min.mjs`;
 
@@ -32,7 +38,11 @@ export type PreviwerProps = {
   virtualListRef: React.RefObject<VariableSizeList>;
 };
 
-const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel,virtualListRef }) => {
+const Previewer: React.FC<PreviwerProps> = ({
+  projectId,
+  viewModel,
+  virtualListRef,
+}) => {
   const [curPdfUrl, setCurPdfUrl] = useState<string>("");
   const [compStatus, setCompStatus] = useState<CompileStatus>(
     CompileStatus.COMPLETE
@@ -144,7 +154,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel,virtualListRe
       toast.warn(t("msg_empty_proj_info"));
       return;
     }
-    let cachedScale = localStorage.getItem("pdf:scale:" + projectId);
+    let cachedScale = getCurPdfScale(projectId, viewModel);
     let numberScale = Number(cachedScale);
     let curScale;
     if (numberScale > 5) {
@@ -152,11 +162,11 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel,virtualListRe
     } else {
       curScale = numberScale + 0.1;
     }
-    localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
+    setCurPdfScale(curScale, projectId, viewModel);
     setProjAttr({
       pdfScale: curScale,
-      legacyPdfScale: Number(cachedScale)
-    }); 
+      legacyPdfScale: Number(cachedScale),
+    });
   };
 
   const handleZoomOut = async () => {
@@ -164,7 +174,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel,virtualListRe
       toast.warn(t("msg_empty_proj_info"));
       return;
     }
-    let cachedScale = localStorage.getItem("pdf:scale:" + projectId);
+    let cachedScale = getCurPdfScale(projectId, viewModel);
     let numberScale = Number(cachedScale);
     let curScale;
     if (numberScale < 0.2) {
@@ -172,10 +182,10 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel,virtualListRe
     } else {
       curScale = numberScale - 0.1;
     }
-    localStorage.setItem("pdf:scale:" + projectId, curScale.toString());
+    setCurPdfScale(curScale, projectId, viewModel);
     setProjAttr({
       pdfScale: curScale,
-      legacyPdfScale: Number(cachedScale)
+      legacyPdfScale: Number(cachedScale),
     });
   };
 

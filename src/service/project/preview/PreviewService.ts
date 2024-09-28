@@ -4,6 +4,28 @@ import store from "@/redux/store/store";
 import { readConfig } from "@/config/app/config-reader";
 import { BaseMethods } from "rdjs-wheel";
 
+export function setCurPdfScale(
+  scale: number,
+  projId: string,
+  viewModel: string
+) {
+  let pdfScaleKey = viewModel + ":pdf:scale:" + projId;
+  localStorage.setItem(pdfScaleKey, scale.toString());
+}
+
+export function getCurPdfScale(
+  projId: string,
+  viewModel: string
+) {
+  let pdfScaleKey = viewModel + ":pdf:scale:" + projId;
+  let curScale = localStorage.getItem(pdfScaleKey);
+  if (curScale) {
+    return Number(curScale);
+  } else {
+    return 1;
+  }
+}
+
 export function setCurPdfPage(pageNo: number, projId: string) {
   const actionTypeString: string =
     PreviewActionType[PreviewActionType.SET_CUR_PAGE];
