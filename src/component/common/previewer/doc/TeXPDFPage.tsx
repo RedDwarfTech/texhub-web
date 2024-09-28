@@ -53,10 +53,13 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     setProjAttribute(projAttr);
   }, [projAttr, cachedScale]);
 
+  /**
+   * the element and viewport intersection with 20% will trigger this action
+   */
   var pageObserve = new IntersectionObserver(
     (entries: IntersectionObserverEntry[]) => {
       entries.forEach((item: IntersectionObserverEntry) => {
-        if (item.intersectionRatio > 0) {
+        if (item.intersectionRatio > 0.2) {
           let dataPage = item.target.getAttribute("data-page-number");
           if (!dataPage) return;
           setCurPdfPage(Number(dataPage), projId);
@@ -64,7 +67,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
       });
     },
     {
-      threshold: 0,
+      threshold: 0.2,
     }
   );
 

@@ -30,11 +30,10 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     virtualListRef,
   }) => {
     let cachedScale = getCurPdfScale(projId, viewModel);
-    const { pdfFocus } = useSelector((state: AppState) => state.proj);
+    const { pdfFocus, projAttr } = useSelector((state: AppState) => state.proj);
     const [pdf, setPdf] = useState<DocumentCallback>();
     const [pageViewports, setPageViewports] = useState<any>();
     const divRef = useRef<HTMLDivElement>(null);
-    const { projAttr } = useSelector((state: AppState) => state.proj);
     const [projAttribute, setProjAttribute] = useState<PreviewPdfAttribute>({
       pdfScale: cachedScale,
       legacyPdfScale: cachedScale,

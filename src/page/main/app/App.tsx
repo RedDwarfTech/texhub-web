@@ -104,9 +104,7 @@ const App: React.FC = () => {
         sendQueueCompileRequest(params).then((resp) => {
           if (ResponseHandler.responseSuccess(resp)) {
 
-          } else {
-            //toast.error(resp.msg);
-          }
+          } 
         });
       } else {
         toast.error(resp.msg);
