@@ -13,7 +13,7 @@ export const scrollToPage = (
   virtualListRef: React.RefObject<VariableSizeList>
 ) => {
   if (virtualListRef.current) {
-    virtualListRef.current.scrollToItem(pageIndex - 1);
+    virtualListRef.current.scrollToItem(pageIndex);
   }
 };
 
