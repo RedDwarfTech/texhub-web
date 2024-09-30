@@ -30,8 +30,6 @@ export function setCurPdfPage(pageNo: number, projId: string) {
   const actionTypeString: string =
     PreviewActionType[PreviewActionType.SET_CUR_PAGE];
   localStorage.setItem(readConfig("pdfCurPage") + projId, pageNo.toString());
-  if (pageNo < 100) {
-  }
   return XHRClient.dispathAction(pageNo, actionTypeString, store);
 }
 

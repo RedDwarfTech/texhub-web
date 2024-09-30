@@ -137,16 +137,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       // we need to change the height of the pdf page when scale
       // the pdf content will override each other when scale the page
       const actualHeight = pageViewport.height * scale * projAttribute.pdfScale;
-      console.log(
-        "actual height:" +
-          actualHeight +
-          ",width:" +
-          width +
-          ", pageIndex:" +
-          pageIndex +
-          ",pdfScale:" +
-          projAttribute.pdfScale
-      );
       // margin 10px for each pdf pages
       return actualHeight + 10;
     };
@@ -190,7 +180,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             }) => {
               return (
                 <TeXPDFPage
-                  index={index + 1}
+                  index={index}
                   width={width}
                   style={style}
                   projId={projId}
