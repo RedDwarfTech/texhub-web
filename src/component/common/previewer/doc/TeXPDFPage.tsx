@@ -5,7 +5,10 @@ import { PageCallback } from "react-pdf/dist/cjs/shared/types";
 import { PreviewPdfAttribute } from "@/model/proj/config/PreviewPdfAttribute";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
-import { getCurPdfScale, setCurPdfPage } from "@/service/project/preview/PreviewService";
+import {
+  getCurPdfScale,
+  setCurPdfPage,
+} from "@/service/project/preview/PreviewService";
 import { PageViewport } from "pdfjs-dist";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import Highlight from "../feat/highlight/Highlight";
@@ -27,9 +30,9 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   width,
   viewPort,
   curPdfPosition,
-  viewModel
+  viewModel,
 }) => {
-  let cachedScale = getCurPdfScale(projId,viewModel);
+  let cachedScale = getCurPdfScale(projId, viewModel);
   const { projAttr } = useSelector((state: AppState) => state.proj);
   const canvasArray = useRef<
     Array<React.MutableRefObject<HTMLCanvasElement | null>>

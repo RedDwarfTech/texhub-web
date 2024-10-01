@@ -65,7 +65,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
       if (virtualListRef.current) {
         let pdfPage = getCurPdfPage(projId);
-        virtualListRef.current.scrollToItem(pdfPage);
+        virtualListRef.current.scrollToItem(pdfPage - 1);
       }
     }, [projAttr, cachedScale]);
 
@@ -180,12 +180,12 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             }) => {
               return (
                 <TeXPDFPage
-                  index={index}
+                  index={index + 1}
                   width={width}
                   style={style}
                   projId={projId}
                   viewPort={pageViewports[index]}
-                  curPdfPosition= {curPdfPosition}
+                  curPdfPosition={curPdfPosition}
                   viewModel={viewModel}
                 />
               );
