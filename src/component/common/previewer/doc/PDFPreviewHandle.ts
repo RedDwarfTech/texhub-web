@@ -13,15 +13,15 @@ export const scrollToPage = (
   virtualListRef: React.RefObject<VariableSizeList>
 ) => {
   if (virtualListRef.current) {
-    virtualListRef.current.scrollToItem(pageIndex);
+    virtualListRef.current.scrollToItem(pageIndex, "center");
   }
 };
 
 /**
-     * Open pdf's link in the browser new tab
-     * https://github.com/diegomura/react-pdf/issues/645
-     * @param e
-     */
+ * Open pdf's link in the browser new tab
+ * https://github.com/diegomura/react-pdf/issues/645
+ * @param e
+ */
 export const openPdfUrlLink = (e: React.MouseEvent<HTMLDivElement>) => {
   e.preventDefault();
   if ((e.target as HTMLElement).tagName.toLowerCase() === "a") {

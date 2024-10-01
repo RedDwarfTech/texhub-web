@@ -373,7 +373,10 @@ const Previewer: React.FC<PreviwerProps> = ({
             if (event.key === "Enter" && !event.shiftKey) {
               event.preventDefault();
               const navPage = (event.target as HTMLInputElement).value;
-              scrollToPage(Number(navPage), virtualListRef);
+              const tweakedPageNum = Number(navPage) ;
+              if (tweakedPageNum >= 0 && tweakedPageNum < 10000) {
+                scrollToPage(tweakedPageNum, virtualListRef);
+              }
             }
           }}
         ></input>

@@ -27,8 +27,7 @@ export function getCurPdfScale(
 }
 
 export function setCurPdfPage(pageNo: number, projId: string) {
-  const actionTypeString: string =
-    PreviewActionType[PreviewActionType.SET_CUR_PAGE];
+  const actionTypeString: string = PreviewActionType[PreviewActionType.SET_CUR_PAGE];
   localStorage.setItem(readConfig("pdfCurPage") + projId, pageNo.toString());
   return XHRClient.dispathAction(pageNo, actionTypeString, store);
 }

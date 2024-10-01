@@ -65,7 +65,8 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
       if (virtualListRef.current) {
         let pdfPage = getCurPdfPage(projId);
-        virtualListRef.current.scrollToItem(pdfPage - 1);
+        debugger;
+        scrollToPage(pdfPage - 1,virtualListRef);
       }
     }, [projAttr, cachedScale]);
 
