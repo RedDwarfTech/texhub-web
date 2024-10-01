@@ -110,7 +110,7 @@ const ProjectTab: React.FC = () => {
 
   const handleProjDownload = (docItem: TexProjectModel) => {
     if (!currProject) {
-      toast.info("请选择下载项目");
+      toast.info(t("tips_choose_dl_proj"));
     }
     let proj: QueryDownload = {
       project_id: docItem.project_id,
@@ -653,6 +653,14 @@ const ProjectTab: React.FC = () => {
               data-bs-target="#newProj"
             >
               {t("create_blank_proj")}
+            </a>
+          </li>
+          <li>
+            <a
+              className="dropdown-item"
+              href="/tpl"
+            >
+              {t("create_tpl_proj")}
             </a>
           </li>
           <li>
