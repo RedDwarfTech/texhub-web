@@ -89,7 +89,7 @@ export function uploadProjectFile(doc: File, project_id: string, parent: string)
   const config: AxiosRequestConfig = {
     method: 'post',
     headers: { 'Content-Type': 'multipart/form-data' },
-    url: '/tex/project/file/upload',
+    url: '/tex/ul/file/upload',
     data: formData
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.UPLOAD_PROJ_FILE];
