@@ -900,12 +900,7 @@ const ProjectTab: React.FC = () => {
         <div></div>
       )}
       {currProject && currProject.project_id ? (
-        <TeXUploadProj
-          projectId={currProject.project_id.toString()}
-          currProject={currProject}
-          getProjFilter={getProjFilter}
-          activeTab={activeTab}
-        ></TeXUploadProj>
+        <TeXUploadProj></TeXUploadProj>
       ) : (
         <div></div>
       )}
