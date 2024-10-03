@@ -1,5 +1,5 @@
 import { uploadProject } from "@/service/project/ProjectService";
-import { ResponseHandler } from "rdjs-wheel";
+import { BaseMethods, ResponseHandler } from "rdjs-wheel";
 import { toast } from "react-toastify";
 import { UserService } from "rd-component";
 import { useTranslation } from "react-i18next";
@@ -20,12 +20,13 @@ const TeXUploadProj: React.FC<UploadProjProps> = (props: UploadProjProps) => {
       fileInput &&
       fileInput.current &&
       fileInput.current.files &&
-      fileInput.current.files.length > 0
+      fileInput.current.files.length === 1
     ) {
-      const uploadFile = fileInput.current?.files[0];
+      const uploadFile = fileInput.current.files[0];
       uploadProject(uploadFile).then((res) => {
         if (ResponseHandler.responseSuccess(res)) {
         } else {
+          toast.error(t("tips_upload_failed"));
         }
       });
     }
@@ -52,6 +53,7 @@ const TeXUploadProj: React.FC<UploadProjProps> = (props: UploadProjProps) => {
                   id="formFileLg"
                   ref={fileInput}
                   type="file"
+                  accept=".zip"
                 />
               </div>
             </div>
