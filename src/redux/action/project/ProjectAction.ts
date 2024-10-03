@@ -30,6 +30,7 @@ export enum ProjectActionType {
     GET_COMPILE_LOG,
     SET_COMPILE_STATUS,
     UPLOAD_PROJ_FILE,
+    UPLOAD_PROJ,
     PROJ_ATTR,
     GET_PDF_POSITION,
     GET_SRC_POSITION,
@@ -141,6 +142,11 @@ export interface setCompileStatusAction {
 
 export interface uploadProjFileAction {
     type: ProjectActionType.UPLOAD_PROJ_FILE;
+    data: CompileStatus;
+}
+
+export interface uploadProjAction {
+    type: ProjectActionType.UPLOAD_PROJ;
     data: CompileStatus;
 }
 

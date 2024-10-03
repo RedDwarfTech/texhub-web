@@ -32,6 +32,7 @@ import FolderDel from "../edit/FolderDel";
 import { FolderModel } from "@/model/proj/folder/FolderModel";
 import TeXProjCopy from "../new/TeXProjCopy";
 import Bowser from "bowser";
+import TeXUploadProj from "../upload/TeXUploadProj";
 
 const ProjectTab: React.FC = () => {
   const [userDocList, setUserDocList] = useState<TexProjectModel[]>([]);
@@ -658,6 +659,16 @@ const ProjectTab: React.FC = () => {
           <li>
             <a
               className="dropdown-item"
+              data-bs-toggle="modal"
+              href="#/"
+              data-bs-target="#uploadProj"
+            >
+              {t("upload_proj")}
+            </a>
+          </li>
+          <li>
+            <a
+              className="dropdown-item"
               href="/tpl"
             >
               {t("create_tpl_proj")}
@@ -885,6 +896,16 @@ const ProjectTab: React.FC = () => {
           getProjFilter={getProjFilter}
           activeTab={activeTab}
         ></TeXRecovery>
+      ) : (
+        <div></div>
+      )}
+      {currProject && currProject.project_id ? (
+        <TeXUploadProj
+          projectId={currProject.project_id.toString()}
+          currProject={currProject}
+          getProjFilter={getProjFilter}
+          activeTab={activeTab}
+        ></TeXUploadProj>
       ) : (
         <div></div>
       )}

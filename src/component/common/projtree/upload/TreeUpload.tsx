@@ -7,6 +7,7 @@ import {
 } from "@/service/project/ProjectService";
 import { ResponseHandler } from "rdjs-wheel";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -21,6 +22,7 @@ const TreeUpload: React.FC<TreeUploadProps> = (props: TreeUploadProps) => {
   const [selectedFile, setSelectedFile] = useState<TexFileModel>(
     selected ? JSON.parse(selected) : null
   );
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     setSelectedFile(treeSelectItem);
@@ -99,7 +101,7 @@ const TreeUpload: React.FC<TreeUploadProps> = (props: TreeUploadProps) => {
               className="btn btn-secondary"
               data-bs-dismiss="modal"
             >
-              取消
+              {t("btn_cancel")}
             </button>
             <button
               type="button"
@@ -109,7 +111,7 @@ const TreeUpload: React.FC<TreeUploadProps> = (props: TreeUploadProps) => {
                 handleOk();
               }}
             >
-              确定
+              {t("btn_confirm")}
             </button>
           </div>
         </div>
