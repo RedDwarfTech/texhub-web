@@ -899,11 +899,7 @@ const ProjectTab: React.FC = () => {
       ) : (
         <div></div>
       )}
-      {currProject && currProject.project_id ? (
-        <TeXUploadProj></TeXUploadProj>
-      ) : (
-        <div></div>
-      )}
+      <TeXUploadProj></TeXUploadProj>
       <ToastContainer />
     </div>
   );
