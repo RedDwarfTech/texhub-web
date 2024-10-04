@@ -360,7 +360,7 @@ const ProjectTab: React.FC = () => {
               }}
               data-bs-target="#delPrj"
             >
-              {t("btn_del_folder")}
+              {t("btn_del_proj")}
             </a>
           </li>
         </ul>

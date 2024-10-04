@@ -22,6 +22,7 @@
     "btn_rename": "重命名",
     "btn_download": "下载",
     "btn_del_folder": "删除文件夹",
+    "btn_del_proj": "删除项目",
     "btn_rename_folder": "重命名文件夹",
     "btn_rename_proj": "重命名项目",
     "btn_share_proj": "分享项目",
