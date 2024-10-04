@@ -347,7 +347,7 @@ const ProjectTab: React.FC = () => {
               }}
               data-bs-target="#recoveryProj"
             >
-              恢复项目
+              {t("btn_restore_proj")}
             </a>
           </li>
           <li>
