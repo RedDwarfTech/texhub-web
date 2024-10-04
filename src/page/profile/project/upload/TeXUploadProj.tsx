@@ -53,6 +53,7 @@ const TeXUploadProj: React.FC<UploadProjProps> = (props: UploadProjProps) => {
                   id="formFileLg"
                   ref={fileInput}
                   type="file"
+                  // https://stackoverflow.com/questions/33247452/bootstrap-file-input-limit-file-types
                   accept=".zip"
                 />
               </div>
