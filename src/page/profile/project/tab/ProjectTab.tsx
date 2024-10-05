@@ -33,6 +33,7 @@ import { FolderModel } from "@/model/proj/folder/FolderModel";
 import TeXProjCopy from "../new/TeXProjCopy";
 import Bowser from "bowser";
 import TeXUploadProj from "../new/upload/TeXUploadProj";
+import TeXImportProj from "../new/import/TeXImportProj";
 
 const ProjectTab: React.FC = () => {
   const [userDocList, setUserDocList] = useState<TexProjectModel[]>([]);
@@ -911,6 +912,7 @@ const ProjectTab: React.FC = () => {
         <div></div>
       )}
       <TeXUploadProj></TeXUploadProj>
+      <TeXImportProj></TeXImportProj>
       <ToastContainer />
     </div>
   );
