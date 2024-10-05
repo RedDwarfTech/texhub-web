@@ -678,7 +678,9 @@ const ProjectTab: React.FC = () => {
           <li>
             <a
               className="dropdown-item"
-              href="/tpl"
+              href="#/"
+              data-bs-toggle="modal"
+              data-bs-target="#importProj"
             >
               {t("import_proj_from_github")}
             </a>

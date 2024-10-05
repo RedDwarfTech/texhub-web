@@ -34,7 +34,7 @@ const TeXImportProj: React.FC<UploadProjProps> = (props: UploadProjProps) => {
 
   return (
     <div>
-      <div className="modal" id="uploadProj" tabIndex={-1}>
+      <div className="modal" id="importProj" tabIndex={-1}>
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
