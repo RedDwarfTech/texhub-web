@@ -109,6 +109,18 @@ export function uploadProject(doc: File) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
+export function importGitHubProject(url: string) {
+  const config: AxiosRequestConfig = {
+    method: 'post',
+    url: '/tex/ul/proj/import',
+    data: {
+      url: url
+    }
+  };
+  const actionTypeString: string = ProjectActionType[ProjectActionType.IMPORT_GITHUB_PROJ];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
 export function createProjectFromTpl(doc: CreateTplProjReq) {
   const config: AxiosRequestConfig = {
     method: 'post',

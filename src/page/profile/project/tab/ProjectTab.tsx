@@ -32,7 +32,7 @@ import FolderDel from "../edit/FolderDel";
 import { FolderModel } from "@/model/proj/folder/FolderModel";
 import TeXProjCopy from "../new/TeXProjCopy";
 import Bowser from "bowser";
-import TeXUploadProj from "../upload/TeXUploadProj";
+import TeXUploadProj from "../new/upload/TeXUploadProj";
 
 const ProjectTab: React.FC = () => {
   const [userDocList, setUserDocList] = useState<TexProjectModel[]>([]);
@@ -56,7 +56,8 @@ const ProjectTab: React.FC = () => {
   const firstUpdate = useRef(true);
 
   React.useEffect(() => {
-    getProjectList(getProjFilter({}));
+    let req : QueryProjReq = getProjFilter({});
+    getProjectList(req);
   }, []);
 
   React.useEffect(() => {
@@ -672,6 +673,14 @@ const ProjectTab: React.FC = () => {
               href="/tpl"
             >
               {t("create_tpl_proj")}
+            </a>
+          </li>
+          <li>
+            <a
+              className="dropdown-item"
+              href="/tpl"
+            >
+              {t("import_proj_from_github")}
             </a>
           </li>
           <li>

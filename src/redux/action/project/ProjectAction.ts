@@ -31,6 +31,7 @@ export enum ProjectActionType {
     SET_COMPILE_STATUS,
     UPLOAD_PROJ_FILE,
     UPLOAD_PROJ,
+    IMPORT_GITHUB_PROJ,
     PROJ_ATTR,
     GET_PDF_POSITION,
     GET_SRC_POSITION,
