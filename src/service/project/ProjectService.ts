@@ -112,7 +112,7 @@ export function uploadProject(doc: File) {
 export function importGitHubProject(url: string) {
   const config: AxiosRequestConfig = {
     method: 'post',
-    url: '/tex/ul/proj/import',
+    url: '/tex/project/github/import',
     data: {
       url: url
     }
