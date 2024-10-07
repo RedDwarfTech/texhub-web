@@ -105,6 +105,7 @@
     "tips_upload_failed": "Upload failed",
     "tips_import_failed": "Import failed",
     "tips_enter_github_url": "Enter the github url",
+    "tips_enter_main": "Enter the main file name",
     "tips_trash_proj": "Are you sure to trash this project?",
     "tips_restore_proj": "Are you sure to restore project？",
     "title_del": "Delete",

@@ -109,12 +109,13 @@ export function uploadProject(doc: File) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function importGitHubProject(url: string) {
+export function importGitHubProject(url: string, mainFile: string) {
   const config: AxiosRequestConfig = {
     method: 'post',
     url: '/tex/project/github/import',
     data: {
-      url: url
+      url: url,
+      main_file: mainFile
     }
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.IMPORT_GITHUB_PROJ];

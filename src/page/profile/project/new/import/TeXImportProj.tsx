@@ -8,11 +8,13 @@ import { UserService } from "rd-component";
 import { useTranslation } from "react-i18next";
 import React from "react";
 import { getProjFilter } from "../../tab/ProjectTabEventHandler";
+import styles from "./TeXImportProj.module.css";
 
 export type UploadProjProps = {};
 
 const TeXImportProj: React.FC<UploadProjProps> = (props: UploadProjProps) => {
   const urlInput = React.createRef<HTMLInputElement>();
+  const mainFileInput = React.createRef<HTMLInputElement>();
   const { t } = useTranslation();
 
   const handleProjImport = () => {
@@ -21,8 +23,9 @@ const TeXImportProj: React.FC<UploadProjProps> = (props: UploadProjProps) => {
       return;
     }
     let url = urlInput.current?.value;
-    if (url) {
-      importGitHubProject(url).then((res) => {
+    let mainFile = mainFileInput.current?.value;
+    if (url && mainFile) {
+      importGitHubProject(url,mainFile).then((res) => {
         if (ResponseHandler.responseSuccess(res)) {
           getProjectList(getProjFilter({}));
         } else {
@@ -47,12 +50,19 @@ const TeXImportProj: React.FC<UploadProjProps> = (props: UploadProjProps) => {
               ></button>
             </div>
             <div className="modal-body">
-              <div>
+              <div className={styles.cloneInfo}>
                 <input
                   className="form-control form-control-md"
-                  id="formFileLg"
+                  id="formUrl"
                   ref={urlInput}
                   placeholder={t("tips_enter_github_url")}
+                />
+                <input
+                  className="form-control form-control-md"
+                  id="formMainFile"
+                  ref={mainFileInput}
+                  defaultValue={"main.tex"}
+                  placeholder={t("tips_enter_main")}
                 />
               </div>
             </div>
