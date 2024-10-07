@@ -9,6 +9,8 @@ import { useTranslation } from "react-i18next";
 import React from "react";
 import { getProjFilter } from "../../tab/ProjectTabEventHandler";
 import styles from "./TeXImportProj.module.css";
+import { ProjTabType } from "@/model/proj/config/ProjTabType";
+import { QueryProjReq } from "@/model/request/proj/query/QueryProjReq";
 
 export type UploadProjProps = {};
 
@@ -25,9 +27,10 @@ const TeXImportProj: React.FC<UploadProjProps> = (props: UploadProjProps) => {
     let url = urlInput.current?.value;
     let mainFile = mainFileInput.current?.value;
     if (url && mainFile) {
-      importGitHubProject(url,mainFile).then((res) => {
+      importGitHubProject(url, mainFile).then((res) => {
         if (ResponseHandler.responseSuccess(res)) {
-          getProjectList(getProjFilter({}));
+          let query: QueryProjReq = getProjFilter({}, ProjTabType.All);
+          getProjectList(query);
         } else {
           toast.error(t("tips_import_failed"));
         }

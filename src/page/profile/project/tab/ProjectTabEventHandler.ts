@@ -8,7 +8,10 @@ import {
 import { ResponseHandler } from "rdjs-wheel";
 import { toast } from "react-toastify";
 
-export function handleProjDel(delProjCancelRef: any,currProject: TexProjectModel) {
+export function handleProjDel(
+  delProjCancelRef: any,
+  currProject: TexProjectModel
+) {
   if (!currProject) {
     toast.info("请选择删除项目");
   }
@@ -41,6 +44,6 @@ export function getProjFilter(
   } else if (activeTab === ProjTabType.Trash) {
     query.trash = 1;
   }
-  query.proj_type = activeTab;
+  query.proj_type = activeTab ? activeTab : ProjTabType.All;
   return query;
 }
