@@ -139,7 +139,7 @@ const ProjectTab: React.FC = () => {
     } else if (activeTab === ProjTabType.Trash) {
       query.trash = 1;
     }
-    query.proj_type = activeTab;
+    query.proj_status = activeTab;
     return query;
   };
 
@@ -619,14 +619,14 @@ const ProjectTab: React.FC = () => {
     if (clickTab === ProjTabType.Archived) {
       let projReq: QueryProjReq = {
         archive_status: 1,
-        proj_type: ProjTabType.Archived,
+        proj_status: ProjTabType.Archived,
       };
       getProjectList(projReq);
     }
     if (clickTab === ProjTabType.Trash) {
       let projReq: QueryProjReq = {
         trash: 1,
-        proj_type: ProjTabType.Trash,
+        proj_status: ProjTabType.Trash,
       };
       getProjectList(projReq);
     }

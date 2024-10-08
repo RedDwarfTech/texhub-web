@@ -44,6 +44,6 @@ export function getProjFilter(
   } else if (activeTab === ProjTabType.Trash) {
     query.trash = 1;
   }
-  query.proj_type = activeTab ? activeTab : ProjTabType.All;
+  query.proj_status = activeTab ? activeTab : ProjTabType.All;
   return query;
 }
