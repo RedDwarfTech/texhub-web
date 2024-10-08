@@ -195,7 +195,7 @@ export function moveProject(proj: MoveProjReq) {
 export function getFolderProject(folder_id: number, proj_type: number) {
   const config: AxiosRequestConfig = {
     method: 'get',
-    url: '/tex/project/perfolder?folder_id=' + folder_id + '&proj_type=' + proj_type,
+    url: '/tex/project/perfolder?folder_id=' + folder_id + '&proj_status=' + proj_type,
   };
   const actionTypeString: string = ProjectActionType[ProjectActionType.GET_FOLDER_PROJ];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
