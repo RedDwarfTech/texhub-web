@@ -612,7 +612,7 @@ const ProjectTab: React.FC = () => {
     if (clickTab === ProjTabType.Shared) {
       let projReq = {
         role_id: 2,
-        proj_type: ProjTabType.Shared,
+        proj_status: ProjTabType.Shared,
       };
       getProjectList(projReq);
     }
