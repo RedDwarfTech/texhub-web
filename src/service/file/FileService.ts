@@ -95,7 +95,7 @@ export function downloadProjFile(req: DownloadFileReq) {
     method: "get",
     url: "/tex/file/download",
     params: params,
-    responseType: "arraybuffer",
+    responseType: "blob",
   };
   const actionTypeString: string = FileActionType[FileActionType.DOWNLOAD_FILE];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
