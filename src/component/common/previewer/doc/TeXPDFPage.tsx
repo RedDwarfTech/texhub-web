@@ -95,7 +95,6 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
    */
   const renderLegacyPage = (pageNumber: number, width: number) => {
     if (isLoading) {
-      console.log("page" + pageNumber + " not rendered. using the legacy page");
       return (
         <Page
           /**
