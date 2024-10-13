@@ -36,7 +36,6 @@ export enum ProjectActionType {
     GET_PDF_POSITION,
     GET_SRC_POSITION,
     CHANGE_PROJ_CONF,
-    PROJ_SEARCH,
     PROJ_HISTORY,
     PROJ_HISTORY_DETAIL,
     PROJ_HISTORY_PAGE,
@@ -163,11 +162,6 @@ export interface getPdfPositionAction {
 
 export interface changeProjConfAction {
     type: ProjectActionType.CHANGE_PROJ_CONF;
-    data: any;
-}
-
-export interface projSearchAction {
-    type: ProjectActionType.PROJ_SEARCH;
     data: any;
 }
 

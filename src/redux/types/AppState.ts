@@ -40,7 +40,6 @@ export interface AppState {
         pdfFocus: PdfPosition[],
         srcFocus: SrcPosition[],
         projConf: ProjConf,
-        hits: SearchResult[],
         activeShare: false,
         projHistories: ProjHisotry[],
         insertContext: string,
@@ -49,6 +48,9 @@ export interface AppState {
         replaceContext: string,
         curHistory: ProjHisotry,
         connState: string,
+    },
+    projTree: {
+        hits: SearchResult[],
     },
     tpl: {
         tplList: TemplateModel[],

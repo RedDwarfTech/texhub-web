@@ -7,6 +7,7 @@ import snippet from "@/redux/reducer/snippet/SnippetReducer";
 import projShare from "@/redux/reducer/project/ProjectShareReducer";
 import editor from "@/redux/reducer/project/EditorReducer";
 import preview from "@/redux/reducer/project/preview/PreviewReducer";
+import projTree from "@/redux/reducer/project/tree/ProjectTreeReducer";
 
 const rootReducer = combineReducers({
     proj,
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
     snippet,
     projShare,
     editor,
-    preview
+    preview,
+    projTree
 });
 
 export default rootReducer;

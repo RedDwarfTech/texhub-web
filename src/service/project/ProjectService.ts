@@ -32,6 +32,7 @@ import { RenameFolderReq } from "@/model/request/proj/edit/RenameFolderReq";
 import { DelFolderReq } from "@/model/request/proj/edit/DelFolderReq";
 import { QueryHistoryDetail } from "@/model/request/proj/query/QueryHistoryDetail";
 import * as Y from 'yjs';
+import { ProjectTreeActionType } from "@/redux/action/project/tree/ProjectTreeAction";
 
 export function getProjectList(req: QueryProjReq) {
   const params = new URLSearchParams();
@@ -404,7 +405,7 @@ export function projSerach(req: QueryFile) {
     url: '/tex/project/search',
     params: params
   };
-  const actionTypeString: string = ProjectActionType[ProjectActionType.PROJ_SEARCH];
+  const actionTypeString: string = ProjectTreeActionType[ProjectTreeActionType.PROJ_SEARCH];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 

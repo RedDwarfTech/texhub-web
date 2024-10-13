@@ -151,11 +151,6 @@ const ProjectReducer = (state = initState, action: any) => {
                 ...state,
                 projConf: action.data
             };
-        case "PROJ_SEARCH":
-            return {
-                ...state,
-                hits: action.data
-            };
         case "SHARE_PROJ":
             let newActiveShare = !state.activeShare;
             return {

@@ -19,7 +19,7 @@ export type ProjSearchProps = {
 const ProjFileSearch: React.FC<ProjSearchProps> = (props: ProjSearchProps) => {
   const [searchWord, setSearchWord] = useState<string>("");
   const [hitItem, setHitItem] = useState<SearchResult[]>();
-  const { hits } = useSelector((state: AppState) => state.proj);
+  const { hits } = useSelector((state: AppState) => state.projTree);
   const { t } = useTranslation();
 
   React.useEffect(() => {

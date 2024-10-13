@@ -11,10 +11,16 @@ import { CompileStatus } from "@/model/proj/compile/CompileStatus";
 import { CompileQueue } from "@/model/proj/CompileQueue";
 import {
   getLatestCompile,
+  getTempAuthCode,
+  sendQueueCompileRequest,
+  setCompileQueue,
+  setLatestCompile,
   setProjAttr,
+  showPreviewTab,
+  updatePdfUrl,
 } from "@/service/project/ProjectService";
 import { CompileResultType } from "@/model/proj/compile/CompileResultType";
-import { BaseMethods } from "rdjs-wheel";
+import { BaseMethods, ResponseHandler } from "rdjs-wheel";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { scrollToPage } from "./doc/PDFPreviewHandle";
 import { useTranslation } from "react-i18next";
@@ -63,6 +69,8 @@ const Previewer: React.FC<PreviwerProps> = ({
     queue,
     latestComp,
     projInfo,
+    endSignal,
+    compileResult
   } = useSelector((state: AppState) => state.proj);
   const { t } = useTranslation();
 
@@ -93,6 +101,57 @@ const Previewer: React.FC<PreviwerProps> = ({
       }
     }
   }, [latestComp]);
+
+  const compile = (prj_id: string) => {
+    getTempAuthCode().then((resp) => {
+      if (ResponseHandler.responseSuccess(resp)) {
+        let params = {
+          project_id: prj_id
+        };
+        sendQueueCompileRequest(params).then((resp) => {
+          if (ResponseHandler.responseSuccess(resp)) {
+
+          } 
+        });
+      } else {
+        toast.error(resp.msg);
+      }
+    });
+  }
+  
+  React.useEffect(() => {
+    if (latestComp && Object.keys(latestComp).length > 0) {
+      if (latestComp.path && latestComp.path.length > 0) {
+        let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + projectId
+        updatePdfUrl(newPdfUrl);
+      } else {
+        compile(projectId.toString());
+      }
+    }
+  }, [latestComp]);
+
+  React.useEffect(() => {
+    if (!compileResult || Object.keys(compileResult).length === 0) {
+      return;
+    }
+    let proj_id = compileResult.project_id;
+    let vid = compileResult.out_path;
+    if (proj_id && vid) {
+      let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + projectId
+      updatePdfUrl(newPdfUrl);
+    }
+  }, [compileResult]);
+
+  React.useEffect(() => {
+    if (endSignal && endSignal.length > 0) {
+      let result = JSON.parse(endSignal);
+      setLatestCompile(result.comp);
+      setCompileQueue(result.queue);
+      if (result && result.queue && result.queue.comp_result === CompileResultType.SUCCESS) {
+        showPreviewTab("pdfview");
+      }
+    }
+  }, [endSignal]);
 
   React.useEffect(() => {
     if (pdfUrl && pdfUrl.length > 0) {
@@ -423,7 +482,7 @@ const Previewer: React.FC<PreviwerProps> = ({
       </div>
     );
   };
-
+  debugger;
   return (
     <div id="preview" className={styles.preview}>
       <div className={styles.previewHader}>
