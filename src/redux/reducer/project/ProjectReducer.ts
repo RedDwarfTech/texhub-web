@@ -9,11 +9,9 @@ import { PreviewPdfAttribute } from "@/model/proj/config/PreviewPdfAttribute";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 import { ProjConf } from "@/model/proj/config/ProjConf";
-import { SearchResult } from "@/model/proj/search/SearchResult";
 import { ProjHisotry as ProjHistory } from "@/model/proj/history/ProjHistory";
 import { TexProjects } from "@/model/proj/TexProjects";
 import * as Y from 'yjs';
-import { TexFileModel } from "@/model/file/TexFileModel";
 
 const initState: AppState["proj"] = {
     projList: {} as TexProjects,
@@ -35,7 +33,6 @@ const initState: AppState["proj"] = {
     pdfFocus: [] as PdfPosition[],
     srcFocus: [] as SrcPosition[],
     projConf: {} as ProjConf,
-    hits: [] as SearchResult[],
     activeShare: false,
     projHistories: [] as ProjHistory[],
     insertContext: "",
