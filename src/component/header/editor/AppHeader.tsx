@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import styles from "./EHeader.module.css";
+import styles from "./AppHeader.module.css";
 import { AppState } from "@/redux/types/AppState";
 import React, { useState } from "react";
 import { TexFileModel } from "@/model/file/TexFileModel";

@@ -1,0 +1,72 @@
+.header {
+    height: 40px;
+  }
+  
+  .editorBody {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    flex-grow: 1;
+  }
+  
+  .leftDraggable {
+    height: 100%;
+    width: 4px;
+    min-width: 4px;
+    background-color: rgb(33, 41, 53);
+  }
+  
+  .leftDraggable:hover {
+    cursor: ew-resize;
+  }
+  
+  .rightDraggable {
+    height: 100%;
+    width: 4px;
+    min-width: 4px;
+    background-color: rgb(33, 41, 53);
+  }
+  
+  .rightDraggable:hover {
+    cursor: ew-resize;
+  }
+  
+  .rightDraggableIcon {
+    width: 2px;
+    height: 14px;
+    color: white;
+    margin-top: 200px;
+  }
+  
+  .editorFooter {
+    height: 3vh;
+    background-color: rgb(29, 35, 47);
+    color: white;
+    width: 100%;
+  }
+  
+  .editor {
+    resize: horizontal;
+    flex: 0 0 60%;
+    overflow: hidden;
+    height: 96vh;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .editor::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .treeItem {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+  }
+  
+  .folderArrow {
+    font-size: 12px;
+    width: 12px;
+    height: 12px;
+  }
