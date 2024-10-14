@@ -12,6 +12,7 @@ import PwdReset from "./pwd/PwdReset";
 import MyOrder from "./order/MyOrder";
 import { readConfig } from "@/config/app/config-reader";
 import { useTranslation } from "react-i18next";
+import AppConfig from "./config/AppConfig";
 
 const Settings: React.FC = () => {
 
@@ -96,6 +97,9 @@ const Settings: React.FC = () => {
         if (currentPanel && currentPanel === 'order') {
             return <MyOrder></MyOrder>
         }
+        if (currentPanel && currentPanel === 'appconfig'){
+            return <AppConfig></AppConfig>
+        }
         if (currentPanel && currentPanel === 'userinfo') {
             return (
                 <div id="userinfo">
@@ -177,6 +181,9 @@ const Settings: React.FC = () => {
                     <span>{t("myOrder")}</span>
                 </div>
                 {/**
+                 * <div className={styles.menuItem} data-target="appconfig" id="userinfo-menu" onClick={handlePanelSwitch}>
+                    <span>{t("label_app_config")}</span>
+                </div>
                 * <div className={styles.menuItem} data-target="feedback" id="feedback-menu" onClick={handlePanelSwitch}>
                     <span>意见与建议</span>
                 </div>
