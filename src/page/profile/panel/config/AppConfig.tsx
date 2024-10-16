@@ -5,20 +5,20 @@ import { useTranslation } from "react-i18next";
 import { ToastContainer, toast } from "react-toastify";
 
 const AppConfig: React.FC = () => {
-  const [oldPwd, setOldPwd] = useState<string>();
+  const [githubToken, setGithubToken] = useState<string>();
   const { t } = useTranslation();
 
-  const handleOldPwdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTokenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let inputValue = e.target.value;
-    setOldPwd(inputValue);
+    setGithubToken(inputValue);
   };
 
   const handlePwdReset = () => {
-    if (!oldPwd) {
+    if (!githubToken) {
       toast.warn(t("tips_input_github_token"));
       return;
     }
-    saveGithubToken(oldPwd).then((resp) => {
+    saveGithubToken(githubToken).then((resp) => {
       if (ResponseHandler.responseSuccess(resp)) {
         toast.success(t("tips_success"));
       } else {
@@ -41,7 +41,7 @@ const AppConfig: React.FC = () => {
             <div>
               <input
                 className="form-control"
-                onChange={handleOldPwdChange}
+                onChange={handleTokenChange}
                 type="password"
                 placeholder={t("tips_input_github_token")}
               ></input>

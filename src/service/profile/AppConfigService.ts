@@ -6,7 +6,7 @@ import { XHRClient } from "rd-component";
 export function saveGithubToken(token: string) {
   const config: AxiosRequestConfig = {
     method: "put",
-    url: "/tex/profile/github",
+    url: "/tex/appconf/github-token",
     data: {
       token: token,
     },
