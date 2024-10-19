@@ -1,5 +1,5 @@
 import { QueryFile } from "@/model/request/proj/search/QueryFile";
-import { projSerach } from "@/service/project/ProjectService";
+import { projSerach } from "@/service/project/tree/ProjTreeService";
 import { toast } from "react-toastify";
 
 export const handleEnterProjSearch = (

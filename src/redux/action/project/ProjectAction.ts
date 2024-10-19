@@ -45,8 +45,6 @@ export enum ProjectActionType {
     COPY_PROJ,
     DOWNLOAD_PROJ,
     EDITOR_INSERT_TEXT,
-    SET_CUR_YDOC,
-    SET_WS_CON_STATE,
     EDITOR_REPLACE_TEXT
 }
 
@@ -219,14 +217,3 @@ export interface replaceTextAction {
     type: ProjectActionType.EDITOR_REPLACE_TEXT;
     data: any;
 }
-
-export interface setYDocAction {
-    type: ProjectActionType.SET_CUR_YDOC;
-    data: any;
-}
-
-export interface setWsConnStateAction {
-    type: ProjectActionType.SET_WS_CON_STATE;
-    data: any;
-}
-

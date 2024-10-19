@@ -17,7 +17,6 @@ import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
 import { QueryPdfPos } from "@/model/request/proj/query/QueryPdfPos";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 import { QuerySrcPos } from "@/model/request/proj/query/QuerySrcPos";
-import { QueryFile } from "@/model/request/proj/search/QueryFile";
 import { ProjectActionType } from "@/redux/action/project/ProjectAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
@@ -31,8 +30,7 @@ import { CopyProjReq } from "@/model/request/proj/edit/CopyProjReq";
 import { RenameFolderReq } from "@/model/request/proj/edit/RenameFolderReq";
 import { DelFolderReq } from "@/model/request/proj/edit/DelFolderReq";
 import { QueryHistoryDetail } from "@/model/request/proj/query/QueryHistoryDetail";
-import * as Y from 'yjs';
-import { ProjectTreeActionType } from "@/redux/action/project/tree/ProjectTreeAction";
+import { CollarEditorActionType } from "@/redux/action/project/editor/EditorAction";
 
 export function getProjectList(req: QueryProjReq) {
   const params = new URLSearchParams();
@@ -395,20 +393,6 @@ export function setProjAttr(data: PreviewPdfAttribute) {
   return XHRClient.dispathAction(data, actionTypeString, store);
 }
 
-export function projSerach(req: QueryFile) {
-  const params = new URLSearchParams();
-  for (const [key, value] of Object.entries(req)) {
-    params.append(key, value);
-  }
-  const config: AxiosRequestConfig = {
-    method: 'get',
-    url: '/tex/project/search',
-    params: params
-  };
-  const actionTypeString: string = ProjectTreeActionType[ProjectTreeActionType.PROJ_SEARCH];
-  return XHRClient.requestWithActionType(config, actionTypeString, store);
-}
-
 export function getProjHistoryDetail(history: QueryHistoryDetail) {
   const params = new URLSearchParams();
   for (const [key, value] of Object.entries(history)) {
@@ -495,12 +479,7 @@ export function copyProj(req: CopyProjReq) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function setCurYDoc(ydoc: Y.Doc) {
-  const actionTypeString: string = ProjectActionType[ProjectActionType.SET_CUR_YDOC];
-  return XHRClient.dispathAction(ydoc, actionTypeString, store);
-}
-
 export function setWsConnState(state: string) {
-  const actionTypeString: string = ProjectActionType[ProjectActionType.SET_WS_CON_STATE];
+  const actionTypeString: string = CollarEditorActionType[CollarEditorActionType.SET_WS_CON_STATE];
   return XHRClient.dispathAction(state, actionTypeString, store);
 }

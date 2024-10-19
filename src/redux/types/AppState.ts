@@ -21,6 +21,13 @@ import { ProjCollarModel } from "@/model/proj/share/ProjCollarModel";
 import { EditorView } from "codemirror";
 import { WebsocketProvider } from "rdy-websocket";
 
+/**
+ * the legacy proj contains too much state fields that make
+ * the application has too many unexpect rerender
+ * so try to split more precisely
+ * from proj => projTree
+ * from proj => projEditor
+ */
 export interface AppState {
     proj: {
         projList: TexProjects,
@@ -44,9 +51,13 @@ export interface AppState {
         projHistories: ProjHisotry[],
         insertContext: string,
         projHisPage: EntityList<ProjHisotry>,
-        curYDoc: Y.Doc,
         replaceContext: string,
         curHistory: ProjHisotry,
+    },
+    projEditor: {
+        curYDoc: Y.Doc,
+        editor: EditorView,
+        ws: WebsocketProvider,
         connState: string,
     },
     projTree: {
@@ -71,10 +82,6 @@ export interface AppState {
     },
     projShare: {
         collar: ProjCollarModel[]
-    },
-    editor: {
-        editor: EditorView,
-        ws: WebsocketProvider
     },
     preview: {
         curPage: number,

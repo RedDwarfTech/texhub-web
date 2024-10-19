@@ -17,11 +17,10 @@ import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { RefObject } from "react";
 import {
   projHasFile,
-  setCurYDoc,
   setWsConnState,
 } from "../project/ProjectService";
 import { Metadata } from "@/component/common/editor/foundation/extensions/language";
-import { setEditorInstance, setWebsocketProvider } from "../project/editor/EditorService";
+import { setCurYDoc, setEditorInstance, setWebsocketProvider } from "../project/editor/EditorService";
 import { handleYDocUpdate } from "@/component/common/collar/ver/YjsEvent";
 
 export const usercolors = [

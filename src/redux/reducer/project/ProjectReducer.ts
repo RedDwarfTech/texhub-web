@@ -43,10 +43,8 @@ const initState: AppState["proj"] = {
             pageSize: 0
         }
     },
-    curYDoc: new Y.Doc(),
     replaceContext: "",
-    curHistory: {} as ProjHistory,
-    connState: ""
+    curHistory: {} as ProjHistory
 };
 
 const ProjectReducer = (state = initState, action: any) => {
@@ -179,21 +177,12 @@ const ProjectReducer = (state = initState, action: any) => {
                 ...state,
                 replaceContext: action.data
             };
-        case "SET_CUR_YDOC":
-            return {
-                ...state,
-                curYDoc: action.data
-            };
         case "PROJ_HISTORY_DETAIL":
             return {
                 ...state,
                 curHistory: action.data
             };
-        case "SET_WS_CON_STATE":
-            return {
-                ...state,
-                connState: action.data
-            };
+        
         default:
             break;
     }

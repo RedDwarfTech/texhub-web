@@ -1,19 +1,16 @@
 import ProjectTree from "@/component/common/projtree/main/ProjectTree";
 import styles from "./AppBody.module.css";
-import { useRef, useState } from "react";
-import { TexFileModel } from "@/model/file/TexFileModel";
+import { useRef } from "react";
 import React from "react";
-import { AppState } from "@/redux/types/AppState";
-import { useSelector } from "react-redux";
 import RightDraggable from "@/assets/icon/right-drag.svg?react";
 import Previewer from "@/component/common/previewer/Previewer";
 import { VariableSizeList } from "react-window";
 import { getProjectInfo } from "@/service/project/ProjectService";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 const CollarCodeEditor = React.lazy(
-    () => import("@/component/common/editor/main/CollarCodeEditor")
-  );
-  
+  () => import("@/component/common/editor/main/CollarCodeEditor")
+);
+
 export type AppBodyProps = {
   projectId: string;
 };
@@ -21,8 +18,6 @@ export type AppBodyProps = {
 const AppBody: React.FC<AppBodyProps> = (props: AppBodyProps) => {
   let pid = props.projectId;
   const projTreeRef = useRef<HTMLDivElement>(null);
-  const [activeFileModel, setActiveFileModel] = useState<TexFileModel>();
-  const { activeFile } = useSelector((state: AppState) => state.file);
   const virtualListRef = React.useRef<VariableSizeList>(null);
 
   React.useEffect(() => {
@@ -35,10 +30,6 @@ const AppBody: React.FC<AppBodyProps> = (props: AppBodyProps) => {
     }
     return () => {};
   }, []);
-
-  React.useEffect(() => {
-    setActiveFileModel(activeFile);
-  }, [activeFile]);
 
   const resizeRight = (resizeBarName: string, resizeArea: string) => {
     setTimeout(() => {
@@ -95,9 +86,6 @@ const AppBody: React.FC<AppBodyProps> = (props: AppBodyProps) => {
         <React.Suspense fallback={<div>Loading...</div>}>
           <CollarCodeEditor projectId={pid.toString()}></CollarCodeEditor>
         </React.Suspense>
-        <div className={styles.editorFooter}>
-          {activeFileModel ? activeFileModel.name : "ddd"}
-        </div>
       </div>
       <div className={styles.rightDraggable} id="rightDraggable">
         <RightDraggable className={styles.rightDraggableIcon}></RightDraggable>
