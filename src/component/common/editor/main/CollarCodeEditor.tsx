@@ -30,9 +30,12 @@ export type EditorProps = {
 const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<HTMLDivElement>(null);
   const { activeFile } = useSelector((state: AppState) => state.file);
-  const { projInfo, projConf, insertContext, replaceContext, connState } =
-    useSelector((state: AppState) => state.proj);
-  const { editor } = useSelector((state: AppState) => state.editor);
+  const { projInfo, projConf, insertContext, replaceContext } = useSelector(
+    (state: AppState) => state.proj
+  );
+  const { connState, editor } = useSelector(
+    (state: AppState) => state.projEditor
+  );
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();

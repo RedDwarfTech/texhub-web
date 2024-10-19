@@ -17,16 +17,9 @@ export type HistoryProps = {
 
 const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
 
-    const { projHisPage, curYDoc } = useSelector((state: AppState) => state.proj);
+    const { projHisPage } = useSelector((state: AppState) => state.proj);
     const [histories, setHistories] = useState<ProjHisotry[]>([]);
-    const [curDoc, setCurDoc] = useState<Y.Doc>();
     const { t } = useTranslation();
-
-    React.useEffect(() => {
-        if (curYDoc) {
-            setCurDoc(curYDoc);
-        }
-    }, [curYDoc]);
 
     React.useEffect(() => {
         if (projHisPage && projHisPage.data) {
