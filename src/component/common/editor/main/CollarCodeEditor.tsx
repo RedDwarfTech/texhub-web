@@ -22,6 +22,7 @@ import EquationDesigner from "../equation/EquationDesigner";
 import { handlePdfLocate, handleSrcTreeNav } from "./CollarCodeEditorHandler";
 import { useTranslation } from "react-i18next";
 import { ProjInfo } from "@/model/proj/ProjInfo";
+import { BaseMethods } from "rdjs-wheel";
 
 export type EditorProps = {
   projectId: string;
@@ -207,6 +208,9 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
    * Try to reconnect the editor websocket
    */
   const tryReconnect = (connState: string) => {
+    if(BaseMethods.isNull(connState)) {
+      return;
+    }
     switch (connState) {
       case "connected":
         break;
