@@ -173,7 +173,6 @@ export function initEditor(
   ydoc.on("update", (update, origin) => {
     handleYDocUpdate(editorAttr, ytext, ydoc);
   });
-
   const texEditorState = EditorState.create({
     doc: ytext.toString(),
     extensions: createExtensions({
