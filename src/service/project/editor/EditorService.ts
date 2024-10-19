@@ -21,3 +21,8 @@ export function setCurYDoc(ydoc: Y.Doc) {
   const actionTypeString: string = CollarEditorActionType[CollarEditorActionType.SET_CUR_YDOC];
   return XHRClient.dispathAction(ydoc, actionTypeString, store);
 }
+
+export function setWsConnState(state: string) {
+  const actionTypeString: string = CollarEditorActionType[CollarEditorActionType.SET_WS_CON_STATE];
+  return XHRClient.dispathAction(state, actionTypeString, store);
+}

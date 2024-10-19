@@ -478,8 +478,3 @@ export function copyProj(req: CopyProjReq) {
   const actionTypeString: string = ProjectActionType[ProjectActionType.COPY_PROJ];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
-
-export function setWsConnState(state: string) {
-  const actionTypeString: string = CollarEditorActionType[CollarEditorActionType.SET_WS_CON_STATE];
-  return XHRClient.dispathAction(state, actionTypeString, store);
-}

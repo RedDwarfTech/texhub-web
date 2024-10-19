@@ -15,12 +15,14 @@ import {
 } from "rdjs-wheel";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { RefObject } from "react";
-import {
-  projHasFile,
-  setWsConnState,
-} from "../project/ProjectService";
+import { projHasFile } from "../project/ProjectService";
 import { Metadata } from "@/component/common/editor/foundation/extensions/language";
-import { setCurYDoc, setEditorInstance, setWebsocketProvider } from "../project/editor/EditorService";
+import {
+  setCurYDoc,
+  setEditorInstance,
+  setWebsocketProvider,
+  setWsConnState,
+} from "../project/editor/EditorService";
 import { handleYDocUpdate } from "@/component/common/collar/ver/YjsEvent";
 
 export const usercolors = [
