@@ -58,7 +58,7 @@ export interface AppState {
         curYDoc: Y.Doc,
         editor: EditorView,
         ws: WebsocketProvider,
-        connState: string,
+        connState: string
     },
     projTree: {
         hits: SearchResult[],

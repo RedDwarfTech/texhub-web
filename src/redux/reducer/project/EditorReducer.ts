@@ -1,3 +1,7 @@
+import {
+  CollarEditorActionType,
+  editorAction,
+} from "@/redux/action/project/editor/EditorAction";
 import { AppState } from "@/redux/types/AppState";
 import { EditorView } from "@codemirror/view";
 import { WebsocketProvider } from "rdy-websocket";
@@ -10,24 +14,24 @@ const initState: AppState["projEditor"] = {
   connState: "",
 };
 
-const EditorReducer = (state = initState, action: any) => {
+const EditorReducer = (state = initState, action: editorAction) => {
   switch (action.type) {
-    case "INITIAL_EDITOR":
+    case CollarEditorActionType.INITIAL_EDITOR:
       return {
         ...state,
         editor: action.data,
       };
-    case "INITIAL_WS":
+    case CollarEditorActionType.INITIAL_WS:
       return {
         ...state,
         ws: action.data,
       };
-    case "SET_CUR_YDOC":
+    case CollarEditorActionType.SET_CUR_YDOC:
       return {
         ...state,
         curYDoc: action.data,
       };
-    case "SET_WS_CON_STATE":
+    case CollarEditorActionType.SET_WS_CON_STATE:
       debugger;
       return {
         ...state,

@@ -482,7 +482,7 @@ const Previewer: React.FC<PreviwerProps> = ({
       </div>
     );
   };
-  debugger;
+
   return (
     <div id="preview" className={styles.preview}>
       <div className={styles.previewHader}>
