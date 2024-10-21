@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { ChangeEvent, useMemo, useRef, useState } from "react";
 import styles from "./Previewer.module.css";
 import { ToastContainer, toast } from "react-toastify";
 import { pdfjs } from "react-pdf";
@@ -24,6 +24,7 @@ import { BaseMethods, ResponseHandler } from "rdjs-wheel";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { scrollToPage } from "./doc/PDFPreviewHandle";
 import { useTranslation } from "react-i18next";
+import { getPdfjsOptions } from "@/config/pdf/PdfJsConfig";
 import {
   handleDownloadPdf,
   handleOpenInBrowser,
@@ -300,6 +301,11 @@ const Previewer: React.FC<PreviwerProps> = ({
     setNumPages(pageNum);
   };
 
+  // https://stackoverflow.com/questions/76834748/react-pdf-gives-typeerror-cannot-read-properties-of-null-reading-sendwithprom
+  const opt = useMemo(() => {
+    return getPdfjsOptions();
+  }, []);
+
   const renderPdfView = () => {
     if (!curPdfUrl || !projectId) return <div>Loading...</div>;
     return (
@@ -309,6 +315,7 @@ const Previewer: React.FC<PreviwerProps> = ({
         viewModel={viewModel}
         setPageNum={setPageNum}
         virtualListRef={virtualListRef}
+        pdfOptions={opt}
       ></MemoizedPDFPreview>
     );
   };

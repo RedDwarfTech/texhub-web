@@ -1,3 +1,4 @@
+import { Options } from "react-pdf/dist/cjs/shared/types";
 import { VariableSizeList } from "react-window";
 
 export interface PDFPreviewProps {
@@ -6,4 +7,5 @@ export interface PDFPreviewProps {
   viewModel: string;
   setPageNum: (page: number) => void;
   virtualListRef: React.RefObject<VariableSizeList>;
+  pdfOptions: Options
 }
