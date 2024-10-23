@@ -37,11 +37,7 @@ export const handleOpenInBrowserDirect = (projectId: string) => {
     getPreviewUrl(projectId).then((res) => {
       if (ResponseHandler.responseSuccess(res)) {
         console.log(res.data);
-        let url =
-          "/tex/file/pdf/preview?proj_id=" +
-          projectId +
-          "&signature=a&expire=1";
-        window.open(url, "_blank")!.focus();
+        window.open(res.result, "_blank")!.focus();
       }
     });
   }
