@@ -4,6 +4,8 @@ import { getCurPdfPage } from "@/service/project/preview/PreviewService";
 import { getSrcPosition } from "@/service/project/ProjectService";
 import { toast } from "react-toastify";
 import { getAccessToken } from "../cache/Cache";
+import { getPreviewUrl } from "@/service/file/FileService";
+import { ResponseHandler } from "rdjs-wheel";
 
 /**
  * get the source location by pdf file position
@@ -32,9 +34,16 @@ export const handleSrcLocate = (
 
 export const handleOpenInBrowserDirect = (projectId: string) => {
   if (projectId) {
-    let url =
-      "/tex/file/pdf/preview?proj_id=" + projectId + "&signature=a&expire=1";
-    window.open(url, "_blank")!.focus();
+    getPreviewUrl(projectId).then((res) => {
+      if (ResponseHandler.responseSuccess(res)) {
+        console.log(res.data);
+        let url =
+          "/tex/file/pdf/preview?proj_id=" +
+          projectId +
+          "&signature=a&expire=1";
+        window.open(url, "_blank")!.focus();
+      }
+    });
   }
 };
 

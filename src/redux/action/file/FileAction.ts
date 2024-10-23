@@ -22,6 +22,7 @@ export enum FileActionType {
   SWITCH_EDITOR_FILE,
   RENAME_FILE,
   SET_CUR_FILE_TREE,
+  GET_PREVIEW_URL,
 }
 
 export interface getFileListAction {
@@ -86,5 +87,10 @@ export interface downloadFileAction {
 
 export interface setCurFileTreeAction {
   type: FileActionType.SET_CUR_FILE_TREE;
+  data: any;
+}
+
+export interface setPreviewUrlAction {
+  type: FileActionType.GET_PREVIEW_URL;
   data: any;
 }
