@@ -7,10 +7,14 @@ import { getAccessToken } from "../cache/Cache";
 
 /**
  * get the source location by pdf file position
- * 
+ *
  * @returns src position info
  */
-export const handleSrcLocate = (projectId: string, curProjInfo: ProjInfo, msg: string) => {
+export const handleSrcLocate = (
+  projectId: string,
+  curProjInfo: ProjInfo,
+  msg: string
+) => {
   if (!projectId) {
     toast.info(msg);
     return;
@@ -26,25 +30,33 @@ export const handleSrcLocate = (projectId: string, curProjInfo: ProjInfo, msg: s
   getSrcPosition(req);
 };
 
+export const handleOpenInBrowserDirect = (projectId: string) => {
+  if (projectId) {
+    let url =
+      "/tex/file/pdf/full?proj_id=" + projectId + "&signature=a&expire=1";
+    window.open(url, "_blank")!.focus();
+  }
+};
+
 export const handleOpenInBrowser = (projectId: string) => {
   if (projectId) {
-let accessToken = getAccessToken();
-let url = "/tex/file/pdf/full?proj_id=" + projectId;
-fetch(url, {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: "Bearer " + accessToken,
-  },
-})
-  .then((response) => response.blob())
-  .then((blob) => {
-    var _url = window.URL.createObjectURL(blob);
-    window.open(_url, "_blank")!.focus();
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+    let accessToken = getAccessToken();
+    let url = "/tex/file/pdf/full?proj_id=" + projectId;
+    fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + accessToken,
+      },
+    })
+      .then((response) => response.blob())
+      .then((blob) => {
+        var _url = window.URL.createObjectURL(blob);
+        window.open(_url, "_blank")!.focus();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 };
 

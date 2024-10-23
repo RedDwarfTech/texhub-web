@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useMemo, useRef, useState } from "react";
+import React, { ChangeEvent, useMemo, useState } from "react";
 import styles from "./Previewer.module.css";
 import { ToastContainer, toast } from "react-toastify";
 import { pdfjs } from "react-pdf";
@@ -27,7 +27,7 @@ import { useTranslation } from "react-i18next";
 import { getPdfjsOptions } from "@/config/pdf/PdfJsConfig";
 import {
   handleDownloadPdf,
-  handleOpenInBrowser,
+  handleOpenInBrowserDirect,
   handleSrcLocate,
 } from "./PreviewerHandler";
 import { VariableSizeList } from "react-window";
@@ -329,7 +329,7 @@ const Previewer: React.FC<PreviwerProps> = ({
             data-bs-toggle="tooltip"
             title={t("btn_open_in_broswer")}
             onClick={() => {
-              handleOpenInBrowser(projectId);
+              handleOpenInBrowserDirect(projectId);
             }}
           >
             <i className="fa-brands fa-chrome"></i>
