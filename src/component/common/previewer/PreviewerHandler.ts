@@ -33,7 +33,7 @@ export const handleSrcLocate = (
 export const handleOpenInBrowserDirect = (projectId: string) => {
   if (projectId) {
     let url =
-      "/tex/file/pdf/full?proj_id=" + projectId + "&signature=a&expire=1";
+      "/tex/file/pdf/preview?proj_id=" + projectId + "&signature=a&expire=1";
     window.open(url, "_blank")!.focus();
   }
 };
