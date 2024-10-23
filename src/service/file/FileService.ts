@@ -142,7 +142,7 @@ export function setCurFileTree(fileTree: TexFileModel[]) {
 export function getPreviewUrl(proj_id: String) {
   const config: AxiosRequestConfig = {
     method: 'get',
-    url: '/tex/filepdf/preview-url?proj_id=' + proj_id
+    url: '/tex/file/pdf/preview-url?proj_id=' + proj_id
   };
   const actionTypeString: string = FileActionType[FileActionType.GET_PREVIEW_URL];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
