@@ -5,7 +5,7 @@ import * as Y from "yjs";
 
 const initState: AppState["projEditor"] = {
   editor: {} as EditorView,
-  ws: {} as WebsocketProvider,
+  texEditorWs: {} as WebsocketProvider,
   curYDoc: {} as Y.Doc,
   connState: "",
 };
@@ -20,7 +20,7 @@ const EditorReducer = (state = initState, action: any) => {
     case "INITIAL_WS":
       return {
         ...state,
-        ws: action.data,
+        texEditorWs: action.data,
       };
     case "SET_CUR_YDOC":
       return {

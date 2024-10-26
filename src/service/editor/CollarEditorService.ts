@@ -154,8 +154,13 @@ const metadata: Metadata = {
 export function initEditor(
   editorAttr: EditorAttr,
   activeEditorView: EditorView | undefined,
-  edContainer: RefObject<HTMLDivElement>
+  edContainer: RefObject<HTMLDivElement>,
+  legacyWs: WebsocketProvider | undefined
 ) {
+  if (legacyWs) {
+    // close the legacy websocket to avoid 1006 disconnect on the server side
+    legacyWs.ws?.close();
+  }
   if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
     activeEditorView.destroy();
   }

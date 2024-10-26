@@ -57,7 +57,7 @@ export interface AppState {
     projEditor: {
         curYDoc: Y.Doc,
         editor: EditorView,
-        ws: WebsocketProvider,
+        texEditorWs: WebsocketProvider,
         connState: string
     },
     projTree: {

@@ -34,23 +34,20 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const { projInfo, projConf, insertContext, replaceContext } = useSelector(
     (state: AppState) => state.proj
   );
-  const { connState, editor } = useSelector(
+  const { connState, editor, texEditorWs } = useSelector(
     (state: AppState) => state.projEditor
   );
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
+  const [wsProvider, setWsProvider] = useState<WebsocketProvider>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
   const activeKey = readConfig("projActiveFile") + props.projectId;
-  let wsProvider: WebsocketProvider;
   const { t } = useTranslation();
 
   React.useEffect(() => {
     return () => {
       // try to delete the last state project info to avoid websocket connect to previous project through main file id
       delProjInfo();
-      if (wsProvider) {
-        wsProvider.destroy();
-      }
     };
   }, []);
 
@@ -59,6 +56,12 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       setActiveEditorView(editor);
     }
   }, [editor]);
+
+  React.useEffect(() => {
+    if (texEditorWs) {
+      setWsProvider(texEditorWs);
+    }
+  }, [texEditorWs]);
 
   React.useEffect(() => {
     if (projInfo && Object.keys(projInfo).length > 0) {
@@ -137,7 +140,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       name: file.name,
       theme: themeMap.get("Solarized Light")!,
     };
-    initEditor(editorAttr, activeEditorView, edContainer);
+    initEditor(editorAttr, activeEditorView, edContainer, wsProvider);
   };
 
   const destroy = () => {

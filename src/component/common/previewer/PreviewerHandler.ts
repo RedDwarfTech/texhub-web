@@ -36,7 +36,6 @@ export const handleOpenInBrowserDirect = (projectId: string) => {
   if (projectId) {
     getPreviewUrl(projectId).then((res) => {
       if (ResponseHandler.responseSuccess(res)) {
-        console.log(res.data);
         window.open(res.result, "_blank")!.focus();
       }
     });
