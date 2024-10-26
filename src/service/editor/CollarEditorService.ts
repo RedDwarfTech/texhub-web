@@ -159,7 +159,7 @@ export function initEditor(
 ) {
   if (legacyWs) {
     // close the legacy websocket to avoid 1006 disconnect on the server side
-    legacyWs.ws?.close(1001,"client send close signal");
+    legacyWs.ws?.close(1000,"client send close signal");
   }
   if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
     activeEditorView.destroy();
