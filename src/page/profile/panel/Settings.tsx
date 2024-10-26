@@ -129,7 +129,7 @@ const Settings: React.FC = () => {
                     }}
                     className="btn btn-primary"
                   >
-                    设置昵称
+                    {t("btn_edit_nickname")}
                   </button>
                 </div>
               </div>
