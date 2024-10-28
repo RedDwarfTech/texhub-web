@@ -7,6 +7,7 @@ import Previewer from "@/component/common/previewer/Previewer";
 import { VariableSizeList } from "react-window";
 import { getProjectInfo } from "@/service/project/ProjectService";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
+import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 const CollarCodeEditor = React.lazy(
   () => import("@/component/common/editor/main/CollarCodeEditor")
 );
@@ -71,6 +72,17 @@ const AppBody: React.FC<AppBodyProps> = (props: AppBodyProps) => {
     }, 1500);
   };
 
+  const fallbackRender = (props: FallbackProps) => {
+    // Call resetErrorBoundary() to reset the error boundary and retry the render.
+
+    return (
+      <div role="alert">
+        <p>Something went wrong:</p>
+        <pre style={{ color: "red" }}>{props.error}</pre>
+      </div>
+    );
+  };
+
   return (
     <div className={styles.editorBody}>
       {pid ? (
@@ -84,7 +96,9 @@ const AppBody: React.FC<AppBodyProps> = (props: AppBodyProps) => {
       <div className={styles.leftDraggable} id="leftDraggable"></div>
       <div id="editor" className={styles.editor}>
         <React.Suspense fallback={<div>Loading...</div>}>
-          <CollarCodeEditor projectId={pid.toString()}></CollarCodeEditor>
+          <ErrorBoundary fallbackRender={fallbackRender}>
+            <CollarCodeEditor projectId={pid.toString()}></CollarCodeEditor>
+          </ErrorBoundary>
         </React.Suspense>
       </div>
       <div className={styles.rightDraggable} id="rightDraggable">
