@@ -37,7 +37,7 @@ import {
   setCurPdfPage,
   setCurPdfScale,
 } from "@/service/project/preview/PreviewService";
-pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/legacy/pdf.worker.min.mjs`;
+pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
 
 export type PreviwerProps = {
   projectId: string;
