@@ -1,6 +1,6 @@
 {
     "home": "Home",
-    "template": "Template",
+    "template": "Templates",
     "about": "About",
     "projects": "Projects",
     "setting": "Setting",
@@ -9,7 +9,7 @@
     "price": "Price",
     "console": "Settings",
     "logout": "Logout",
-    "document": "Document",
+    "document": "Documents",
     "delete_main_forbidden": "delete main file is not allowed",
     "btn_share": "Share",
     "btn_compile": "Compile",
