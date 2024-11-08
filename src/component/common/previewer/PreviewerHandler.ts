@@ -70,7 +70,13 @@ export const handleDownloadPdf = async (pdfUrl: string) => {
     return;
   }
   try {
-    const response = await fetch(pdfUrl);
+    let accessToken = getAccessToken();
+    const response = await fetch(pdfUrl,{
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + accessToken,
+      },
+    });
     const blob = await response.blob();
     const downloadUrl = window.URL.createObjectURL(new Blob([blob]));
     const link = document.createElement("a");
