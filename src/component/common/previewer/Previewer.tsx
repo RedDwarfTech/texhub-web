@@ -62,7 +62,7 @@ const Previewer: React.FC<PreviwerProps> = ({
   const [curPages, setCurPages] = useState<number>();
   const { curPage } = useSelector((state: AppState) => state.preview);
   const {
-    pdfUrl,
+    texPdfUrl,
     streamLogText,
     logText,
     tabName,
@@ -155,10 +155,10 @@ const Previewer: React.FC<PreviwerProps> = ({
   }, [endSignal]);
 
   React.useEffect(() => {
-    if (pdfUrl && pdfUrl.length > 0) {
-      setCurPdfUrl(pdfUrl);
+    if (texPdfUrl && texPdfUrl.length > 0) {
+      setCurPdfUrl(texPdfUrl);
     }
-  }, [pdfUrl]);
+  }, [texPdfUrl]);
 
   React.useEffect(() => {
     setCurCompileQueue(queue);

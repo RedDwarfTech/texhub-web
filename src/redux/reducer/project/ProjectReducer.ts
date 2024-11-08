@@ -18,7 +18,7 @@ const initState: AppState["proj"] = {
     compileResult: {} as CompileResult,
     joinResult: {} as JoinResult,
     latestComp: {} as LatestCompile,
-    pdfUrl: "",
+    texPdfUrl: "",
     logText: "",
     streamLogText: "",
     endSignal: "",
@@ -71,7 +71,7 @@ const ProjectReducer = (state = initState, action: any) => {
         case "RENDER_PDF":
             return {
                 ...state,
-                pdfUrl: action.data
+                texPdfUrl: action.data
             };
         case "APPEND_LOG":
             return {

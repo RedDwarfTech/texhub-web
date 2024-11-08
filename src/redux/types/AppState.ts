@@ -35,7 +35,7 @@ export interface AppState {
         compileResult: CompileResult,
         latestComp: LatestCompile,
         joinResult: JoinResult,
-        pdfUrl: string,
+        texPdfUrl: string,
         logText: string,
         endSignal: string,
         queue: CompileQueue,
