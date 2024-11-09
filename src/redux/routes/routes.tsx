@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { PaySuccess, RdReg } from "rd-component";
+import { PaySuccess } from "rd-component";
 import "rd-component/dist/style.css";
 import DocTab from "@/page/profile/project/tab/ProjectTab";
 import Home from "@/page/home/Home";
@@ -16,6 +16,7 @@ import DocCenter from "@/page/document/DocCenter";
 import VerifyPwd from "@/page/pwd/verify/VerifyPwd";
 import ResetPwd from "@/page/pwd/reset/ResetPwd";
 import RdTeXHubLogin from "@/page/profile/user/login/RdTeXHubLogin";
+import RdTeXHubReg from "@/page/profile/user/reg/RdTeXHubReg";
 
 const routes = createBrowserRouter([
   {
@@ -65,7 +66,7 @@ const routes = createBrowserRouter([
   {
     path: "/user/reg",
     element: (
-      <RdReg
+      <RdTeXHubReg
         appId={readConfig("appId")}
         store={store}
         regUrl={readConfig("regUrl")}
