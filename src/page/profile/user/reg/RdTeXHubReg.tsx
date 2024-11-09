@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { ResponseHandler } from "rdjs-wheel";
 import { AnyAction, Store } from "redux";
 import { UserService } from "rd-component";
+import { useTranslation } from "react-i18next";
 
 interface IRegProp {
   appId: string;
@@ -22,6 +23,7 @@ const RdTeXHubReg: React.FC<IRegProp> = (props: IRegProp) => {
   const navigate = useNavigate();
   const [passwordShown, setPasswordShown] = useState(false);
   const [pwdConfirmShown, setPwdConfirmShown] = useState(false);
+  const { t } = useTranslation();
 
   const togglePasswordVisibility = (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -92,7 +94,7 @@ const RdTeXHubReg: React.FC<IRegProp> = (props: IRegProp) => {
       UserService.userReg(params, props.store, props.regUrl).then(
         (res: any) => {
           if (ResponseHandler.responseSuccess(res)) {
-            toast.success("注册成功");
+            toast.success(t("tips_reg_success"));
             navigate("/user/login");
           } else {
             toast.error(res.msg);

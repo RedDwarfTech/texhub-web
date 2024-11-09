@@ -112,6 +112,7 @@
     "tips_restore_proj": "Are you sure to restore project？",
     "tips_input_github_token": "Please input the Github token",
     "tips_success": "Success",
+    "tips_reg_success": "Regster success",
     "title_del": "Delete",
     "title_template_detail": "Template detail",
     "title_search_proj": "Search project",
