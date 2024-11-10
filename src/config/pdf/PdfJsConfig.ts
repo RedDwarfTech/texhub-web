@@ -65,7 +65,7 @@ export const getPdfjsOptions = (): Options => {
   return cachedOptions;
 };
 
-const getAuthorization = (headers: Object): any => {
+export const getAuthorization = (headers: Object): any => {
   if ('Authorization' in headers) {
     return headers.Authorization;
   }

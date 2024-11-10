@@ -19,6 +19,8 @@ import {
 import { PreviewPdfAttribute } from "@/model/proj/config/PreviewPdfAttribute";
 import TeXPDFPage from "./TeXPDFPage";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
+import { getAccessToken } from "../../cache/Cache";
+import { getAuthorization } from "@/config/pdf/PdfJsConfig";
 
 const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
   ({
@@ -27,7 +29,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     viewModel = "default",
     setPageNum,
     virtualListRef,
-    pdfOptions
+    pdfOptions,
   }) => {
     let cachedScale = getCurPdfScale(projId, viewModel);
     const { pdfFocus, projAttr } = useSelector((state: AppState) => state.proj);
@@ -41,18 +43,8 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
 
     React.useEffect(() => {
-      const handleResize = () => {};
-
-      const resizeObserver = new ResizeObserver(handleResize);
-
-      if (divRef.current) {
-        resizeObserver.observe(divRef.current);
-      }
-
       // Cleanup observer on component unmount
-      return () => {
-        resizeObserver.disconnect();
-      };
+      return () => {};
     }, []);
 
     React.useEffect(() => {
@@ -65,7 +57,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
       if (virtualListRef.current) {
         let pdfPage = getCurPdfPage(projId);
-        scrollToPage(pdfPage - 1,virtualListRef);
+        scrollToPage(pdfPage - 1, virtualListRef);
       }
     }, [projAttr, cachedScale]);
 
@@ -196,6 +188,19 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     };
 
     const onResize = (size: Size) => {};
+
+    // avoid the cached expired token
+    if (
+      pdfOptions &&
+      pdfOptions.httpHeaders &&
+      getAuthorization(pdfOptions.httpHeaders) !== "Bearer " + getAccessToken()
+    ) {
+      debugger;
+      console.log("reset the expired token");
+      pdfOptions.httpHeaders = {
+        Authorization: "Bearer " + getAccessToken(),
+      };
+    }
 
     return (
       <AutoSizer onResize={onResize}>
