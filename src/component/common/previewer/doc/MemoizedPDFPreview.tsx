@@ -20,7 +20,7 @@ import { PreviewPdfAttribute } from "@/model/proj/config/PreviewPdfAttribute";
 import TeXPDFPage from "./TeXPDFPage";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { getAccessToken } from "../../cache/Cache";
-import { getAuthorization } from "@/config/pdf/PdfJsConfig";
+import { authTokenEquals, getAuthorization } from "@/config/pdf/PdfJsConfig";
 
 const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
   ({
@@ -235,7 +235,8 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
   },
   (prevProps, nextProps) => {
     let arePropsEqual = prevProps.curPdfUrl === nextProps.curPdfUrl;
-    return arePropsEqual;
+    let areAuthEqual = authTokenEquals(nextProps.pdfOptions);
+    return arePropsEqual && areAuthEqual;
   }
 );
 

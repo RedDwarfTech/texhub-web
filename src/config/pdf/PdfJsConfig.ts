@@ -71,3 +71,13 @@ export const getAuthorization = (headers: Object): any => {
   }
   return undefined;
 }
+
+export const authTokenEquals = (pdfOptions: Options): boolean => {
+  if(!pdfOptions.httpHeaders){
+    return false;
+  }
+  if(getAuthorization(pdfOptions.httpHeaders) !== "Bearer " + getAccessToken()){
+    return false;
+  }
+  return true;
+}
