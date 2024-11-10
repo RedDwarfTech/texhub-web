@@ -1,6 +1,6 @@
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
-import styles from "./RdTeXHubReg.module.css";
+import styles from "@/page/profile/user/reg/RdTeXHubReg.module.css";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
