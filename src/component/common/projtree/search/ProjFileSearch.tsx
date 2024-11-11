@@ -80,6 +80,7 @@ const ProjFileSearch: React.FC<ProjSearchProps> = (props: ProjSearchProps) => {
       </div>
       <div className={styles.search}>
         <input
+          autoFocus
           placeholder={t("tips_enter_keyword")}
           onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
             handleEnterProjSearch(searchWord, props.projectId, e);

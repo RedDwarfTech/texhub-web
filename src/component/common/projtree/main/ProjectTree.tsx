@@ -465,7 +465,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
           </button>
           <button
             className={styles.menuButton}
-            title="搜索"
+            title={t("btn_search")}
             onClick={() => {
               handleProjSearch(curTabName, setCurTabName);
             }}
