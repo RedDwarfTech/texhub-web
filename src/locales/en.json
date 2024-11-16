@@ -113,6 +113,7 @@
     "tips_input_github_token": "Please input the Github token",
     "tips_success": "Success",
     "tips_reg_success": "Regster success",
+    "tips_no_data": "No data",
     "title_del": "Delete",
     "title_template_detail": "Template detail",
     "title_search_proj": "Search project",

@@ -112,6 +112,7 @@
     "tips_input_github_token": "输入Github Token",
     "tips_success": "成功",
     "tips_reg_success": "注册成功",
+    "tips_no_data": "暂无数据",
     "title_del": "删除",
     "title_template_detail": "模版详情",
     "title_search_proj": "在项目中检索",
