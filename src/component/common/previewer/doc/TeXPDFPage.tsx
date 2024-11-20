@@ -11,7 +11,7 @@ import {
 } from "@/service/project/preview/PreviewService";
 import { PageViewport } from "pdfjs-dist";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
-import Highlight from "../feat/highlight/Highlight";
+import TeXPDFHighlight from "../feat/highlight/TeXPDFHighlight";
 
 interface PDFPageProps {
   index: number;
@@ -154,11 +154,11 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
         width={width}
       >
         {curPdfPosition && viewPort ? (
-          <Highlight
+          <TeXPDFHighlight
             position={curPdfPosition}
             pageNumber={index}
             viewport={viewPort}
-          ></Highlight>
+          ></TeXPDFHighlight>
         ) : (
           <div></div>
         )}

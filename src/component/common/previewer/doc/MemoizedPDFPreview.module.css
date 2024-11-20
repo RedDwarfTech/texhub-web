@@ -1,6 +1,6 @@
 .previewBody {
     flex-grow: 1;
-    //background-color: rgb(233, 233, 233);
+    /*background-color: rgb(233, 233, 233);*/
     display: flex;
     overflow: scroll;
     /**
@@ -10,7 +10,7 @@
     /*justify-content: center;*/
     height: 100vh;
     width: 100vw;
-    flexDirection: column;
+    flex-direction: column;
     flex: 1;
 }
 
@@ -21,6 +21,6 @@
     align-items: center;
     height: 100vh;
     width: 100vw;
-    flexDirection: column;
+    flex-direction: column;
     flex: 1;
 }

@@ -8,23 +8,23 @@ interface HighlightProps {
     viewport: PageViewport
 }
 
-const Highlight: React.FC<HighlightProps> = ({ position, pageNumber, viewport }) => {
-    if (!position || position.length == 0) {
+const TeXPDFHighlight: React.FC<HighlightProps> = ({ position, pageNumber, viewport }) => {
+    if (!position || position.length === 0) {
         return (<div></div>);
     }
-    const pdfToViewport = (pdf: PdfPosition, viewport: PageViewport) => {
+    const pdfToViewport = (pdfPosition: PdfPosition, viewport: PageViewport) => {
         const [x1, y1, x2, y2] = viewport.convertToViewportRectangle([
-            pdf.h,
-            pdf.v,
-            pdf.x,
-            pdf.y,
+            pdfPosition.h,
+            pdfPosition.v,
+            pdfPosition.x,
+            pdfPosition.y,
         ]);
         return {
             left: Math.min(x1, x2),
             top: Math.min(y1, y2),
             width: Math.abs(x2 - x1),
             height: Math.abs(y1 - y2),
-            pageNumber: pdf.page,
+            pageNumber: pdfPosition.page,
         };
     };
 
@@ -34,13 +34,13 @@ const Highlight: React.FC<HighlightProps> = ({ position, pageNumber, viewport })
             if (item.page !== pageNumber || !viewport) {
                 return;
             }
-            let p = pdfToViewport(item, viewport);
+            let viewPort = pdfToViewport(item, viewport);
             let lineHeight = item.height * viewport.scale;
             highlightList.push(
                 <div key={uuid()} style={{
                     position: 'absolute',
-                    top: viewport.height - p.top - lineHeight,
-                    left: p.left,
+                    top: viewport.height - viewPort.top - lineHeight,
+                    left: viewPort.left,
                     width: item.width * viewport.scale,
                     height: lineHeight,
                     backgroundColor: 'rgba(255, 226, 143, 1)',
@@ -59,4 +59,4 @@ const Highlight: React.FC<HighlightProps> = ({ position, pageNumber, viewport })
     );
 }
 
-export default Highlight;
+export default TeXPDFHighlight;

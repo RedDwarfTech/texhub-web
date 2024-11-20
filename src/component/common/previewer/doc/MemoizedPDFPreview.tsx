@@ -94,7 +94,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         scrollToPage(pageNum, virtualListRef);
         setTimeout(() => {
           setCurPdfPosition([]);
-        }, 5000);
+        }, 50000);
       }
     }, [pdfFocus]);
 
