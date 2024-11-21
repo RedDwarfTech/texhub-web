@@ -72,7 +72,7 @@ const EHeader: React.FC = () => {
                 qid: queue.id,
                 access_token: getAccessToken()
             };
-            if (queue.comp_status == CompileStatus.COMPILING) {
+            if (queue.comp_status === CompileStatus.COMPILING) {
                 clearCompileCheck(interval);
                 getStreamLog(req, onSseMessage);
             }
