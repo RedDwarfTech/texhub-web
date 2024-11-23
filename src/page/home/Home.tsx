@@ -8,10 +8,15 @@ import { UserService } from "rd-component";
 import { toast, ToastContainer } from 'react-toastify';
 import { useTranslation } from "react-i18next";
 import TeXHubFooter from "@/component/footer/TexHubFooter";
+import React from "react";
 
 const Home: React.FC = () => {
     const navigate = useNavigate();
     const { t } = useTranslation();
+
+    React.useEffect(() => {
+        window.document.title = 'Some Name';
+    },[]);
 
     const handleUseReq = () => {
         if(!UserService.isLoggedIn()){

@@ -44,11 +44,6 @@ export const handleOpenInBrowserDirect = (projectId: string) => {
             }
           });
         }
-        setTimeout(() => {
-          if (newWindow) {
-            //newWindow.document.title = "新的标题名";
-          }
-        }, 300);
       }
     });
   }
