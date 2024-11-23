@@ -37,9 +37,16 @@ export const handleOpenInBrowserDirect = (projectId: string) => {
     getPreviewUrl(projectId).then((res) => {
       if (ResponseHandler.responseSuccess(res)) {
         var newWindow = window.open(res.result, "_blank");
+        if (newWindow) {
+          newWindow.addEventListener("load", () => {
+            if (newWindow) {
+              newWindow.document.title = "New title";
+            }
+          });
+        }
         setTimeout(() => {
           if (newWindow) {
-            newWindow.document.title = "新的标题名";
+            //newWindow.document.title = "新的标题名";
           }
         }, 300);
       }
