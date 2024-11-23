@@ -14,10 +14,6 @@ const Home: React.FC = () => {
     const navigate = useNavigate();
     const { t } = useTranslation();
 
-    React.useEffect(() => {
-        window.document.title = 'Some Name';
-    },[]);
-
     const handleUseReq = () => {
         if(!UserService.isLoggedIn()){
             toast.warning(t("tips_need_login"));

@@ -37,13 +37,17 @@ export const handleOpenInBrowserDirect = (projectId: string) => {
     getPreviewUrl(projectId).then((res) => {
       if (ResponseHandler.responseSuccess(res)) {
         var newWindow = window.open(res.result, "_blank");
-        if (newWindow) {
-          newWindow.addEventListener("load", () => {
-            if (newWindow) {
-              newWindow.document.title = "New title";
+        const loop = setInterval(function () {
+          if (newWindow) {
+            if (newWindow.closed) {
+              clearInterval(loop);
+            } else {
+              newWindow.document.title = "winName";
             }
-          });
-        }
+          } else {
+            clearInterval(loop);
+          }
+        }, 1000);
       }
     });
   }
