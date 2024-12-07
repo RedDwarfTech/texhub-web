@@ -17,6 +17,15 @@ export const scrollToPage = (
   }
 };
 
+export const scrollToOffset = (
+  offset: number,
+  virtualListRef: React.RefObject<VariableSizeList>
+) => {
+  if (virtualListRef.current) {
+    virtualListRef.current.scrollTo(offset);
+  }
+};
+
 /**
  * Open pdf's link in the browser new tab
  * https://github.com/diegomura/react-pdf/issues/645

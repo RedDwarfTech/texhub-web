@@ -52,6 +52,7 @@
     "btn_nav_src": "导航到源码",
     "btn_scroll_top": "滚动到顶部",
     "btn_open_in_broswer": "在浏览器打开",
+    "btn_debug_app": "调试",
     "btn_detail": "详情",
     "btn_restore": "还原",
     "btn_login": "登录",

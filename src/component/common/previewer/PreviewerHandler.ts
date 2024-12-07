@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import { getAccessToken } from "../cache/Cache";
 import { getPreviewUrl } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
+import { scrollToOffset } from "./doc/PDFPreviewHandle";
+import { VariableSizeList } from "react-window";
 
 /**
  * get the source location by pdf file position
@@ -40,6 +42,10 @@ export const handleOpenInBrowserDirect = (projectId: string) => {
       }
     });
   }
+};
+
+export const debugApp = (virtualListRef: React.RefObject<VariableSizeList>) => {
+  scrollToOffset(1000, virtualListRef);
 };
 
 export const handleOpenInBrowser = (projectId: string) => {

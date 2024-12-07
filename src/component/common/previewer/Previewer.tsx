@@ -26,6 +26,7 @@ import { scrollToPage } from "./doc/PDFPreviewHandle";
 import { useTranslation } from "react-i18next";
 import { getPdfjsOptions } from "@/config/pdf/PdfJsConfig";
 import {
+  debugApp,
   handleDownloadPdf,
   handleOpenInBrowserDirect,
   handleSrcLocate,
@@ -324,6 +325,16 @@ const Previewer: React.FC<PreviwerProps> = ({
     if (curPreviewTab === "pdfview") {
       return (
         <div className={styles.rightAction}>
+          <button
+            className={styles.previewIconButton}
+            data-bs-toggle="tooltip"
+            title={t("btn_debug_app")}
+            onClick={() => {
+              debugApp(virtualListRef);
+            }}
+          >
+            <i className="fa-solid fa-check"></i>
+          </button>
           <button
             className={styles.previewIconButton}
             data-bs-toggle="tooltip"

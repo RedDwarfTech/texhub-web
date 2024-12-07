@@ -30,7 +30,7 @@ const AppBody: React.FC<AppBodyProps> = (props: AppBodyProps) => {
       getProjectInfo(query);
     }
     return () => {};
-  }, []);
+  }, [pid]);
 
   const resizeRight = (resizeBarName: string, resizeArea: string) => {
     setTimeout(() => {
