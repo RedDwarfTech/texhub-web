@@ -1,12 +1,23 @@
 import { saveGithubToken } from "@/service/profile/AppConfigService";
 import { ResponseHandler } from "rdjs-wheel";
+import React from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ToastContainer, toast } from "react-toastify";
 
 const AppConfig: React.FC = () => {
   const [githubToken, setGithubToken] = useState<string>();
+  const [devModel, setDevModel] = useState<boolean>();
   const { t } = useTranslation();
+
+  React.useEffect(() => {
+    let devModelFlag = localStorage.getItem("devModel");
+    if (devModelFlag && Boolean(devModelFlag) === true) {
+      setDevModel(true);
+    } else {
+      setDevModel(false);
+    }
+  }, []);
 
   const handleTokenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let inputValue = e.target.value;
@@ -25,6 +36,30 @@ const AppConfig: React.FC = () => {
         toast.warn(resp.msg);
       }
     });
+  };
+
+  const renderInput = () => {
+    if (devModel) {
+      return (
+        <input
+          className="form-check-input"
+          type="checkbox"
+          id="flexSwitchCheckChecked"
+          onChange={() => {
+            setDevModel(devModel ? false : true);
+          }}
+          checked
+        />
+      );
+    } else {
+      return (
+        <input
+          className="form-check-input"
+          type="checkbox"
+          id="flexSwitchCheckChecked"
+        />
+      );
+    }
   };
 
   return (
@@ -61,21 +96,9 @@ const AppConfig: React.FC = () => {
         <div className="card-body col">
           <div className="col mb-3">
             <div className="form-check form-switch">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="flexSwitchCheckChecked"
-                checked
-              />
-              <label className="form-check-label">
-                {t("title_dev_model")}
-              </label>
+              {renderInput()}
+              <label className="form-check-label">{t("title_dev_model")}</label>
             </div>
-          </div>
-          <div>
-            <button className="btn btn-primary" onClick={handlePwdReset}>
-              {t("btn_save")}
-            </button>
           </div>
         </div>
       </div>
