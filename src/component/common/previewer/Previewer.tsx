@@ -61,6 +61,7 @@ const Previewer: React.FC<PreviwerProps> = ({
   const [curCompileQueue, setCurCompileQueue] = useState<CompileQueue>();
   const [numPages, setNumPages] = useState<number>();
   const [curPages, setCurPages] = useState<number>();
+  const [devModel, setDevModel] = useState<boolean>();
   const { curPage } = useSelector((state: AppState) => state.preview);
   const {
     texPdfUrl,
@@ -72,9 +73,18 @@ const Previewer: React.FC<PreviwerProps> = ({
     latestComp,
     projInfo,
     endSignal,
-    compileResult
+    compileResult,
   } = useSelector((state: AppState) => state.proj);
   const { t } = useTranslation();
+
+  React.useEffect(() => {
+    let devModelFlag = localStorage.getItem("devModel");
+    if (devModelFlag && Boolean(devModelFlag) === true) {
+      setDevModel(true);
+    } else {
+      setDevModel(false);
+    }
+  }, []);
 
   React.useEffect(() => {
     getLatestCompile(projectId);
@@ -108,23 +118,22 @@ const Previewer: React.FC<PreviwerProps> = ({
     getTempAuthCode().then((resp) => {
       if (ResponseHandler.responseSuccess(resp)) {
         let params = {
-          project_id: prj_id
+          project_id: prj_id,
         };
         sendQueueCompileRequest(params).then((resp) => {
           if (ResponseHandler.responseSuccess(resp)) {
-
-          } 
+          }
         });
       } else {
         toast.error(resp.msg);
       }
     });
-  }
-  
+  };
+
   React.useEffect(() => {
     if (latestComp && Object.keys(latestComp).length > 0) {
       if (latestComp.path && latestComp.path.length > 0) {
-        let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + projectId
+        let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + projectId;
         updatePdfUrl(newPdfUrl);
       } else {
         compile(projectId.toString());
@@ -139,7 +148,7 @@ const Previewer: React.FC<PreviwerProps> = ({
     let proj_id = compileResult.project_id;
     let vid = compileResult.out_path;
     if (proj_id && vid) {
-      let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + projectId
+      let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + projectId;
       updatePdfUrl(newPdfUrl);
     }
   }, [compileResult]);
@@ -149,7 +158,11 @@ const Previewer: React.FC<PreviwerProps> = ({
       let result = JSON.parse(endSignal);
       setLatestCompile(result.comp);
       setCompileQueue(result.queue);
-      if (result && result.queue && result.queue.comp_result === CompileResultType.SUCCESS) {
+      if (
+        result &&
+        result.queue &&
+        result.queue.comp_result === CompileResultType.SUCCESS
+      ) {
         showPreviewTab("pdfview");
       }
     }
@@ -325,16 +338,20 @@ const Previewer: React.FC<PreviwerProps> = ({
     if (curPreviewTab === "pdfview") {
       return (
         <div className={styles.rightAction}>
-          <button
-            className={styles.previewIconButton}
-            data-bs-toggle="tooltip"
-            title={t("btn_debug_app")}
-            onClick={() => {
-              debugApp(virtualListRef);
-            }}
-          >
-            <i className="fa-solid fa-check"></i>
-          </button>
+          {!devModel ? (
+            <div></div>
+          ) : (
+            <button
+              className={styles.previewIconButton}
+              data-bs-toggle="tooltip"
+              title={t("btn_debug_app")}
+              onClick={() => {
+                debugApp(virtualListRef);
+              }}
+            >
+              <i className="fa-solid fa-check"></i>
+            </button>
+          )}
           <button
             className={styles.previewIconButton}
             data-bs-toggle="tooltip"
@@ -450,7 +467,7 @@ const Previewer: React.FC<PreviwerProps> = ({
             if (event.key === "Enter" && !event.shiftKey) {
               event.preventDefault();
               const navPage = (event.target as HTMLInputElement).value;
-              const tweakedPageNum = Number(navPage) ;
+              const tweakedPageNum = Number(navPage);
               if (tweakedPageNum >= 0 && tweakedPageNum < 10000) {
                 scrollToPage(tweakedPageNum, virtualListRef);
               }
