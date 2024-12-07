@@ -54,6 +54,31 @@ const AppConfig: React.FC = () => {
           </div>
         </div>
       </div>
+      <div className="card" style={{ marginBottom: "20px" }}>
+        <div className="card-header">
+          <h6 className="card-title">{t("title_dev_model")}</h6>
+        </div>
+        <div className="card-body col">
+          <div className="col mb-3">
+            <div className="form-check form-switch">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="flexSwitchCheckChecked"
+                checked
+              />
+              <label className="form-check-label">
+                {t("title_dev_model")}
+              </label>
+            </div>
+          </div>
+          <div>
+            <button className="btn btn-primary" onClick={handlePwdReset}>
+              {t("btn_save")}
+            </button>
+          </div>
+        </div>
+      </div>
       <ToastContainer />
     </div>
   );

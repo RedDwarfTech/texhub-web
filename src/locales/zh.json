@@ -126,6 +126,7 @@
     "title_move_trash": "移动到回收站",
     "title_restore_proj": "恢复项目",
     "title_import_proj": "导入项目(Alpha)",
+    "title_dev_model": "开发模式",
     "label_create_time": "创建时间",
     "label_update_time": "更新时间",
     "label_time": "时间",
