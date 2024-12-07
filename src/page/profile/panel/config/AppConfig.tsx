@@ -46,7 +46,9 @@ const AppConfig: React.FC = () => {
           type="checkbox"
           id="flexSwitchCheckChecked"
           onChange={() => {
-            setDevModel(devModel ? false : true);
+            let curModel: boolean = devModel ? false : true;
+            setDevModel(curModel);
+            localStorage.setItem("devModel", String(curModel));
           }}
           checked
         />
