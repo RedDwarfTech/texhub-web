@@ -49,7 +49,7 @@ export const debugApp = (
   virtualListRef: React.RefObject<VariableSizeList>,
   projectId: string
 ) => {
-  let offset = localStorage.getItem("scrollOffset");
+  let offset = localStorage.getItem("pdfScrollOffset");
   if (offset) {
     const key = "default:" + readConfig("pdfScrollKey") + projectId;
     let defaultScroll = localStorage.getItem(key);

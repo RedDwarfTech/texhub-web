@@ -346,7 +346,7 @@ const Previewer: React.FC<PreviwerProps> = ({
               data-bs-toggle="tooltip"
               title={t("btn_debug_app")}
               onClick={() => {
-                debugApp(virtualListRef);
+                debugApp(virtualListRef, projectId);
               }}
             >
               <i className="fa-solid fa-check"></i>
