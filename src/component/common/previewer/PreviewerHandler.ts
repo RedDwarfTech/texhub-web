@@ -8,6 +8,7 @@ import { getPreviewUrl } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
 import { scrollToOffset } from "./doc/PDFPreviewHandle";
 import { VariableSizeList } from "react-window";
+import { readConfig } from "@/config/app/config-reader";
 
 /**
  * get the source location by pdf file position
@@ -44,8 +45,20 @@ export const handleOpenInBrowserDirect = (projectId: string) => {
   }
 };
 
-export const debugApp = (virtualListRef: React.RefObject<VariableSizeList>) => {
-  scrollToOffset(1000, virtualListRef);
+export const debugApp = (
+  virtualListRef: React.RefObject<VariableSizeList>,
+  projectId: string
+) => {
+  let offset = localStorage.getItem("scrollOffset");
+  if (offset) {
+    const key = "default:" + readConfig("pdfScrollKey") + projectId;
+    let defaultScroll = localStorage.getItem(key);
+
+    const keyFullscreen =
+      "fullscreen:" + readConfig("pdfScrollKey") + projectId;
+    let fullScroll = localStorage.getItem(keyFullscreen);
+    scrollToOffset(parseInt(offset), virtualListRef);
+  }
 };
 
 export const handleOpenInBrowser = (projectId: string) => {
