@@ -6,6 +6,7 @@ import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import {
   openPdfUrlLink,
+  restorePdfOffset,
   scrollToOffset,
   scrollToPage,
 } from "./PDFPreviewHandle";
@@ -49,9 +50,9 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
 
     React.useEffect(() => {
-      // Cleanup observer on component unmount
+      restorePdfOffset(projId, viewModel, virtualListRef);
       return () => {};
-    }, []);
+    }, [projId, viewModel, virtualListRef]);
 
     React.useEffect(() => {
       if (projAttr.pdfScale === 1 && cachedScale) {

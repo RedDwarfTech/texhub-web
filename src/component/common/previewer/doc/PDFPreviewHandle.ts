@@ -1,5 +1,7 @@
 import { VariableSizeList } from "react-window";
 import styles from "./MemoizedPDFPreview.module.css";
+import { ViewModel } from "@/model/enum/ViewModel";
+import { readConfig } from "@/config/app/config-reader";
 
 export const goPage = (i: number) => {
   let element = document.querySelectorAll(`.${styles.pdfPage}`);
@@ -35,5 +37,20 @@ export const openPdfUrlLink = (e: React.MouseEvent<HTMLDivElement>) => {
   e.preventDefault();
   if ((e.target as HTMLElement).tagName.toLowerCase() === "a") {
     window.open((e.target as HTMLAnchorElement).href);
+  }
+};
+
+export const restorePdfOffset = (
+  projId: string,
+  viewModel: string,
+  virtualListRef: React.RefObject<VariableSizeList>
+) => {
+  if (virtualListRef.current) {
+    const key = viewModel + ":" + readConfig("pdfScrollKey") + projId;
+    let fullScreenOffset = localStorage.getItem(key);
+    if (fullScreenOffset) {
+      console.log("trigger restore offset");
+      scrollToOffset(parseInt(fullScreenOffset), virtualListRef);
+    }
   }
 };
