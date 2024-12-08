@@ -43,13 +43,11 @@ pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.m
 export type PreviwerProps = {
   projectId: string;
   viewModel: string;
-  virtualListRef: React.RefObject<VariableSizeList>;
 };
 
 const Previewer: React.FC<PreviwerProps> = ({
   projectId,
   viewModel,
-  virtualListRef,
 }) => {
   const [curPdfUrl, setCurPdfUrl] = useState<string>("");
   const [compStatus, setCompStatus] = useState<CompileStatus>(
@@ -62,6 +60,7 @@ const Previewer: React.FC<PreviwerProps> = ({
   const [numPages, setNumPages] = useState<number>();
   const [curPages, setCurPages] = useState<number>();
   const [devModel, setDevModel] = useState<boolean>();
+  const virtualListRef = React.useRef<VariableSizeList>(null);
   const { curPage } = useSelector((state: AppState) => state.preview);
   const {
     texPdfUrl,

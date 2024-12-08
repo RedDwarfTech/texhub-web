@@ -19,7 +19,6 @@ export type AppBodyProps = {
 const AppBody: React.FC<AppBodyProps> = (props: AppBodyProps) => {
   let pid = props.projectId;
   const projTreeRef = useRef<HTMLDivElement>(null);
-  const virtualListRef = React.useRef<VariableSizeList>(null);
 
   React.useEffect(() => {
     resizeRight("rightDraggable", "editor");
@@ -107,7 +106,6 @@ const AppBody: React.FC<AppBodyProps> = (props: AppBodyProps) => {
       <Previewer
         projectId={pid as string}
         viewModel={"default"}
-        virtualListRef={virtualListRef}
       ></Previewer>
     </div>
   );
