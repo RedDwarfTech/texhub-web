@@ -115,6 +115,9 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       const { numPages } = pdf;
       setPageNum(numPages);
       setPdf(pdf);
+      if (virtualListRef.current) {
+        console.log("current list is not null");
+      }
     };
 
     const getDynStyles = (viewModel: string) => {
