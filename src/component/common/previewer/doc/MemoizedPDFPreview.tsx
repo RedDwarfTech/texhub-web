@@ -8,14 +8,12 @@ import {
   openPdfUrlLink,
   restorePdfOffset,
   scrollToOffset,
-  scrollToPage,
 } from "./PDFPreviewHandle";
 import { ListOnScrollProps, VariableSizeList } from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
 import AutoSizer, { Size } from "react-virtualized-auto-sizer";
 import { PDFPreviewProps } from "@/model/props/proj/pdf/PDFPreviewProps";
 import {
-  getCurPdfPage,
   getCurPdfScale,
   getCurPdfScrollOffset,
   setCurPdfPage,
@@ -26,7 +24,6 @@ import TeXPDFPage from "./TeXPDFPage";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { getAccessToken } from "../../cache/Cache";
 import { authTokenEquals, getAuthorization } from "@/config/pdf/PdfJsConfig";
-import { ViewModel } from "@/model/enum/ViewModel";
 import { readConfig } from "@/config/app/config-reader";
 
 const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
@@ -48,11 +45,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       legacyPdfScale: cachedScale,
     });
     const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
-
-    React.useEffect(() => {
-      restorePdfOffset(projId, viewModel, virtualListRef);
-      return () => {};
-    }, [projId, viewModel, virtualListRef]);
 
     React.useEffect(() => {
       if (projAttr.pdfScale === 1 && cachedScale) {
@@ -176,6 +168,9 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             overscanCount={0}
             onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
             itemSize={(pageIndex) => getPageHeight(pageIndex, width)}
+            onItemsRendered={() => {
+              restorePdfOffset(projId, viewModel, virtualListRef);
+            }}
           >
             {({
               index,
