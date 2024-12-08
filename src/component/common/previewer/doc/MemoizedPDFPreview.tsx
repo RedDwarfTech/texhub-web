@@ -179,7 +179,8 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
             itemSize={(pageIndex) => getPageHeight(pageIndex, width)}
             onItemsRendered={() => {
-              restorePdfOffset(projId, viewModel, virtualListRef);
+              // will cause dead loop
+              // restorePdfOffset(projId, viewModel, virtualListRef);
             }}
           >
             {({
