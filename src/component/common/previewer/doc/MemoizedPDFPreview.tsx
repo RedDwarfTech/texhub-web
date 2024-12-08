@@ -4,7 +4,11 @@ import styles from "./MemoizedPDFPreview.module.css";
 import { DocumentCallback } from "react-pdf/dist/cjs/shared/types";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
-import { openPdfUrlLink, scrollToPage } from "./PDFPreviewHandle";
+import {
+  openPdfUrlLink,
+  scrollToOffset,
+  scrollToPage,
+} from "./PDFPreviewHandle";
 import { ListOnScrollProps, VariableSizeList } from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
 import AutoSizer, { Size } from "react-virtualized-auto-sizer";
@@ -21,6 +25,8 @@ import TeXPDFPage from "./TeXPDFPage";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { getAccessToken } from "../../cache/Cache";
 import { authTokenEquals, getAuthorization } from "@/config/pdf/PdfJsConfig";
+import { ViewModel } from "@/model/enum/ViewModel";
+import { readConfig } from "@/config/app/config-reader";
 
 const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
   ({
@@ -56,8 +62,11 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         virtualListRef.current.resetAfterIndex(0, true);
       }
       if (virtualListRef.current) {
-        let pdfPage = getCurPdfPage(projId);
-        scrollToPage(pdfPage - 1, virtualListRef);
+        const key = viewModel + ":" + readConfig("pdfScrollKey") + projId;
+        let fullScreenOffset = localStorage.getItem(key);
+        if (fullScreenOffset) {
+          scrollToOffset(parseInt(fullScreenOffset), virtualListRef);
+        }
       }
     }, [projAttr, cachedScale]);
 
@@ -91,7 +100,11 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         let pageNum = pdfFocus[0].page;
         setCurPdfPage(pageNum, projId);
         setCurPdfPosition(pdfFocus);
-        scrollToPage(pageNum, virtualListRef);
+        const key = viewModel + ":" + readConfig("pdfScrollKey") + projId;
+        let viewModelOffset = localStorage.getItem(key);
+        if (viewModelOffset) {
+          scrollToOffset(parseInt(viewModelOffset), virtualListRef);
+        }
         setTimeout(() => {
           setCurPdfPosition([]);
         }, 5000);

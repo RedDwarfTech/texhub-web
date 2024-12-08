@@ -53,10 +53,11 @@ export const debugApp = (
   if (offset) {
     const key = "default:" + readConfig("pdfScrollKey") + projectId;
     let defaultScroll = localStorage.getItem(key);
-
+    console.log("defaultScroll:" + defaultScroll);
     const keyFullscreen =
       "fullscreen:" + readConfig("pdfScrollKey") + projectId;
     let fullScroll = localStorage.getItem(keyFullscreen);
+    console.log("fullScroll:" + fullScroll);
     scrollToOffset(parseInt(offset), virtualListRef);
   }
 };
