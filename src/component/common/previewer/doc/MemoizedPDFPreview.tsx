@@ -48,10 +48,10 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
 
     React.useEffect(() => {
       if (virtualListRef.current) {
-        // 只有在 virtualListRef.current 被赋值后，才调用 restorePdfOffset
+        console.log("virtualListRef in hooks");
         restorePdfOffset(projId, viewModel, virtualListRef);
       }
-    }, [virtualListRef.current]);
+    }, []);
 
     React.useEffect(() => {
       if (projAttr.pdfScale === 1 && cachedScale) {
