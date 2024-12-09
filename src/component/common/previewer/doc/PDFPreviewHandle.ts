@@ -1,6 +1,5 @@
 import { VariableSizeList } from "react-window";
 import styles from "./MemoizedPDFPreview.module.css";
-import { ViewModel } from "@/model/enum/ViewModel";
 import { readConfig } from "@/config/app/config-reader";
 
 export const goPage = (i: number) => {

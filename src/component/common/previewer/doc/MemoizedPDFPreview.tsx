@@ -47,13 +47,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
 
     React.useEffect(() => {
-      if (virtualListRef.current) {
-        console.log("virtualListRef in hooks");
-        restorePdfOffset(projId, viewModel, virtualListRef);
-      }
-    }, []);
-
-    React.useEffect(() => {
       if (projAttr.pdfScale === 1 && cachedScale) {
         return;
       }
