@@ -8,12 +8,14 @@ import {
   openPdfUrlLink,
   restorePdfOffset,
   scrollToOffset,
+  scrollToPage,
 } from "./PDFPreviewHandle";
 import { ListOnScrollProps, VariableSizeList } from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
 import AutoSizer, { Size } from "react-virtualized-auto-sizer";
 import { PDFPreviewProps } from "@/model/props/proj/pdf/PDFPreviewProps";
 import {
+  getCurPdfPage,
   getCurPdfScale,
   getCurPdfScrollOffset,
   setCurPdfPage,
@@ -93,14 +95,12 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         let pageNum = pdfFocus[0].page;
         setCurPdfPage(pageNum, projId);
         setCurPdfPosition(pdfFocus);
-        const key = viewModel + ":" + readConfig("pdfScrollKey") + projId;
-        let viewModelOffset = localStorage.getItem(key);
-        if (viewModelOffset) {
-          scrollToOffset(parseInt(viewModelOffset), virtualListRef);
+        if (virtualListRef.current) {
+          scrollToPage(pageNum, virtualListRef);
         }
         setTimeout(() => {
           setCurPdfPosition([]);
-        }, 5000);
+        }, 10000);
       }
     }, [pdfFocus]);
 
