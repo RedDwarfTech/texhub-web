@@ -14,7 +14,9 @@ export const scrollToPage = (
   virtualListRef: React.RefObject<VariableSizeList>
 ) => {
   if (virtualListRef.current) {
-    virtualListRef.current.scrollToItem(pageIndex, "center");
+    // the VariableSizeList index was started by 0
+    // the page size start by 1
+    virtualListRef.current.scrollToItem(pageIndex - 1, "center");
   }
 };
 
