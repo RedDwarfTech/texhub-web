@@ -63,9 +63,12 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     (entries: IntersectionObserverEntry[]) => {
       entries.forEach((item: IntersectionObserverEntry) => {
         if (item.intersectionRatio > 0.2) {
-          let dataPage = item.target.getAttribute("data-page-number");
-          if (!dataPage) return;
-          setCurPdfPage(Number(dataPage), projId, "IntersectionObserver");
+          let docLoadTime = localStorage.getItem("docLoadTime");
+          if (docLoadTime && isMoreThanFiveSeconds(docLoadTime)) {
+            let dataPage = item.target.getAttribute("data-page-number");
+            if (!dataPage) return;
+            setCurPdfPage(Number(dataPage), projId, "IntersectionObserver");
+          }
         }
       });
     },
@@ -73,6 +76,27 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
       threshold: 0.2,
     }
   );
+
+  function isMoreThanFiveSeconds(strDate: string): boolean {
+    // 将字符串转换为 Date 对象
+    const targetDate: Date = new Date(strDate);
+
+    // 获取当前时间
+    const currentDate: Date = new Date();
+
+    // 计算两个时间的差异，返回的是毫秒值
+    const diffInMilliseconds: number =
+      currentDate.getTime() - targetDate.getTime();
+
+    // 检查差值是否大于 5 秒（5000 毫秒）
+    if (diffInMilliseconds > 5000) {
+      console.log("时间差大于 5 秒");
+      return true;
+    } else {
+      console.log("时间差小于或等于 5 秒");
+      return false;
+    }
+  }
 
   const handlePageRenderSuccess = (page: PageCallback) => {
     setRenderedScale(projAttribute.pdfScale);

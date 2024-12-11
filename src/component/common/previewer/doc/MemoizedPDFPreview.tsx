@@ -20,6 +20,7 @@ import {
   getCurPdfScrollOffset,
   setCurPdfPage,
   setCurPdfScrollOffset,
+  setDocLoadTime,
 } from "@/service/project/preview/PreviewService";
 import { PreviewPdfAttribute } from "@/model/proj/config/PreviewPdfAttribute";
 import TeXPDFPage from "./TeXPDFPage";
@@ -111,6 +112,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       if (virtualListRef.current) {
         console.log("current list is not null");
       }
+      setDocLoadTime();
     };
 
     const getDynStyles = (viewModel: string) => {

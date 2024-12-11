@@ -3,6 +3,7 @@ import { XHRClient } from "rd-component";
 import store from "@/redux/store/store";
 import { readConfig } from "@/config/app/config-reader";
 import { BaseMethods } from "rdjs-wheel";
+import { now } from "lodash";
 
 export function setCurPdfScale(
   scale: number,
@@ -31,6 +32,10 @@ export function setCurPdfPage(pageNo: number, projId: string, src: string) {
   const actionTypeString: string = PreviewActionType[PreviewActionType.SET_CUR_PAGE];
   localStorage.setItem(readConfig("pdfCurPage") + projId, pageNo.toString());
   return XHRClient.dispathAction(pageNo, actionTypeString, store);
+}
+
+export function setDocLoadTime() {
+  localStorage.setItem("docLoadTime", new Date().getTime().toString());
 }
 
 export function getCurPdfPage(projId: string) {
