@@ -451,7 +451,7 @@ const Previewer: React.FC<PreviwerProps> = ({
 
   const handleNavPageChange = (e: any) => {
     let val = e.target.value;
-    setCurPdfPage(val, projectId);
+    setCurPdfPage(val, projectId, "handleNavPageChange");
   };
 
   const renderPageNaviation = () => {

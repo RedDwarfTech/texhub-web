@@ -65,7 +65,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
         if (item.intersectionRatio > 0.2) {
           let dataPage = item.target.getAttribute("data-page-number");
           if (!dataPage) return;
-          setCurPdfPage(Number(dataPage), projId);
+          setCurPdfPage(Number(dataPage), projId, "IntersectionObserver");
         }
       });
     },

@@ -93,7 +93,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     React.useEffect(() => {
       if (pdfFocus && pdfFocus.length > 0) {
         let pageNum = pdfFocus[0].page;
-        setCurPdfPage(pageNum, projId);
+        setCurPdfPage(pageNum, projId, "pdfFocus");
         setCurPdfPosition(pdfFocus);
         if (virtualListRef.current) {
           scrollToPage(pageNum, virtualListRef);
@@ -200,7 +200,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
     };
 
-    const onResize = (size: Size) => {};
+    const onResize = (size: Size) => { };
 
     // avoid the cached expired token
     if (
