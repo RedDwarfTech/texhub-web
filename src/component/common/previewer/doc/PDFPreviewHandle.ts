@@ -55,3 +55,23 @@ export const restorePdfOffset = (
     }
   }
 };
+
+export const isMoreThanFiveSeconds = (strDate: string) => {
+  // 将字符串转换为 Date 对象
+  const targetDate = Number(strDate);
+
+  // 获取当前时间
+  const currentDate: Date = new Date();
+
+  // 计算两个时间的差异，返回的是毫秒值
+  const diffInMilliseconds: number = currentDate.getTime() - targetDate;
+
+  // 检查差值是否大于 5 秒（5000 毫秒）
+  if (diffInMilliseconds > 5000) {
+    console.log("时间差大于 5 secondsseconds");
+    return true;
+  } else {
+    console.log("时间差小于或等于 5 secondsseconds");
+    return false;
+  }
+};

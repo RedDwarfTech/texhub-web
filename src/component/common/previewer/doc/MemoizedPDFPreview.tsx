@@ -5,6 +5,7 @@ import { DocumentCallback } from "react-pdf/dist/cjs/shared/types";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import {
+  isMoreThanFiveSeconds,
   openPdfUrlLink,
   restorePdfOffset,
   scrollToOffset,
@@ -128,7 +129,15 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
 
     const handleWindowPdfScroll = (e: ListOnScrollProps) => {
       const scrollOffset = e.scrollOffset;
-      setCurPdfScrollOffset(scrollOffset, projId, viewModel);
+      let docLoadTime = localStorage.getItem("docLoadTime");
+      if (docLoadTime && isMoreThanFiveSeconds(docLoadTime)) {
+        setCurPdfScrollOffset(
+          scrollOffset,
+          projId,
+          viewModel,
+          "handleWindowPdfScroll"
+        );
+      }
     };
 
     const getPageHeight = (pageIndex: number, width: number) => {
@@ -202,7 +211,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
     };
 
-    const onResize = (size: Size) => { };
+    const onResize = (size: Size) => {};
 
     // avoid the cached expired token
     if (

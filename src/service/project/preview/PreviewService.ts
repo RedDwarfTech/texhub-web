@@ -3,7 +3,6 @@ import { XHRClient } from "rd-component";
 import store from "@/redux/store/store";
 import { readConfig } from "@/config/app/config-reader";
 import { BaseMethods } from "rdjs-wheel";
-import { now } from "lodash";
 
 export function setCurPdfScale(
   scale: number,
@@ -14,10 +13,7 @@ export function setCurPdfScale(
   localStorage.setItem(pdfScaleKey, scale.toString());
 }
 
-export function getCurPdfScale(
-  projId: string,
-  viewModel: string
-) {
+export function getCurPdfScale(projId: string, viewModel: string) {
   let pdfScaleKey = viewModel + ":pdf:scale:" + projId;
   let curScale = localStorage.getItem(pdfScaleKey);
   if (curScale) {
@@ -29,7 +25,8 @@ export function getCurPdfScale(
 
 export function setCurPdfPage(pageNo: number, projId: string, src: string) {
   console.warn("update pageno:" + pageNo + ",src: " + src);
-  const actionTypeString: string = PreviewActionType[PreviewActionType.SET_CUR_PAGE];
+  const actionTypeString: string =
+    PreviewActionType[PreviewActionType.SET_CUR_PAGE];
   localStorage.setItem(readConfig("pdfCurPage") + projId, pageNo.toString());
   return XHRClient.dispathAction(pageNo, actionTypeString, store);
 }
@@ -58,9 +55,11 @@ export function getCurPdfPage(projId: string) {
 export function setCurPdfScrollOffset(
   scrollOffset: number,
   projId: string,
-  viewModel: string
+  viewModel: string,
+  src: string
 ) {
   const key = viewModel + ":" + readConfig("pdfScrollKey") + projId;
+  console.warn("offsetChanged, src: " + src);
   localStorage.setItem(key, scrollOffset.toString());
 }
 
