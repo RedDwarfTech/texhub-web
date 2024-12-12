@@ -161,6 +161,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
      */
     const getInitialOffset = () => {
       let page = getCurPdfScrollOffset(projId, viewModel);
+      console.warn("scroll to offset:" + page + ",viewModel:" + viewModel);
       return page;
     };
 
