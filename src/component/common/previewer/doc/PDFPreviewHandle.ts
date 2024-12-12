@@ -25,6 +25,7 @@ export const scrollToOffset = (
   virtualListRef: React.RefObject<VariableSizeList>
 ) => {
   if (virtualListRef.current) {
+    console.warn("trigger scrolltooffset:" + offset);
     virtualListRef.current.scrollTo(offset);
   }
 };
