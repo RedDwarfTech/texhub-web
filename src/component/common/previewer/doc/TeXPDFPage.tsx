@@ -90,10 +90,10 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
 
     // 检查差值是否大于 5 秒（5000 毫秒）
     if (diffInMilliseconds > 5000) {
-      console.log("时间差大于 5 秒");
+      console.log("时间差大于 5 secondsseconds");
       return true;
     } else {
-      console.log("时间差小于或等于 5 秒");
+      console.log("时间差小于或等于 5 secondsseconds");
       return false;
     }
   }
