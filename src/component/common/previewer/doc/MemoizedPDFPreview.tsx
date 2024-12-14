@@ -51,6 +51,14 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
 
     React.useEffect(() => {
+      if (virtualListRef.current) {
+        console.log("current virtualListRef is not null");
+      } else {
+        console.log("current virtualListRef is null");
+      }
+    }, []);
+
+    React.useEffect(() => {
       if (projAttr.pdfScale === 1 && cachedScale) {
         return;
       }
@@ -178,7 +186,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             width={width}
             height={height}
             estimatedItemSize={500}
-            initialScrollOffset={getInitialOffset()}
+            // initialScrollOffset={getInitialOffset()}
             itemCount={pdf.numPages}
             overscanCount={0}
             onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
