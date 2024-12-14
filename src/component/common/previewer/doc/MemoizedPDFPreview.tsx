@@ -61,8 +61,8 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       if (virtualListRef.current) {
         let curOffset = getCurPdfScrollOffset(projId, viewModel);
         let fullScreenOffset = getNewScaleOffsetPosition(
-          projAttr.pdfScale,
           projAttr.legacyPdfScale,
+          projAttr.pdfScale,
           curOffset
         );
         if (fullScreenOffset) {
