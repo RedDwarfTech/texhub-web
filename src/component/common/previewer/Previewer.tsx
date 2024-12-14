@@ -22,7 +22,7 @@ import {
 import { CompileResultType } from "@/model/proj/compile/CompileResultType";
 import { BaseMethods, ResponseHandler } from "rdjs-wheel";
 import { ProjInfo } from "@/model/proj/ProjInfo";
-import { scrollToPage } from "./doc/PDFPreviewHandle";
+import { restorePdfOffset, scrollToPage } from "./doc/PDFPreviewHandle";
 import { useTranslation } from "react-i18next";
 import { getPdfjsOptions } from "@/config/pdf/PdfJsConfig";
 import {
@@ -360,6 +360,18 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
               <i className="fa-solid fa-check"></i>
             </button>
           )}
+          <button
+            className={styles.previewIconButton}
+            data-bs-toggle="tooltip"
+            title={t("btn_restore_scroll")}
+            onClick={() => {
+              if (virtualListRef && virtualListRef.current) {
+                restorePdfOffset(projectId, viewModel, virtualListRef);
+              }
+            }}
+          >
+            <i className="fa-solid fa-hashtag"></i>
+          </button>
           <button
             className={styles.previewIconButton}
             data-bs-toggle="tooltip"
