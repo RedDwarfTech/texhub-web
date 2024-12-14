@@ -68,11 +68,11 @@ export const isMoreThanFiveSeconds = (strDate: string) => {
   const diffInMilliseconds: number = currentDate.getTime() - targetDate;
 
   // 检查差值是否大于 5 秒（5000 毫秒）
-  if (diffInMilliseconds > 5000) {
-    console.log("时间差大于 5 secondsseconds");
+  if (diffInMilliseconds > 25000) {
+    console.log("时间差大于 25 secondsseconds");
     return true;
   } else {
-    console.log("时间差小于或等于 5 secondsseconds");
+    console.log("时间差小于或等于 25 secondsseconds");
     return false;
   }
 };
