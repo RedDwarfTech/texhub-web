@@ -84,7 +84,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     setTimeout(() => {
       if (virtualListRef && virtualListRef.current) {
         let scrollOffset = getCurPdfScrollOffset(projectId, viewModel);
-        virtualListRef.current.scrollTo(scrollOffset);
+        // virtualListRef.current.scrollTo(scrollOffset);
         console.log(
           "This virtualListRef is not null, scroll to:" + scrollOffset
         );
