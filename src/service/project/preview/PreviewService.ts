@@ -59,7 +59,7 @@ export function setCurPdfScrollOffset(
   src: string
 ) {
   const key = viewModel + ":" + readConfig("pdfScrollKey") + projId;
-  console.warn("offsetChanged, src: " + src);
+  console.warn("offsetChanged," + scrollOffset + " src: " + src);
   localStorage.setItem(key, scrollOffset.toString());
 }
 
