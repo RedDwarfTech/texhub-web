@@ -1,6 +1,5 @@
 import { VariableSizeList } from "react-window";
 import styles from "./MemoizedPDFPreview.module.css";
-import { readConfig } from "@/config/app/config-reader";
 import { getCurPdfScrollOffset } from "@/service/project/preview/PreviewService";
 
 export const goPage = (i: number) => {

@@ -31,6 +31,7 @@ import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { getAccessToken } from "../../cache/Cache";
 import { authTokenEquals, getAuthorization } from "@/config/pdf/PdfJsConfig";
 import { readConfig } from "@/config/app/config-reader";
+import { getNewScaleOffsetPosition } from "../calc/ScrollUtil";
 
 const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
   ({
@@ -58,13 +59,15 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
       setProjAttribute(projAttr);
       if (virtualListRef.current) {
-        virtualListRef.current.resetAfterIndex(0, true);
-      }
-      if (virtualListRef.current) {
-        const key = viewModel + ":" + readConfig("pdfScrollKey") + projId;
-        let fullScreenOffset = localStorage.getItem(key);
+        let curOffset = getCurPdfScrollOffset(projId, viewModel);
+        let fullScreenOffset = getNewScaleOffsetPosition(
+          projAttr.pdfScale,
+          projAttr.legacyPdfScale,
+          curOffset
+        );
         if (fullScreenOffset) {
-          scrollToOffset(parseInt(fullScreenOffset), virtualListRef);
+          console.log("get the newOffset:" + fullScreenOffset);
+          // scrollToOffset(fullScreenOffset, virtualListRef);
         }
       }
     }, [projAttr, cachedScale]);
@@ -192,7 +195,10 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
                 console.log(
                   "item rendered, overscanStopIndex:" +
                     props.overscanStopIndex +
-                    ",pdf.numPages" + pdf.numPages + ",height:" + height 
+                    ",pdf.numPages" +
+                    pdf.numPages +
+                    ",height:" +
+                    height
                 );
               }
               // will cause dead loop
