@@ -202,6 +202,12 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             onItemsRendered={(props: ListOnItemsRenderedProps) => {
               if (props.overscanStopIndex >= pdf.numPages - 1) {
                 console.log("all item rendered", virtualListRef.current);
+              } else {
+                console.log(
+                  "item rendered, overscanStopIndex:" +
+                    props.overscanStopIndex +
+                    ",pdf.numPages" + pdf.numPages
+                );
               }
               // will cause dead loop
               // restorePdfOffset(projId, viewModel, virtualListRef);
