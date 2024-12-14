@@ -50,7 +50,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     });
     const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
 
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
       if (virtualListRef.current) {
         console.log("current virtualListRef is not null");
       } else {
