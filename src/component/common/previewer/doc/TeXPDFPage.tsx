@@ -19,6 +19,7 @@ interface PDFPageProps {
   style: React.CSSProperties;
   projId: string;
   width: number;
+  height: number;
   viewPort: PageViewport;
   curPdfPosition: PdfPosition[] | undefined;
   viewModel: string;
@@ -29,6 +30,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   style,
   projId,
   width,
+  height,
   viewPort,
   curPdfPosition,
   viewModel,
@@ -156,6 +158,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
         onRenderSuccess={handlePageRenderSuccess}
         pageNumber={index}
         width={width}
+        height={height}
       >
         {curPdfPosition && viewPort ? (
           <TeXPDFHighlight

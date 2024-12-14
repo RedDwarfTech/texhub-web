@@ -192,7 +192,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
                 console.log(
                   "item rendered, overscanStopIndex:" +
                     props.overscanStopIndex +
-                    ",pdf.numPages" + pdf.numPages
+                    ",pdf.numPages" + pdf.numPages + ",height:" + height 
                 );
               }
               // will cause dead loop
@@ -210,6 +210,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
                 <TeXPDFPage
                   index={index + 1}
                   width={width}
+                  height={height}
                   style={style}
                   projId={projId}
                   viewPort={pageViewports[index]}
