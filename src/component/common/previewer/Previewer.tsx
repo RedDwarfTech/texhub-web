@@ -58,7 +58,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   const [numPages, setNumPages] = useState<number>();
   const [curPages, setCurPages] = useState<number>();
   const [devModel, setDevModel] = useState<boolean>();
-  // const virtualListRef = React.useRef<VariableSizeList>(null);
+  const virtualListRef = React.useRef<VariableSizeList>(null);
   const { curPage } = useSelector((state: AppState) => state.preview);
   const {
     texPdfUrl,
@@ -80,14 +80,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
       setDevModel(true);
     } else {
       setDevModel(false);
-    }
-  }, []);
-
-  const virtualListRef = useCallback((node: VariableSizeList) => {
-    if (node !== null) {
-      let offset = getCurPdfScrollOffset(projectId, viewModel);
-      node.scrollTo(offset);
-      console.log("offset", offset); // node = elRef.current
     }
   }, []);
 

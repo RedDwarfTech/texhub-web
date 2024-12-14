@@ -42,11 +42,25 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const [pdf, setPdf] = useState<DocumentCallback>();
     const [pageViewports, setPageViewports] = useState<any>();
     const divRef = useRef<HTMLDivElement>(null);
+    const [isMounted, setIsMounted] = useState(false);
     const [projAttribute, setProjAttribute] = useState<PreviewPdfAttribute>({
       pdfScale: cachedScale,
       legacyPdfScale: cachedScale,
     });
     const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
+
+    React.useEffect(() => {
+      setIsMounted(true);
+    }, []);
+
+    React.useEffect(() => {
+      if (isMounted && virtualListRef.current) {
+        // 只有在组件挂载后并且 ref 不为空时才执行
+        console.log("loaded not null");
+      }else{
+        console.log("loaded null");
+      }
+    }, [isMounted]); 
 
     React.useEffect(() => {
       if (projAttr.pdfScale === 1 && cachedScale) {
