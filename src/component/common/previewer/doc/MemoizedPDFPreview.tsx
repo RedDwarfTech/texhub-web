@@ -10,7 +10,11 @@ import {
   scrollToOffset,
   scrollToPage,
 } from "./PDFPreviewHandle";
-import { ListOnScrollProps, VariableSizeList } from "react-window";
+import {
+  ListOnItemsRenderedProps,
+  ListOnScrollProps,
+  VariableSizeList,
+} from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
 import AutoSizer, { Size } from "react-virtualized-auto-sizer";
 import { PDFPreviewProps } from "@/model/props/proj/pdf/PDFPreviewProps";
@@ -57,10 +61,10 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       if (isMounted && virtualListRef.current) {
         // 只有在组件挂载后并且 ref 不为空时才执行
         console.log("loaded not null");
-      }else{
+      } else {
         console.log("loaded null");
       }
-    }, [isMounted]); 
+    }, [isMounted]);
 
     React.useEffect(() => {
       if (projAttr.pdfScale === 1 && cachedScale) {
@@ -195,7 +199,10 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             overscanCount={0}
             onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
             itemSize={(pageIndex) => getPageHeight(pageIndex, width)}
-            onItemsRendered={() => {
+            onItemsRendered={(props: ListOnItemsRenderedProps) => {
+              if (props.overscanStopIndex >= pdf.numPages - 1) {
+                console.log("all item rendered", virtualListRef.current);
+              }
               // will cause dead loop
               // restorePdfOffset(projId, viewModel, virtualListRef);
             }}
