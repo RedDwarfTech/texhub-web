@@ -81,6 +81,13 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     } else {
       setDevModel(false);
     }
+    setTimeout(() => {
+      if(virtualListRef && virtualListRef.current){
+        console.log('This virtualListRef is not null');
+      }else{
+        console.log('This virtualListRef is null');
+      }
+    }, 10000);
   }, []);
 
   React.useEffect(() => {
