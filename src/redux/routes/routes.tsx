@@ -18,7 +18,7 @@ import ResetPwd from "@/page/pwd/reset/ResetPwd";
 import RdTeXHubLogin from "@/page/profile/user/login/RdTeXHubLogin";
 import RdTeXHubReg from "@/page/profile/user/reg/RdTeXHubReg";
 
-const routes = createBrowserRouter([
+const routeDefine = [
   {
     path: "/product/pay/success",
     element: <PaySuccess />,
@@ -93,6 +93,13 @@ const routes = createBrowserRouter([
     path: "/userpage/pwd/reset",
     element: <ResetPwd />,
   },
-]);
+];
+
+const routes = createBrowserRouter(routeDefine,{
+  future: {
+    v7_normalizeFormMethod: true,
+    v7_relativeSplatPath: true,
+  }
+});
 
 export default routes;
