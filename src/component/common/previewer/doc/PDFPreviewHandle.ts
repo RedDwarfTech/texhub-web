@@ -51,7 +51,6 @@ export const restorePdfOffset = (
     const key = viewModel + ":" + readConfig("pdfScrollKey") + projId;
     let fullScreenOffset = localStorage.getItem(key);
     if (fullScreenOffset) {
-      console.log("trigger restore offset");
       scrollToOffset(parseInt(fullScreenOffset), virtualListRef);
     }
   }
@@ -68,11 +67,11 @@ export const isMoreThanFiveSeconds = (strDate: string) => {
   const diffInMilliseconds: number = currentDate.getTime() - targetDate;
 
   // 检查差值是否大于 5 秒（5000 毫秒）
-  if (diffInMilliseconds > 25000) {
-    console.log("时间差大于 25 secondsseconds");
+  if (diffInMilliseconds > 5000) {
+    console.log("时间差大于 5 secondsseconds");
     return true;
   } else {
-    console.log("时间差小于或等于 25 secondsseconds");
+    console.log("时间差小于或等于 5 secondsseconds");
     return false;
   }
 };
