@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useMemo, useState } from "react";
+import React, { ChangeEvent, useCallback, useMemo, useState } from "react";
 import styles from "./Previewer.module.css";
 import { ToastContainer, toast } from "react-toastify";
 import { pdfjs } from "react-pdf";
@@ -35,6 +35,7 @@ import { VariableSizeList } from "react-window";
 import {
   getCurPdfPage,
   getCurPdfScale,
+  getCurPdfScrollOffset,
   setCurPdfPage,
   setCurPdfScale,
 } from "@/service/project/preview/PreviewService";
@@ -45,10 +46,7 @@ export type PreviwerProps = {
   viewModel: string;
 };
 
-const Previewer: React.FC<PreviwerProps> = ({
-  projectId,
-  viewModel,
-}) => {
+const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   const [curPdfUrl, setCurPdfUrl] = useState<string>("");
   const [compStatus, setCompStatus] = useState<CompileStatus>(
     CompileStatus.COMPLETE
@@ -60,7 +58,7 @@ const Previewer: React.FC<PreviwerProps> = ({
   const [numPages, setNumPages] = useState<number>();
   const [curPages, setCurPages] = useState<number>();
   const [devModel, setDevModel] = useState<boolean>();
-  const virtualListRef = React.useRef<VariableSizeList>(null);
+  // const virtualListRef = React.useRef<VariableSizeList>(null);
   const { curPage } = useSelector((state: AppState) => state.preview);
   const {
     texPdfUrl,
@@ -82,6 +80,14 @@ const Previewer: React.FC<PreviwerProps> = ({
       setDevModel(true);
     } else {
       setDevModel(false);
+    }
+  }, []);
+
+  const virtualListRef = useCallback((node: VariableSizeList) => {
+    if (node !== null) {
+      let offset = getCurPdfScrollOffset(projectId, viewModel);
+      node.scrollTo(offset);
+      console.log("offset", offset); // node = elRef.current
     }
   }, []);
 

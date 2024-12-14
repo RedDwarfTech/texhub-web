@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 import {
   isMoreThanFiveSeconds,
   openPdfUrlLink,
-  restorePdfOffset,
   scrollToOffset,
   scrollToPage,
 } from "./PDFPreviewHandle";
@@ -16,7 +15,6 @@ import { asyncMap } from "@wojtekmaj/async-array-utils";
 import AutoSizer, { Size } from "react-virtualized-auto-sizer";
 import { PDFPreviewProps } from "@/model/props/proj/pdf/PDFPreviewProps";
 import {
-  getCurPdfPage,
   getCurPdfScale,
   getCurPdfScrollOffset,
   setCurPdfPage,
@@ -49,14 +47,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       legacyPdfScale: cachedScale,
     });
     const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
-
-    React.useLayoutEffect(() => {
-      if (virtualListRef.current) {
-        console.log("current virtualListRef is not null");
-      } else {
-        console.log("current virtualListRef is null");
-      }
-    }, []);
 
     React.useEffect(() => {
       if (projAttr.pdfScale === 1 && cachedScale) {
