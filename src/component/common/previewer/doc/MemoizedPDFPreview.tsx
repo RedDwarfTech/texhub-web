@@ -68,7 +68,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         );
         if (fullScreenOffset) {
           console.log("get the newOffset:" + fullScreenOffset);
-          // scrollToOffset(fullScreenOffset, virtualListRef);
+          scrollToOffset(fullScreenOffset, virtualListRef);
         }
       }
     }, [projAttr, cachedScale]);
