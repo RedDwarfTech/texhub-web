@@ -115,7 +115,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
           scrollToPage(pageNum, virtualListRef);
         }
         setTimeout(() => {
-          setCurPdfPosition([]);
+          // setCurPdfPosition([]);
         }, 10000);
       }
     }, [pdfFocus]);
@@ -174,7 +174,12 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
      * @returns
      */
     const getInitialOffset = () => {
-      let page = getCurPdfScrollOffset(projId, viewModel);
+      let curOffset = getCurPdfScrollOffset(projId, viewModel);
+      let page = getNewScaleOffsetPosition(
+        projAttr.legacyPdfScale,
+        projAttr.pdfScale,
+        curOffset
+      );
       console.warn("scroll to offset:" + page + ",viewModel:" + viewModel);
       return page;
     };
@@ -192,7 +197,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             width={width}
             height={height}
             estimatedItemSize={500}
-            // initialScrollOffset={getInitialOffset()}
+            initialScrollOffset={getInitialOffset()}
             itemCount={pdf.numPages}
             overscanCount={0}
             onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
