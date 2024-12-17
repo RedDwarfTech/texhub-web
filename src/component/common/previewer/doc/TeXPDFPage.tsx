@@ -85,7 +85,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     setRenderedPageNumber(page.pageNumber);
     let elements = document.querySelectorAll(`.${styles.pdfPage}`);
     if (elements && elements.length > 0) {
-      elements.forEach((box) => pageObserve.observe(box));
+      // elements.forEach((box) => pageObserve.observe(box));
     }
   };
 

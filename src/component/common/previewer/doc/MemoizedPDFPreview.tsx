@@ -203,6 +203,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
             itemSize={(pageIndex) => getPageHeight(pageIndex, width)}
             onItemsRendered={(props: ListOnItemsRenderedProps) => {
+              setCurPdfPage(props.overscanStopIndex, projId, "IntersectionObserver");
               if (props.overscanStopIndex >= pdf.numPages - 1) {
                 console.log("all item rendered", virtualListRef.current);
               } else {
