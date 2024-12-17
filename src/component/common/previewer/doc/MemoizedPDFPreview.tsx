@@ -70,7 +70,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
           console.log("get the newOffset:" + fullScreenOffset);
           setTimeout(() => {
             scrollToOffset(fullScreenOffset, virtualListRef);
-          },500);
+          }, 500);
           setCurPdfScrollOffset(
             fullScreenOffset,
             projId,
@@ -175,13 +175,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
      */
     const getInitialOffset = () => {
       let curOffset = getCurPdfScrollOffset(projId, viewModel);
-      let page = getNewScaleOffsetPosition(
-        projAttr.legacyPdfScale,
-        projAttr.pdfScale,
-        curOffset
-      );
-      console.warn("scroll to offset:" + page + ",viewModel:" + viewModel);
-      return page;
+      return curOffset;
     };
 
     /**
@@ -197,27 +191,25 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             width={width}
             height={height}
             estimatedItemSize={500}
-            // initialScrollOffset={getInitialOffset()}
+            initialScrollOffset={getInitialOffset()}
             itemCount={pdf.numPages}
             overscanCount={0}
             onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
             itemSize={(pageIndex) => getPageHeight(pageIndex, width)}
             onItemsRendered={(props: ListOnItemsRenderedProps) => {
-              setCurPdfPage(props.overscanStopIndex, projId, "IntersectionObserver");
-              if (props.overscanStopIndex >= pdf.numPages - 1) {
-                console.log("all item rendered", virtualListRef.current);
-              } else {
-                console.log(
-                  "item rendered, overscanStopIndex:" +
-                    props.overscanStopIndex +
-                    ",pdf.numPages" +
-                    pdf.numPages +
-                    ",height:" +
-                    height
-                );
-              }
-              // will cause dead loop
-              // restorePdfOffset(projId, viewModel, virtualListRef);
+              setCurPdfPage(
+                props.overscanStopIndex,
+                projId,
+                "IntersectionObserver"
+              );
+              console.log(
+                "item rendered, overscanStopIndex:" +
+                  props.overscanStopIndex +
+                  ",pdf.numPages" +
+                  pdf.numPages +
+                  ",height:" +
+                  height
+              );
             }}
           >
             {({
