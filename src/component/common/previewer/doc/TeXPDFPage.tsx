@@ -59,34 +59,9 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     setProjAttribute(projAttr);
   }, [projAttr, cachedScale]);
 
-  /**
-   * the element and viewport intersection with 20% will trigger this action
-   */
-  var pageObserve = new IntersectionObserver(
-    (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((item: IntersectionObserverEntry) => {
-        if (item.intersectionRatio > 0.2) {
-          let docLoadTime = localStorage.getItem("docLoadTime");
-          if (docLoadTime && isMoreThanFiveSeconds(docLoadTime)) {
-            let dataPage = item.target.getAttribute("data-page-number");
-            if (!dataPage) return;
-            setCurPdfPage(Number(dataPage), projId, "IntersectionObserver");
-          }
-        }
-      });
-    },
-    {
-      threshold: 0.2,
-    }
-  );
-
   const handlePageRenderSuccess = (page: PageCallback) => {
-    setRenderedScale(projAttribute.pdfScale);
-    setRenderedPageNumber(page.pageNumber);
-    let elements = document.querySelectorAll(`.${styles.pdfPage}`);
-    if (elements && elements.length > 0) {
-      // elements.forEach((box) => pageObserve.observe(box));
-    }
+    // setRenderedScale(projAttribute.pdfScale);
+    // setRenderedPageNumber(page.pageNumber);    
   };
 
   const handlePageChange = (page: any) => {};
@@ -145,9 +120,6 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
         }%`,
       }}
     >
-      {isLoading && renderedPageNumber && renderedScale
-        ? renderLegacyPage(index, width)
-        : null}
       <Page
         key={index + "@new-" + projAttribute.pdfScale}
         scale={projAttribute.pdfScale}
