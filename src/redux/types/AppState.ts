@@ -85,5 +85,6 @@ export interface AppState {
     },
     preview: {
         curPage: number,
+        fullscreenFlag: boolean
     }
 }

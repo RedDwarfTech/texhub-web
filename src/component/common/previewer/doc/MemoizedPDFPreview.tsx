@@ -43,6 +43,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
   }) => {
     let cachedScale = getCurPdfScale(projId, viewModel);
     const { pdfFocus, projAttr } = useSelector((state: AppState) => state.proj);
+    const { fullscreenFlag } = useSelector((state: AppState) => state.preview);
     const [pdf, setPdf] = useState<DocumentCallback>();
     const [pageViewports, setPageViewports] = useState<any>();
     const divRef = useRef<HTMLDivElement>(null);
@@ -105,6 +106,31 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         setPageViewports(nextPageViewports);
       })();
     }, [pdf]);
+
+    React.useEffect(() => {
+      if (fullscreenFlag) {
+        handleFullScreen();
+      }
+    }, [fullscreenFlag]);
+
+    const handleFullScreen = () => {
+      const divElement: any = document.getElementById("pdfContainer");
+      if (!divElement) {
+        return;
+      }
+      if (divElement.requestFullscreen) {
+        divElement.requestFullscreen();
+      } else if (divElement.mozRequestFullScreen) {
+        // Firefox
+        divElement.mozRequestFullScreen();
+      } else if (divElement.webkitRequestFullscreen) {
+        // Safari
+        divElement.webkitRequestFullscreen();
+      } else if (divElement.msRequestFullscreen) {
+        // IE/Edge
+        divElement.msRequestFullscreen();
+      }
+    };
 
     React.useEffect(() => {
       if (pdfFocus && pdfFocus.length > 0) {

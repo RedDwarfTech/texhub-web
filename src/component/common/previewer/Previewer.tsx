@@ -231,6 +231,14 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     }
   };
 
+  const toggleFullscreen = () => {
+    if(virtualListRef && virtualListRef.current){
+      
+    }
+    
+  
+  }
+
   const handleZoomIn = async () => {
     if (!projectId) {
       toast.warn(t("msg_empty_proj_info"));
@@ -381,6 +389,16 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
             }}
           >
             <i className="fa-brands fa-chrome"></i>
+          </button>
+          <button
+            className={styles.previewIconButton}
+            data-bs-toggle="tooltip"
+            title={t("btn_maximize")}
+            onClick={() => {
+              toggleFullscreen();
+            }}
+          >
+            <i className="fa-solid fa-maximize"></i>
           </button>
           <button
             className={styles.previewIconButton}

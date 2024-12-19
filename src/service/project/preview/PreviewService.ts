@@ -31,6 +31,12 @@ export function setCurPdfPage(pageNo: number, projId: string, src: string) {
   return XHRClient.dispathAction(pageNo, actionTypeString, store);
 }
 
+export function setFullscreenFlag(fullscreen: boolean) {
+  const actionTypeString: string =
+    PreviewActionType[PreviewActionType.SET_FULLSCREEN_FLAG];
+  return XHRClient.dispathAction(fullscreen, actionTypeString, store);
+}
+
 export function setDocLoadTime() {
   localStorage.setItem("docLoadTime", new Date().getTime().toString());
 }
