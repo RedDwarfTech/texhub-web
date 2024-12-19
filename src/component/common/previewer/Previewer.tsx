@@ -38,6 +38,7 @@ import {
   getCurPdfScrollOffset,
   setCurPdfPage,
   setCurPdfScale,
+  setFullscreenFlag,
 } from "@/service/project/preview/PreviewService";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
 
@@ -232,11 +233,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   };
 
   const toggleFullscreen = () => {
-    if(virtualListRef && virtualListRef.current){
-      
-    }
-    
-  
+    setFullscreenFlag(true);
   }
 
   const handleZoomIn = async () => {
