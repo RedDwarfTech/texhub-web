@@ -24,6 +24,7 @@ import {
   setCurPdfPage,
   setCurPdfScrollOffset,
   setDocLoadTime,
+  setFullscreenFlag,
 } from "@/service/project/preview/PreviewService";
 import { PreviewPdfAttribute } from "@/model/proj/config/PreviewPdfAttribute";
 import TeXPDFPage from "./TeXPDFPage";
@@ -52,6 +53,22 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       legacyPdfScale: cachedScale,
     });
     const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
+
+    React.useEffect(() => {
+      const handleEscape = (event: any) => {
+        if (event.key === "Escape") {
+          console.log("Esc key pressed");
+          // 在这里执行你需要的逻辑
+          setFullscreenFlag(false);
+        }
+      };
+
+      document.addEventListener("keydown", handleEscape);
+
+      return () => {
+        document.removeEventListener("keydown", handleEscape);
+      };
+    }, []);
 
     React.useEffect(() => {
       if (projAttr.pdfScale === 1 && cachedScale) {
