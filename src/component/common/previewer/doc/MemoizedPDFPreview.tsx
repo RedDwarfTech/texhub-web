@@ -5,6 +5,7 @@ import { DocumentCallback } from "react-pdf/dist/cjs/shared/types";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import {
+  handleFullScreen,
   isMoreThanFiveSeconds,
   openPdfUrlLink,
   scrollToOffset,
@@ -54,21 +55,26 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     });
     const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
 
-    React.useEffect(() => {
-      const handleEscape = (event: any) => {
-        console.log("trigger fullsreenchange");
-        if (document.fullscreenElement) {
-        } else {
-          setFullscreenFlag(false);
-        }
-      };
-      document.addEventListener('fullscreenchange', handleEscape);
-      document.addEventListener('webkitfullscreenchange', handleEscape);
-      document.addEventListener('mozfullscreenchange', handleEscape);
-      document.addEventListener('MSFullscreenChange', handleEscape);
-      return () => {
-      };
-    }, []);
+React.useEffect(() => {
+  // https://stackoverflow.com/questions/25126106/capture-esc-event-when-exiting-full-screen-mode
+  const handleEscape = (event: any) => {
+    console.log("trigger fullsreenchange");
+    if (
+      !document.fullscreenElement &&
+      !document.webkitIsFullScreen &&
+      !document.mozFullScreen &&
+      !document.msFullscreenElement
+    ) {
+      ///fire your event
+      setFullscreenFlag(false);
+    }
+  };
+  document.addEventListener("fullscreenchange", handleEscape);
+  document.addEventListener("webkitfullscreenchange", handleEscape);
+  document.addEventListener("mozfullscreenchange", handleEscape);
+  document.addEventListener("MSFullscreenChange", handleEscape);
+  return () => {};
+}, []);
 
     React.useEffect(() => {
       if (projAttr.pdfScale === 1 && cachedScale) {
@@ -129,25 +135,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         handleFullScreen();
       }
     }, [fullscreenFlag]);
-
-    const handleFullScreen = () => {
-      const divElement: any = document.getElementById("pdfContainer");
-      if (!divElement) {
-        return;
-      }
-      if (divElement.requestFullscreen) {
-        divElement.requestFullscreen();
-      } else if (divElement.mozRequestFullScreen) {
-        // Firefox
-        divElement.mozRequestFullScreen();
-      } else if (divElement.webkitRequestFullscreen) {
-        // Safari
-        divElement.webkitRequestFullscreen();
-      } else if (divElement.msRequestFullscreen) {
-        // IE/Edge
-        divElement.msRequestFullscreen();
-      }
-    };
 
     React.useEffect(() => {
       if (pdfFocus && pdfFocus.length > 0) {

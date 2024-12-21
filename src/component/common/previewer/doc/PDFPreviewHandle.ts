@@ -65,3 +65,22 @@ export const isMoreThanFiveSeconds = (strDate: string) => {
     return false;
   }
 };
+
+export const enterFullScreen = () => {
+  const divElement: any = document.getElementById("pdfContainer");
+  if (!divElement) {
+    return;
+  }
+  if (divElement.requestFullscreen) {
+    divElement.requestFullscreen();
+  } else if (divElement.mozRequestFullScreen) {
+    // Firefox
+    divElement.mozRequestFullScreen();
+  } else if (divElement.webkitRequestFullscreen) {
+    // Safari
+    divElement.webkitRequestFullscreen();
+  } else if (divElement.msRequestFullscreen) {
+    // IE/Edge
+    divElement.msRequestFullscreen();
+  }
+};

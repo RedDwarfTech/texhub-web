@@ -22,7 +22,7 @@ import {
 import { CompileResultType } from "@/model/proj/compile/CompileResultType";
 import { BaseMethods, ResponseHandler } from "rdjs-wheel";
 import { ProjInfo } from "@/model/proj/ProjInfo";
-import { restorePdfOffset, scrollToPage } from "./doc/PDFPreviewHandle";
+import { enterFullScreen, restorePdfOffset, scrollToPage } from "./doc/PDFPreviewHandle";
 import { useTranslation } from "react-i18next";
 import { getPdfjsOptions } from "@/config/pdf/PdfJsConfig";
 import {
@@ -232,10 +232,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     }
   };
 
-  const toggleFullscreen = () => {
-    setFullscreenFlag(true);
-  }
-
   const handleZoomIn = async () => {
     if (!projectId) {
       toast.warn(t("msg_empty_proj_info"));
@@ -392,7 +388,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
             data-bs-toggle="tooltip"
             title={t("btn_maximize")}
             onClick={() => {
-              toggleFullscreen();
+              enterFullScreen();
             }}
           >
             <i className="fa-solid fa-maximize"></i>
