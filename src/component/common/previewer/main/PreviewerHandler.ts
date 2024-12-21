@@ -1,7 +1,7 @@
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { QuerySrcPos } from "@/model/request/proj/query/QuerySrcPos";
 import { getCurPdfPage } from "@/service/project/preview/PreviewService";
-import { getSrcPosition } from "@/service/project/ProjectService";
+import { getSrcPosition, getTempAuthCode, sendQueueCompileRequest } from "@/service/project/ProjectService";
 import { toast } from "react-toastify";
 import { getAccessToken } from "../../cache/Cache";
 import { getPreviewUrl } from "@/service/file/FileService";
@@ -108,4 +108,20 @@ export const handleDownloadPdf = async (pdfUrl: string) => {
   } catch (error) {
     console.error("Error downloading PDF:", error);
   }
+};
+
+export const compile = (prj_id: string) => {
+  getTempAuthCode().then((resp) => {
+    if (ResponseHandler.responseSuccess(resp)) {
+      let params = {
+        project_id: prj_id,
+      };
+      sendQueueCompileRequest(params).then((resp) => {
+        if (ResponseHandler.responseSuccess(resp)) {
+        }
+      });
+    } else {
+      toast.error(resp.msg);
+    }
+  });
 };

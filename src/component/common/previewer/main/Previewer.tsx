@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useMemo, useState } from "react";
 import styles from "./Previewer.module.css";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
@@ -11,16 +11,13 @@ import { CompileStatus } from "@/model/proj/compile/CompileStatus";
 import { CompileQueue } from "@/model/proj/CompileQueue";
 import {
   getLatestCompile,
-  getTempAuthCode,
-  sendQueueCompileRequest,
   setCompileQueue,
   setLatestCompile,
-  setProjAttr,
   showPreviewTab,
   updatePdfUrl,
 } from "@/service/project/ProjectService";
 import { CompileResultType } from "@/model/proj/compile/CompileResultType";
-import { BaseMethods, ResponseHandler } from "rdjs-wheel";
+import { BaseMethods } from "rdjs-wheel";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import {
   enterFullScreen,
@@ -30,6 +27,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { getPdfjsOptions } from "@/config/pdf/PdfJsConfig";
 import {
+  compile,
   debugApp,
   handleDownloadPdf,
   handleOpenInBrowserDirect,
@@ -38,10 +36,8 @@ import {
 import { VariableSizeList } from "react-window";
 import {
   getCurPdfPage,
-  getCurPdfScale,
   getCurPdfScrollOffset,
   setCurPdfPage,
-  setCurPdfScale,
 } from "@/service/project/preview/PreviewService";
 import { usePreviewHandler } from "./usePreviewHandler";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
@@ -64,10 +60,8 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   const [curPages, setCurPages] = useState<number>();
   const [devModel, setDevModel] = useState<boolean>();
   const virtualListRef = React.useRef<VariableSizeList>(null);
-  const { handleScrollTop, handleZoomIn } = usePreviewHandler(
-    projectId,
-    viewModel
-  );
+  const { handleScrollTop, handleZoomIn, handleFullScreen, handleZoomOut } =
+    usePreviewHandler(projectId, viewModel);
   const { curPage } = useSelector((state: AppState) => state.preview);
   const {
     texPdfUrl,
@@ -130,22 +124,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
       }
     }
   }, [latestComp]);
-
-  const compile = (prj_id: string) => {
-    getTempAuthCode().then((resp) => {
-      if (ResponseHandler.responseSuccess(resp)) {
-        let params = {
-          project_id: prj_id,
-        };
-        sendQueueCompileRequest(params).then((resp) => {
-          if (ResponseHandler.responseSuccess(resp)) {
-          }
-        });
-      } else {
-        toast.error(resp.msg);
-      }
-    });
-  };
 
   React.useEffect(() => {
     if (latestComp && Object.keys(latestComp).length > 0) {
@@ -232,35 +210,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
       });
     }
   }, [streamLogText]);
-
-  const handleZoomOut = async () => {
-    if (!projectId) {
-      toast.warn(t("msg_empty_proj_info"));
-      return;
-    }
-    let cachedScale = getCurPdfScale(projectId, viewModel);
-    let numberScale = Number(cachedScale);
-    let curScale;
-    if (numberScale < 0.2) {
-      curScale = 0.2;
-    } else {
-      curScale = numberScale - 0.1;
-    }
-    setCurPdfScale(curScale, projectId, viewModel);
-    setProjAttr({
-      pdfScale: curScale,
-      legacyPdfScale: Number(cachedScale),
-    });
-  };
-
-  const handleFullScreen = async () => {
-    if (!projectId) {
-      toast.warn(t("msg_empty_proj_info"));
-      return;
-    }
-    let url = "/preview/fullscreen?projId=" + projectId;
-    window.open(url, "_blank", "noopener,noreferrer");
-  };
 
   const renderPreviewTab = () => {
     switch (curPreviewTab) {

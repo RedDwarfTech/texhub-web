@@ -16,6 +16,15 @@ export const usePreviewHandler = (projectId: string, viewModel: string) => {
     }
   };
 
+  const handleFullScreen = async () => {
+    if (!projectId) {
+      toast.warn(t("msg_empty_proj_info"));
+      return;
+    }
+    let url = "/preview/fullscreen?projId=" + projectId;
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   const handleZoomIn = async () => {
     if (!projectId) {
       toast.warn(t("msg_empty_proj_info"));
@@ -36,8 +45,30 @@ export const usePreviewHandler = (projectId: string, viewModel: string) => {
     });
   };
 
+  const handleZoomOut = async () => {
+    if (!projectId) {
+      toast.warn(t("msg_empty_proj_info"));
+      return;
+    }
+    let cachedScale = getCurPdfScale(projectId, viewModel);
+    let numberScale = Number(cachedScale);
+    let curScale;
+    if (numberScale < 0.2) {
+      curScale = 0.2;
+    } else {
+      curScale = numberScale - 0.1;
+    }
+    setCurPdfScale(curScale, projectId, viewModel);
+    setProjAttr({
+      pdfScale: curScale,
+      legacyPdfScale: Number(cachedScale),
+    });
+  };
+
   return {
     handleScrollTop,
     handleZoomIn,
+    handleFullScreen,
+    handleZoomOut,
   };
 };
