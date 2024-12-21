@@ -67,7 +67,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       document.addEventListener('mozfullscreenchange', handleEscape);
       document.addEventListener('MSFullscreenChange', handleEscape);
       return () => {
-        document.removeEventListener("fullsreenchange", handleEscape);
       };
     }, []);
 
