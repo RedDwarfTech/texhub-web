@@ -56,17 +56,15 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
 
     React.useEffect(() => {
       const handleEscape = (event: any) => {
-        if (event.key === "Escape") {
-          console.log("Esc key pressed");
-          // 在这里执行你需要的逻辑
+        if (document.fullscreenElement) {
+        } else {
           setFullscreenFlag(false);
         }
       };
 
-      document.addEventListener("keydown", handleEscape);
-
+      document.addEventListener("fullsreenchange", handleEscape);
       return () => {
-        document.removeEventListener("keydown", handleEscape);
+        document.removeEventListener("fullsreenchange", handleEscape);
       };
     }, []);
 
