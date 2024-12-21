@@ -313,16 +313,18 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
           >
             <i className="fa-brands fa-chrome"></i>
           </button>
-          <button
-            className={styles.previewIconButton}
-            data-bs-toggle="tooltip"
-            title={t("btn_maximize")}
-            onClick={() => {
-              enterFullScreen();
-            }}
-          >
-            <i className="fa-solid fa-maximize"></i>
-          </button>
+          {viewModel === "fullscreen" ? (
+            <button
+              className={styles.previewIconButton}
+              data-bs-toggle="tooltip"
+              title={t("btn_maximize")}
+              onClick={() => {
+                enterFullScreen();
+              }}
+            >
+              <i className="fa-solid fa-maximize"></i>
+            </button>
+          ) : null}
           <button
             className={styles.previewIconButton}
             data-bs-toggle="tooltip"
