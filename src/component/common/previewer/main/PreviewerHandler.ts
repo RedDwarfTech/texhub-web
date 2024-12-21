@@ -3,10 +3,10 @@ import { QuerySrcPos } from "@/model/request/proj/query/QuerySrcPos";
 import { getCurPdfPage } from "@/service/project/preview/PreviewService";
 import { getSrcPosition } from "@/service/project/ProjectService";
 import { toast } from "react-toastify";
-import { getAccessToken } from "../cache/Cache";
+import { getAccessToken } from "../../cache/Cache";
 import { getPreviewUrl } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
-import { scrollToOffset } from "./doc/PDFPreviewHandle";
+import { scrollToOffset } from "../doc/PDFPreviewHandle";
 import { VariableSizeList } from "react-window";
 import { readConfig } from "@/config/app/config-reader";
 

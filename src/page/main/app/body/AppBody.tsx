@@ -3,7 +3,7 @@ import styles from "./AppBody.module.css";
 import { useRef } from "react";
 import React from "react";
 import RightDraggable from "@/assets/icon/right-drag.svg?react";
-import Previewer from "@/component/common/previewer/Previewer";
+import Previewer from "@/component/common/previewer/main/Previewer";
 import { VariableSizeList } from "react-window";
 import { getProjectInfo } from "@/service/project/ProjectService";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
