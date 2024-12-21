@@ -131,7 +131,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     }, [fullscreenFlag]);
 
     const handleFullScreen = () => {
-      const divElement: any = virtualListRef.current;
+      const divElement: any = virtualListRef.current; //document.getElementById("pdfContainer");
       if (!divElement) {
         return;
       }
