@@ -56,6 +56,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
 
     React.useEffect(() => {
       const handleEscape = (event: any) => {
+        console.log("trigger fullsreenchange");
         if (document.fullscreenElement) {
         } else {
           setFullscreenFlag(false);
