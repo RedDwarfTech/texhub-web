@@ -53,27 +53,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     });
     const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
 
-React.useEffect(() => {
-  // https://stackoverflow.com/questions/25126106/capture-esc-event-when-exiting-full-screen-mode
-  const handleEscape = (event: any) => {
-    console.log("trigger fullsreenchange");
-    if (
-      !document.fullscreenElement &&
-      !document.webkitIsFullScreen &&
-      !document.mozFullScreen &&
-      !document.msFullscreenElement
-    ) {
-      ///fire your event
-      setFullscreenFlag(false);
-    }
-  };
-  document.addEventListener("fullscreenchange", handleEscape);
-  document.addEventListener("webkitfullscreenchange", handleEscape);
-  document.addEventListener("mozfullscreenchange", handleEscape);
-  document.addEventListener("MSFullscreenChange", handleEscape);
-  return () => {};
-}, []);
-
     React.useEffect(() => {
       if (projAttr.pdfScale === 1 && cachedScale) {
         return;
