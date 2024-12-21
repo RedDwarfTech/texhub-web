@@ -5,14 +5,19 @@ import {
 import { setProjAttr } from "@/service/project/ProjectService";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import { scrollToOffset } from "../doc/PDFPreviewHandle";
+import { VariableSizeList } from "react-window";
 
 export const usePreviewHandler = (projectId: string, viewModel: string) => {
   const { t } = useTranslation();
 
-  const handleScrollTop = () => {
-    const pdfContainerDiv = document.getElementById("pdfContainer");
-    if (pdfContainerDiv) {
-      pdfContainerDiv.scrollTop = 0;
+  const handleScrollTop = (
+    virtualListRef: React.RefObject<VariableSizeList>,
+    projId: string,
+    viewModel: string
+  ) => {
+    if (virtualListRef && virtualListRef.current) {
+      scrollToOffset(0, virtualListRef, projectId, viewModel);
     }
   };
 

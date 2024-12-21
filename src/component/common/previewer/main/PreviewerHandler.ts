@@ -1,7 +1,11 @@
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { QuerySrcPos } from "@/model/request/proj/query/QuerySrcPos";
 import { getCurPdfPage } from "@/service/project/preview/PreviewService";
-import { getSrcPosition, getTempAuthCode, sendQueueCompileRequest } from "@/service/project/ProjectService";
+import {
+  getSrcPosition,
+  getTempAuthCode,
+  sendQueueCompileRequest,
+} from "@/service/project/ProjectService";
 import { toast } from "react-toastify";
 import { getAccessToken } from "../../cache/Cache";
 import { getPreviewUrl } from "@/service/file/FileService";
@@ -58,7 +62,7 @@ export const debugApp = (
       "fullscreen:" + readConfig("pdfScrollKey") + projectId;
     let fullScroll = localStorage.getItem(keyFullscreen);
     console.log("fullScroll:" + fullScroll);
-    scrollToOffset(parseInt(offset), virtualListRef);
+    scrollToOffset(parseInt(offset), virtualListRef, projectId, "fullscreen");
   }
 };
 

@@ -328,7 +328,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
             data-bs-toggle="tooltip"
             title={t("btn_scroll_top")}
             onClick={() => {
-              handleScrollTop();
+              handleScrollTop(virtualListRef, projectId, viewModel);
             }}
           >
             <i className="fa-solid fa-arrow-up"></i>

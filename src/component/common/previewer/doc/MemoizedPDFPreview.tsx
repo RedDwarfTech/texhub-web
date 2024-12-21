@@ -70,14 +70,8 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
           setDocLoadTime();
           console.log("get the newOffset:" + fullScreenOffset);
           setTimeout(() => {
-            scrollToOffset(fullScreenOffset, virtualListRef);
+            scrollToOffset(fullScreenOffset, virtualListRef, projId, viewModel);
           }, 500);
-          setCurPdfScrollOffset(
-            fullScreenOffset,
-            projId,
-            viewModel,
-            "project attribute update"
-          );
         }
       }
     }, [projAttr, cachedScale]);
