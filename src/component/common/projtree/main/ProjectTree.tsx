@@ -34,7 +34,6 @@ import {
 import { TeXFileType } from "@/model/enum/TeXFileType";
 import { DownloadFileReq } from "@/model/request/file/query/DownloadFileReq";
 import { useTranslation } from "react-i18next";
-import { ProjInfo } from "@/model/proj/ProjInfo";
 
 const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const divRef = props.treeDivRef;
@@ -239,7 +238,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     });
     sortedData.forEach((item: TexFileModel) => {
       let expandStatus: boolean = ProjectTreeFolder.getExpandStatus(item);
-      let marginText = level === 0 ? "6px" : "20px";
       tagList.push(
         <div
           id={item.file_id}
@@ -249,7 +247,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
           onDragOver={(e) => handleDragOver(e, item)}
           onDrop={(e) => handleDrop(e, item)}
           onDragLeave={(e) => handleDragLeave(e, item)}
-          style={{ marginLeft: marginText }}
         >
           <div
             key={item.file_id}
@@ -262,6 +259,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                 ? styles.fileItemSelected
                 : styles.fileItem
             }
+            style={{ paddingLeft: `${level === 0 ? 10 : (level * 20 + 10)}px` }}
           >
             {renderIcon(item)}
             <div className={styles.fileName}>{item.name}</div>

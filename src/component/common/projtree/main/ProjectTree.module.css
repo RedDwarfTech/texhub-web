@@ -48,9 +48,9 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    padding-left: 5px;
+    padding-left: 10px;
     gap: 6px;
-    margin-left: 8px;
+    margin-left: 0px;
     height: 32px;
 }
 
