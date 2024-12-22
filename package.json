@@ -137,5 +137,10 @@
     "overrides": {
       "pdfjs-dist": "^4.9.155"
     }
+  },
+  "overrides": {
+    "react-pdf": {
+      "pdfjs-dist": "4.9.155"
+    }
   }
 }
