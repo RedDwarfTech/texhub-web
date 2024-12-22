@@ -145,7 +145,11 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       return (
         <div className={styles.menuIcons}>
           <i
-            className="fa-solid fa-chevron-right"
+            className={
+              item.expand
+                ? `fa-solid fa-chevron-down`
+                : `fa-solid fa-chevron-right`
+            }
             onClick={(e: React.MouseEvent<HTMLElement>) => {
               handleExpandFolderEvent(e, item, texFileTree, setTexFileTree);
             }}
