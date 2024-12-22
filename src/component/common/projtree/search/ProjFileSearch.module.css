@@ -37,9 +37,17 @@
     flex-grow: 0;
 }
 
-.matchedContent{
+.matchedIcon {
     margin-left: 5px;
+}
 
+.matchedTitle {
+    margin-left: 5px;
+}
+
+.matchedContent{
+    margin-left: 15px;
+    font-size: 15px;
 }
 
 .matchedContent:hover {

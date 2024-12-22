@@ -51,7 +51,10 @@ const ProjFileSearch: React.FC<ProjSearchProps> = (props: ProjSearchProps) => {
     for (let i = 0; i < hitItem.length; i++) {
       tagList.push(
         <div>
-          <div className={styles.hitFile}>{hitItem[i].name}</div>
+          <div className={styles.hitFile}>
+            <i className={`fa-solid fa-chevron-right ${styles.matchedIcon}`}></i>
+            <i className={styles.matchedTitle}>{hitItem[i].name}</i>
+          </div>
           <div>
             <i
               className={styles.matchedContent}
