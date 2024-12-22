@@ -133,7 +133,9 @@
     "ts-jest": "^29.2.5",
     "typescript": "^4.9.5"
   },
-  "overrides": {
-    "pdfjs-dist": "^4.9.155"
+  "pnpm": {
+    "overrides": {
+      "pdfjs-dist": "^4.9.155"
+    }
   }
 }
