@@ -35,6 +35,10 @@
     gap: 5px;
 }
 
+.expandFlag {
+    width: 10px;
+}
+
 .menuIcons :first-child {
     font-size: 13px;
 }
