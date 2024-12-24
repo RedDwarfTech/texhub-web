@@ -240,8 +240,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       pdfOptions.httpHeaders &&
       getAuthorization(pdfOptions.httpHeaders) !== "Bearer " + getAccessToken()
     ) {
-      debugger;
-      console.log("reset the expired token");
       pdfOptions.httpHeaders = {
         Authorization: "Bearer " + getAccessToken(),
       };
