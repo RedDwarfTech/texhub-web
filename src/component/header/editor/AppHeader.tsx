@@ -12,7 +12,6 @@ import {
   sendQueueCompileRequest,
   setCompileStatus,
   showPreviewTab,
-  updateLogText,
   projHistoryPage,
 } from "@/service/project/ProjectService";
 import { useNavigate } from "react-router-dom";
@@ -74,7 +73,7 @@ const EHeader: React.FC = () => {
         }
       } else if (queue.comp_status === CompileStatus.COMPILING) {
         clearCompileCheck(interval);
-        getStreamLog(req, onSseMessage);
+        getStreamLog(req);
       } else if (queue.comp_status === CompileStatus.COMPLETE) {
         clearCompileCheck(interval);
         compileProjectLog(req);
@@ -116,10 +115,6 @@ const EHeader: React.FC = () => {
       project_id: mainFile.project_id,
     };
     projHistoryPage(hist);
-  };
-
-  const onSseMessage = (msg: string, eventSource: EventSource) => {
-    updateLogText(msg);
   };
 
   if (!mainFile) {

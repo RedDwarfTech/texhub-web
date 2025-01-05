@@ -120,15 +120,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     if (latestComp && Object.keys(latestComp).length > 0) {
       if (latestComp.path && latestComp.path.length > 0) {
         let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + projectId;
-        setCurPdfUrl(newPdfUrl);
-      }
-    }
-  }, [latestComp]);
-
-  React.useEffect(() => {
-    if (latestComp && Object.keys(latestComp).length > 0) {
-      if (latestComp.path && latestComp.path.length > 0) {
-        let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + projectId;
         updatePdfUrl(newPdfUrl);
       } else {
         compile(projectId.toString());
@@ -202,14 +193,25 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
       }
       setCompStatus(CompileStatus.COMPILING);
       setCurLogText((prevState) => {
-        let newLogText =
-          prevState && prevState.length > 0
-            ? prevState + "<br/>" + streamLogText
-            : prevState + streamLogText;
-        return newLogText;
+        return getNewText(prevState, streamLogText);
       });
     }
   }, [streamLogText]);
+
+  const getNewText = (prevState: any, streamLogText: string) => {
+    let newLogText = "";
+    if (prevState && prevState.length > 0) {
+      if (streamLogText.startsWith("!")) {
+        newLogText =
+          prevState + "<br/><p color='red'>" + streamLogText + "</p>";
+      } else {
+        newLogText = prevState + "<br/>" + streamLogText;
+      }
+    } else {
+      newLogText = prevState + streamLogText;
+    }
+    return newLogText;
+  };
 
   const renderPreviewTab = () => {
     switch (curPreviewTab) {
@@ -331,7 +333,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
               data-bs-toggle="tooltip"
               title={t("btn_home")}
               onClick={() => {
-                window.location.href ="/";
+                window.location.href = "/";
               }}
             >
               <i className="fa-solid fa-home"></i>

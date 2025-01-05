@@ -24,7 +24,6 @@ import {
   setCurPdfPage,
   setCurPdfScrollOffset,
   setDocLoadTime,
-  setFullscreenFlag,
 } from "@/service/project/preview/PreviewService";
 import { PreviewPdfAttribute } from "@/model/proj/config/PreviewPdfAttribute";
 import TeXPDFPage from "./TeXPDFPage";
