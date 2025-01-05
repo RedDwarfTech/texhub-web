@@ -204,7 +204,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
       if (streamLogText.startsWith("!")) {
         console.log("compilewitherror");
         newLogText =
-          prevState + "<br/><p color='red'>" + streamLogText + "</p>";
+          prevState + "<br/><p style='color:red;'>" + streamLogText + "</p>";
       } else {
         newLogText = prevState + "<br/>" + streamLogText;
       }
