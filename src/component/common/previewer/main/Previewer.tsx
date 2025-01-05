@@ -205,6 +205,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         console.log("compilewitherror");
         newLogText =
           prevState + "<br/><p style='color:red;'>" + streamLogText + "</p>";
+        debugger;
       } else {
         newLogText = prevState + "<br/>" + streamLogText;
       }
