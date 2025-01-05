@@ -322,7 +322,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
                 enterFullScreen();
               }}
             >
-              <i className="fa-solid fa-maximize"></i>
+              <i className="fa-solid fa-expand"></i>
             </button>
           ) : null}
           <button
@@ -392,7 +392,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
               handleFullScreen();
             }}
           >
-            <i className="fa fa-expand"></i>
+            <i className="fa fa-maximize"></i>
           </button>
         </div>
       );
