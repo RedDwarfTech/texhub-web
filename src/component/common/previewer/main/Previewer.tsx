@@ -325,6 +325,18 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
               <i className="fa-solid fa-expand"></i>
             </button>
           ) : null}
+          {viewModel === "fullscreen" ? (
+            <button
+              className={styles.previewIconButton}
+              data-bs-toggle="tooltip"
+              title={t("btn_home")}
+              onClick={() => {
+                window.location.href ="/";
+              }}
+            >
+              <i className="fa-solid fa-home"></i>
+            </button>
+          ) : null}
           <button
             className={styles.previewIconButton}
             data-bs-toggle="tooltip"
