@@ -103,6 +103,9 @@
     font-size: 15px;
     background-color: #DCDCDC;
     border-radius: 5px;
+    margin-top: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .logLoadingContainer {
