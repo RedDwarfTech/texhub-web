@@ -56,6 +56,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   const [curPreviewTab, setCurPreviewTab] = useState<string>("pdfview");
   const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
   const [curCompileQueue, setCurCompileQueue] = useState<CompileQueue>();
+  const [texCompileResult, setTexCompileResult] = useState<CompileResultType>(CompileResultType.SUCCESS);
   const [numPages, setNumPages] = useState<number>();
   const [curPages, setCurPages] = useState<number>();
   const [devModel, setDevModel] = useState<boolean>();
@@ -206,6 +207,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         newLogText =
           prevState + "<br/><p style='color:red;'>" + streamLogText + "</p>";
         debugger;
+        setTexCompileResult(CompileResultType.FAILED)
       } else {
         newLogText = prevState + "<br/>" + streamLogText;
       }
@@ -421,9 +423,9 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
 
   const renderCompiled = () => {
     if (curCompileQueue && Object.keys(curCompileQueue).length > 0) {
-      if (curCompileQueue.comp_result === CompileResultType.FAILED) {
+      if (texCompileResult === CompileResultType.FAILED) {
         return <i className="fa-solid fa-bug text-danger"></i>;
-      } else if (curCompileQueue.comp_result === CompileResultType.SUCCESS) {
+      } else if (texCompileResult === CompileResultType.SUCCESS) {
         return <i className="fa-solid fa-square-check text-success"></i>;
       }
     }
