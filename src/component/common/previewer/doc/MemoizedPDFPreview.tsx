@@ -196,14 +196,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
                 projId,
                 "IntersectionObserver"
               );
-              console.log(
-                "item rendered, overscanStopIndex:" +
-                  props.overscanStopIndex +
-                  ",pdf.numPages" +
-                  pdf.numPages +
-                  ",height:" +
-                  height
-              );
             }}
           >
             {({
@@ -278,6 +270,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
   (prevProps, nextProps) => {
     let arePropsEqual = prevProps.curPdfUrl === nextProps.curPdfUrl;
     let areAuthEqual = authTokenEquals(nextProps.pdfOptions);
+    // if the final value is true, means did not need to rerender 
     return arePropsEqual && areAuthEqual;
   }
 );

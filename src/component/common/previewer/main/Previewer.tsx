@@ -85,17 +85,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     } else {
       setDevModel(false);
     }
-    setTimeout(() => {
-      if (virtualListRef && virtualListRef.current) {
-        let scrollOffset = getCurPdfScrollOffset(projectId, viewModel);
-        // virtualListRef.current.scrollTo(scrollOffset);
-        console.log(
-          "This virtualListRef is not null, scroll to:" + scrollOffset
-        );
-      } else {
-        console.log("This virtualListRef is null");
-      }
-    }, 10000);
   }, []);
 
   React.useEffect(() => {
@@ -266,7 +255,9 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   }, []);
 
   const renderPdfView = () => {
-    if (!curPdfUrl || !projectId) return <div>Loading...</div>;
+    if (!curPdfUrl || !projectId){
+      return <div>Loading...</div>;
+    } 
     return (
       <MemoizedPDFPreview
         curPdfUrl={curPdfUrl}
@@ -427,6 +418,8 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         return <i className="fa-solid fa-bug text-danger"></i>;
       } else if (texCompileResult === CompileResultType.SUCCESS) {
         return <i className="fa-solid fa-square-check text-success"></i>;
+      }else {
+        return <i className="fa-solid fa-spinner"></i>;
       }
     }
   };
