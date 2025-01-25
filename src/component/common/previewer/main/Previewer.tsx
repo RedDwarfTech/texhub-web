@@ -206,6 +206,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         texCompileResult !== CompileResultType.FAILED &&
         streamLogText.indexOf("====END====") >= 0
       ) {
+        debugger
         setTexCompileResult(CompileResultType.SUCCESS);
       }
     } else {
