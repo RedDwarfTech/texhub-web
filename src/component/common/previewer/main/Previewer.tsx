@@ -56,7 +56,9 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   const [curPreviewTab, setCurPreviewTab] = useState<string>("pdfview");
   const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
   const [curCompileQueue, setCurCompileQueue] = useState<CompileQueue>();
-  const [texCompileResult, setTexCompileResult] = useState<CompileResultType>(CompileResultType.SUCCESS);
+  const [texCompileResult, setTexCompileResult] = useState<CompileResultType>(
+    CompileResultType.SUCCESS
+  );
   const [numPages, setNumPages] = useState<number>();
   const [curPages, setCurPages] = useState<number>();
   const [devModel, setDevModel] = useState<boolean>();
@@ -196,9 +198,15 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         newLogText =
           prevState + "<br/><p style='color:red;'>" + streamLogText + "</p>";
         debugger;
-        setTexCompileResult(CompileResultType.FAILED)
+        setTexCompileResult(CompileResultType.FAILED);
       } else {
         newLogText = prevState + "<br/>" + streamLogText;
+      }
+      if (
+        texCompileResult !== CompileResultType.FAILED &&
+        streamLogText.indexOf("====END====")
+      ) {
+        setTexCompileResult(CompileResultType.SUCCESS);
       }
     } else {
       newLogText = prevState + streamLogText;
@@ -255,9 +263,9 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   }, []);
 
   const renderPdfView = () => {
-    if (!curPdfUrl || !projectId){
+    if (!curPdfUrl || !projectId) {
       return <div>Loading...</div>;
-    } 
+    }
     return (
       <MemoizedPDFPreview
         curPdfUrl={curPdfUrl}
@@ -418,7 +426,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         return <i className="fa-solid fa-bug text-danger"></i>;
       } else if (texCompileResult === CompileResultType.SUCCESS) {
         return <i className="fa-solid fa-square-check text-success"></i>;
-      }else {
+      } else {
         return <i className="fa-solid fa-spinner"></i>;
       }
     }
