@@ -12,6 +12,7 @@ import { CompileQueue } from "@/model/proj/CompileQueue";
 import {
   getLatestCompile,
   setCompileQueue,
+  setContextCompileResultType,
   setLatestCompile,
   showPreviewTab,
   updatePdfUrl,
@@ -202,7 +203,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         newLogText =
           prevState + "<br/><p style='color:red;'>" + streamLogText + "</p>";
         debugger;
-        setTexCompileResult(CompileResultType.FAILED);
+        setContextCompileResultType(CompileResultType.FAILED);
       } else {
         newLogText = prevState + "<br/>" + streamLogText;
       }
@@ -211,7 +212,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         streamLogText.indexOf("====END====") >= 0
       ) {
         debugger;
-        setTexCompileResult(CompileResultType.SUCCESS);
+        setContextCompileResultType(CompileResultType.PROCESSING);
       }
     } else {
       newLogText = prevState + streamLogText;
