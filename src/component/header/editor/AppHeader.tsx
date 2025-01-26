@@ -10,9 +10,10 @@ import {
   getStreamLog,
   getCompQueueStatus,
   sendQueueCompileRequest,
-  setCompileStatus,
+  setContextCompileStatus,
   showPreviewTab,
   projHistoryPage,
+  setContextCompileResultType,
 } from "@/service/project/ProjectService";
 import { useNavigate } from "react-router-dom";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
@@ -25,6 +26,7 @@ import TeXShare from "@/page/profile/project/share/TeXShare";
 import { useTranslation } from "react-i18next";
 import ProjHistory from "@/page/main/history/ProjHistory";
 import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
+import { CompileResultType } from "@/model/proj/compile/CompileResultType";
 
 const EHeader: React.FC = () => {
   const { fileTree } = useSelector((state: AppState) => state.file);
@@ -95,6 +97,7 @@ const EHeader: React.FC = () => {
   const handleQueueCompile = (mainFile: TexFileModel) => {
     if (!mainFile) {
       toast.error("file is null");
+      return;
     }
     let req: CompileQueueReq = {
       project_id: mainFile.project_id,
@@ -102,7 +105,8 @@ const EHeader: React.FC = () => {
     sendQueueCompileRequest(req).then((res) => {
       if (ResponseHandler.responseSuccess(res)) {
         showPreviewTab("logview");
-        setCompileStatus(CompileStatus.WAITING);
+        setContextCompileStatus(CompileStatus.WAITING);
+        setContextCompileResultType(CompileResultType.PROCESSING);
         clearCompLogText("====CLEAR====");
       }
     });

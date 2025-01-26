@@ -36,7 +36,6 @@ import {
 import { VariableSizeList } from "react-window";
 import {
   getCurPdfPage,
-  getCurPdfScrollOffset,
   setCurPdfPage,
 } from "@/service/project/preview/PreviewService";
 import { usePreviewHandler } from "./usePreviewHandler";
@@ -52,6 +51,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   const [compStatus, setCompStatus] = useState<CompileStatus>(
     CompileStatus.COMPLETE
   );
+  const { compileResultType } = useSelector((state: AppState) => state.preview);
   const [curLogText, setCurLogText] = useState<string>("");
   const [curPreviewTab, setCurPreviewTab] = useState<string>("pdfview");
   const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
@@ -76,7 +76,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     latestComp,
     projInfo,
     endSignal,
-    compileResult,
+    remoteCompileResult,
   } = useSelector((state: AppState) => state.proj);
   const { t } = useTranslation();
 
@@ -88,6 +88,10 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
       setDevModel(false);
     }
   }, []);
+
+  React.useEffect(() => {
+    setTexCompileResult(compileResultType);
+  }, [compileResultType]);
 
   React.useEffect(() => {
     getLatestCompile(projectId);
@@ -120,16 +124,16 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   }, [latestComp]);
 
   React.useEffect(() => {
-    if (!compileResult || Object.keys(compileResult).length === 0) {
+    if (!remoteCompileResult || Object.keys(remoteCompileResult).length === 0) {
       return;
     }
-    let proj_id = compileResult.project_id;
-    let vid = compileResult.out_path;
+    let proj_id = remoteCompileResult.project_id;
+    let vid = remoteCompileResult.out_path;
     if (proj_id && vid) {
       let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + projectId;
       updatePdfUrl(newPdfUrl);
     }
-  }, [compileResult]);
+  }, [remoteCompileResult]);
 
   React.useEffect(() => {
     if (endSignal && endSignal.length > 0) {
@@ -206,7 +210,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         texCompileResult !== CompileResultType.FAILED &&
         streamLogText.indexOf("====END====") >= 0
       ) {
-        debugger
+        debugger;
         setTexCompileResult(CompileResultType.SUCCESS);
       }
     } else {
@@ -427,7 +431,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         return <i className="fa-solid fa-bug text-danger"></i>;
       } else if (texCompileResult === CompileResultType.SUCCESS) {
         return <i className="fa-solid fa-square-check text-success"></i>;
-      } else {
+      } else if (texCompileResult === CompileResultType.PROCESSING) {
         return <i className="fa-solid fa-spinner"></i>;
       }
     }

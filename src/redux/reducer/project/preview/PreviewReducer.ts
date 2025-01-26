@@ -1,8 +1,10 @@
+import { CompileResultType } from "@/model/proj/compile/CompileResultType";
 import { AppState } from "@/redux/types/AppState";
 
 const initState: AppState["preview"] = {
   curPage: -1,
   fullscreenFlag: false,
+  compileResultType: CompileResultType.SUCCESS
 };
 
 const PreviewReducer = (state = initState, action: any) => {
@@ -16,6 +18,11 @@ const PreviewReducer = (state = initState, action: any) => {
       return {
         ...state,
         fullscreenFlag: action.data,
+      };
+    case "SET_COMPILE_RESULT_TYPE":
+      return {
+        ...state,
+        compileResultType: action.data,
       };
     default:
       break;

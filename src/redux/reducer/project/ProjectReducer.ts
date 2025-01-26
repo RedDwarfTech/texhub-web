@@ -1,4 +1,4 @@
-import { CompileResult } from "@/model/proj/CompileResult";
+import { RemoteCompileResult } from "@/model/proj/RemoteCompileResult";
 import { LatestCompile } from "@/model/proj/LatestCompile";
 import { AppState } from "@/redux/types/AppState";
 import { JoinResult } from "@/model/proj/JoinResult";
@@ -15,7 +15,7 @@ import { TexProjects } from "@/model/proj/TexProjects";
 const initState: AppState["proj"] = {
     projList: {} as TexProjects,
     folderProjList: [],
-    compileResult: {} as CompileResult,
+    remoteCompileResult: {} as RemoteCompileResult,
     joinResult: {} as JoinResult,
     latestComp: {} as LatestCompile,
     texPdfUrl: "",
@@ -123,6 +123,11 @@ const ProjectReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 compileStatus: action.data
+            };
+        case "SET_COMPILE_RESULT":
+            return {
+                ...state,
+                compileResult: action.data
             };
         case "PROJ_ATTR":
             const newObject: PreviewPdfAttribute = { ...state.projAttr, ...action.data };

@@ -30,6 +30,9 @@ import { CopyProjReq } from "@/model/request/proj/edit/CopyProjReq";
 import { RenameFolderReq } from "@/model/request/proj/edit/RenameFolderReq";
 import { DelFolderReq } from "@/model/request/proj/edit/DelFolderReq";
 import { QueryHistoryDetail } from "@/model/request/proj/query/QueryHistoryDetail";
+import { RemoteCompileResult } from "@/model/proj/RemoteCompileResult";
+import { CompileResultType } from "@/model/proj/compile/CompileResultType";
+import { PreviewActionType } from "@/redux/action/project/preview/PreviewAction";
 
 export function getProjectList(req: QueryProjReq) {
   const params = new URLSearchParams();
@@ -362,7 +365,7 @@ export function doCompile(params: CompileProjLog) {
     const actionTypeString: string =
       ProjectActionType[ProjectActionType.TEX_COMP_END];
     eventNative.close();
-    setCompileStatus(CompileStatus.COMPLETE);
+    setContextCompileStatus(CompileStatus.COMPLETE);
     return XHRClient.dispathAction(event.data, actionTypeString, store);
   });
 }
@@ -397,10 +400,16 @@ export function delProjInfo() {
   return XHRClient.dispathAction("", actionTypeString, store);
 }
 
-export function setCompileStatus(compStatus: CompileStatus) {
+export function setContextCompileStatus(compStatus: CompileStatus) {
   const actionTypeString: string =
     ProjectActionType[ProjectActionType.SET_COMPILE_STATUS];
   return XHRClient.dispathAction(compStatus, actionTypeString, store);
+}
+
+export function setContextCompileResultType(compResult: CompileResultType) {
+  const actionTypeString: string =
+    ProjectActionType[PreviewActionType.SET_COMPILE_RESULT_TYPE];
+  return XHRClient.dispathAction(compResult, actionTypeString, store);
 }
 
 export function setLatestCompile(data: LatestCompile) {

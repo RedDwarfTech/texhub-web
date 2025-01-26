@@ -1,4 +1,4 @@
-import { CompileResult } from "@/model/proj/CompileResult";
+import { RemoteCompileResult } from "@/model/proj/RemoteCompileResult";
 import { LatestCompile } from "@/model/proj/LatestCompile";
 import { TexProjectModel } from "@/model/proj/TexProjectModel";
 import { TexFileModel } from "@/model/file/TexFileModel";
@@ -20,6 +20,7 @@ import * as Y from 'yjs';
 import { ProjCollarModel } from "@/model/proj/share/ProjCollarModel";
 import { EditorView } from "codemirror";
 import { WebsocketProvider } from "rdy-websocket";
+import { CompileResultType } from "@/model/proj/compile/CompileResultType";
 
 /**
  * the legacy proj contains too much state fields that make
@@ -32,7 +33,7 @@ export interface AppState {
     proj: {
         projList: TexProjects,
         folderProjList: TexProjectModel[],
-        compileResult: CompileResult,
+        remoteCompileResult: RemoteCompileResult,
         latestComp: LatestCompile,
         joinResult: JoinResult,
         texPdfUrl: string,
@@ -85,6 +86,7 @@ export interface AppState {
     },
     preview: {
         curPage: number,
-        fullscreenFlag: boolean
+        fullscreenFlag: boolean,
+        compileResultType: CompileResultType
     }
 }
