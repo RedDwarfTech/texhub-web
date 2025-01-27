@@ -13,7 +13,6 @@ import {
   setContextCompileStatus,
   showPreviewTab,
   projHistoryPage,
-  setContextCompileResultType,
 } from "@/service/project/ProjectService";
 import { useNavigate } from "react-router-dom";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
@@ -27,6 +26,7 @@ import { useTranslation } from "react-i18next";
 import ProjHistory from "@/page/main/history/ProjHistory";
 import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
 import { CompileResultType } from "@/model/proj/compile/CompileResultType";
+import { setContextCompileResultType } from "@/service/project/preview/PreviewService";
 
 const EHeader: React.FC = () => {
   const { fileTree } = useSelector((state: AppState) => state.file);

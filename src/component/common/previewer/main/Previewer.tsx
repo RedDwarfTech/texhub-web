@@ -92,7 +92,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
 
   React.useEffect(() => {
     setTexCompileResult(compileResultType);
-    debugger;
   }, [compileResultType]);
 
   React.useEffect(() => {
@@ -203,7 +202,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         console.log("compilewitherror");
         newLogText =
           prevState + "<br/><p style='color:red;'>" + streamLogText + "</p>";
-        debugger;
         setContextCompileResultType(CompileResultType.FAILED);
       } else {
         newLogText = prevState + "<br/>" + streamLogText;
@@ -212,7 +210,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
         texCompileResult !== CompileResultType.FAILED &&
         streamLogText.indexOf("====END====") >= 0
       ) {
-        debugger;
         setContextCompileResultType(CompileResultType.PROCESSING);
       }
     } else {
