@@ -406,12 +406,6 @@ export function setContextCompileStatus(compStatus: CompileStatus) {
   return XHRClient.dispathAction(compStatus, actionTypeString, store);
 }
 
-export function setContextCompileResultType(compResult: CompileResultType) {
-  const actionTypeString: string =
-    ProjectActionType[PreviewActionType.SET_COMPILE_RESULT_TYPE];
-  return XHRClient.dispathAction(compResult, actionTypeString, store);
-}
-
 export function setLatestCompile(data: LatestCompile) {
   const actionTypeString: string =
     ProjectActionType[ProjectActionType.LATEST_COMPILE];

@@ -99,7 +99,6 @@ const EHeader: React.FC = () => {
       toast.error("file is null");
       return;
     }
-    setContextCompileResultType(CompileResultType.PROCESSING);
     let req: CompileQueueReq = {
       project_id: mainFile.project_id,
     };
@@ -107,6 +106,7 @@ const EHeader: React.FC = () => {
       if (ResponseHandler.responseSuccess(res)) {
         showPreviewTab("logview");
         setContextCompileStatus(CompileStatus.WAITING);
+        setContextCompileResultType(CompileResultType.PROCESSING);
         clearCompLogText("====CLEAR====");
       }
     });

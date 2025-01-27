@@ -12,7 +12,6 @@ import { CompileQueue } from "@/model/proj/CompileQueue";
 import {
   getLatestCompile,
   setCompileQueue,
-  setContextCompileResultType,
   setLatestCompile,
   showPreviewTab,
   updatePdfUrl,
@@ -37,6 +36,7 @@ import {
 import { VariableSizeList } from "react-window";
 import {
   getCurPdfPage,
+  setContextCompileResultType,
   setCurPdfPage,
 } from "@/service/project/preview/PreviewService";
 import { usePreviewHandler } from "./usePreviewHandler";
@@ -92,6 +92,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
 
   React.useEffect(() => {
     setTexCompileResult(compileResultType);
+    debugger;
   }, [compileResultType]);
 
   React.useEffect(() => {
@@ -426,7 +427,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     return <div></div>;
   };
 
-  const renderCompiled = () => {
+  const renderCompiled = (texCompileResult: CompileResultType) => {
     if (curCompileQueue && Object.keys(curCompileQueue).length > 0) {
       if (texCompileResult === CompileResultType.FAILED) {
         return <i className="fa-solid fa-bug text-danger"></i>;
@@ -500,7 +501,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
           }}
         >
           <i className="fa-regular fa-file-lines"></i> {t("tab_log")}{" "}
-          {renderCompiled()}
+          {renderCompiled(texCompileResult)}
         </button>
       </div>
     );

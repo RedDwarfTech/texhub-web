@@ -20,6 +20,7 @@ const PreviewReducer = (state = initState, action: any) => {
         fullscreenFlag: action.data,
       };
     case "SET_COMPILE_RESULT_TYPE":
+      debugger;
       return {
         ...state,
         compileResultType: action.data,

@@ -3,6 +3,7 @@ import { XHRClient } from "rd-component";
 import store from "@/redux/store/store";
 import { readConfig } from "@/config/app/config-reader";
 import { BaseMethods } from "rdjs-wheel";
+import { CompileResultType } from "@/model/proj/compile/CompileResultType";
 
 export function setCurPdfScale(
   scale: number,
@@ -87,4 +88,10 @@ export function getCurPdfScrollOffset(projId: string, viewModel: string) {
   } else {
     return 0;
   }
+}
+
+export function setContextCompileResultType(compResult: CompileResultType) {
+  const actionTypeString: string =
+  PreviewActionType[PreviewActionType.SET_COMPILE_RESULT_TYPE];
+  return XHRClient.dispathAction(compResult, actionTypeString, store);
 }
