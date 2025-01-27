@@ -48,16 +48,16 @@ const handleWsAuth = (
 ) => {
   if (event.status === "failed") {
     wsProvider.shouldConnect = false;
-    wsProvider.ws?.close();
+    wsProvider.ws?.close(1000, "failed when connect");
   }
   if (event.status === "expired") {
     RequestHandler.handleWebAccessTokenExpire().then((res) => {
       if (ResponseHandler.responseSuccess(res)) {
-        wsProvider.ws?.close();
+        wsProvider.ws?.close(1000, "expired refresh success");
         wsProvider = doWsConn(ydoc, editorAttr);
       } else {
         wsProvider.shouldConnect = false;
-        wsProvider.ws?.close();
+        wsProvider.ws?.close(1000, "expired refresh failed");
       }
     });
   }
@@ -159,7 +159,7 @@ export function initEditor(
 ) {
   if (legacyWs) {
     // close the legacy websocket to avoid 1006 disconnect on the server side
-    legacyWs.ws?.close(1000,"client send close signal");
+    legacyWs.ws?.close(1000, "client send close signal");
   }
   if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
     activeEditorView.destroy();
