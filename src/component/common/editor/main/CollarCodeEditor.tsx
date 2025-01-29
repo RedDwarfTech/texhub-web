@@ -23,6 +23,7 @@ import { handlePdfLocate, handleSrcTreeNav } from "./CollarCodeEditorHandler";
 import { useTranslation } from "react-i18next";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { BaseMethods } from "rdjs-wheel";
+import { io } from "socket.io-client";
 
 export type EditorProps = {
   projectId: string;
@@ -211,7 +212,8 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
    * Try to reconnect the editor websocket
    */
   const tryReconnect = (connState: string) => {
-    if(BaseMethods.isNull(connState)) {
+    connectSocketIO();
+    if (BaseMethods.isNull(connState)) {
       return;
     }
     switch (connState) {
@@ -228,6 +230,25 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       default:
         break;
     }
+  };
+
+  const connectSocketIO = () => {
+    const socket = io("wss://ws.poemhub.top", {
+      reconnectionDelayMax: 10000,
+      auth: {
+        token: "123",
+      },
+      query: {
+        "my-key": "my-value",
+      },
+    });
+    socket.connect();
+    socket.io.on("ping", () => {
+      console.log("receive ping");
+    });
+    socket.io.on("error", (error) => {
+      console.log("error", error);
+    });
   };
 
   return (
