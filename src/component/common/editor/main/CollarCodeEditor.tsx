@@ -7,7 +7,7 @@ import { WebsocketProvider } from "rdy-websocket";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import { initEditor, themeConfig } from "@/service/editor/CollarEditorService";
+import { initEditor, initSocketIOEditor, themeConfig } from "@/service/editor/CollarEditorService";
 import { themeMap } from "@/component/common/editor/foundation/extensions/theme/theme";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { delProjInfo, projHasFile } from "@/service/project/ProjectService";
@@ -23,7 +23,7 @@ import { handlePdfLocate, handleSrcTreeNav } from "./CollarCodeEditorHandler";
 import { useTranslation } from "react-i18next";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { BaseMethods } from "rdjs-wheel";
-import { io } from "socket.io-client";
+import { io, ManagerOptions, SocketOptions } from "socket.io-client";
 
 export type EditorProps = {
   projectId: string;
@@ -141,7 +141,12 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       name: file.name,
       theme: themeMap.get("Solarized Light")!,
     };
-    initEditor(editorAttr, activeEditorView, edContainer, wsProvider);
+    let wsChannel = localStorage.getItem("legacyModel");
+    if (wsChannel && wsChannel.toString() === "socketio") {
+      initSocketIOEditor(editorAttr, activeEditorView, edContainer, wsProvider);
+    } else {
+      initEditor(editorAttr, activeEditorView, edContainer, wsProvider);
+    }
   };
 
   const destroy = () => {
@@ -233,7 +238,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   };
 
   const connectSocketIO = () => {
-    const socket = io("wss://ws.poemhub.top", {
+    let options: Partial<ManagerOptions & SocketOptions> = {
       reconnectionDelayMax: 10000,
       auth: {
         token: "123",
@@ -241,7 +246,11 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       query: {
         "my-key": "my-value",
       },
-    });
+      extraHeaders: {
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+    const socket = io("wss://ws.poemhub.top", options);
     socket.connect();
     socket.io.on("ping", () => {
       console.log("receive ping");

@@ -8,6 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 const AppConfig: React.FC = () => {
   const [githubToken, setGithubToken] = useState<string>();
   const [devModel, setDevModel] = useState<boolean>();
+  const [legacyModel, setLegacyModel] = useState<string>();
   const { t } = useTranslation();
 
   React.useEffect(() => {
@@ -17,6 +18,9 @@ const AppConfig: React.FC = () => {
     } else {
       setDevModel(false);
     }
+
+    let wsLegacyModelFlag = localStorage.getItem("legacyModel");
+    setLegacyModel(wsLegacyModelFlag ? wsLegacyModelFlag.toString() : "native");
   }, []);
 
   const handleTokenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,6 +73,35 @@ const AppConfig: React.FC = () => {
     }
   };
 
+  const renderChannelInput = () => {
+    if (legacyModel) {
+      return (
+        <input
+          className="form-check-input"
+          type="checkbox"
+          id="flexSwitchCheckChecked"
+          onChange={() => {
+            setLegacyModel("native");
+            localStorage.setItem("legacyModel", "native");
+          }}
+          checked
+        />
+      );
+    } else {
+      return (
+        <input
+          className="form-check-input"
+          type="checkbox"
+          id="flexSwitchCheckChecked"
+          onChange={() => {
+            setLegacyModel("socketio");
+            localStorage.setItem("legacyModel", "socketio");
+          }}
+        />
+      );
+    }
+  };
+
   return (
     <div>
       <div className="card" style={{ marginBottom: "20px" }}>
@@ -105,6 +138,14 @@ const AppConfig: React.FC = () => {
             <div className="form-check form-switch">
               {renderInput()}
               <label className="form-check-label">{t("title_dev_model")}</label>
+            </div>
+          </div>
+          <div className="col mb-3">
+            <div className="form-check form-switch">
+              {renderChannelInput()}
+              <label className="form-check-label">
+                {t("title_socket_channel")}
+              </label>
             </div>
           </div>
         </div>

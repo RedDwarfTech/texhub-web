@@ -87,7 +87,8 @@
     "vite-plugin-wasm": "^3.4.1",
     "web-vitals": "^2.1.4",
     "y-codemirror.next": "^0.3.5",
-    "yjs": "^13.6.21"
+    "yjs": "^13.6.21",
+    "texhub-broadcast": "1.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
