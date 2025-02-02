@@ -1,6 +1,6 @@
 import { EditorView } from "@codemirror/view";
 // @ts-ignore
-import { WebsocketProvider } from "rdy-websocket";
+import { SocketIOProvider } from "texhub-broadcast";
 import * as Y from "yjs";
 import * as random from "lib0/random";
 import { createExtensions } from "@/component/common/editor/foundation/extensions/extensions";
@@ -42,7 +42,7 @@ let wsRetryCount = 0;
 
 const handleWsAuth = (
   event: any,
-  wsProvider: WebsocketProvider,
+  wsProvider: SocketIOProvider,
   editorAttr: EditorAttr,
   ydoc: Y.Doc
 ) => {
@@ -63,12 +63,12 @@ const handleWsAuth = (
   }
 };
 
-const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): WebsocketProvider => {
+const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): SocketIOProvider => {
   let contains = projHasFile(editorAttr.docId, editorAttr.projectId);
   if (!contains) {
     console.error("initial the file do not belong the project");
   }
-  const wsProvider: WebsocketProvider = new WebsocketProvider(
+  const wsProvider: SocketIOProvider = new SocketIOProvider(
     readConfig("wssUrl"),
     editorAttr.docId,
     ydoc,
@@ -155,7 +155,7 @@ export function initEditor(
   editorAttr: EditorAttr,
   activeEditorView: EditorView | undefined,
   edContainer: RefObject<HTMLDivElement>,
-  legacyWs: WebsocketProvider | undefined
+  legacyWs: SocketIOProvider | undefined
 ) {
   if (legacyWs) {
     // close the legacy websocket to avoid 1006 disconnect on the server side
@@ -174,7 +174,59 @@ export function initEditor(
   setCurYDoc(ydoc);
   const ytext: Y.Text = ydoc.getText(editorAttr.docId);
   const undoManager = new Y.UndoManager(ytext);
-  let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr);
+  let wsProvider: SocketIOProvider = doWsConn(ydoc, editorAttr);
+  ydoc.on("update", (update, origin) => {
+    handleYDocUpdate(editorAttr, ytext, ydoc);
+  });
+  const texEditorState = EditorState.create({
+    doc: ytext.toString(),
+    extensions: createExtensions({
+      ytext: ytext,
+      wsProvider: wsProvider,
+      undoManager: undoManager,
+      docName: docOpt.guid,
+      metadata: metadata,
+    }),
+  });
+  if (
+    edContainer.current &&
+    edContainer.current.children &&
+    edContainer.current.children.length > 0
+  ) {
+    return;
+  }
+  const editorView: EditorView = new EditorView({
+    state: texEditorState,
+    parent: edContainer.current!,
+  });
+  setEditorInstance(editorView);
+  setWebsocketProvider(wsProvider);
+}
+
+export function initSocketIOEditor(
+  editorAttr: EditorAttr,
+  activeEditorView: EditorView | undefined,
+  edContainer: RefObject<HTMLDivElement>,
+  legacyWs: SocketIOProvider | undefined
+) {
+  if (legacyWs) {
+    // close the legacy websocket to avoid 1006 disconnect on the server side
+    legacyWs.ws?.close(1000, "client send close signal");
+  }
+  if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
+    activeEditorView.destroy();
+  }
+  let docOpt = {
+    guid: editorAttr.docId,
+    collectionid: editorAttr.projectId,
+    // https://discuss.yjs.dev/t/error-garbage-collection-must-be-disabled-in-origindoc/2313
+    gc: false,
+  };
+  ydoc = new Y.Doc(docOpt);
+  setCurYDoc(ydoc);
+  const ytext: Y.Text = ydoc.getText(editorAttr.docId);
+  const undoManager = new Y.UndoManager(ytext);
+  let wsProvider: SocketIOProvider = doWsConn(ydoc, editorAttr);
   ydoc.on("update", (update, origin) => {
     handleYDocUpdate(editorAttr, ytext, ydoc);
   });

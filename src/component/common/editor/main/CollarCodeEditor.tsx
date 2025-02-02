@@ -7,7 +7,7 @@ import { WebsocketProvider } from "rdy-websocket";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import { initEditor, initSocketIOEditor, themeConfig } from "@/service/editor/CollarEditorService";
+import { initEditor, themeConfig } from "@/service/editor/CollarEditorService";
 import { themeMap } from "@/component/common/editor/foundation/extensions/theme/theme";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { delProjInfo, projHasFile } from "@/service/project/ProjectService";
@@ -24,6 +24,7 @@ import { useTranslation } from "react-i18next";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { BaseMethods } from "rdjs-wheel";
 import { io, ManagerOptions, SocketOptions } from "socket.io-client";
+import { initSocketIOEditor } from "@/service/editor/CollarEditorSocketIOService";
 
 export type EditorProps = {
   projectId: string;
@@ -142,6 +143,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       theme: themeMap.get("Solarized Light")!,
     };
     let wsChannel = localStorage.getItem("legacyModel");
+    debugger;
     if (wsChannel && wsChannel.toString() === "socketio") {
       initSocketIOEditor(editorAttr, activeEditorView, edContainer, wsProvider);
     } else {

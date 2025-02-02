@@ -74,15 +74,16 @@ const AppConfig: React.FC = () => {
   };
 
   const renderChannelInput = () => {
-    if (legacyModel) {
+    debugger;
+    if (legacyModel === "native") {
       return (
         <input
           className="form-check-input"
           type="checkbox"
           id="flexSwitchCheckChecked"
           onChange={() => {
-            setLegacyModel("native");
-            localStorage.setItem("legacyModel", "native");
+            setLegacyModel("socketio");
+            localStorage.setItem("legacyModel", "socketio");
           }}
           checked
         />
@@ -94,8 +95,8 @@ const AppConfig: React.FC = () => {
           type="checkbox"
           id="flexSwitchCheckChecked"
           onChange={() => {
-            setLegacyModel("socketio");
-            localStorage.setItem("legacyModel", "socketio");
+            setLegacyModel("native");
+            localStorage.setItem("legacyModel", "native");
           }}
         />
       );

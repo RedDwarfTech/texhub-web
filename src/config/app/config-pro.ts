@@ -15,8 +15,7 @@ let proConfigMap = new Map([
   ["pdfScrollKey","pdf:scroll:"],
   ["pdfCurPage","pdf:page:"],
   ["projActiveFile","proj:file:active:"],
-  ["cfSiteKey","0x4AAAAAAANSWx3t0X_4XgDR"],
-  ["wsChannel", "socketio"]
+  ["cfSiteKey","0x4AAAAAAANSWx3t0X_4XgDR"]
 ]); 
 
 export default proConfigMap;
