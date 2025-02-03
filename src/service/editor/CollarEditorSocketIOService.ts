@@ -54,7 +54,7 @@ const handleWsAuth = (
     RequestHandler.handleWebAccessTokenExpire().then((res) => {
       if (ResponseHandler.responseSuccess(res)) {
         wsProvider.ws?.close(1000, "expired refresh success");
-        wsProvider = doWsConn(ydoc, editorAttr);
+        wsProvider = doSocketIOConn(ydoc, editorAttr);
       } else {
         wsProvider.shouldConnect = false;
         wsProvider.ws?.close(1000, "expired refresh failed");
@@ -63,7 +63,7 @@ const handleWsAuth = (
   }
 };
 
-const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
+const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
   let contains = projHasFile(editorAttr.docId, editorAttr.projectId);
   if (!contains) {
     console.error("initial the file do not belong the project");
@@ -174,7 +174,7 @@ export function initEditor(
   setCurYDoc(ydoc);
   const ytext: Y.Text = ydoc.getText(editorAttr.docId);
   const undoManager = new Y.UndoManager(ytext);
-  let wsProvider: SocketIOProvider = doWsConn(ydoc, editorAttr);
+  let wsProvider: SocketIOProvider = doSocketIOConn(ydoc, editorAttr);
   ydoc.on("update", (update, origin) => {
     handleYDocUpdate(editorAttr, ytext, ydoc);
   });
@@ -226,7 +226,7 @@ export function initSocketIOEditor(
   setCurYDoc(ydoc);
   const ytext: Y.Text = ydoc.getText(editorAttr.docId);
   const undoManager = new Y.UndoManager(ytext);
-  let wsProvider: SocketIOProvider = doWsConn(ydoc, editorAttr);
+  let wsProvider: SocketIOProvider = doSocketIOConn(ydoc, editorAttr);
   ydoc.on("update", (update, origin) => {
     handleYDocUpdate(editorAttr, ytext, ydoc);
   });
