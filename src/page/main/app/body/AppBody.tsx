@@ -72,12 +72,10 @@ const AppBody: React.FC<AppBodyProps> = (props: AppBodyProps) => {
   };
 
   const fallbackRender = (props: FallbackProps) => {
-    // Call resetErrorBoundary() to reset the error boundary and retry the render.
-
     return (
       <div role="alert">
         <p>Something went wrong:</p>
-        <pre style={{ color: "red" }}>{props.error}</pre>
+        <div style={{ color: "red" }}>{props.error.message}</div>
       </div>
     );
   };
