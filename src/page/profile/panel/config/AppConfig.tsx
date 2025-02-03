@@ -75,7 +75,7 @@ const AppConfig: React.FC = () => {
 
   const renderChannelInput = () => {
     debugger;
-    if (legacyModel === "native") {
+    if (legacyModel === "native"|| !legacyModel) {
       return (
         <input
           className="form-check-input"
@@ -85,7 +85,6 @@ const AppConfig: React.FC = () => {
             setLegacyModel("socketio");
             localStorage.setItem("legacyModel", "socketio");
           }}
-          checked
         />
       );
     } else {
@@ -98,6 +97,7 @@ const AppConfig: React.FC = () => {
             setLegacyModel("native");
             localStorage.setItem("legacyModel", "native");
           }}
+          checked
         />
       );
     }

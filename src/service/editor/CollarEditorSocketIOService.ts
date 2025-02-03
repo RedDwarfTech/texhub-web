@@ -69,7 +69,7 @@ const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): SocketIOProvider => {
     console.error("initial the file do not belong the project");
   }
   const wsProvider: SocketIOProvider = new SocketIOProvider(
-    readConfig("wssUrl"),
+    readConfig("socketUrl"),
     editorAttr.docId,
     ydoc,
     {
