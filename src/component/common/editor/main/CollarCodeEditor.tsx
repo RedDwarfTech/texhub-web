@@ -145,7 +145,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     let wsChannel = localStorage.getItem("legacyModel");
     debugger;
     if (wsChannel && wsChannel.toString() === "socketio") {
-      initSocketIOEditor(editorAttr, activeEditorView, edContainer, wsProvider);
+      // initSocketIOEditor(editorAttr, activeEditorView, edContainer, wsProvider);
     } else {
       initEditor(editorAttr, activeEditorView, edContainer, wsProvider);
     }

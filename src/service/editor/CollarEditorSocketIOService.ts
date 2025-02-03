@@ -42,7 +42,7 @@ let wsRetryCount = 0;
 
 const handleWsAuth = (
   event: any,
-  wsProvider: SocketIOProvider,
+  wsProvider: any,
   editorAttr: EditorAttr,
   ydoc: Y.Doc
 ) => {
@@ -63,12 +63,12 @@ const handleWsAuth = (
   }
 };
 
-const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): SocketIOProvider => {
+const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
   let contains = projHasFile(editorAttr.docId, editorAttr.projectId);
   if (!contains) {
     console.error("initial the file do not belong the project");
   }
-  const wsProvider: SocketIOProvider = new SocketIOProvider(
+  const wsProvider: any = new SocketIOProvider(
     readConfig("socketUrl"),
     editorAttr.docId,
     ydoc,

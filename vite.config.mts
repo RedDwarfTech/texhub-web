@@ -25,6 +25,9 @@ export default defineConfig({
       open: true,
     }) as PluginOption,
   ],
+  define: {
+    'process.env': process.env
+  },
   css: {},
   build: {
     outDir: "build",
