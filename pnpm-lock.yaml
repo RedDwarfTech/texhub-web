@@ -237,8 +237,8 @@ dependencies:
     specifier: ^4.8.1
     version: 4.8.1
   texhub-broadcast:
-    specifier: 1.0.5
-    version: 1.0.5
+    specifier: 1.0.6
+    version: 1.0.6
   ts-node:
     specifier: ^10.9.2
     version: 10.9.2(@types/node@22.10.2)(typescript@4.9.5)
@@ -16411,8 +16411,8 @@ packages:
       glob: 7.2.3
       minimatch: 3.1.2
 
-  /texhub-broadcast@1.0.5:
-    resolution: {integrity: sha512-XO9Bx2UuO2j+JYYtfoIz9ASfC1IXROQC8PhdQR02MHl0IxD6ohJodhyjGxTQL/Cd7zneD2ejy1nrNkAP18aU2Q==}
+  /texhub-broadcast@1.0.6:
+    resolution: {integrity: sha512-sWTVAZNEI6Nzv9O5lwFB2wTG2XFrDzDCMUiY/3QAB11c+pl9V1MVMw3HQwDRpqyUWVxQemzt7mWFgmvqFNtMUw==}
     dependencies:
       dotenv: 16.4.7
       express: 4.21.2

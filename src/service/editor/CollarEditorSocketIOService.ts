@@ -1,6 +1,6 @@
 import { EditorView } from "@codemirror/view";
 // @ts-ignore
-import { SocketIOProvider } from "texhub-broadcast";
+import { SocketIOProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_provider";
 import * as Y from "yjs";
 import * as random from "lib0/random";
 import { createExtensions } from "@/component/common/editor/foundation/extensions/extensions";
