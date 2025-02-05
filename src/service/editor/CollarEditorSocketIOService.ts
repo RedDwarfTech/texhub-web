@@ -1,6 +1,6 @@
 import { EditorView } from "@codemirror/view";
 // @ts-ignore
-import { SocketIOProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_provider";
+import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
 import * as Y from "yjs";
 import * as random from "lib0/random";
 import { createExtensions } from "@/component/common/editor/foundation/extensions/extensions";
@@ -68,7 +68,7 @@ const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
   if (!contains) {
     console.error("initial the file do not belong the project");
   }
-  const wsProvider: any = new SocketIOProvider(
+  const wsProvider: any = new SocketIOClientProvider(
     readConfig("socketUrl"),
     editorAttr.docId,
     ydoc,
@@ -155,7 +155,7 @@ export function initEditor(
   editorAttr: EditorAttr,
   activeEditorView: EditorView | undefined,
   edContainer: RefObject<HTMLDivElement>,
-  legacyWs: SocketIOProvider | undefined
+  legacyWs: SocketIOClientProvider | undefined
 ) {
   if (legacyWs) {
     // close the legacy websocket to avoid 1006 disconnect on the server side
@@ -174,7 +174,7 @@ export function initEditor(
   setCurYDoc(ydoc);
   const ytext: Y.Text = ydoc.getText(editorAttr.docId);
   const undoManager = new Y.UndoManager(ytext);
-  let wsProvider: SocketIOProvider = doSocketIOConn(ydoc, editorAttr);
+  let wsProvider: SocketIOClientProvider = doSocketIOConn(ydoc, editorAttr);
   ydoc.on("update", (update, origin) => {
     handleYDocUpdate(editorAttr, ytext, ydoc);
   });
@@ -207,7 +207,7 @@ export function initSocketIOEditor(
   editorAttr: EditorAttr,
   activeEditorView: EditorView | undefined,
   edContainer: RefObject<HTMLDivElement>,
-  legacyWs: SocketIOProvider | undefined
+  legacyWs: SocketIOClientProvider | undefined
 ) {
   if (legacyWs) {
     // close the legacy websocket to avoid 1006 disconnect on the server side
@@ -226,7 +226,7 @@ export function initSocketIOEditor(
   setCurYDoc(ydoc);
   const ytext: Y.Text = ydoc.getText(editorAttr.docId);
   const undoManager = new Y.UndoManager(ytext);
-  let wsProvider: SocketIOProvider = doSocketIOConn(ydoc, editorAttr);
+  let wsProvider: SocketIOClientProvider = doSocketIOConn(ydoc, editorAttr);
   ydoc.on("update", (update, origin) => {
     handleYDocUpdate(editorAttr, ytext, ydoc);
   });
