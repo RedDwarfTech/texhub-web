@@ -74,7 +74,6 @@ const AppConfig: React.FC = () => {
   };
 
   const renderChannelInput = () => {
-    debugger;
     if (legacyModel === "native"|| !legacyModel) {
       return (
         <input

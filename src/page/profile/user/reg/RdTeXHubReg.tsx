@@ -44,7 +44,6 @@ const RdTeXHubReg: React.FC<IRegProp> = (props: IRegProp) => {
       !phoneInputRef.current ||
       (phoneInputRef.current as HTMLInputElement).value.length === 0
     ) {
-      debugger;
       toast("请输入用户名!");
       return;
     }

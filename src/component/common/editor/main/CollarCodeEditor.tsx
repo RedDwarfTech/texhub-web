@@ -143,7 +143,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       theme: themeMap.get("Solarized Light")!,
     };
     let wsChannel = localStorage.getItem("legacyModel");
-    debugger;
     if (wsChannel && wsChannel.toString() === "socketio") {
       initSocketIOEditor(editorAttr, activeEditorView, edContainer, wsProvider);
     } else {
