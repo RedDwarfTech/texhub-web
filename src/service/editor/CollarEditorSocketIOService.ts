@@ -24,6 +24,7 @@ import {
   setWsConnState,
 } from "../project/editor/EditorService";
 import { handleYDocUpdate } from "@/component/common/collar/ver/YjsEvent";
+import { ManagerOptions, SocketOptions } from "socket.io-client";
 
 export const usercolors = [
   { color: "#30bced", light: "#30bced33" },
@@ -68,10 +69,14 @@ const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
   if (!contains) {
     console.error("initial the file do not belong the project");
   }
+  let options: Partial<ManagerOptions & SocketOptions> = {
+    withCredentials: true,
+  };
   const wsProvider: any = new SocketIOClientProvider(
     readConfig("socketUrl"),
     editorAttr.docId,
     ydoc,
+    options,
     {
       maxBackoffTime: 1000000,
       params: {
