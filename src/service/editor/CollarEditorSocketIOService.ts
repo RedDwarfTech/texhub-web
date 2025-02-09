@@ -104,8 +104,16 @@ const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
     // https://discuss.yjs.dev/t/how-to-refresh-the-wsprovider-params-when-token-expire/2131
     handleWsAuth(event, wsProvider, editorAttr, ydoc);
   });
-  wsProvider.on("connection-error", (event: any) => {
-    console.error("connection error:" + editorAttr.docId, event);
+  wsProvider.on("connect_error", (err: any) => {
+    console.error("connection error:" + editorAttr.docId, err);
+    // the reason of the error, for example "xhr poll error"
+    console.error(err.message);
+
+    // some additional description, for example the status code of the initial HTTP response
+    console.error(err.description);
+
+    // some additional context, for example the XMLHttpRequest object
+    console.error(err.context);
   });
   wsProvider.on("message", (event: MessageEvent) => {});
   wsProvider.on("status", (event: any) => {
