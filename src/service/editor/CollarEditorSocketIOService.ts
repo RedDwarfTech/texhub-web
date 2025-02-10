@@ -173,7 +173,7 @@ export function initEditor(
 ) {
   if (legacyWs) {
     // close the legacy websocket to avoid 1006 disconnect on the server side
-    legacyWs.ws?.close(1000, "client send close signal");
+    // legacyWs.ws?.close(1000, "client send close signal");
   }
   if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
     activeEditorView.destroy();
@@ -214,19 +214,14 @@ export function initEditor(
     parent: edContainer.current!,
   });
   setEditorInstance(editorView);
-  setWebsocketProvider(wsProvider);
+  // setWebsocketProvider(wsProvider);
 }
 
 export function initSocketIOEditor(
   editorAttr: EditorAttr,
   activeEditorView: EditorView | undefined,
-  edContainer: RefObject<HTMLDivElement>,
-  legacyWs: SocketIOClientProvider | undefined
+  edContainer: RefObject<HTMLDivElement>
 ) {
-  if (legacyWs) {
-    // close the legacy websocket to avoid 1006 disconnect on the server side
-    legacyWs.ws?.close(1000, "client send close signal");
-  }
   if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
     activeEditorView.destroy();
   }
@@ -266,5 +261,4 @@ export function initSocketIOEditor(
     parent: edContainer.current!,
   });
   setEditorInstance(editorView);
-  setWebsocketProvider(wsProvider);
 }
