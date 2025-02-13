@@ -71,7 +71,7 @@ const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
   }
   let options: Partial<ManagerOptions & SocketOptions> = {
     withCredentials: true,
-    path: "/texhub"
+    path: "/socket.io/"
   };
   const wsProvider: any = new SocketIOClientProvider(
     readConfig("socketUrl"),
