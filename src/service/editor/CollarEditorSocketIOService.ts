@@ -11,7 +11,6 @@ import {
   RequestHandler,
   ResponseHandler,
   UserModel,
-  WheelGlobal,
 } from "rdjs-wheel";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { RefObject } from "react";
@@ -20,11 +19,11 @@ import { Metadata } from "@/component/common/editor/foundation/extensions/langua
 import {
   setCurYDoc,
   setEditorInstance,
-  setWebsocketProvider,
   setWsConnState,
 } from "../project/editor/EditorService";
 import { handleYDocUpdate } from "@/component/common/collar/ver/YjsEvent";
 import { ManagerOptions, SocketOptions } from "socket.io-client";
+import { getAccessToken } from "@/component/common/cache/Cache";
 
 export const usercolors = [
   { color: "#30bced", light: "#30bced33" },
@@ -69,9 +68,13 @@ const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
   if (!contains) {
     console.error("initial the file do not belong the project");
   }
+  // avoid the cached expired token
   let options: Partial<ManagerOptions & SocketOptions> = {
     withCredentials: true,
-    path: "/sync"
+    path: "/sync",
+    auth: {
+      token: getAccessToken()
+    }
   };
   const wsProvider: any = new SocketIOClientProvider(
     readConfig("socketUrl"),
