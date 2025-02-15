@@ -18,7 +18,8 @@ let devConfigMap = new Map([
     ["shareBaseUrl","http://dev-tex.poemhub.top/proj/share"],
     ["pdfScaleKey",""],
     ["pdfScrollKey","pdf:scroll:"],
-    ["pdfCurPage","pdf:page:"]
+    ["pdfCurPage","pdf:page:"],
+    ["socketUrl","http://localhost:1234/texhub"],
 ]); 
 
 export default devConfigMap;
