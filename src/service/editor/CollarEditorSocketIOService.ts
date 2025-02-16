@@ -75,7 +75,7 @@ const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
     path: "/sync",
     auth: {
       token: getAccessToken()
-    }
+    },
   };
   const wsProvider: any = new SocketIOClientProvider(
     readConfig("socketUrl"),
@@ -87,6 +87,7 @@ const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
       params: {
         // https://self-issued.info/docs/draft-ietf-oauth-v2-bearer.html#query-param
         access_token: localStorage.getItem(WheelGlobal.ACCESS_TOKEN_NAME) ?? "",
+        docId: editorAttr.docId
         // from: "web_tex_editor",
       },
     }
