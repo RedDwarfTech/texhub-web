@@ -121,7 +121,9 @@ const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
     // some additional context, for example the XMLHttpRequest object
     console.error(err.context);
   });
-  wsProvider.on("message", (event: MessageEvent) => {});
+  wsProvider.on("message", (event: MessageEvent) => {
+    console.log("message", event);
+  });
   wsProvider.on("status", (event: any) => {
     if (event.status === "connected") {
       setWsConnState("connected");
