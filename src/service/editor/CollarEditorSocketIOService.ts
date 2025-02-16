@@ -1,5 +1,4 @@
 import { EditorView } from "@codemirror/view";
-// @ts-ignore
 import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
 import * as Y from "yjs";
 import * as random from "lib0/random";
@@ -77,7 +76,7 @@ const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
       token: getAccessToken()
     },
   };
-  const wsProvider: any = new SocketIOClientProvider(
+  const wsProvider: SocketIOClientProvider = new SocketIOClientProvider(
     readConfig("socketUrl"),
     editorAttr.docId,
     ydoc,
