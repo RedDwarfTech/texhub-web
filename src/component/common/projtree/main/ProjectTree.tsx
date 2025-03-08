@@ -361,6 +361,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     }
     let parentId = getParentId();
     if (!parentId || parentId.length === 0) {
+      toast.warn("请选择文件夹创建位置");
       return;
     }
     let params = {
