@@ -36,7 +36,14 @@ const TreeFolderCreate: React.FC<TreeFolderCreateProps> = (
     }
     let parentId = getParentId();
     if (!parentId || parentId.length === 0) {
-      toast.warn("请选择文件夹创建位置");
+      /**
+       * when the user did not choose any file or folder
+       * just create folder in root path
+       * choose1:tips the user to choose file or folder location could make user confuse
+       * choose2:let user choose the parent folder could make it hard to use(too much oper)
+       */
+      //toast.warn("请选择文件夹创建位置");
+      parentId = pid;
       return;
     }
     let params = {
