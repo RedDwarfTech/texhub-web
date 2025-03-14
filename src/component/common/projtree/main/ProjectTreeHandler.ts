@@ -106,7 +106,7 @@ export function handleFileSelected(
   }
 }
 
-export function handleFileCreate(
+export function handleFileCreateConfirm(
   selectedFile: TexFileModel,
   createFileName: string,
   pid: string

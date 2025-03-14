@@ -25,11 +25,11 @@ const TeXNewFolder: React.FC<BlankProjProps> = (props: BlankProjProps) => {
             toast.warning("登录后即可创建文件夹");
             return;
         }
-        if (folderName == null || folderName.length == 0) {
+        if (folderName == null || folderName.length === 0) {
             toast.warning("请填写文件夹名称");
             return;
         }
-        if (folderName.length > 256) {
+        if (folderName.length > 32) {
             toast.warning("超过文件夹名称长度限制");
             return;
         }

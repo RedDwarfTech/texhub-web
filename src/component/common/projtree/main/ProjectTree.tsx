@@ -1,17 +1,11 @@
 import { useState } from "react";
 import styles from "./ProjectTree.module.css";
-import {
-  addFile,
-  downloadProjFile,
-  getFileTree,
-} from "@/service/file/FileService";
-import { ResponseHandler } from "rdjs-wheel";
+import { downloadProjFile } from "@/service/file/FileService";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import React from "react";
 import * as bootstrap from "bootstrap";
-import { toast } from "react-toastify";
 import TreeUpload from "../upload/TreeUpload";
 import TreeFileMove from "../move/TreeFileMove";
 import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
@@ -21,10 +15,11 @@ import TreeFileRename from "../rename/TreeFileRename";
 import TreeFileDel from "../del/TreeFileDel";
 import { TreeProps } from "@/model/props/TreeProps";
 import { ProjectTreeFolder } from "./ProjectTreeFolder";
+import TreeFolderCreate from "../create/TreeFolderCreate";
 import {
   handleExpandFolderEvent,
   handleFileAdd,
-  handleFileCreate,
+  handleFileCreateConfirm,
   handleFileSelected,
   handleFileTreeUpdate,
   handleProjSearch,
@@ -37,7 +32,6 @@ import { useTranslation } from "react-i18next";
 
 const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const divRef = props.treeDivRef;
-  const [folderName, setFolderName] = useState("");
   const [curTabName, setCurTabName] = useState("tree");
   const [createFileName, setCreateFileName] = useState("");
   const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
@@ -259,7 +253,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                 ? styles.fileItemSelected
                 : styles.fileItem
             }
-            style={{ paddingLeft: `${level === 0 ? 10 : (level * 20 + 10)}px` }}
+            style={{ paddingLeft: `${level === 0 ? 10 : level * 20 + 10}px` }}
           >
             {renderIcon(item)}
             <div className={styles.fileName}>{item.name}</div>
@@ -352,47 +346,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     e.preventDefault();
     e.stopPropagation();
     handleFileSelected(fileItem, selectedFile);
-  };
-
-  const handleFolderAddConfirm = () => {
-    if (!folderName || folderName.length === 0) {
-      toast.warn("请输入文件夹名称");
-      return;
-    }
-    let parentId = getParentId();
-    if (!parentId || parentId.length === 0) {
-      toast.warn("请选择文件夹创建位置");
-      return;
-    }
-    let params = {
-      name: folderName,
-      project_id: pid,
-      parent: parentId,
-      file_type: 0,
-    };
-    addFile(params).then((resp) => {
-      if (ResponseHandler.responseSuccess(resp)) {
-        getFileTree(pid?.toString());
-      } else {
-        toast.error(resp.msg);
-      }
-    });
-  };
-
-  const getParentId = (): string => {
-    if (!selectedFile) {
-      toast.warn("请选择目录位置");
-      return "";
-    }
-    if (selectedFile.file_type === 0) {
-      return selectedFile.file_id;
-    } else {
-      return selectedFile.parent;
-    }
-  };
-
-  const handleInputChange = (event: any) => {
-    setFolderName(event.target.value);
   };
 
   const handleFileInputChange = (event: any) => {
@@ -523,7 +476,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                 className="btn btn-primary"
                 data-bs-dismiss="modal"
                 onClick={() => {
-                  handleFileCreate(selectedFile, createFileName, pid);
+                  handleFileCreateConfirm(selectedFile, createFileName, pid);
                 }}
               >
                 确定
@@ -532,60 +485,10 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
           </div>
         </div>
       </div>
-      <div
-        className="modal fade"
-        id="createFolderModal"
-        aria-labelledby="createFolderModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="createFolderModalLabel">
-                创建文件夹
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body">
-              <div className="input-group flex-nowrap">
-                <input
-                  id="folderName"
-                  type="text"
-                  onChange={handleInputChange}
-                  className="form-control"
-                  placeholder="文件夹名称"
-                  aria-label="Username"
-                  aria-describedby="addon-wrapping"
-                />
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                取消
-              </button>
-              <button
-                type="button"
-                className="btn btn-primary"
-                data-bs-dismiss="modal"
-                onClick={() => {
-                  handleFolderAddConfirm();
-                }}
-              >
-                确定
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <TreeFolderCreate
+        projectId={pid}
+        selectedFile={selectedFile}
+      ></TreeFolderCreate>
       <TreeUpload projectId={pid}></TreeUpload>
       <TreeFileMove projectId={pid} texFile={moveFile!}></TreeFileMove>
       <TreeFileRename projectId={pid} operFile={operFile!}></TreeFileRename>
