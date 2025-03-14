@@ -44,7 +44,6 @@ const TreeFolderCreate: React.FC<TreeFolderCreateProps> = (
        */
       //toast.warn("请选择文件夹创建位置");
       parentId = pid;
-      return;
     }
     let params = {
       name: folderName,
