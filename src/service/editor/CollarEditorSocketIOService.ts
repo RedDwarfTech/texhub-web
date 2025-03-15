@@ -75,6 +75,8 @@ const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
   // avoid the cached expired token
   let options: Partial<ManagerOptions & SocketOptions> = {
     withCredentials: true,
+    reconnection: true,
+    reconnectionDelay: 15000,
     transports: ["websocket"],
     path: "/sync",
     auth: {
