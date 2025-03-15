@@ -6,6 +6,7 @@ import { createExtensions } from "@/component/common/editor/foundation/extension
 import { Compartment, EditorState } from "@codemirror/state";
 import { readConfig } from "@/config/app/config-reader";
 import {
+  AuthHandler,
   BaseMethods,
   RequestHandler,
   ResponseHandler,
@@ -68,12 +69,16 @@ const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
   if (!contains) {
     console.error("initial the file do not belong the project");
   }
+  if (AuthHandler.isTokenNeedRefresh(120)) {
+    RequestHandler.handleWebAccessTokenExpire();
+  }
   // avoid the cached expired token
   let options: Partial<ManagerOptions & SocketOptions> = {
     withCredentials: true,
+    transports: ["websocket"],
     path: "/sync",
     auth: {
-      token: getAccessToken()
+      token: getAccessToken(),
     },
   };
   const wsProvider: SocketIOClientProvider = new SocketIOClientProvider(
@@ -86,7 +91,7 @@ const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
       params: {
         // https://self-issued.info/docs/draft-ietf-oauth-v2-bearer.html#query-param
         access_token: localStorage.getItem(WheelGlobal.ACCESS_TOKEN_NAME) ?? "",
-        docId: editorAttr.docId
+        docId: editorAttr.docId,
         // from: "web_tex_editor",
       },
     }

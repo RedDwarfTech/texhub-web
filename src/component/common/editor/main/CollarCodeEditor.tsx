@@ -218,7 +218,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
    * Try to reconnect the editor websocket
    */
   const tryReconnect = (connState: string) => {
-    connectSocketIO();
     if (BaseMethods.isNull(connState)) {
       return;
     }
@@ -236,29 +235,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       default:
         break;
     }
-  };
-
-  const connectSocketIO = () => {
-    let options: Partial<ManagerOptions & SocketOptions> = {
-      reconnectionDelayMax: 10000,
-      auth: {
-        token: "123",
-      },
-      query: {
-        "my-key": "my-value",
-      },
-      extraHeaders: {
-        "Access-Control-Allow-Origin": "*",
-      },
-    };
-    const socket = io("wss://ws.poemhub.top", options);
-    socket.connect();
-    socket.io.on("ping", () => {
-      console.log("receive ping");
-    });
-    socket.io.on("error", (error) => {
-      console.log("error", error);
-    });
   };
 
   return (
