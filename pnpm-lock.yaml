@@ -16,7 +16,7 @@ dependencies:
     version: 7.25.9(@babel/core@7.26.10)
   '@codemirror/autocomplete':
     specifier: github:overleaf/codemirror-autocomplete#v6.12.0-overleaf-2
-    version: git@github.com+overleaf/codemirror-autocomplete/2aff95fc5d6cda311537ed62066c9a0afbbbcad8(@codemirror/language@6.11.0)(@codemirror/state@6.5.2)(@codemirror/view@6.36.4)(@lezer/common@1.2.3)
+    version: github.com/overleaf/codemirror-autocomplete/2aff95fc5d6cda311537ed62066c9a0afbbbcad8(@codemirror/language@6.11.0)(@codemirror/state@6.5.2)(@codemirror/view@6.36.4)(@lezer/common@1.2.3)
   '@codemirror/lang-javascript':
     specifier: ^6.2.3
     version: 6.2.3
@@ -237,8 +237,8 @@ dependencies:
     specifier: ^4.8.1
     version: 4.8.1
   texhub-broadcast:
-    specifier: 1.0.31
-    version: 1.0.31
+    specifier: 1.0.32
+    version: 1.0.32
   ts-node:
     specifier: ^10.9.2
     version: 10.9.2(@types/node@22.13.10)(typescript@4.9.5)
@@ -16768,8 +16768,8 @@ packages:
       glob: 7.2.3
       minimatch: 3.1.2
 
-  /texhub-broadcast@1.0.31:
-    resolution: {integrity: sha512-GPwLpcSnSxjTPy4/Jt2l5PIbacAeRwXrAnVS6UoEcVcNYHKyg/J/8LDwHncq4+hvQBjBagRjfTY0uAGofMTb1A==}
+  /texhub-broadcast@1.0.32:
+    resolution: {integrity: sha512-vuJrko2tLf9aX9sip5DRsTe7nT5/kIg6gz1bmBsUOE2D8v20HI5Q3SXrkuSA2L45M6aPPN4ulvYkSK/aIY2PbA==}
     dependencies:
       '@socket.io/admin-ui': 0.5.1(socket.io@4.8.1)
       dotenv: 16.4.7
@@ -18267,9 +18267,9 @@ packages:
       commander: 9.5.0
     dev: false
 
-  git@github.com+overleaf/codemirror-autocomplete/2aff95fc5d6cda311537ed62066c9a0afbbbcad8(@codemirror/language@6.11.0)(@codemirror/state@6.5.2)(@codemirror/view@6.36.4)(@lezer/common@1.2.3):
-    resolution: {commit: 2aff95fc5d6cda311537ed62066c9a0afbbbcad8, repo: git@github.com:overleaf/codemirror-autocomplete.git, type: git}
-    id: git@github.com+overleaf/codemirror-autocomplete/2aff95fc5d6cda311537ed62066c9a0afbbbcad8
+  github.com/overleaf/codemirror-autocomplete/2aff95fc5d6cda311537ed62066c9a0afbbbcad8(@codemirror/language@6.11.0)(@codemirror/state@6.5.2)(@codemirror/view@6.36.4)(@lezer/common@1.2.3):
+    resolution: {tarball: https://codeload.github.com/overleaf/codemirror-autocomplete/tar.gz/2aff95fc5d6cda311537ed62066c9a0afbbbcad8}
+    id: github.com/overleaf/codemirror-autocomplete/2aff95fc5d6cda311537ed62066c9a0afbbbcad8
     name: '@codemirror/autocomplete'
     version: 6.12.0
     requiresBuild: true
