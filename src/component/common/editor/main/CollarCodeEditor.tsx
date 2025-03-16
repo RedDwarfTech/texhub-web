@@ -146,7 +146,10 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         return;
       }
       switchEditorFile(activeFile);
-      preInitEditor(activeFile);
+      let wsChannel = localStorage.getItem("legacyModel");
+      if (wsChannel && wsChannel.toString() === "socketio") {
+        preInitEditor(activeFile);
+      }
       localStorage.setItem(activeKey, JSON.stringify(activeFile));
     }
   };
