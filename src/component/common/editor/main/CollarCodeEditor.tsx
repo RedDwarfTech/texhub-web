@@ -42,7 +42,8 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   );
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [wsProvider, setWsProvider] = useState<WebsocketProvider>();
-  const [wsSocketIOProvider, setWsSocketIOProvider] = useState<SocketIOClientProvider>();
+  const [wsSocketIOProvider, setWsSocketIOProvider] =
+    useState<SocketIOClientProvider>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
   const activeKey = readConfig("projActiveFile") + props.projectId;
@@ -144,14 +145,18 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       if (!contains) {
         return;
       }
-      switchEditorFile();
+      switchEditorFile(activeFile);
       preInitEditor(activeFile);
       localStorage.setItem(activeKey, JSON.stringify(activeFile));
     }
   };
 
-  const switchEditorFile = () => {
-    wsSocketIOProvider?.sendExtMsg("a");
+  const switchEditorFile = (activeFile: TexFileModel) => {
+    let command = {
+      fileId: activeFile.file_id,
+      controlType: 1,
+    };
+    wsSocketIOProvider?.sendExtMsg(JSON.stringify(command));
   };
 
   const preInitEditor = (file: TexFileModel) => {
