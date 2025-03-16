@@ -25,6 +25,7 @@ import { ProjInfo } from "@/model/proj/ProjInfo";
 import { BaseMethods } from "rdjs-wheel";
 import { io, ManagerOptions, SocketOptions } from "socket.io-client";
 import { initSocketIOEditor } from "@/service/editor/CollarEditorSocketIOService";
+import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
 
 export type EditorProps = {
   projectId: string;
@@ -36,11 +37,12 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const { projInfo, projConf, insertContext, replaceContext } = useSelector(
     (state: AppState) => state.proj
   );
-  const { connState, editor, texEditorWs } = useSelector(
+  const { connState, editor, texEditorWs, texEditorSocketIOWs } = useSelector(
     (state: AppState) => state.projEditor
   );
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [wsProvider, setWsProvider] = useState<WebsocketProvider>();
+  const [wsSocketIOProvider, setWsSocketIOProvider] = useState<SocketIOClientProvider>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
   const activeKey = readConfig("projActiveFile") + props.projectId;
@@ -64,6 +66,12 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       setWsProvider(texEditorWs);
     }
   }, [texEditorWs]);
+
+  React.useEffect(() => {
+    if (texEditorSocketIOWs) {
+      setWsSocketIOProvider(texEditorSocketIOWs);
+    }
+  }, [texEditorSocketIOWs]);
 
   React.useEffect(() => {
     if (projInfo && Object.keys(projInfo).length > 0) {
@@ -123,6 +131,12 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     };
   }, [activeFile]);
 
+  React.useEffect(() => {
+    if (texEditorWs) {
+      setWsProvider(texEditorWs);
+    }
+  }, [texEditorWs]);
+
   const initByActiveFile = (activeFile: TexFileModel) => {
     if (!activeFile || !activeFile.file_id) return;
     if (activeFile && activeFile.file_type !== TreeFileType.Folder) {
@@ -130,9 +144,14 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       if (!contains) {
         return;
       }
+      switchEditorFile();
       preInitEditor(activeFile);
       localStorage.setItem(activeKey, JSON.stringify(activeFile));
     }
+  };
+
+  const switchEditorFile = () => {
+    wsSocketIOProvider?.sendExtMsg("a");
   };
 
   const preInitEditor = (file: TexFileModel) => {

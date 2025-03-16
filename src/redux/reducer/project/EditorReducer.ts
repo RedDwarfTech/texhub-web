@@ -1,11 +1,13 @@
 import { AppState } from "@/redux/types/AppState";
 import { EditorView } from "@codemirror/view";
 import { WebsocketProvider } from "rdy-websocket";
+import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
 import * as Y from "yjs";
 
 const initState: AppState["projEditor"] = {
   editor: {} as EditorView,
   texEditorWs: {} as WebsocketProvider,
+  texEditorSocketIOWs: {} as SocketIOClientProvider,
   curYDoc: {} as Y.Doc,
   connState: "",
 };
@@ -21,6 +23,11 @@ const EditorReducer = (state = initState, action: any) => {
       return {
         ...state,
         texEditorWs: action.data,
+      };
+    case "INITIAL_SOCKETIO_WS":
+      return {
+        ...state,
+        texEditorSocketIOWs: action.data,
       };
     case "SET_CUR_YDOC":
       return {

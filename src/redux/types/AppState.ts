@@ -21,6 +21,7 @@ import { ProjCollarModel } from "@/model/proj/share/ProjCollarModel";
 import { EditorView } from "codemirror";
 import { WebsocketProvider } from "rdy-websocket";
 import { CompileResultType } from "@/model/proj/compile/CompileResultType";
+import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
 
 /**
  * the legacy proj contains too much state fields that make
@@ -59,6 +60,7 @@ export interface AppState {
         curYDoc: Y.Doc,
         editor: EditorView,
         texEditorWs: WebsocketProvider,
+        texEditorSocketIOWs: SocketIOClientProvider,
         connState: string
     },
     projTree: {

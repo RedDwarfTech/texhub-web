@@ -20,6 +20,7 @@ import { Metadata } from "@/component/common/editor/foundation/extensions/langua
 import {
   setCurYDoc,
   setEditorInstance,
+  setSocketIOProvider,
   setWsConnState,
 } from "../project/editor/EditorService";
 import { handleYDocUpdate } from "@/component/common/collar/ver/YjsEvent";
@@ -222,4 +223,5 @@ export function initSocketIOEditor(
     parent: edContainer.current!,
   });
   setEditorInstance(editorView);
+  setSocketIOProvider(wsProvider);
 }
