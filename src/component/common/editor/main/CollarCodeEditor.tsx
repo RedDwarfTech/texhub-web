@@ -26,6 +26,7 @@ import { BaseMethods } from "rdjs-wheel";
 import { io, ManagerOptions, SocketOptions } from "socket.io-client";
 import { initSocketIOEditor } from "@/service/editor/CollarEditorSocketIOService";
 import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
+import { AppControlType } from "texhub-broadcast/dist/model/texhub/app/app_control_type";
 
 export type EditorProps = {
   projectId: string;
@@ -157,7 +158,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const switchEditorFile = (activeFile: TexFileModel) => {
     let command = {
       fileId: activeFile.file_id,
-      controlType: 21,
+      controlType: AppControlType.SwitchEditFile,
     };
     wsSocketIOProvider?.sendExtMsg(JSON.stringify(command));
   };
