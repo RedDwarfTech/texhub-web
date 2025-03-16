@@ -157,7 +157,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const switchEditorFile = (activeFile: TexFileModel) => {
     let command = {
       fileId: activeFile.file_id,
-      controlType: 1,
+      controlType: 21,
     };
     wsSocketIOProvider?.sendExtMsg(JSON.stringify(command));
   };
