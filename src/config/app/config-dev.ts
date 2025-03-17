@@ -19,7 +19,6 @@ let devConfigMap = new Map([
     ["pdfScaleKey",""],
     ["pdfScrollKey","pdf:scroll:"],
     ["pdfCurPage","pdf:page:"],
-    ["socketUrl","http://localhost:1234/texhub"],
 ]); 
 
 export default devConfigMap;
