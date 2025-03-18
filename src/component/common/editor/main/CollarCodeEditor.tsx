@@ -160,7 +160,9 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       fileId: activeFile.file_id,
       controlType: AppControlType.SwitchEditFile,
     };
-    wsSocketIOProvider?.sendExtMsg(JSON.stringify(command));
+    if(wsSocketIOProvider){
+      wsSocketIOProvider.sendExtMsg(JSON.stringify(command));
+    }
   };
 
   const preInitEditor = (file: TexFileModel) => {
