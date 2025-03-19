@@ -153,7 +153,7 @@ dependencies:
     specifier: ^4.17.21
     version: 4.17.21
   pdfjs-dist:
-    specifier: ^4.10.38
+    specifier: ^4.9.155
     version: 4.10.38
   query-string:
     specifier: ^8.2.0
@@ -237,8 +237,8 @@ dependencies:
     specifier: ^4.8.1
     version: 4.8.1
   texhub-broadcast:
-    specifier: 1.0.32
-    version: 1.0.32
+    specifier: 1.0.38
+    version: 1.0.38
   ts-node:
     specifier: ^10.9.2
     version: 10.9.2(@types/node@22.13.10)(typescript@4.9.5)
@@ -11609,6 +11609,7 @@ packages:
   /level-concat-iterator@2.0.1:
     resolution: {integrity: sha512-OTKKOqeav2QWcERMJR7IS9CUo1sHnke2C0gkSmcR7QuEtFNLLzHQAvnMw8ykvEcv0Qtkg0p7FOwP1v9e5Smdcw==}
     engines: {node: '>=6'}
+    deprecated: Superseded by abstract-level (https://github.com/Level/community#faq)
     requiresBuild: true
     dev: false
     optional: true
@@ -11616,6 +11617,7 @@ packages:
   /level-concat-iterator@3.1.0:
     resolution: {integrity: sha512-BWRCMHBxbIqPxJ8vHOvKUsaO0v1sLYZtjN3K2iZJsRBYtp+ONsY6Jfi6hy9K3+zolgQRryhIn2NRZjZnWJ9NmQ==}
     engines: {node: '>=10'}
+    deprecated: Superseded by abstract-level (https://github.com/Level/community#faq)
     dependencies:
       catering: 2.1.1
     dev: false
@@ -11623,6 +11625,7 @@ packages:
   /level-errors@2.0.1:
     resolution: {integrity: sha512-UVprBJXite4gPS+3VznfgDSU8PTRuVX0NXwoWW50KLxd2yw4Y1t2JUR5In1itQnudZqRMT9DlAM3Q//9NCjCFw==}
     engines: {node: '>=6'}
+    deprecated: Superseded by abstract-level (https://github.com/Level/community#faq)
     requiresBuild: true
     dependencies:
       errno: 0.1.8
@@ -11632,6 +11635,7 @@ packages:
   /level-errors@3.0.1:
     resolution: {integrity: sha512-tqTL2DxzPDzpwl0iV5+rBCv65HWbHp6eutluHNcVIftKZlQN//b6GEnZDM2CvGZvzGYMwyPtYppYnydBQd2SMQ==}
     engines: {node: '>=10'}
+    deprecated: Superseded by abstract-level (https://github.com/Level/community#faq)
     dev: false
 
   /level-iterator-stream@4.0.2:
@@ -16768,8 +16772,8 @@ packages:
       glob: 7.2.3
       minimatch: 3.1.2
 
-  /texhub-broadcast@1.0.32:
-    resolution: {integrity: sha512-vuJrko2tLf9aX9sip5DRsTe7nT5/kIg6gz1bmBsUOE2D8v20HI5Q3SXrkuSA2L45M6aPPN4ulvYkSK/aIY2PbA==}
+  /texhub-broadcast@1.0.38:
+    resolution: {integrity: sha512-GAZIWE0OvOrZnLYJUljDYK5P8BFfCCSnBm6E2U1xKsS2eDF0/ZWz1ug8e5on8B35xdr4uNEIS+Tx2TErdoKzEA==}
     dependencies:
       '@socket.io/admin-ui': 0.5.1(socket.io@4.8.1)
       dotenv: 16.4.7

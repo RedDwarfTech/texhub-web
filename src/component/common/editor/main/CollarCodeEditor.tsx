@@ -159,9 +159,10 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     let command = {
       fileId: activeFile.file_id,
       controlType: AppControlType.SwitchEditFile,
+      projectId: activeFile.project_id
     };
     if(wsSocketIOProvider){
-      wsSocketIOProvider.sendExtMsg(JSON.stringify(command));
+      wsSocketIOProvider.sendExtMsg(command);
     }
   };
 
