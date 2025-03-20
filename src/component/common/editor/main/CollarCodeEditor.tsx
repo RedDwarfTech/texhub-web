@@ -146,23 +146,8 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       if (!contains) {
         return;
       }
-      switchEditorFile(activeFile);
-      let wsChannel = localStorage.getItem("legacyModel");
-      if (wsChannel && wsChannel.toString() === "socketio") {
-        preInitEditor(activeFile);
-      }
+      preInitEditor(activeFile);
       localStorage.setItem(activeKey, JSON.stringify(activeFile));
-    }
-  };
-
-  const switchEditorFile = (activeFile: TexFileModel) => {
-    let command = {
-      fileId: activeFile.file_id,
-      controlType: AppControlType.SwitchEditFile,
-      projectId: activeFile.project_id
-    };
-    if(wsSocketIOProvider){
-      wsSocketIOProvider.sendExtMsg(command);
     }
   };
 
