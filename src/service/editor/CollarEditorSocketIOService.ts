@@ -78,6 +78,8 @@ const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
     withCredentials: true,
     reconnection: true,
     reconnectionDelay: 15000,
+    reconnectionDelayMax: 15000,
+    reconnectionAttempts: 5,
     transports: ["websocket"],
     path: "/sync",
     auth: {
