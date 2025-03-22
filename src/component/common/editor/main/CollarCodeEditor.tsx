@@ -162,6 +162,9 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     if (wsChannel && wsChannel.toString() === "socketio") {
       initEditor(editorAttr, activeEditorView, edContainer, wsProvider);
     } else {
+      if (wsSocketIOProvider) {
+        wsSocketIOProvider.destroy();
+      }
       initSocketIOEditor(editorAttr, activeEditorView, edContainer);
     }
   };
