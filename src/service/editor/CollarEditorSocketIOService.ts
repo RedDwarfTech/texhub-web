@@ -80,7 +80,8 @@ const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
     reconnectionDelay: 15000,
     reconnectionDelayMax: 15000,
     reconnectionAttempts: 5,
-    transports: ["websocket"],
+    transports: ["websocket", "polling"],
+    tryAllTransports: true,
     path: "/sync",
     auth: {
       token: getAccessToken(),
@@ -131,7 +132,7 @@ const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
     console.error(err.context);
   });
   wsProvider.on("message", (event: MessageEvent) => {
-    debugger
+    debugger;
     console.log("socketiomessage", event);
   });
   wsProvider.on("status", (event: any) => {
