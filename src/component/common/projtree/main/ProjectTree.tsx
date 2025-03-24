@@ -23,8 +23,7 @@ import {
   handleFileSelected,
   handleFileTreeUpdate,
   handleProjSearch,
-  handleProjSymbol,
-  resizeLeft,
+  handleProjSymbol
 } from "./ProjectTreeHandler";
 import { TeXFileType } from "@/model/enum/TeXFileType";
 import { DownloadFileReq } from "@/model/request/file/query/DownloadFileReq";
@@ -67,7 +66,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     if (projInfo && Object.keys(projInfo).length > 0) {
       handleFileTreeUpdate(projInfo.tree, props.projectId, setTexFileTree);
       setMainFile(projInfo.main_file);
-      resizeLeft(props, "leftDraggable");
     }
   }, [projInfo]);
 

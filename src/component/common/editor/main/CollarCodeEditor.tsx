@@ -7,7 +7,7 @@ import { WebsocketProvider } from "rdy-websocket";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import { initEditor, themeConfig } from "@/service/editor/CollarEditorService";
+import { themeConfig } from "@/service/editor/CollarEditorService";
 import { themeMap } from "@/component/common/editor/foundation/extensions/theme/theme";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { delProjInfo, projHasFile } from "@/service/project/ProjectService";
@@ -23,10 +23,8 @@ import { handlePdfLocate, handleSrcTreeNav } from "./CollarCodeEditorHandler";
 import { useTranslation } from "react-i18next";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { BaseMethods } from "rdjs-wheel";
-import { io, ManagerOptions, SocketOptions } from "socket.io-client";
 import { initSocketIOEditor } from "@/service/editor/CollarEditorSocketIOService";
 import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
-import { AppControlType } from "texhub-broadcast/dist/model/texhub/app/app_control_type";
 
 export type EditorProps = {
   projectId: string;
@@ -158,15 +156,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       name: file.name,
       theme: themeMap.get("Solarized Light")!,
     };
-    let wsChannel = localStorage.getItem("legacyModel");
-    if (wsChannel && wsChannel.toString() === "socketio") {
-      initEditor(editorAttr, activeEditorView, edContainer, wsProvider);
-    } else {
-      if (wsSocketIOProvider) {
-        wsSocketIOProvider.destroy();
-      }
-      initSocketIOEditor(editorAttr, activeEditorView, edContainer);
-    }
+    initSocketIOEditor(editorAttr, activeEditorView, edContainer);
   };
 
   const destroy = () => {
