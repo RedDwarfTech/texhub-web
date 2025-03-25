@@ -9,6 +9,7 @@ const AppConfig: React.FC = () => {
   const [githubToken, setGithubToken] = useState<string>();
   const [devModel, setDevModel] = useState<boolean>();
   const [legacyModel, setLegacyModel] = useState<string>();
+  const [enableSubDoc, setEnableSubDoc] = useState<string>();
   const { t } = useTranslation();
 
   React.useEffect(() => {
@@ -74,7 +75,7 @@ const AppConfig: React.FC = () => {
   };
 
   const renderChannelInput = () => {
-    if (legacyModel === "native"|| !legacyModel) {
+    if (legacyModel === "native" || !legacyModel) {
       return (
         <input
           className="form-check-input"
@@ -95,6 +96,35 @@ const AppConfig: React.FC = () => {
           onChange={() => {
             setLegacyModel("native");
             localStorage.setItem("legacyModel", "native");
+          }}
+          checked
+        />
+      );
+    }
+  };
+
+  const renderSubDocInput = () => {
+    if (enableSubDoc === "subdoc") {
+      return (
+        <input
+          className="form-check-input"
+          type="checkbox"
+          id="flexSwitchCheckChecked"
+          onChange={() => {
+            setEnableSubDoc("normal");
+            localStorage.setItem("subdoc", "normal");
+          }}
+        />
+      );
+    } else {
+      return (
+        <input
+          className="form-check-input"
+          type="checkbox"
+          id="flexSwitchCheckChecked"
+          onChange={() => {
+            setEnableSubDoc("subdoc");
+            localStorage.setItem("subdoc", "subdoc");
           }}
           checked
         />
@@ -146,6 +176,12 @@ const AppConfig: React.FC = () => {
               <label className="form-check-label">
                 {t("title_socket_channel")}
               </label>
+            </div>
+          </div>
+          <div className="col mb-3">
+            <div className="form-check form-switch">
+              {renderSubDocInput()}
+              <label className="form-check-label">subDocument</label>
             </div>
           </div>
         </div>

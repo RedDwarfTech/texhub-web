@@ -23,7 +23,7 @@ import { handlePdfLocate, handleSrcTreeNav } from "./CollarCodeEditorHandler";
 import { useTranslation } from "react-i18next";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { BaseMethods } from "rdjs-wheel";
-import { initSocketIOEditor } from "@/service/editor/CollarEditorSocketIOService";
+import { initSocketIOEditor, initSubDocSocketIO } from "@/service/editor/CollarEditorSocketIOService";
 import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
 
 export type EditorProps = {
@@ -156,7 +156,12 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       name: file.name,
       theme: themeMap.get("Solarized Light")!,
     };
-    initSocketIOEditor(editorAttr, activeEditorView, edContainer);
+    const subdoc = localStorage.getItem("subdoc");
+    if (subdoc && subdoc === "subdoc") {
+      initSubDocSocketIO(editorAttr, activeEditorView, edContainer);
+    } else {
+      initSocketIOEditor(editorAttr, activeEditorView, edContainer);
+    }
   };
 
   const destroy = () => {

@@ -32,8 +32,6 @@ import { getAccessToken } from "../../cache/Cache";
 import { authTokenEquals, getAuthorization } from "@/config/pdf/PdfJsConfig";
 import { getNewScaleOffsetPosition } from "../calc/ScrollUtil";
 
-
-
 const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
   ({
     curPdfUrl,
