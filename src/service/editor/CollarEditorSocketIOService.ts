@@ -238,6 +238,7 @@ export function initSubDocSocketIO(
   edContainer: RefObject<HTMLDivElement>,
   projInfo: ProjInfo
 ) {
+  console.log("initSubDocSocketIO");
   if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
     activeEditorView.destroy();
   }
