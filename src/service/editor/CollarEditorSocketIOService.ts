@@ -26,6 +26,8 @@ import {
 import { handleYDocUpdate } from "@/component/common/collar/ver/YjsEvent";
 import { ManagerOptions, SocketOptions } from "socket.io-client";
 import { getAccessToken } from "@/component/common/cache/Cache";
+import { ProjInfo } from "@/model/proj/ProjInfo.js";
+import { TexFileModel } from "@/model/file/TexFileModel.js";
 
 export const usercolors = [
   { color: "#30bced", light: "#30bced33" },
@@ -149,7 +151,6 @@ const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
 
 let history: Uint8Array[] = [];
 var ydoc: Y.Doc;
-var rootYdoc: Y.Doc;
 export function saveHistory(docId: string) {
   const update = Y.encodeStateAsUpdate(ydoc);
   history.push(update);
@@ -234,7 +235,8 @@ export function initSocketIOEditor(
 export function initSubDocSocketIO(
   editorAttr: EditorAttr,
   activeEditorView: EditorView | undefined,
-  edContainer: RefObject<HTMLDivElement>
+  edContainer: RefObject<HTMLDivElement>,
+  projInfo: ProjInfo
 ) {
   if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
     activeEditorView.destroy();
@@ -245,16 +247,16 @@ export function initSubDocSocketIO(
     // https://discuss.yjs.dev/t/error-garbage-collection-must-be-disabled-in-origindoc/2313
     gc: false,
   };
-  rootYdoc = new Y.Doc(rootDocOpt);
+  let rootYdoc: Y.Doc = new Y.Doc(rootDocOpt);
   // initial all sub document
-
+  if (projInfo && projInfo.tree) {
+    initialSub(projInfo.tree, rootYdoc);
+  }
   setCurYDoc(rootYdoc);
   const ytext: Y.Text = rootYdoc.getText(editorAttr.projectId);
   const undoManager = new Y.UndoManager(ytext);
   let wsProvider: SocketIOClientProvider = doSocketIOConn(rootYdoc, editorAttr);
-  rootYdoc.on("update", (update, origin) => {
-    
-  });
+  rootYdoc.on("update", (update, origin) => {});
   const texEditorState = EditorState.create({
     doc: ytext.toString(),
     extensions: createExtensions({
@@ -279,3 +281,16 @@ export function initSubDocSocketIO(
   setEditorInstance(editorView);
   setSocketIOProvider(wsProvider);
 }
+
+const initialSub = (tree: TexFileModel[], rootDoc: Y.Doc) => {
+  if (tree && tree.length > 0) {
+    const folder = rootDoc.getMap();
+    tree.forEach((item: TexFileModel) => {
+      const subDoc = new Y.Doc();
+      folder.set(item.id.toString(), subDoc);
+      if (item.children && item.children.length > 0) {
+        initialSub(item.children, rootDoc);
+      }
+    });
+  }
+};

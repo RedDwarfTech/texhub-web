@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { getPdfPosition } from "@/service/project/ProjectService";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { ProjectTreeFolder } from "../../projtree/main/ProjectTreeFolder";
+import * as Y from "yjs";
 
 export const getCursorPos = (
   editor: EditorView
@@ -30,7 +31,8 @@ export const getCursorPos = (
 export const handleSrcTreeNav = (
   props: EditorProps,
   curProjInfo: ProjInfo,
-  selectedFile: TexFileModel
+  selectedFile: TexFileModel,
+  ydoc: Y.Doc
 ) => {
   if (BaseMethods.isNull(props)) {
     return;
@@ -42,7 +44,8 @@ export const handleSrcTreeNav = (
   ProjectTreeFolder.handleExpandFolder(
     name_paths,
     props.projectId,
-    selectedFile
+    selectedFile,
+    ydoc
   );
 };
 

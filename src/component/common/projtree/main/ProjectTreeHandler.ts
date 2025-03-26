@@ -7,6 +7,7 @@ import { ResponseHandler } from "rdjs-wheel";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 import { getProjectInfo } from "@/service/project/ProjectService";
 import * as bootstrap from "bootstrap";
+import * as Y from "yjs";
 
 export function handleFileTreeUpdate(
   tree: TexFileModel[],
@@ -51,11 +52,19 @@ export function handleExpandFolderEvent(
 export function handleFileSelected(
   fileItem: TexFileModel,
   selectedFile: TexFileModel,
+  curYDoc: Y.Doc
 ) {
   if (selectedFile && fileItem.file_id === selectedFile.file_id) return;
   chooseFile(fileItem);
   if (fileItem.file_type !== TeXFileType.FOLDER) {
     switchFile(fileItem);
+    let subdoc = localStorage.getItem("subDoc");
+    if (subdoc && subdoc === "subdoc") {
+      let subDoc: any = curYDoc.getMap().get(fileItem.id.toString());
+      if (subDoc) {
+        subDoc.load();
+      }
+    }
   }
 }
 

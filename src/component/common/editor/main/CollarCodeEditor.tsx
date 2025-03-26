@@ -2,8 +2,6 @@ import { useRef, useState } from "react";
 import { EditorView } from "@codemirror/view";
 import styles from "./CollarCodeEditor.module.css";
 import React from "react";
-// @ts-ignore
-import { WebsocketProvider } from "rdy-websocket";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
@@ -23,8 +21,11 @@ import { handlePdfLocate, handleSrcTreeNav } from "./CollarCodeEditorHandler";
 import { useTranslation } from "react-i18next";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { BaseMethods } from "rdjs-wheel";
-import { initSocketIOEditor, initSubDocSocketIO } from "@/service/editor/CollarEditorSocketIOService";
-import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
+import {
+  initSocketIOEditor,
+  initSubDocSocketIO,
+} from "@/service/editor/CollarEditorSocketIOService";
+import * as Y from "yjs";
 
 export type EditorProps = {
   projectId: string;
@@ -32,6 +33,7 @@ export type EditorProps = {
 
 const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<HTMLDivElement>(null);
+  const [curDoc, setCurDoc] = useState<Y.Doc>();
   const { activeFile } = useSelector((state: AppState) => state.file);
   const { projInfo, projConf, insertContext, replaceContext } = useSelector(
     (state: AppState) => state.proj
@@ -40,12 +42,10 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     (state: AppState) => state.projEditor
   );
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
-  const [wsProvider, setWsProvider] = useState<WebsocketProvider>();
-  const [wsSocketIOProvider, setWsSocketIOProvider] =
-    useState<SocketIOClientProvider>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
   const activeKey = readConfig("projActiveFile") + props.projectId;
+  const { curYDoc } = useSelector((state: AppState) => state.projEditor);
   const { t } = useTranslation();
 
   React.useEffect(() => {
@@ -56,6 +56,12 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }, []);
 
   React.useEffect(() => {
+    if (curYDoc) {
+      setCurDoc(curYDoc);
+    }
+  }, [curYDoc]);
+
+  React.useEffect(() => {
     if (editor) {
       setActiveEditorView(editor);
     }
@@ -63,13 +69,13 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   React.useEffect(() => {
     if (texEditorWs) {
-      setWsProvider(texEditorWs);
+      //setWsProvider(texEditorWs);
     }
   }, [texEditorWs]);
 
   React.useEffect(() => {
     if (texEditorSocketIOWs) {
-      setWsSocketIOProvider(texEditorSocketIOWs);
+      //setWsSocketIOProvider(texEditorSocketIOWs);
     }
   }, [texEditorSocketIOWs]);
 
@@ -125,6 +131,10 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }, [projConf]);
 
   React.useEffect(() => {
+    let subDoc = localStorage.getItem("subDoc");
+    if (subDoc && subDoc === "subDoc") {
+      return;
+    }
     initByActiveFile(activeFile);
     return () => {
       destroy();
@@ -133,7 +143,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   React.useEffect(() => {
     if (texEditorWs) {
-      setWsProvider(texEditorWs);
+      //setWsProvider(texEditorWs);
     }
   }, [texEditorWs]);
 
@@ -158,7 +168,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     };
     const subdoc = localStorage.getItem("subdoc");
     if (subdoc && subdoc === "subdoc") {
-      initSubDocSocketIO(editorAttr, activeEditorView, edContainer);
+      initSubDocSocketIO(editorAttr, activeEditorView, edContainer, projInfo);
     } else {
       initSocketIOEditor(editorAttr, activeEditorView, edContainer);
     }
@@ -263,7 +273,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
               let activeFileJson = localStorage.getItem(activeKey);
               if (activeFileJson) {
                 let activeFile: TexFileModel = JSON.parse(activeFileJson);
-                handleSrcTreeNav(props, curProjInfo, activeFile);
+                handleSrcTreeNav(props, curProjInfo, activeFile, curDoc!);
               }
             }
           }}

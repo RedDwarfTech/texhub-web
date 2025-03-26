@@ -4,6 +4,7 @@ import { TreeFileType } from "@/model/file/TreeFileType";
 import { handleFileSelected } from "./ProjectTreeHandler";
 import { BaseMethods } from "rdjs-wheel";
 import { setCurFileTree } from "@/service/file/FileService";
+import * as Y from "yjs";
 
 export const ProjectTreeFolder = {
   getExpandStatus: (item: TexFileModel): boolean => {
@@ -124,7 +125,8 @@ export const ProjectTreeFolder = {
   handleExpandFolder: (
     name_paths: string[],
     projId: string,
-    selectedFile: TexFileModel
+    selectedFile: TexFileModel,
+    ydoc: Y.Doc
   ) => {
     for (let i = 0; i < name_paths.length; i++) {
       // get the newest tree content to avoid the legacy override the newest update
@@ -151,7 +153,7 @@ export const ProjectTreeFolder = {
         );
         setCurFileTree(upatedItems);
       } else {
-        handleFileSelected(pathNode, selectedFile);
+        handleFileSelected(pathNode, selectedFile, ydoc);
       }
     }
   },

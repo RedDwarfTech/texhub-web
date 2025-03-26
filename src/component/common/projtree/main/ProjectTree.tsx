@@ -28,17 +28,20 @@ import {
 import { TeXFileType } from "@/model/enum/TeXFileType";
 import { DownloadFileReq } from "@/model/request/file/query/DownloadFileReq";
 import { useTranslation } from "react-i18next";
+import * as Y from "yjs";
 
 const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const divRef = props.treeDivRef;
   const [curTabName, setCurTabName] = useState("tree");
   const [createFileName, setCreateFileName] = useState("");
+  const [curDoc, setCurDoc] = useState<Y.Doc>();
   const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
   const { fileTree, treeSelectItem, curFileTree } = useSelector(
     (state: AppState) => state.file
   );
   const { projInfo, srcFocus } = useSelector((state: AppState) => state.proj);
-  const [mainFile, setMainFile] = useState<TexFileModel>();
+  const { curYDoc } = useSelector((state: AppState) => state.projEditor);
+  
   const pid = props.projectId;
   const selected = localStorage.getItem("proj-select-file:" + pid);
   const [selectedFile, setSelectedFile] = useState<TexFileModel>(
@@ -65,9 +68,14 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   React.useEffect(() => {
     if (projInfo && Object.keys(projInfo).length > 0) {
       handleFileTreeUpdate(projInfo.tree, props.projectId, setTexFileTree);
-      setMainFile(projInfo.main_file);
     }
   }, [projInfo]);
+
+  React.useEffect(() => {
+    if (curYDoc) {
+      setCurDoc(curYDoc);
+    }
+  }, [curYDoc]);
 
   React.useEffect(() => {
     if (curFileTree && Object.keys(curFileTree).length > 0) {
@@ -78,10 +86,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   React.useEffect(() => {
     if (fileTree && fileTree.length > 0) {
       handleFileTreeUpdate(fileTree, props.projectId, setTexFileTree);
-      let defaultFile = fileTree.filter(
-        (file: TexFileModel) => file.main_flag === 1
-      );
-      setMainFile(defaultFile[0]);
     }
   }, [fileTree]);
 
@@ -191,7 +195,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   };
 
   const handleSearchComplete = (paths: string[]) => {
-    ProjectTreeFolder.handleExpandFolder(paths, props.projectId, selectedFile);
+    ProjectTreeFolder.handleExpandFolder(paths, props.projectId, selectedFile, curDoc!);
   };
 
   const renderBody = () => {
@@ -343,7 +347,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   ) => {
     e.preventDefault();
     e.stopPropagation();
-    handleFileSelected(fileItem, selectedFile);
+    handleFileSelected(fileItem, selectedFile, curDoc!);
   };
 
   const handleFileInputChange = (event: any) => {
@@ -358,7 +362,8 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       ProjectTreeFolder.handleExpandFolder(
         name_paths,
         props.projectId,
-        selectedFile
+        selectedFile,
+        curDoc!
       );
     }
   }, [srcFocus, props.projectId]);
