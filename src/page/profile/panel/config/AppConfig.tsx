@@ -104,15 +104,15 @@ const AppConfig: React.FC = () => {
   };
 
   const renderSubDocInput = () => {
-    if (enableSubDoc === "subdoc") {
+    if (!enableSubDoc || enableSubDoc !== "subdoc") {
       return (
         <input
           className="form-check-input"
           type="checkbox"
           id="flexSwitchCheckChecked"
           onChange={() => {
-            setEnableSubDoc("normal");
-            localStorage.setItem("subdoc", "normal");
+            setEnableSubDoc("subdoc");
+            localStorage.setItem("subdoc", "subdoc");
           }}
         />
       );
@@ -123,8 +123,8 @@ const AppConfig: React.FC = () => {
           type="checkbox"
           id="flexSwitchCheckChecked"
           onChange={() => {
-            setEnableSubDoc("subdoc");
-            localStorage.setItem("subdoc", "subdoc");
+            setEnableSubDoc("normal");
+            localStorage.setItem("subdoc", "normal");
           }}
           checked
         />
