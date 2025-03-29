@@ -134,8 +134,7 @@ const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
     console.error(err.context);
   });
   wsProvider.on("message", (event: MessageEvent) => {
-    debugger;
-    console.log("socketiomessage", event);
+    
   });
   wsProvider.on("status", (event: any) => {
     if (event.status === "connected") {
