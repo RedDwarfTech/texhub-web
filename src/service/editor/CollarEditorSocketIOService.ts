@@ -133,9 +133,7 @@ const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
     // some additional context, for example the XMLHttpRequest object
     console.error(err.context);
   });
-  wsProvider.on("message", (event: MessageEvent) => {
-    
-  });
+  wsProvider.on("message", (event: MessageEvent) => {});
   wsProvider.on("status", (event: any) => {
     if (event.status === "connected") {
       setWsConnState("connected");
@@ -257,6 +255,11 @@ export function initSubDocSocketIO(
   const undoManager = new Y.UndoManager(ytext);
   let wsProvider: SocketIOClientProvider = doSocketIOConn(rootYdoc, editorAttr);
   rootYdoc.on("update", (update, origin) => {});
+  rootYdoc.on("subdocs", ({ added, removed, loaded }) => {
+    loaded.forEach(subdoc => {
+      wsProvider.addSubdoc(subdoc) 
+    })
+  });
   const texEditorState = EditorState.create({
     doc: ytext.toString(),
     extensions: createExtensions({
