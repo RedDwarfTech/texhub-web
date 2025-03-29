@@ -256,10 +256,12 @@ export function initSubDocSocketIO(
   let wsProvider: SocketIOClientProvider = doSocketIOConn(rootYdoc, editorAttr);
   rootYdoc.on("update", (update, origin) => {});
   rootYdoc.on("subdocs", ({ added, removed, loaded }) => {
-    loaded.forEach(subdoc => {
-      wsProvider.addSubdoc(subdoc) 
-    })
+    loaded.forEach((subdoc) => {
+      wsProvider.addSubdoc(subdoc);
+    });
   });
+  const subDoc: any = rootYdoc.get(editorAttr.docId);
+  subDoc.load();
   const texEditorState = EditorState.create({
     doc: ytext.toString(),
     extensions: createExtensions({
