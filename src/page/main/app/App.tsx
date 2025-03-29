@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./App.module.css";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import queryString, { ParsedQuery } from "query-string";
 import AppBody from "./body/AppBody";
@@ -17,7 +17,7 @@ const App: React.FC = () => {
 
   React.useEffect(() => {
     if (errors && errors.msg) {
-      toast.error("Error：" + errors.msg);
+      console.error("an error occured", errors);
     }
   }, [errors]);
 
