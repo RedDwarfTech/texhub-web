@@ -58,7 +58,7 @@ const handleWsAuth = (
     RequestHandler.handleWebAccessTokenExpire().then((res) => {
       if (ResponseHandler.responseSuccess(res)) {
         wsProvider.ws?.close(1000, "expired refresh success");
-        wsProvider = doSocketIOConn(ydoc, editorAttr);
+        wsProvider = doSocketIOConn(ydoc, editorAttr, false);
       } else {
         wsProvider.shouldConnect = false;
         wsProvider.ws?.close(1000, "expired refresh failed");
@@ -67,7 +67,11 @@ const handleWsAuth = (
   }
 };
 
-const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
+const doSocketIOConn = (
+  ydoc: Y.Doc,
+  editorAttr: EditorAttr,
+  enableSubDoc: boolean
+): any => {
   let contains = projHasFile(editorAttr.docId, editorAttr.projectId);
   if (!contains) {
     console.error("initial the file do not belong the project");
@@ -91,7 +95,7 @@ const doSocketIOConn = (ydoc: Y.Doc, editorAttr: EditorAttr): any => {
   };
   const wsProvider: SocketIOClientProvider = new SocketIOClientProvider(
     readConfig("socketUrl"),
-    editorAttr.docId,
+    enableSubDoc ? editorAttr.projectId : editorAttr.docId,
     ydoc,
     options,
     {
@@ -200,7 +204,11 @@ export function initSocketIOEditor(
   setCurYDoc(ydoc);
   const ytext: Y.Text = ydoc.getText(editorAttr.docId);
   const undoManager = new Y.UndoManager(ytext);
-  let wsProvider: SocketIOClientProvider = doSocketIOConn(ydoc, editorAttr);
+  let wsProvider: SocketIOClientProvider = doSocketIOConn(
+    ydoc,
+    editorAttr,
+    false
+  );
   ydoc.on("update", (update, origin) => {
     handleYDocUpdate(editorAttr, ytext, ydoc);
   });
@@ -253,7 +261,11 @@ export function initSubDocSocketIO(
   setCurYDoc(rootYdoc);
   const ytext: Y.Text = rootYdoc.getText(editorAttr.projectId);
   const undoManager = new Y.UndoManager(ytext);
-  let wsProvider: SocketIOClientProvider = doSocketIOConn(rootYdoc, editorAttr);
+  let wsProvider: SocketIOClientProvider = doSocketIOConn(
+    rootYdoc,
+    editorAttr,
+    true
+  );
   rootYdoc.on("update", (update, origin) => {});
   rootYdoc.on("subdocs", ({ added, removed, loaded }) => {
     loaded.forEach((subdoc) => {
