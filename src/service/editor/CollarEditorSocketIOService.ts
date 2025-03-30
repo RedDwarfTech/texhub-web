@@ -261,6 +261,7 @@ export function initSubDocSocketIO(
   setCurYDoc(rootYdoc);
   const ytext: Y.Text = rootYdoc.getText(editorAttr.projectId);
   const undoManager = new Y.UndoManager(ytext);
+  // init room with project id
   let wsProvider: SocketIOClientProvider = doSocketIOConn(
     rootYdoc,
     editorAttr,
@@ -272,6 +273,7 @@ export function initSubDocSocketIO(
       wsProvider.addSubdoc(subdoc);
     });
   });
+  // load the initial subdocument
   const subDoc: any = rootYdoc.get(editorAttr.docId);
   subDoc.load();
   const texEditorState = EditorState.create({
