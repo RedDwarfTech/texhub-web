@@ -274,11 +274,12 @@ export function initSubDocSocketIO(
     });
   });
   // load the initial subdocument
-  const subDoc: any = rootYdoc.getMap().get(editorAttr.docId);
-  if (subDoc) {
-    console.log("now we start load sub doc:" + editorAttr.docId);
-    subDoc.load();
-  }
+   rootYdoc.getSubdocs().forEach((docItem =>{
+    if(docItem && docItem.guid === editorAttr.docIntId){
+      console.log("now we start load sub doc:" + editorAttr.docIntId);
+      docItem.load();
+    }
+   }));
   const texEditorState = EditorState.create({
     doc: ytext.toString(),
     extensions: createExtensions({
@@ -309,6 +310,7 @@ const initialSub = (tree: TexFileModel[], rootDoc: Y.Doc) => {
     const folder = rootDoc.getMap();
     tree.forEach((item: TexFileModel) => {
       const subDoc: Y.Doc = new Y.Doc();
+      subDoc.guid = item.id.toString();
       folder.set(item.id.toString(), subDoc);
       if (item.children && item.children.length > 0) {
         initialSub(item.children, rootDoc);

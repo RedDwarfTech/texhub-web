@@ -162,6 +162,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const preInitEditor = (file: TexFileModel) => {
     const editorAttr: EditorAttr = {
       projectId: props.projectId,
+      docIntId: file.id.toString(),
       docId: file.file_id,
       name: file.name,
       theme: themeMap.get("Solarized Light")!,
