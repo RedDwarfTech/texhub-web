@@ -9,7 +9,6 @@ const AppConfig: React.FC = () => {
   const [githubToken, setGithubToken] = useState<string>();
   const [devModel, setDevModel] = useState<boolean>();
   const [legacyModel, setLegacyModel] = useState<string>();
-  const [enableSubDoc, setEnableSubDoc] = useState<string>();
   const { t } = useTranslation();
 
   React.useEffect(() => {
@@ -104,16 +103,19 @@ const AppConfig: React.FC = () => {
   };
 
   const renderSubDocInput = () => {
-    if (!enableSubDoc || enableSubDoc !== "subdoc") {
+    if (
+      localStorage.getItem("subdoc") &&
+      localStorage.getItem("subdoc")?.toString() === "subdoc"
+    ) {
       return (
         <input
           className="form-check-input"
           type="checkbox"
           id="flexSwitchCheckChecked"
           onChange={() => {
-            setEnableSubDoc("subdoc");
-            localStorage.setItem("subdoc", "subdoc");
+            localStorage.setItem("subdoc", "normal");
           }}
+          checked
         />
       );
     } else {
@@ -123,10 +125,8 @@ const AppConfig: React.FC = () => {
           type="checkbox"
           id="flexSwitchCheckChecked"
           onChange={() => {
-            setEnableSubDoc("normal");
-            localStorage.setItem("subdoc", "normal");
+            localStorage.setItem("subdoc", "subdoc");
           }}
-          checked
         />
       );
     }

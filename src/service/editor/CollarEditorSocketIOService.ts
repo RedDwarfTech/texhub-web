@@ -268,18 +268,30 @@ export function initSubDocSocketIO(
     true
   );
   rootYdoc.on("update", (update, origin) => {});
-  rootYdoc.on("subdocs", ({ added, removed, loaded }) => {
-    loaded.forEach((subdoc) => {
-      wsProvider.addSubdoc(subdoc);
-    });
-  });
-  // load the initial subdocument
-   rootYdoc.getSubdocs().forEach((docItem =>{
-    if(docItem && docItem.guid === editorAttr.docIntId){
-      console.log("now we start load sub doc:" + editorAttr.docIntId);
-      docItem.load();
+  rootYdoc.on(
+    "subdocs",
+    ({
+      added,
+      removed,
+      loaded,
+    }: {
+      added: Set<Y.Doc>;
+      removed: Set<Y.Doc>;
+      loaded: Set<Y.Doc>;
+    }) => {
+      loaded.forEach((subdoc) => {
+        wsProvider.addSubdoc(subdoc);
+      });
     }
-   }));
+  );
+// load the initial subdocument
+rootYdoc.getSubdocs().forEach((docItem) => {
+  if (docItem && docItem.guid === editorAttr.docIntId) {
+    console.log("now we start load sub doc:" + editorAttr.docIntId);
+    docItem.load();
+  }
+});
+
   const texEditorState = EditorState.create({
     doc: ytext.toString(),
     extensions: createExtensions({
