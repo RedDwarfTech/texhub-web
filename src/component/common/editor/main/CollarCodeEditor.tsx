@@ -38,7 +38,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const { projInfo, projConf, insertContext, replaceContext } = useSelector(
     (state: AppState) => state.proj
   );
-  const { connState, editor, texEditorWs, texEditorSocketIOWs } = useSelector(
+  const { connState, editor, texEditorSocketIOWs } = useSelector(
     (state: AppState) => state.projEditor
   );
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
@@ -66,12 +66,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       setActiveEditorView(editor);
     }
   }, [editor]);
-
-  React.useEffect(() => {
-    if (texEditorWs) {
-      //setWsProvider(texEditorWs);
-    }
-  }, [texEditorWs]);
 
   React.useEffect(() => {
     if (texEditorSocketIOWs) {
@@ -140,12 +134,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       destroy();
     };
   }, [activeFile]);
-
-  React.useEffect(() => {
-    if (texEditorWs) {
-      //setWsProvider(texEditorWs);
-    }
-  }, [texEditorWs]);
 
   const initByActiveFile = (activeFile: TexFileModel) => {
     if (!activeFile || !activeFile.file_id) return;

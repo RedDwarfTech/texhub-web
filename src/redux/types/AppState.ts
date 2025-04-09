@@ -19,7 +19,6 @@ import { TexSnippetModel } from "@/model/snippet/TexSnippetModel";
 import * as Y from 'rdyjs';
 import { ProjCollarModel } from "@/model/proj/share/ProjCollarModel";
 import { EditorView } from "codemirror";
-import { WebsocketProvider } from "rdy-websocket";
 import { CompileResultType } from "@/model/proj/compile/CompileResultType";
 import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
 
@@ -59,7 +58,6 @@ export interface AppState {
     projEditor: {
         curYDoc: Y.Doc,
         editor: EditorView,
-        texEditorWs: WebsocketProvider,
         texEditorSocketIOWs: SocketIOClientProvider,
         connState: string
     },

@@ -1,7 +1,8 @@
 import { EditorView } from "@codemirror/view";
 import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
 import * as Y from "rdyjs";
-import * as random from "lib0/random";
+// @ts-ignore
+import * as random from "rdlib0/random";
 import { createExtensions } from "@/component/common/editor/foundation/extensions/extensions";
 import { Compartment, EditorState } from "@codemirror/state";
 import { readConfig } from "@/config/app/config-reader";

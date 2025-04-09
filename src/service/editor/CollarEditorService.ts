@@ -1,17 +1,12 @@
 import { EditorView } from "@codemirror/view";
-// @ts-ignore
-import { WebsocketProvider } from "rdy-websocket";
 import * as Y from "rdyjs";
-import * as random from "lib0/random";
+// @ts-ignore
+import * as random from "rdlib0/random";
 import { createExtensions } from "@/component/common/editor/foundation/extensions/extensions";
 import { Compartment, EditorState } from "@codemirror/state";
-import { readConfig } from "@/config/app/config-reader";
 import {
   BaseMethods,
-  RequestHandler,
-  ResponseHandler,
   UserModel,
-  WheelGlobal,
 } from "rdjs-wheel";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { RefObject } from "react";
@@ -20,10 +15,7 @@ import { Metadata } from "@/component/common/editor/foundation/extensions/langua
 import {
   setCurYDoc,
   setEditorInstance,
-  setWebsocketProvider,
-  setWsConnState,
 } from "../project/editor/EditorService";
-import { handleYDocUpdate } from "@/component/common/collar/ver/YjsEvent";
 
 export const usercolors = [
   { color: "#30bced", light: "#30bced33" },
@@ -37,50 +29,13 @@ export const usercolors = [
 ];
 export const themeConfig = new Compartment();
 export const userColor = usercolors[random.uint32() % usercolors.length];
-const wsMaxRetries = 1;
-let wsRetryCount = 0;
 
-const handleWsAuth = (
-  event: any,
-  wsProvider: WebsocketProvider,
-  editorAttr: EditorAttr,
-  ydoc: Y.Doc
-) => {
-  if (event.status === "failed") {
-    wsProvider.shouldConnect = false;
-    wsProvider.ws?.close(1000, "failed when connect");
-  }
-  if (event.status === "expired") {
-    RequestHandler.handleWebAccessTokenExpire().then((res) => {
-      if (ResponseHandler.responseSuccess(res)) {
-        wsProvider.ws?.close(1000, "expired refresh success");
-        wsProvider = doWsConn(ydoc, editorAttr);
-      } else {
-        wsProvider.shouldConnect = false;
-        wsProvider.ws?.close(1000, "expired refresh failed");
-      }
-    });
-  }
-};
-
-const doWsConn = (ydoc: any, editorAttr: EditorAttr): WebsocketProvider => {
+const doWsConn = (ydoc: any, editorAttr: EditorAttr): any => {
   let contains = projHasFile(editorAttr.docId, editorAttr.projectId);
   if (!contains) {
     console.error("initial the file do not belong the project");
   }
-  const wsProvider: WebsocketProvider = new WebsocketProvider(
-    readConfig("wssUrl"),
-    editorAttr.docId,
-    ydoc,
-    {
-      maxBackoffTime: 1000000,
-      params: {
-        // https://self-issued.info/docs/draft-ietf-oauth-v2-bearer.html#query-param
-        access_token: localStorage.getItem(WheelGlobal.ACCESS_TOKEN_NAME) ?? "",
-        from: "web_tex_editor",
-      },
-    }
-  );
+  const wsProvider = null;
   const uInfo = localStorage.getItem("userInfo");
   if (!uInfo) {
     console.error("user info is null", uInfo);
@@ -94,24 +49,6 @@ const doWsConn = (ydoc: any, editorAttr: EditorAttr): WebsocketProvider => {
   };
   const permanentUserData = new Y.PermanentUserData(ydoc);
   permanentUserData.setUserMapping(ydoc, ydoc.clientID, ydocUser.name);
-  wsProvider.awareness.setLocalStateField("user", ydocUser);
-  wsProvider.on("auth", (event: any) => {
-    // https://discuss.yjs.dev/t/how-to-refresh-the-wsprovider-params-when-token-expire/2131
-    handleWsAuth(event, wsProvider, editorAttr, ydoc);
-  });
-  wsProvider.on("connection-error", (event: any) => {
-    console.error("connection error:" + editorAttr.docId, event);
-  });
-  wsProvider.on("message", (event: MessageEvent) => {});
-  wsProvider.on("status", (event: any) => {
-    if (event.status === "connected") {
-      setWsConnState("connected");
-    } else if (event.status === "disconnected" && wsRetryCount < wsMaxRetries) {
-      setWsConnState("connecting");
-    } else {
-      setWsConnState("disconnected");
-    }
-  });
   return wsProvider;
 };
 
@@ -155,7 +92,7 @@ export function initEditor(
   editorAttr: EditorAttr,
   activeEditorView: EditorView | undefined,
   edContainer: RefObject<HTMLDivElement>,
-  legacyWs: WebsocketProvider | undefined
+  legacyWs: any | undefined
 ) {
   if (legacyWs) {
     // close the legacy websocket to avoid 1006 disconnect on the server side
@@ -174,7 +111,7 @@ export function initEditor(
   setCurYDoc(ydoc);
   const ytext: Y.Text = ydoc.getText(editorAttr.docId);
   const undoManager = new Y.UndoManager(ytext);
-  let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr);
+  let wsProvider: any = doWsConn(ydoc, editorAttr);
   const texEditorState = EditorState.create({
     doc: ytext.toString(),
     extensions: createExtensions({
@@ -197,5 +134,4 @@ export function initEditor(
     parent: edContainer.current!,
   });
   setEditorInstance(editorView);
-  setWebsocketProvider(wsProvider);
 }
