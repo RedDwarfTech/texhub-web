@@ -50,13 +50,13 @@
     "dayjs": "^1.11.13",
     "i18next": "^23.16.8",
     "jspreadsheet-ce": "^4.15.0",
-    "lib0": "^0.2.102",
     "lodash": "^4.17.21",
     "pdfjs-dist": "^4.10.38",
     "query-string": "^8.2.0",
     "rc-table": "7.40.0",
     "rd-component": "^0.1.169",
     "rdjs-wheel": "0.0.31",
+    "rdlib0": "^0.2.106",
     "rdy-websocket": "1.5.0",
     "rdyjs": "^13.6.27",
     "react": "^18.3.1",
@@ -138,12 +138,14 @@
   },
   "pnpm": {
     "overrides": {
-      "pdfjs-dist": "^4.9.155"
+      "pdfjs-dist": "^4.9.155",
+      "rdlib0": "^0.2.106"
     }
   },
   "overrides": {
     "react-pdf": {
-      "pdfjs-dist": "4.9.155"
+      "pdfjs-dist": "4.9.155",
+      "rdlib0": "^0.2.106"
     }
   }
 }

@@ -6,6 +6,7 @@ settings:
 
 overrides:
   pdfjs-dist: ^4.9.155
+  rdlib0: ^0.2.106
 
 importers:
 
@@ -152,9 +153,6 @@ importers:
       jspreadsheet-ce:
         specifier: ^4.15.0
         version: 4.15.0
-      lib0:
-        specifier: ^0.2.102
-        version: 0.2.102
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -173,6 +171,9 @@ importers:
       rdjs-wheel:
         specifier: 0.0.31
         version: 0.0.31(@jest/transform@29.7.0)(@jest/types@29.6.3)(@types/node@22.14.0)(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(rollup@2.79.2)(ts-node@10.9.2(@swc/core@1.11.18)(@types/node@22.14.0)(typescript@4.9.5))(typescript@4.9.5)(vite@5.4.17(@types/node@22.14.0)(sass@1.86.3)(terser@5.39.0))(webpack@5.99.5(@swc/core@1.11.18)(esbuild@0.18.20))
+      rdlib0:
+        specifier: ^0.2.106
+        version: 0.2.106
       rdy-websocket:
         specifier: 1.5.0
         version: 1.5.0(yjs@13.6.24)
