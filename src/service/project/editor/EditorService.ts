@@ -3,7 +3,7 @@ import store from "@/redux/store/store";
 import { EditorView } from "codemirror";
 import { XHRClient } from "rd-component";
 import { WebsocketProvider } from "rdy-websocket";
-import * as Y from 'yjs';
+import * as Y from 'rdyjs';
 import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
 
 export function setEditorInstance(view: EditorView) {

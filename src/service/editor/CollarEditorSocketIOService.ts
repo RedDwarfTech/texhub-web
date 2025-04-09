@@ -1,6 +1,6 @@
 import { EditorView } from "@codemirror/view";
 import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
-import * as Y from "yjs";
+import * as Y from "rdyjs";
 import * as random from "lib0/random";
 import { createExtensions } from "@/component/common/editor/foundation/extensions/extensions";
 import { Compartment, EditorState } from "@codemirror/state";
@@ -93,7 +93,7 @@ const doSocketIOConn = (
       token: getAccessToken(),
     },
   };
-  const wsProvider: SocketIOClientProvider = new SocketIOClientProvider(
+  const wsProvider: any = new SocketIOClientProvider(
     readConfig("socketUrl"),
     enableSubDoc ? editorAttr.projectId : editorAttr.docId,
     ydoc,
@@ -151,7 +151,7 @@ const doSocketIOConn = (
 };
 
 let history: Uint8Array[] = [];
-var ydoc: Y.Doc;
+var ydoc: any;
 export function saveHistory(docId: string) {
   const update = Y.encodeStateAsUpdate(ydoc);
   history.push(update);
@@ -209,7 +209,7 @@ export function initSocketIOEditor(
     editorAttr,
     false
   );
-  ydoc.on("update", (update, origin) => {
+  ydoc.on("update", (update:any, origin:any) => {
     handleYDocUpdate(editorAttr, ytext, ydoc);
   });
   const texEditorState = EditorState.create({
@@ -253,7 +253,7 @@ export function initSubDocSocketIO(
     // https://discuss.yjs.dev/t/error-garbage-collection-must-be-disabled-in-origindoc/2313
     gc: false,
   };
-  let rootYdoc: Y.Doc = new Y.Doc(rootDocOpt);
+  let rootYdoc: any = new Y.Doc(rootDocOpt);
   // initial all sub document
   if (projInfo && projInfo.tree) {
     initialSub(projInfo.tree, rootYdoc);
@@ -267,7 +267,7 @@ export function initSubDocSocketIO(
     editorAttr,
     true
   );
-  rootYdoc.on("update", (update, origin) => {});
+  rootYdoc.on("update", (update:any, origin:any) => {});
   rootYdoc.on(
     "subdocs",
     ({
@@ -285,7 +285,7 @@ export function initSubDocSocketIO(
     }
   );
 // load the initial subdocument
-rootYdoc.getSubdocs().forEach((docItem) => {
+rootYdoc.getSubdocs().forEach((docItem: any) => {
   if (docItem && docItem.guid === editorAttr.docIntId) {
     console.log("now we start load sub doc:" + editorAttr.docIntId);
     docItem.load();

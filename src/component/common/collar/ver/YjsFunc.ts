@@ -1,10 +1,10 @@
 import { base64ToUint8Array } from "@/common/ConvertUtil";
-import * as Y from "yjs";
-import { UndoManager } from "yjs";
-import { encodeStateAsUpdate } from "yjs";
-import { encodeStateVector } from "yjs";
-import { applyUpdate } from "yjs";
-import { Doc } from "yjs";
+import * as Y from "rdyjs";
+import { UndoManager } from "rdyjs";
+import { encodeStateAsUpdate } from "rdyjs";
+import { encodeStateVector } from "rdyjs";
+import { applyUpdate } from "rdyjs";
+import { Doc } from "rdyjs";
 
 const snapshotOrigin = "snapshot-origin";
 

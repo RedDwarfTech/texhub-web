@@ -3,7 +3,7 @@ import { TexFileVersion } from "@/model/file/TexFileVersion";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { addFileVersion } from "@/service/file/FileService";
 import lodash from "lodash";
-import * as Y from "yjs";
+import * as Y from "rdyjs";
 import { getDocDiff } from "@/component/common/collar/ver/YjsFunc";
 
 

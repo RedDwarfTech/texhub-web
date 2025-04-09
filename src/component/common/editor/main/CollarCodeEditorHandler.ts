@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { getPdfPosition } from "@/service/project/ProjectService";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { ProjectTreeFolder } from "../../projtree/main/ProjectTreeFolder";
-import * as Y from "yjs";
+import * as Y from "rdyjs";
 
 export const getCursorPos = (
   editor: EditorView

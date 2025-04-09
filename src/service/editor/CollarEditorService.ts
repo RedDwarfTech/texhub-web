@@ -1,7 +1,7 @@
 import { EditorView } from "@codemirror/view";
 // @ts-ignore
 import { WebsocketProvider } from "rdy-websocket";
-import * as Y from "yjs";
+import * as Y from "rdyjs";
 import * as random from "lib0/random";
 import { createExtensions } from "@/component/common/editor/foundation/extensions/extensions";
 import { Compartment, EditorState } from "@codemirror/state";
@@ -63,7 +63,7 @@ const handleWsAuth = (
   }
 };
 
-const doWsConn = (ydoc: Y.Doc, editorAttr: EditorAttr): WebsocketProvider => {
+const doWsConn = (ydoc: any, editorAttr: EditorAttr): WebsocketProvider => {
   let contains = projHasFile(editorAttr.docId, editorAttr.projectId);
   if (!contains) {
     console.error("initial the file do not belong the project");
@@ -175,9 +175,6 @@ export function initEditor(
   const ytext: Y.Text = ydoc.getText(editorAttr.docId);
   const undoManager = new Y.UndoManager(ytext);
   let wsProvider: WebsocketProvider = doWsConn(ydoc, editorAttr);
-  ydoc.on("update", (update, origin) => {
-    handleYDocUpdate(editorAttr, ytext, ydoc);
-  });
   const texEditorState = EditorState.create({
     doc: ytext.toString(),
     extensions: createExtensions({

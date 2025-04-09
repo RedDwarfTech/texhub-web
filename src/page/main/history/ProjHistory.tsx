@@ -7,7 +7,7 @@ import { getProjHistoryDetail, replaceTextToEditor } from "@/service/project/Pro
 import dayjs from "dayjs";
 import { QueryHistoryDetail } from "@/model/request/proj/query/QueryHistoryDetail";
 import { ResponseHandler } from "rdjs-wheel";
-import * as Y from 'yjs';
+import * as Y from 'rdyjs';
 import { useTranslation } from "react-i18next";
 import ProjHistoryDetail from "./detail/ProjHistoryDetail";
 

@@ -7,7 +7,7 @@ import { ResponseHandler } from "rdjs-wheel";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 import { getProjectInfo } from "@/service/project/ProjectService";
 import * as bootstrap from "bootstrap";
-import * as Y from "yjs";
+import * as Y from "rdyjs";
 
 export function handleFileTreeUpdate(
   tree: TexFileModel[],

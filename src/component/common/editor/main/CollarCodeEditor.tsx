@@ -25,7 +25,7 @@ import {
   initSocketIOEditor,
   initSubDocSocketIO,
 } from "@/service/editor/CollarEditorSocketIOService";
-import * as Y from "yjs";
+import * as Y from "rdyjs";
 
 export type EditorProps = {
   projectId: string;

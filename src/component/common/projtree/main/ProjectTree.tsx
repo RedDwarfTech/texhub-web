@@ -28,7 +28,7 @@ import {
 import { TeXFileType } from "@/model/enum/TeXFileType";
 import { DownloadFileReq } from "@/model/request/file/query/DownloadFileReq";
 import { useTranslation } from "react-i18next";
-import * as Y from "yjs";
+import * as Y from "rdyjs";
 
 const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const divRef = props.treeDivRef;
