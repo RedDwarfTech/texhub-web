@@ -98,6 +98,7 @@ const doSocketIOConn = (
     readConfig("socketUrl"),
     enableSubDoc ? editorAttr.projectId : editorAttr.docId,
     ydoc,
+    enableSubDoc,
     options,
     {
       maxBackoffTime: 1000000,
