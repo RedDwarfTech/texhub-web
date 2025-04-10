@@ -5,7 +5,7 @@ import {
 } from "@codemirror/language";
 import { Extension } from "@codemirror/state";
 import { basicSetup, EditorView } from "codemirror";
-import { yCollab } from "y-codemirror.next";
+import { yCollab } from "rdy-codemirror.next";
 import {
   hightlightSelection,
   highlightUnselection,
