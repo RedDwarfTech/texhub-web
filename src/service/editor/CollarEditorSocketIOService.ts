@@ -211,7 +211,7 @@ export function initSocketIOEditor(
     editorAttr,
     false
   );
-  ydoc.on("update", (update:any, origin:any) => {
+  ydoc.on("update", (update: any, origin: any) => {
     handleYDocUpdate(editorAttr, ytext, ydoc);
   });
   const texEditorState = EditorState.create({
@@ -256,10 +256,6 @@ export function initSubDocSocketIO(
     gc: false,
   };
   let rootYdoc: any = new Y.Doc(rootDocOpt);
-  // initial all sub document
-  if (projInfo && projInfo.tree) {
-    initialSub(projInfo.tree, rootYdoc);
-  }
   setCurYDoc(rootYdoc);
   const ytext: Y.Text = rootYdoc.getText(editorAttr.projectId);
   const undoManager = new Y.UndoManager(ytext);
@@ -269,7 +265,14 @@ export function initSubDocSocketIO(
     editorAttr,
     true
   );
-  rootYdoc.on("update", (update:any, origin:any) => {});
+  // initial last doc
+  if (projInfo && projInfo.tree) {
+    // initialSub(projInfo.tree, rootYdoc);
+    const subDoc: Y.Doc = new Y.Doc();
+    subDoc.guid = editorAttr.docId;
+    wsProvider.addSubdoc(subDoc);
+  }
+  rootYdoc.on("update", (update: any, origin: any) => {});
   rootYdoc.on(
     "subdocs",
     ({
@@ -286,13 +289,13 @@ export function initSubDocSocketIO(
       });
     }
   );
-// load the initial subdocument
-rootYdoc.getSubdocs().forEach((docItem: any) => {
-  if (docItem && docItem.guid === editorAttr.docIntId) {
-    console.log("now we start load sub doc:" + editorAttr.docIntId);
-    docItem.load();
-  }
-});
+  // load the initial subdocument
+  rootYdoc.getSubdocs().forEach((docItem: any) => {
+    if (docItem && docItem.guid === editorAttr.docIntId) {
+      console.log("now we start load sub doc:" + editorAttr.docIntId);
+      docItem.load();
+    }
+  });
 
   const texEditorState = EditorState.create({
     doc: ytext.toString(),
