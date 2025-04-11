@@ -267,10 +267,7 @@ export function initSubDocSocketIO(
   );
   // initial last doc
   if (projInfo && projInfo.tree) {
-    // initialSub(projInfo.tree, rootYdoc);
-    const subDoc: Y.Doc = new Y.Doc();
-    subDoc.guid = editorAttr.docId;
-    wsProvider.addSubdoc(subDoc);
+    initialSub(projInfo.tree, rootYdoc);
   }
   rootYdoc.on("update", (update: any, origin: any) => {});
   rootYdoc.on(
@@ -291,7 +288,7 @@ export function initSubDocSocketIO(
   );
   // load the initial subdocument
   rootYdoc.getSubdocs().forEach((docItem: any) => {
-    if (docItem && docItem.guid === editorAttr.docIntId) {
+    if (docItem && docItem.guid === editorAttr.docId) {
       console.log("now we start load sub doc:" + editorAttr.docIntId);
       docItem.load();
     }
@@ -327,8 +324,8 @@ const initialSub = (tree: TexFileModel[], rootDoc: Y.Doc) => {
     const folder = rootDoc.getMap();
     tree.forEach((item: TexFileModel) => {
       const subDoc: Y.Doc = new Y.Doc();
-      subDoc.guid = item.id.toString();
-      folder.set(item.id.toString(), subDoc);
+      subDoc.guid = item.file_id.toString();
+      folder.set(item.file_id.toString(), subDoc);
       if (item.children && item.children.length > 0) {
         initialSub(item.children, rootDoc);
       }
