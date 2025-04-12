@@ -29,6 +29,7 @@ import { ManagerOptions, SocketOptions } from "socket.io-client";
 import { getAccessToken } from "@/component/common/cache/Cache";
 import { ProjInfo } from "@/model/proj/ProjInfo.js";
 import { TexFileModel } from "@/model/file/TexFileModel.js";
+import { SubDocEventProps } from "@/model/props/yjs/subdoc/SubDocEventProps.js";
 
 export const usercolors = [
   { color: "#30bced", light: "#30bced33" },
@@ -256,6 +257,14 @@ export function initSubDocSocketIO(
     gc: false,
   };
   let rootYdoc: Y.Doc = new Y.Doc(rootDocOpt);
+  // @ts-ignore
+  rootYdoc.on("subdocs", (props: SubDocEventProps) => {
+    console.warn("trigger sub docs");
+    props.loaded.forEach((subdoc) => {
+      console.warn("add sub docs");
+      wsProvider.addSubdoc(subdoc);
+    });
+  });
   setCurYDoc(rootYdoc);
   const ytext: Y.Text = rootYdoc.getText(editorAttr.projectId);
   const undoManager = new Y.UndoManager(ytext);
@@ -279,26 +288,8 @@ export function initSubDocSocketIO(
   }
   // @ts-ignore
   rootYdoc.on("update", (update: any, origin: any) => {});
-  // @ts-ignore
-  rootYdoc.on(
-    "subdocs",
-    ({
-      added,
-      removed,
-      loaded,
-    }: {
-      added: Set<Y.Doc>;
-      removed: Set<Y.Doc>;
-      loaded: Set<Y.Doc>;
-    }) => {
-      console.warn("trigger sub docs");
-      loaded.forEach((subdoc) => {
-        console.warn("add sub docs");
-        wsProvider.addSubdoc(subdoc);
-      });
-    }
-  );
   
+
   const texEditorState = EditorState.create({
     doc: ytext.toString(),
     extensions: createExtensions({
