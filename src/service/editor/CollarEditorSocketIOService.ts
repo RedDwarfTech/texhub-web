@@ -270,7 +270,7 @@ export function initSubDocSocketIO(
     initialSub(projInfo.tree, rootYdoc);
   }
   // load the initial subdocument
-  let initDoc: any = rootYdoc.get(editorAttr.docId);
+  let initDoc: any = rootYdoc.getMap().get(editorAttr.docId);
   if (initDoc) {
     console.warn("load initial doc:" + editorAttr.docId);
     initDoc.load();
