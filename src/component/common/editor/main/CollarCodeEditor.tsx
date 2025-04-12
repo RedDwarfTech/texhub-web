@@ -125,8 +125,8 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }, [projConf]);
 
   React.useEffect(() => {
-    let subDoc = localStorage.getItem("subDoc");
-    if (subDoc && subDoc === "subDoc") {
+    let subDoc = localStorage.getItem("subdoc");
+    if (subDoc && subDoc === "subdoc") {
       return;
     }
     initByActiveFile(activeFile);

@@ -58,7 +58,7 @@ export function handleFileSelected(
   chooseFile(fileItem);
   if (fileItem.file_type !== TeXFileType.FOLDER) {
     switchFile(fileItem);
-    let subdoc = localStorage.getItem("subDoc");
+    let subdoc = localStorage.getItem("subdoc");
     if (subdoc && subdoc === "subdoc") {
       let subDoc: any = curYDoc.getMap().get(fileItem.id.toString());
       if (subDoc) {
