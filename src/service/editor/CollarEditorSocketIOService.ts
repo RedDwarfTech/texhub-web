@@ -260,8 +260,8 @@ export function initSubDocSocketIO(
   // @ts-ignore
   rootYdoc.on("subdocs", (props: SubDocEventProps) => {
     console.warn("trigger sub docs");
-    props.loaded.forEach((subdoc) => {
-      console.warn("add sub docs");
+    props.loaded.forEach((subdoc: Y.Doc) => {
+      console.warn("add sub docs:" + subdoc.guid);
       wsProvider.addSubdoc(subdoc);
     });
   });
@@ -288,7 +288,6 @@ export function initSubDocSocketIO(
   }
   // @ts-ignore
   rootYdoc.on("update", (update: any, origin: any) => {});
-  
 
   const texEditorState = EditorState.create({
     doc: ytext.toString(),
