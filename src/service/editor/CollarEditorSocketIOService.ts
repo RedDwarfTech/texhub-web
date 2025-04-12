@@ -255,7 +255,7 @@ export function initSubDocSocketIO(
     // https://discuss.yjs.dev/t/error-garbage-collection-must-be-disabled-in-origindoc/2313
     gc: false,
   };
-  let rootYdoc: any = new Y.Doc(rootDocOpt);
+  let rootYdoc: Y.Doc = new Y.Doc(rootDocOpt);
   setCurYDoc(rootYdoc);
   const ytext: Y.Text = rootYdoc.getText(editorAttr.projectId);
   const undoManager = new Y.UndoManager(ytext);
@@ -269,7 +269,17 @@ export function initSubDocSocketIO(
   if (projInfo && projInfo.tree) {
     initialSub(projInfo.tree, rootYdoc);
   }
+  // load the initial subdocument
+  let initDoc: any = rootYdoc.get(editorAttr.docId);
+  if (initDoc) {
+    console.warn("load initial doc:" + editorAttr.docId);
+    initDoc.load();
+  } else {
+    console.error("did not found initial doc:" + editorAttr.docId);
+  }
+  // @ts-ignore
   rootYdoc.on("update", (update: any, origin: any) => {});
+  // @ts-ignore
   rootYdoc.on(
     "subdocs",
     ({
@@ -281,19 +291,14 @@ export function initSubDocSocketIO(
       removed: Set<Y.Doc>;
       loaded: Set<Y.Doc>;
     }) => {
+      console.warn("trigger sub docs");
       loaded.forEach((subdoc) => {
+        console.warn("add sub docs");
         wsProvider.addSubdoc(subdoc);
       });
     }
   );
-  // load the initial subdocument
-  rootYdoc.getSubdocs().forEach((docItem: any) => {
-    if (docItem && docItem.guid === editorAttr.docId) {
-      console.log("now we start load sub doc:" + editorAttr.docIntId);
-      docItem.load();
-    }
-  });
-
+  
   const texEditorState = EditorState.create({
     doc: ytext.toString(),
     extensions: createExtensions({
