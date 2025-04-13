@@ -265,7 +265,6 @@ export function initSubDocSocketIO(
       wsProvider.addSubdoc(subdoc);
     });
   });
-  rootYdoc.on("subdoc", (subdoc: Y.SubDoc) => {});
   setCurYDoc(rootYdoc);
   const ytext: Y.Text = rootYdoc.getText(editorAttr.projectId);
   const undoManager = new Y.UndoManager(ytext);
