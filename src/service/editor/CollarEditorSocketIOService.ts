@@ -265,6 +265,7 @@ export function initSubDocSocketIO(
       wsProvider.addSubdoc(subdoc);
     });
   });
+  rootYdoc.on("subdoc", (subdoc: Y.SubDoc) => {});
   setCurYDoc(rootYdoc);
   const ytext: Y.Text = rootYdoc.getText(editorAttr.projectId);
   const undoManager = new Y.UndoManager(ytext);
@@ -283,6 +284,10 @@ export function initSubDocSocketIO(
   if (initDoc) {
     console.warn("load initial doc:" + editorAttr.docId);
     initDoc.load();
+    initDoc.on("synced", () => {
+      const subDocText = initDoc.getText();
+      console.warn(initDoc.guid + ",synced:" + subDocText);
+    });
   } else {
     console.error("did not found initial doc:" + editorAttr.docId);
   }
