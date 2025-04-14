@@ -4,7 +4,7 @@ import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/soc
 import * as Y from "rdyjs";
 
 const initState: AppState["projEditor"] = {
-  editor: {} as EditorView,
+  editorView: {} as EditorView,
   texEditorSocketIOWs: {} as SocketIOClientProvider,
   curYDoc: {} as Y.Doc,
   connState: "",
@@ -15,7 +15,7 @@ const EditorReducer = (state = initState, action: any) => {
     case "INITIAL_EDITOR":
       return {
         ...state,
-        editor: action.data,
+        editorView: action.data,
       };
     case "INITIAL_WS":
       return {

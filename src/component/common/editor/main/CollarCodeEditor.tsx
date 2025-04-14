@@ -38,7 +38,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const { projInfo, projConf, insertContext, replaceContext } = useSelector(
     (state: AppState) => state.proj
   );
-  const { connState, editor, texEditorSocketIOWs } = useSelector(
+  const { connState, editorView, texEditorSocketIOWs } = useSelector(
     (state: AppState) => state.projEditor
   );
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
@@ -62,10 +62,10 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }, [curYDoc]);
 
   React.useEffect(() => {
-    if (editor) {
-      setActiveEditorView(editor);
+    if (editorView) {
+      setActiveEditorView(editorView);
     }
-  }, [editor]);
+  }, [editorView]);
 
   React.useEffect(() => {
     if (texEditorSocketIOWs) {

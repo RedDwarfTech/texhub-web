@@ -30,6 +30,7 @@ import { getAccessToken } from "@/component/common/cache/Cache";
 import { ProjInfo } from "@/model/proj/ProjInfo.js";
 import { TexFileModel } from "@/model/file/TexFileModel.js";
 import { SubDocEventProps } from "@/model/props/yjs/subdoc/SubDocEventProps.js";
+import { ySyncAnnotation, ySyncFacet } from "rdy-codemirror.next";
 
 export const usercolors = [
   { color: "#30bced", light: "#30bced33" },
@@ -266,6 +267,25 @@ export function initSubDocSocketIO(
       const subDocText = subdoc.getText();
       subDocText.observe((event, tr) => {
         console.log("subdocument observed:" + subDocText.toString());
+        let conf = editorView.state.facet(ySyncFacet)
+        if (tr.origin !== conf) {
+          const delta = event.delta
+          const changes = []
+          let pos = 0
+          for (let i = 0; i < delta.length; i++) {
+            const d = delta[i]
+            if (d.insert != null) {
+              changes.push({ from: pos, to: pos, insert: d.insert })
+            } else if (d.delete != null) {
+              changes.push({ from: pos, to: pos + d.delete, insert: '' })
+              pos += d.delete
+            } else {
+              pos += d.retain!;
+            }
+          }
+          // @ts-ignore
+          editorView.dispatch({ changes, annotations: [ySyncAnnotation.of(conf)] })
+        }
       });
     });
   });
@@ -297,7 +317,7 @@ export function initSubDocSocketIO(
   // @ts-ignore
   rootYdoc.on("update", (update: any, origin: any) => {});
 
-  const texEditorState = EditorState.create({
+  const texEditorState: EditorState = EditorState.create({
     doc: ytext.toString(),
     extensions: createExtensions({
       ytext: ytext,
