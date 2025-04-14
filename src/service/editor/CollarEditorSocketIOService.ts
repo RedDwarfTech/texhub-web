@@ -263,6 +263,10 @@ export function initSubDocSocketIO(
     props.loaded.forEach((subdoc: Y.Doc) => {
       console.warn("add sub docs:" + subdoc.guid);
       wsProvider.addSubdoc(subdoc);
+      const subDocText = subdoc.getText();
+      subDocText.observe((event, tr) => {
+        console.log("subdocument observed:" + subDocText.toString());
+      });
     });
   });
   setCurYDoc(rootYdoc);
