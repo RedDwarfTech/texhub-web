@@ -63,6 +63,11 @@ export function handleFileSelected(
       let subDoc: any = curYDoc.getMap().get(fileItem.id.toString());
       if (subDoc) {
         subDoc.load();
+      }else{
+        let subDoc = new Y.Doc();
+        subDoc.guid = selectedFile.file_id;
+        curYDoc.getMap().set(selectedFile.file_id.toString(), subDoc);
+        subDoc.load();
       }
     }
   }
