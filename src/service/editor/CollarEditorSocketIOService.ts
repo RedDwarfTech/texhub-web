@@ -266,26 +266,7 @@ export function initSubDocSocketIO(
       wsProvider.addSubdoc(subdoc);
       const subDocText = subdoc.getText();
       subDocText.observe((event, tr) => {
-        console.log("subdocument observed:" + subDocText.toString());
-        let conf = editorView.state.facet(ySyncFacet)
-        if (tr.origin !== conf) {
-          const delta = event.delta
-          const changes = []
-          let pos = 0
-          for (let i = 0; i < delta.length; i++) {
-            const d = delta[i]
-            if (d.insert != null) {
-              changes.push({ from: pos, to: pos, insert: d.insert })
-            } else if (d.delete != null) {
-              changes.push({ from: pos, to: pos + d.delete, insert: '' })
-              pos += d.delete
-            } else {
-              pos += d.retain!;
-            }
-          }
-          // @ts-ignore
-          editorView.dispatch({ changes, annotations: [ySyncAnnotation.of(conf)] })
-        }
+        updateEditor(subDocText, editorView, tr, event);
       });
     });
   });
@@ -348,5 +329,40 @@ const initialSub = (fileId: string, rootDoc: Y.Doc) => {
     const subDoc: Y.Doc = new Y.Doc();
     subDoc.guid = fileId;
     folder.set(fileId, subDoc);
+  }
+};
+
+export const updateEditor = (
+  subDocText: any,
+  editorView: EditorView | undefined,
+  tr: any,
+  event: any
+) => {
+  console.log("subdocument observed:" + subDocText.toString());
+  if (!editorView) {
+    console.error("EditorView is null:" + subDocText.toString());
+    return;
+  }
+  let conf = editorView.state.facet(ySyncFacet);
+  if (tr.origin !== conf) {
+    const delta = event.delta;
+    const changes = [];
+    let pos = 0;
+    for (let i = 0; i < delta.length; i++) {
+      const d = delta[i];
+      if (d.insert != null) {
+        changes.push({ from: pos, to: pos, insert: d.insert });
+      } else if (d.delete != null) {
+        changes.push({ from: pos, to: pos + d.delete, insert: "" });
+        pos += d.delete;
+      } else {
+        pos += d.retain!;
+      }
+    }
+    // @ts-ignore
+    editorView.dispatch({
+      changes,
+      annotations: [ySyncAnnotation.of(conf)],
+    });
   }
 };

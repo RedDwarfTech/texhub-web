@@ -23,12 +23,13 @@ import {
   handleFileSelected,
   handleFileTreeUpdate,
   handleProjSearch,
-  handleProjSymbol
+  handleProjSymbol,
 } from "./ProjectTreeHandler";
 import { TeXFileType } from "@/model/enum/TeXFileType";
 import { DownloadFileReq } from "@/model/request/file/query/DownloadFileReq";
 import { useTranslation } from "react-i18next";
 import * as Y from "rdyjs";
+import { EditorView } from "@codemirror/view";
 
 const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const divRef = props.treeDivRef;
@@ -41,7 +42,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   );
   const { projInfo, srcFocus } = useSelector((state: AppState) => state.proj);
   const { curYDoc } = useSelector((state: AppState) => state.projEditor);
-  
+
   const pid = props.projectId;
   const selected = localStorage.getItem("proj-select-file:" + pid);
   const [selectedFile, setSelectedFile] = useState<TexFileModel>(
@@ -54,6 +55,8 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     null
   );
   const { t } = useTranslation();
+  const [activeEditorView, setActiveEditorView] = useState<EditorView>();
+  const { editorView } = useSelector((state: AppState) => state.projEditor);
 
   React.useEffect(() => {
     if (treeSelectItem) {
@@ -70,6 +73,12 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       handleFileTreeUpdate(projInfo.tree, props.projectId, setTexFileTree);
     }
   }, [projInfo]);
+
+  React.useEffect(() => {
+    if (editorView) {
+      setActiveEditorView(editorView);
+    }
+  }, [editorView]);
 
   React.useEffect(() => {
     if (curYDoc) {
@@ -195,7 +204,13 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   };
 
   const handleSearchComplete = (paths: string[]) => {
-    ProjectTreeFolder.handleExpandFolder(paths, props.projectId, selectedFile, curDoc!);
+    ProjectTreeFolder.handleExpandFolder(
+      paths,
+      props.projectId,
+      selectedFile,
+      curDoc!,
+      activeEditorView
+    );
   };
 
   const renderBody = () => {
@@ -347,7 +362,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   ) => {
     e.preventDefault();
     e.stopPropagation();
-    handleFileSelected(fileItem, selectedFile, curDoc!);
+    handleFileSelected(fileItem, selectedFile, curDoc!, editorView);
   };
 
   const handleFileInputChange = (event: any) => {
@@ -363,7 +378,8 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         name_paths,
         props.projectId,
         selectedFile,
-        curDoc!
+        curDoc!,
+        editorView
       );
     }
   }, [srcFocus, props.projectId]);

@@ -262,7 +262,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
               let activeFileJson = localStorage.getItem(activeKey);
               if (activeFileJson) {
                 let activeFile: TexFileModel = JSON.parse(activeFileJson);
-                handleSrcTreeNav(props, curProjInfo, activeFile, curDoc!);
+                handleSrcTreeNav(props, curProjInfo, activeFile, curDoc!, activeEditorView);
               }
             }
           }}

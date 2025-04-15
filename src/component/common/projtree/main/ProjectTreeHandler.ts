@@ -8,6 +8,8 @@ import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 import { getProjectInfo } from "@/service/project/ProjectService";
 import * as bootstrap from "bootstrap";
 import * as Y from "rdyjs";
+import { updateEditor } from "@/service/editor/CollarEditorSocketIOService";
+import { EditorView } from "@codemirror/view";
 
 export function handleFileTreeUpdate(
   tree: TexFileModel[],
@@ -52,7 +54,8 @@ export function handleExpandFolderEvent(
 export function handleFileSelected(
   fileItem: TexFileModel,
   selectedFile: TexFileModel,
-  curYDoc: Y.Doc
+  curYDoc: Y.Doc,
+  editorView: EditorView | undefined
 ) {
   if (selectedFile && fileItem.file_id === selectedFile.file_id) return;
   chooseFile(fileItem);
@@ -68,6 +71,10 @@ export function handleFileSelected(
         subDoc.guid = selectedFile.file_id;
         curYDoc.getMap().set(selectedFile.file_id.toString(), subDoc);
         subDoc.load();
+        const subDocText = subDoc.getText();
+      subDocText.observe((event, tr) => {
+        updateEditor(subDocText, editorView, tr, event);
+      });
       }
     }
   }
