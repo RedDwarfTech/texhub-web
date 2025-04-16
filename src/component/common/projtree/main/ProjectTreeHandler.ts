@@ -66,15 +66,15 @@ export function handleFileSelected(
       let subDoc: any = curYDoc.getMap().get(fileItem.id.toString());
       if (subDoc) {
         subDoc.load();
-      }else{
+      } else {
         let subDoc = new Y.Doc();
         subDoc.guid = selectedFile.file_id;
         curYDoc.getMap().set(selectedFile.file_id.toString(), subDoc);
         subDoc.load();
         const subDocText = subDoc.getText();
-      subDocText.observe((event, tr) => {
-        updateEditor(subDocText, editorView, tr, event);
-      });
+        subDocText.observe((event, tr) => {
+          updateEditor(subDocText, editorView, tr, event);
+        });
       }
     }
   }

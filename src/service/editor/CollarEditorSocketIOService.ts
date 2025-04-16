@@ -263,11 +263,16 @@ export function initSubDocSocketIO(
     console.warn("trigger sub docs");
     props.loaded.forEach((subdoc: Y.Doc) => {
       console.warn("add sub docs:" + subdoc.guid);
-      wsProvider.addSubdoc(subdoc);
       const subDocText = subdoc.getText();
       subDocText.observe((event, tr) => {
         updateEditor(subDocText, editorView, tr, event);
       });
+      // @ts-ignore
+      subdoc.on("synced", () => {
+        console.log("syned:" + subDocText.toString());
+        console.warn("subdoc synced event:" + subdoc.guid);
+      });
+      wsProvider.addSubdoc(subdoc);
     });
   });
   setCurYDoc(rootYdoc);
@@ -291,6 +296,10 @@ export function initSubDocSocketIO(
     initDoc.on("synced", () => {
       const subDocText = initDoc.getText();
       console.warn(initDoc.guid + ",synced:" + subDocText);
+      // Add observer for the initial document
+      subDocText.observe((event, tr) => {
+        updateEditor(subDocText, editorView, tr, event);
+      });
     });
   } else {
     console.error("did not found initial doc:" + editorAttr.docId);
@@ -333,10 +342,10 @@ const initialSub = (fileId: string, rootDoc: Y.Doc) => {
 };
 
 export const updateEditor = (
-  subDocText: any,
+  subDocText: Y.Text,
   editorView: EditorView | undefined,
   tr: any,
-  event: any
+  event: Y.YTextEvent
 ) => {
   console.log("subdocument observed:" + subDocText.toString());
   if (!editorView) {
@@ -344,25 +353,23 @@ export const updateEditor = (
     return;
   }
   let conf = editorView.state.facet(ySyncFacet);
-  if (tr.origin !== conf) {
-    const delta = event.delta;
-    const changes = [];
-    let pos = 0;
-    for (let i = 0; i < delta.length; i++) {
-      const d = delta[i];
-      if (d.insert != null) {
-        changes.push({ from: pos, to: pos, insert: d.insert });
-      } else if (d.delete != null) {
-        changes.push({ from: pos, to: pos + d.delete, insert: "" });
-        pos += d.delete;
-      } else {
-        pos += d.retain!;
-      }
+  const delta = event.delta;
+  const changes = [];
+  let pos = 0;
+  for (let i = 0; i < delta.length; i++) {
+    const d = delta[i];
+    if (d.insert != null) {
+      changes.push({ from: pos, to: pos, insert: d.insert });
+    } else if (d.delete != null) {
+      changes.push({ from: pos, to: pos + d.delete, insert: "" });
+      pos += d.delete;
+    } else {
+      pos += d.retain!;
     }
-    // @ts-ignore
-    editorView.dispatch({
-      changes,
-      annotations: [ySyncAnnotation.of(conf)],
-    });
   }
+  // @ts-ignore
+  editorView.dispatch({
+    changes,
+    annotations: [ySyncAnnotation.of(conf)],
+  });
 };
