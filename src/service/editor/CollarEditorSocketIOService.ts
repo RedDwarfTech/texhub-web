@@ -297,7 +297,7 @@ export function initSubDocSocketIO(
       const subDocText = initDoc.getText();
       console.warn(initDoc.guid + ",synced:" + subDocText);
       // Add observer for the initial document
-      subDocText.observe((event, tr) => {
+      subDocText.observe((event: any, tr: any) => {
         updateEditor(subDocText, editorView, tr, event);
       });
     });
@@ -369,6 +369,7 @@ export const updateEditor = (
   }
   // @ts-ignore
   editorView.dispatch({
+    // @ts-ignore
     changes,
     annotations: [ySyncAnnotation.of(conf)],
   });
