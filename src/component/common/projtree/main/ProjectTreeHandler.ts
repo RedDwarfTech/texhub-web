@@ -63,6 +63,12 @@ export function handleFileSelected(
     switchFile(fileItem);
     let subdoc = localStorage.getItem("subdoc");
     if (subdoc && subdoc === "subdoc") {
+      // destroy the legacy select file
+      let legacySubDoc: any = curYDoc.getMap().get(selectedFile.file_id);
+      if (legacySubDoc) {
+        console.warn("destroy the legacy file", selectedFile);
+        legacySubDoc.destroy();
+      }
       let subDoc: any = curYDoc.getMap().get(fileItem.id.toString());
       if (subDoc) {
         subDoc.load();
@@ -72,7 +78,7 @@ export function handleFileSelected(
         curYDoc.getMap().set(selectedFile.file_id.toString(), subDoc);
         subDoc.load();
         const subDocText = subDoc.getText();
-        subDocText.observe((event, tr) => {
+        subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
           updateEditor(subDocText, editorView, tr, event);
         });
       }

@@ -264,7 +264,7 @@ export function initSubDocSocketIO(
     props.loaded.forEach((subdoc: Y.Doc) => {
       console.warn("add sub docs:" + subdoc.guid);
       const subDocText = subdoc.getText();
-      subDocText.observe((event, tr) => {
+      subDocText.observe((event: Y.YTextEvent, tr:Y.Transaction) => {
         updateEditor(subDocText, editorView, tr, event);
       });
       // @ts-ignore
@@ -297,7 +297,7 @@ export function initSubDocSocketIO(
       const subDocText = initDoc.getText();
       console.warn(initDoc.guid + ",synced:" + subDocText);
       // Add observer for the initial document
-      subDocText.observe((event: any, tr: any) => {
+      subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
         updateEditor(subDocText, editorView, tr, event);
       });
     });
@@ -344,7 +344,7 @@ const initialSub = (fileId: string, rootDoc: Y.Doc) => {
 export const updateEditor = (
   subDocText: Y.Text,
   editorView: EditorView | undefined,
-  tr: any,
+  tr: Y.Transaction,
   event: Y.YTextEvent
 ) => {
   console.log("subdocument observed:" + subDocText.toString());
@@ -367,7 +367,6 @@ export const updateEditor = (
       pos += d.retain!;
     }
   }
-  // @ts-ignore
   editorView.dispatch({
     // @ts-ignore
     changes,
