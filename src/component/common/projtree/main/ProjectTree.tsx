@@ -30,6 +30,7 @@ import { DownloadFileReq } from "@/model/request/file/query/DownloadFileReq";
 import { useTranslation } from "react-i18next";
 import * as Y from "rdyjs";
 import { EditorView } from "@codemirror/view";
+import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider.js";
 
 const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const divRef = props.treeDivRef;
@@ -41,8 +42,11 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     (state: AppState) => state.file
   );
   const { projInfo, srcFocus } = useSelector((state: AppState) => state.proj);
-  const { curYDoc } = useSelector((state: AppState) => state.projEditor);
-
+  const { curYDoc, texEditorSocketIOWs } = useSelector(
+    (state: AppState) => state.projEditor
+  );
+  const [wsSocketIOProvider, setWsSocketIOProvider] =
+    useState<SocketIOClientProvider>();
   const pid = props.projectId;
   const selected = localStorage.getItem("proj-select-file:" + pid);
   const [selectedFile, setSelectedFile] = useState<TexFileModel>(
@@ -85,6 +89,12 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       setCurDoc(curYDoc);
     }
   }, [curYDoc]);
+
+  React.useEffect(() => {
+    if (texEditorSocketIOWs) {
+      setWsSocketIOProvider(texEditorSocketIOWs);
+    }
+  }, [texEditorSocketIOWs]);
 
   React.useEffect(() => {
     if (curFileTree && Object.keys(curFileTree).length > 0) {
@@ -209,7 +219,8 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       props.projectId,
       selectedFile,
       curDoc!,
-      activeEditorView
+      activeEditorView,
+      wsSocketIOProvider!
     );
   };
 
@@ -362,7 +373,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   ) => {
     e.preventDefault();
     e.stopPropagation();
-    handleFileSelected(fileItem, selectedFile, curDoc!, editorView);
+    handleFileSelected(fileItem, selectedFile, curDoc!, editorView, wsSocketIOProvider!);
   };
 
   const handleFileInputChange = (event: any) => {
@@ -379,7 +390,8 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         props.projectId,
         selectedFile,
         curDoc!,
-        editorView
+        editorView,
+        wsSocketIOProvider!
       );
     }
   }, [srcFocus, props.projectId]);

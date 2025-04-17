@@ -6,6 +6,7 @@ import { BaseMethods } from "rdjs-wheel";
 import { setCurFileTree } from "@/service/file/FileService";
 import * as Y from "rdyjs";
 import { EditorView } from "@codemirror/view";
+import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider.js";
 
 export const ProjectTreeFolder = {
   getExpandStatus: (item: TexFileModel): boolean => {
@@ -128,7 +129,8 @@ export const ProjectTreeFolder = {
     projId: string,
     selectedFile: TexFileModel,
     ydoc: Y.Doc,
-    editorView: EditorView | undefined
+    editorView: EditorView | undefined,
+    provider: SocketIOClientProvider
   ) => {
     for (let i = 0; i < name_paths.length; i++) {
       // get the newest tree content to avoid the legacy override the newest update
@@ -155,7 +157,7 @@ export const ProjectTreeFolder = {
         );
         setCurFileTree(upatedItems);
       } else {
-        handleFileSelected(pathNode, selectedFile, ydoc, editorView);
+        handleFileSelected(pathNode, selectedFile, ydoc, editorView, provider);
       }
     }
   },

@@ -26,6 +26,7 @@ import {
   initSubDocSocketIO,
 } from "@/service/editor/CollarEditorSocketIOService";
 import * as Y from "rdyjs";
+import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider.js";
 
 export type EditorProps = {
   projectId: string;
@@ -41,6 +42,8 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const { connState, editorView, texEditorSocketIOWs } = useSelector(
     (state: AppState) => state.projEditor
   );
+  const [wsSocketIOProvider, setWsSocketIOProvider] =
+      useState<SocketIOClientProvider>();
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
@@ -69,7 +72,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   React.useEffect(() => {
     if (texEditorSocketIOWs) {
-      //setWsSocketIOProvider(texEditorSocketIOWs);
+      setWsSocketIOProvider(texEditorSocketIOWs);
     }
   }, [texEditorSocketIOWs]);
 
@@ -262,7 +265,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
               let activeFileJson = localStorage.getItem(activeKey);
               if (activeFileJson) {
                 let activeFile: TexFileModel = JSON.parse(activeFileJson);
-                handleSrcTreeNav(props, curProjInfo, activeFile, curDoc!, activeEditorView);
+                handleSrcTreeNav(props, curProjInfo, activeFile, curDoc!, activeEditorView, wsSocketIOProvider!);
               }
             }
           }}

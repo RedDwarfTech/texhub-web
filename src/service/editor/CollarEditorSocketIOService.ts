@@ -300,7 +300,7 @@ export function initSubDocSocketIO(
       console.warn("add sub docs:" + subdoc.guid);
       const subDocText = subdoc.getText();
       subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-        updateEditor(subDocText, editorView, tr, event);
+        updateEditor(editorView, tr, event);
       });
       // @ts-ignore
       subdoc.on("synced", () => {
@@ -333,7 +333,7 @@ export function initSubDocSocketIO(
       console.warn(initDoc.guid + ",synced:" + subDocText);
       // Add observer for the initial document
       subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-        updateEditor(subDocText, editorView, tr, event);
+        updateEditor(editorView, tr, event);
       });
     });
   } else {
@@ -377,14 +377,13 @@ const initialSub = (fileId: string, rootDoc: Y.Doc) => {
 };
 
 export const updateEditor = (
-  subDocText: Y.Text,
   editorView: EditorView | undefined,
   tr: Y.Transaction,
   event: Y.YTextEvent
 ) => {
-  console.log("subdocument observed:" + subDocText.toString());
+  console.log("subdocument observed:");
   if (!editorView) {
-    console.error("EditorView is null:" + subDocText.toString());
+    console.error("EditorView is null:");
     return;
   }
   let conf = editorView.state.facet(ySyncFacet);

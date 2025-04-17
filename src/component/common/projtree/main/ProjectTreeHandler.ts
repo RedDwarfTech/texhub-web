@@ -10,6 +10,7 @@ import * as bootstrap from "bootstrap";
 import * as Y from "rdyjs";
 import { updateEditor } from "@/service/editor/CollarEditorSocketIOService";
 import { EditorView } from "@codemirror/view";
+import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider.js";
 
 export function handleFileTreeUpdate(
   tree: TexFileModel[],
@@ -55,7 +56,8 @@ export function handleFileSelected(
   fileItem: TexFileModel,
   selectedFile: TexFileModel,
   curYDoc: Y.Doc,
-  editorView: EditorView | undefined
+  editorView: EditorView | undefined,
+  provider: SocketIOClientProvider
 ) {
   if (selectedFile && fileItem.file_id === selectedFile.file_id) return;
   chooseFile(fileItem);
@@ -68,6 +70,7 @@ export function handleFileSelected(
       if (legacySubDoc) {
         console.warn("destroy the legacy file", selectedFile);
         legacySubDoc.destroy();
+        provider.removeSubdoc(legacySubDoc);
       }
       let subDoc: any = curYDoc.getMap().get(fileItem.id.toString());
       if (subDoc) {
@@ -76,11 +79,12 @@ export function handleFileSelected(
         let subDoc = new Y.Doc();
         subDoc.guid = selectedFile.file_id;
         curYDoc.getMap().set(selectedFile.file_id.toString(), subDoc);
-        subDoc.load();
         const subDocText = subDoc.getText();
         subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-          updateEditor(subDocText, editorView, tr, event);
+          updateEditor(editorView, tr, event);
         });
+        subDoc.load();
+        provider.addSubdoc(subDoc);
       }
     }
   }
