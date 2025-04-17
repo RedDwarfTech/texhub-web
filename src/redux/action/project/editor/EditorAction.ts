@@ -13,6 +13,7 @@ export enum CollarEditorActionType {
   INITIAL_SOCKETIO_WS,
   SET_CUR_YDOC,
   SET_WS_CON_STATE,
+  SET_EDITOR_TEXT,
 }
 
 export interface setCollarEditorAction {
@@ -32,5 +33,10 @@ export interface setYDocAction {
 
 export interface setWsConnStateAction {
   type: CollarEditorActionType.SET_WS_CON_STATE;
+  data: any;
+}
+
+export interface setEditorTextAction {
+  type: CollarEditorActionType.SET_EDITOR_TEXT;
   data: any;
 }

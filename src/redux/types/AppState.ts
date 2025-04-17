@@ -59,7 +59,8 @@ export interface AppState {
         curYDoc: Y.Doc,
         editorView: EditorView,
         texEditorSocketIOWs: SocketIOClientProvider,
-        connState: string
+        connState: string,
+        editorText: string
     },
     projTree: {
         hits: SearchResult[],

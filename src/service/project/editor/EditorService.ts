@@ -26,3 +26,8 @@ export function setWsConnState(state: string) {
   const actionTypeString: string = CollarEditorActionType[CollarEditorActionType.SET_WS_CON_STATE];
   return XHRClient.dispathAction(state, actionTypeString, store);
 }
+
+export function setEditorText(text: string) {
+  const actionTypeString: string = CollarEditorActionType[CollarEditorActionType.SET_EDITOR_TEXT];
+  return XHRClient.dispathAction(text, actionTypeString, store);
+}

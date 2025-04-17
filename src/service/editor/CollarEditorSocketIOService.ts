@@ -21,6 +21,7 @@ import { Metadata } from "@/component/common/editor/foundation/extensions/langua
 import {
   setCurYDoc,
   setEditorInstance,
+  setEditorText,
   setSocketIOProvider,
   setWsConnState,
 } from "../project/editor/EditorService";
@@ -28,9 +29,10 @@ import { handleYDocUpdate } from "@/component/common/collar/ver/YjsEvent";
 import { ManagerOptions, SocketOptions } from "socket.io-client";
 import { getAccessToken } from "@/component/common/cache/Cache";
 import { ProjInfo } from "@/model/proj/ProjInfo.js";
-import { TexFileModel } from "@/model/file/TexFileModel.js";
 import { SubDocEventProps } from "@/model/props/yjs/subdoc/SubDocEventProps.js";
 import { ySyncAnnotation, ySyncFacet } from "rdy-codemirror.next";
+import { DocOpts } from "rdyjs/dist/src/utils/Doc";
+import store from "@/redux/store/store";
 
 export const usercolors = [
   { color: "#30bced", light: "#30bced33" },
@@ -198,7 +200,7 @@ export function initSocketIOEditor(
   if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
     activeEditorView.destroy();
   }
-  let docOpt = {
+  let docOpt: DocOpts = {
     guid: editorAttr.docId,
     collectionid: editorAttr.projectId,
     // https://discuss.yjs.dev/t/error-garbage-collection-must-be-disabled-in-origindoc/2313
@@ -207,7 +209,6 @@ export function initSocketIOEditor(
   ydoc = new Y.Doc(docOpt);
   setCurYDoc(ydoc);
   const ytext: Y.Text = ydoc.getText(editorAttr.docId);
-  const undoManager = new Y.UndoManager(ytext);
   let wsProvider: SocketIOClientProvider = doSocketIOConn(
     ydoc,
     editorAttr,
@@ -216,16 +217,32 @@ export function initSocketIOEditor(
   ydoc.on("update", (update: any, origin: any) => {
     handleYDocUpdate(editorAttr, ytext, ydoc);
   });
-  const texEditorState = EditorState.create({
-    doc: ytext.toString(),
+  setEditorText(ytext.toString());
+  initEditorView(docOpt, wsProvider, edContainer);
+}
+
+function initEditorView(
+  docOpts: DocOpts,
+  wsProvider: SocketIOClientProvider,
+  edContainer: RefObject<HTMLDivElement>
+) {
+  // Get initial editor text from Redux store
+  const { editorText } = store.getState().projEditor;
+  
+  const ytext = new Y.Text(editorText || "");
+  const undoManager = new Y.UndoManager(ytext);
+  
+  const texEditorState: EditorState = EditorState.create({
+    doc: editorText || "",
     extensions: createExtensions({
       ytext: ytext,
       wsProvider: wsProvider,
       undoManager: undoManager,
-      docName: docOpt.guid,
+      docName: docOpts.guid,
       metadata: metadata,
     }),
   });
+
   if (
     edContainer.current &&
     edContainer.current.children &&
@@ -233,10 +250,28 @@ export function initSocketIOEditor(
   ) {
     return;
   }
+
   const editorView: EditorView = new EditorView({
     state: texEditorState,
     parent: edContainer.current!,
   });
+
+  // Subscribe to editorText changes
+  store.subscribe(() => {
+    const { editorText: newEditorText } = store.getState().projEditor;
+    console.log("newEditorText:" + newEditorText);
+    if (newEditorText !== editorText) {
+      // Update editor content when editorText changes
+      editorView.dispatch({
+        changes: {
+          from: 0,
+          to: editorView.state.doc.length,
+          insert: newEditorText || ""
+        }
+      });
+    }
+  });
+
   setEditorInstance(editorView);
   setSocketIOProvider(wsProvider);
 }
@@ -264,7 +299,7 @@ export function initSubDocSocketIO(
     props.loaded.forEach((subdoc: Y.Doc) => {
       console.warn("add sub docs:" + subdoc.guid);
       const subDocText = subdoc.getText();
-      subDocText.observe((event: Y.YTextEvent, tr:Y.Transaction) => {
+      subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
         updateEditor(subDocText, editorView, tr, event);
       });
       // @ts-ignore
