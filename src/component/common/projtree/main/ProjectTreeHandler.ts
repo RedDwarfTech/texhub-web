@@ -77,8 +77,8 @@ export function handleFileSelected(
         subDoc.load();
       } else {
         let subDoc = new Y.Doc();
-        subDoc.guid = selectedFile.file_id;
-        curYDoc.getMap().set(selectedFile.file_id.toString(), subDoc);
+        subDoc.guid = fileItem.file_id;
+        curYDoc.getMap().set(fileItem.file_id.toString(), subDoc);
         const subDocText = subDoc.getText();
         subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
           updateEditor(editorView, tr, event);
