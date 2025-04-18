@@ -58,7 +58,7 @@
     "rdjs-wheel": "0.0.31",
     "rdlib0": "^0.2.106",
     "rdy-codemirror.next": "^0.3.6",
-    "rdyjs": "^13.6.29",
+    "rdyjs": "^13.6.30",
     "react": "^18.3.1",
     "react-arborist": "^3.4.3",
     "react-copy-to-clipboard": "^5.1.0",
@@ -139,7 +139,7 @@
       "pdfjs-dist": "^4.9.155",
       "rdlib0": "^0.2.106",
       "rdy-protocols": "^1.0.14",
-      "rdyjs": "^13.6.29"
+      "rdyjs": "^13.6.30"
     }
   },
   "overrides": {
@@ -148,6 +148,6 @@
     },
     "rdlib0": "^0.2.106",
     "rdy-protocols": "^1.0.14",
-    "rdyjs": "^13.6.29"
+    "rdyjs": "^13.6.30"
   }
 }
