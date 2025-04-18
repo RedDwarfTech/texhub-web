@@ -143,7 +143,7 @@ const doSocketIOConn = (
     // some additional context, for example the XMLHttpRequest object
     console.error(err.context);
   });
-  wsProvider.on("message", (event: MessageEvent) => {});
+  wsProvider.on("message", (event: MessageEvent) => { });
   wsProvider.on("status", (event: any) => {
     if (event.status === "connected") {
       setWsConnState("connected");
@@ -217,8 +217,36 @@ export function initSocketIOEditor(
   ydoc.on("update", (update: any, origin: any) => {
     handleYDocUpdate(editorAttr, ytext, ydoc);
   });
-  setEditorText(ytext.toString());
-  initEditorView(docOpt, wsProvider, edContainer);
+
+  const undoManager = new Y.UndoManager(ytext);
+
+  const texEditorState: EditorState = EditorState.create({
+    doc: ytext,
+    extensions: createExtensions({
+      ytext: ytext,
+      wsProvider: wsProvider,
+      undoManager: undoManager,
+      docName: docOpt.guid,
+      metadata: metadata,
+    }),
+  });
+
+  if (
+    edContainer.current &&
+    edContainer.current.children &&
+    edContainer.current.children.length > 0
+  ) {
+    return;
+  }
+
+  const editorView: EditorView = new EditorView({
+    state: texEditorState,
+    parent: edContainer.current!,
+  });
+
+  setEditorInstance(editorView);
+  setSocketIOProvider(wsProvider);
+
 }
 
 function initEditorView(
@@ -228,10 +256,10 @@ function initEditorView(
 ) {
   // Get initial editor text from Redux store
   const { editorText } = store.getState().projEditor;
-  
+
   const ytext = new Y.Text(editorText || "");
   const undoManager = new Y.UndoManager(ytext);
-  
+
   const texEditorState: EditorState = EditorState.create({
     doc: editorText || "",
     extensions: createExtensions({
@@ -340,7 +368,7 @@ export function initSubDocSocketIO(
     console.error("did not found initial doc:" + editorAttr.docId);
   }
   // @ts-ignore
-  rootYdoc.on("update", (update: any, origin: any) => {});
+  rootYdoc.on("update", (update: any, origin: any) => { });
 
   const texEditorState: EditorState = EditorState.create({
     doc: ytext.toString(),
