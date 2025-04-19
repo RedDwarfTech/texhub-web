@@ -326,15 +326,35 @@ export function initSubDocSocketIO(
     console.warn("trigger sub docs");
     props.loaded.forEach((subdoc: Y.Doc) => {
       console.warn("add sub docs:" + subdoc.guid);
+      
+      // Add event listeners before adding to provider
+      // @ts-ignore
+      subdoc.on("update", (update: Uint8Array, origin: any) => {
+        console.log("Subdoc update received:", {
+          docId: subdoc.guid,
+          updateLength: update.length,
+          origin: origin
+        });
+      });
+
       const subDocText = subdoc.getText();
       subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
+        console.log("Subdoc text changed:", {
+          docId: subdoc.guid,
+          delta: event.delta,
+          currentText: subDocText.toString()
+        });
         updateEditor(editorView, tr, event, subdoc);
       });
+
       // @ts-ignore
       subdoc.on("synced", () => {
-        console.log("syned:" + subDocText.toString());
-        console.warn("subdoc synced event:" + subdoc.guid);
+        console.log("Subdoc synced:", {
+          docId: subdoc.guid,
+          content: subDocText.toString()
+        });
       });
+
       wsProvider.addSubdoc(subdoc);
     });
   });
@@ -356,19 +376,41 @@ export function initSubDocSocketIO(
   if (initDoc) {
     console.warn("load initial doc:" + editorAttr.docId);
     initDoc.load();
+    
+    // Add event listeners before loading
+    initDoc.on("update", (update: Uint8Array, origin: any) => {
+      console.log("Initial doc update received:", {
+        docId: initDoc.guid,
+        updateLength: update.length,
+        origin: origin
+      });
+    });
+
     initDoc.on("synced", () => {
       const subDocText = initDoc.getText();
       console.warn(initDoc.guid + ",synced:" + subDocText);
+      
       // Add observer for the initial document
       subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
+        console.log("Initial doc text changed:", {
+          docId: initDoc.guid,
+          delta: event.delta,
+          currentText: subDocText.toString()
+        });
         updateEditor(editorView, tr, event, initDoc);
       });
     });
   } else {
     console.error("did not found initial doc:" + editorAttr.docId);
   }
+
   // @ts-ignore
-  rootYdoc.on("update", (update: any, origin: any) => { });
+  rootYdoc.on("update", (update: any, origin: any) => {
+    console.log("Root doc update:", {
+      updateLength: update.length,
+      origin: origin
+    });
+  });
 
   const texEditorState: EditorState = EditorState.create({
     doc: ytext.toString(),
