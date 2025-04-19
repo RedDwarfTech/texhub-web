@@ -150,6 +150,6 @@
     "rdlib0": "^0.2.106",
     "rdy-protocols": "^1.0.14",
     "rdyjs": "^13.6.30",
-    "texhub-broadcast": "1.0.57"
+    "texhub-broadcast": "1.0.58"
   }
 }
