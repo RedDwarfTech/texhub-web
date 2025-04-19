@@ -1,5 +1,6 @@
 import { EditorView } from "@codemirror/view";
 import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
+import SingleClientProvider from "texhub-broadcast/dist/websocket/conn/single_client_provider";
 import * as Y from "rdyjs";
 // @ts-ignore
 import * as random from "rdlib0/random";
@@ -98,7 +99,7 @@ const doSocketIOConn = (
       token: getAccessToken(),
     },
   };
-  const wsProvider: any = new SocketIOClientProvider(
+  const wsProvider: any = SingleClientProvider.getInstance(
     readConfig("socketUrl"),
     enableSubDoc ? editorAttr.projectId : editorAttr.docId,
     ydoc,

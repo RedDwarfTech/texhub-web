@@ -70,21 +70,22 @@ export function handleFileSelected(
       if (legacySubDoc) {
         console.warn("destroy the legacy file", selectedFile);
         legacySubDoc.destroy();
-        provider.removeSubdoc(legacySubDoc);
+        //provider.removeSubdoc(legacySubDoc);
       }
       let subDoc: any = curYDoc.getMap().get(fileItem.id.toString());
       if (subDoc) {
         subDoc.load();
       } else {
-        let subDoc = new Y.Doc();
-        subDoc.guid = fileItem.file_id;
-        curYDoc.getMap().set(fileItem.file_id.toString(), subDoc);
-        const subDocText = subDoc.getText();
+        let subDocEden = new Y.Doc();
+        subDocEden.guid = fileItem.file_id;
+        curYDoc.getMap().set(fileItem.file_id.toString(), subDocEden);
+        const subDocText = subDocEden.getText();
         subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
           updateEditor(editorView, tr, event);
         });
-        subDoc.load();
-        provider.addSubdoc(subDoc);
+        subDocEden.load();
+        provider.addSubdoc(subDocEden);
+        console.info("newest docs:" + JSON.stringify(provider.docs));
       }
     }
   }
