@@ -311,7 +311,6 @@ export function initSubDocSocketIO(
   edContainer: RefObject<HTMLDivElement>,
   projInfo: ProjInfo
 ) {
-  console.log("initSubDocSocketIO");
   if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
     activeEditorView.destroy();
   }
@@ -329,7 +328,7 @@ export function initSubDocSocketIO(
       console.warn("add sub docs:" + subdoc.guid);
       const subDocText = subdoc.getText();
       subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-        updateEditor(editorView, tr, event);
+        updateEditor(editorView, tr, event, doc);
       });
       // @ts-ignore
       subdoc.on("synced", () => {
@@ -362,7 +361,7 @@ export function initSubDocSocketIO(
       console.warn(initDoc.guid + ",synced:" + subDocText);
       // Add observer for the initial document
       subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-        updateEditor(editorView, tr, event);
+        updateEditor(editorView, tr, event, initDoc);
       });
     });
   } else {
@@ -408,9 +407,10 @@ const initialSub = (fileId: string, rootDoc: Y.Doc) => {
 export const updateEditor = (
   editorView: EditorView | undefined,
   tr: Y.Transaction,
-  event: Y.YTextEvent
+  event: Y.YTextEvent,
+  doc: Y.Doc
 ) => {
-  console.log("subdocument observed:");
+  console.log("subdocument observed:",doc.guid);
   if (!editorView) {
     console.error("EditorView is null:");
     return;
