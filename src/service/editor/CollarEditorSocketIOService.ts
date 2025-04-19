@@ -328,7 +328,7 @@ export function initSubDocSocketIO(
       console.warn("add sub docs:" + subdoc.guid);
       const subDocText = subdoc.getText();
       subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-        updateEditor(editorView, tr, event, doc);
+        updateEditor(editorView, tr, event, subdoc);
       });
       // @ts-ignore
       subdoc.on("synced", () => {
