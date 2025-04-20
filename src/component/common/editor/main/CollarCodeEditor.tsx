@@ -27,6 +27,7 @@ import {
 } from "@/service/editor/CollarEditorSocketIOService";
 import * as Y from "rdyjs";
 import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider.js";
+import SingleClientProvider from "../../../../../../../backend/texhub-broadcast/dist/websocket/conn/single_client_provider";
 
 export type EditorProps = {
   projectId: string;
@@ -55,6 +56,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     return () => {
       // try to delete the last state project info to avoid websocket connect to previous project through main file id
       delProjInfo();
+      SingleClientProvider.destroy();
     };
   }, []);
 

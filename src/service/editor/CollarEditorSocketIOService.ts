@@ -101,6 +101,7 @@ const doSocketIOConn = (
       token: getAccessToken(),
     },
   };
+  
   const wsProvider: any = SingleClientProvider.getInstance(
     readConfig("socketUrl"),
     enableSubDoc ? editorAttr.projectId : editorAttr.docId,
@@ -202,6 +203,10 @@ export function initSocketIOEditor(
 ) {
   if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
     activeEditorView.destroy();
+  }
+  if(SingleClientProvider.getCurrentRoom() !== editorAttr.docId){
+    // user siwtch docs
+    SingleClientProvider.destroy();
   }
   let docOpt: DocOpts = {
     guid: editorAttr.docId,
