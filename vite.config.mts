@@ -31,7 +31,7 @@ export default defineConfig({
   css: {},
   build: {
     outDir: "build",
-    sourcemap: true,
+    sourcemap: 'hidden',
     rollupOptions: {
       output: {
         manualChunks: {

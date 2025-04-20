@@ -34,6 +34,8 @@ import { SubDocEventProps } from "@/model/props/yjs/subdoc/SubDocEventProps.js";
 import { ySyncAnnotation, ySyncFacet } from "rdy-codemirror.next";
 import { DocOpts } from "rdyjs/dist/src/utils/Doc";
 import store from "@/redux/store/store";
+// @ts-ignore
+import { decoding } from "rdlib0";
 
 export const usercolors = [
   { color: "#30bced", light: "#30bced33" },
@@ -144,7 +146,7 @@ const doSocketIOConn = (
     // some additional context, for example the XMLHttpRequest object
     console.error(err.context);
   });
-  wsProvider.on("message", (event: MessageEvent) => { });
+  wsProvider.on("message", (event: MessageEvent) => {});
   wsProvider.on("status", (event: any) => {
     if (event.status === "connected") {
       setWsConnState("connected");
@@ -247,7 +249,6 @@ export function initSocketIOEditor(
 
   setEditorInstance(editorView);
   setSocketIOProvider(wsProvider);
-
 }
 
 function initEditorView(
@@ -295,8 +296,8 @@ function initEditorView(
         changes: {
           from: 0,
           to: editorView.state.doc.length,
-          insert: newEditorText || ""
-        }
+          insert: newEditorText || "",
+        },
       });
     }
   });
@@ -326,14 +327,14 @@ export function initSubDocSocketIO(
     console.warn("trigger sub docs");
     props.loaded.forEach((subdoc: Y.Doc) => {
       console.warn("add sub docs:" + subdoc.guid);
-      
+
       // Add event listeners before adding to provider
       // @ts-ignore
       subdoc.on("update", (update: Uint8Array, origin: any) => {
         console.log("Subdoc update received:", {
           docId: subdoc.guid,
           updateLength: update.length,
-          origin: origin
+          origin: origin,
         });
       });
 
@@ -342,7 +343,7 @@ export function initSubDocSocketIO(
         console.log("Subdoc text changed:", {
           docId: subdoc.guid,
           delta: event.delta,
-          currentText: subDocText.toString()
+          currentText: subDocText.toString(),
         });
         updateEditor(editorView, tr, event, subdoc);
       });
@@ -351,7 +352,7 @@ export function initSubDocSocketIO(
       subdoc.on("synced", () => {
         console.log("Subdoc synced:", {
           docId: subdoc.guid,
-          content: subDocText.toString()
+          content: subDocText.toString(),
         });
       });
 
@@ -376,26 +377,26 @@ export function initSubDocSocketIO(
   if (initDoc) {
     console.warn("load initial doc:" + editorAttr.docId);
     initDoc.load();
-    
+
     // Add event listeners before loading
     initDoc.on("update", (update: Uint8Array, origin: any) => {
       console.log("Initial doc update received:", {
         docId: initDoc.guid,
         updateLength: update.length,
-        origin: origin
+        origin: origin,
       });
     });
 
     initDoc.on("synced", () => {
       const subDocText = initDoc.getText();
       console.warn(initDoc.guid + ",synced:" + subDocText);
-      
+
       // Add observer for the initial document
       subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
         console.log("Initial doc text changed:", {
           docId: initDoc.guid,
           delta: event.delta,
-          currentText: subDocText.toString()
+          currentText: subDocText.toString(),
         });
         updateEditor(editorView, tr, event, initDoc);
       });
@@ -408,9 +409,24 @@ export function initSubDocSocketIO(
   rootYdoc.on("update", (update: any, origin: any) => {
     console.log("Root doc update:", {
       updateLength: update.length,
-      origin: origin
+      origin: origin,
     });
+    const doc = new Y.Doc();
+    showDocContent(update, doc);
   });
+
+  const showDocContent = (updateVal: Uint8Array, ydoc: Y.Doc) => {
+    const decoder = decoding.createDecoder(updateVal);
+    Y.transact(ydoc, (transaction) => {
+      transaction.local = false;
+      const doc = transaction.doc;
+      let structDecoder = new Y.UpdateDecoderV1(decoder);
+      const ss = Y.readClientsStructRefs(structDecoder, doc);
+      console.log("refs:", ss);
+    });
+    const ytext = ydoc.getText();
+    console.log("ytext:", ytext.toString());
+  };
 
   const texEditorState: EditorState = EditorState.create({
     doc: ytext.toString(),
@@ -452,7 +468,7 @@ export const updateEditor = (
   event: Y.YTextEvent,
   doc: Y.Doc
 ) => {
-  console.log("subdocument observed:",doc.guid);
+  console.log("subdocument observed:", doc.guid);
   if (!editorView) {
     console.error("EditorView is null:");
     return;
