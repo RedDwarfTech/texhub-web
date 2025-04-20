@@ -429,9 +429,11 @@ export function initSubDocSocketIO(
       const ss = Y.readClientsStructRefs(structDecoder, doc);
       console.log("refs:", ss);
       Y.applyUpdate(ydoc, updateVal);
+      const ytext = ydoc.getText();
+      console.log("doc ytext:", ytext.toString());
     });
     const ytext = ydoc.getText();
-    console.log("doc ytext:", ytext.toString());
+    console.log("doc ytext1:", ytext.toString());
   };
 
   const texEditorState: EditorState = EditorState.create({
