@@ -80,6 +80,11 @@ export function handleFileSelected(
         subDocEden.guid = fileItem.file_id;
         curYDoc.getMap().set(fileItem.file_id.toString(), subDocEden);
         const subDocText = subDocEden.getText(subDocEden.guid);
+        // @ts-ignore
+        subDocEden.on("synced", (e) => {
+          console.log("subDocEden synced");
+          console.log(subDocText);
+        });
         subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
           updateEditor(editorView, tr, event, subDocEden);
         });
