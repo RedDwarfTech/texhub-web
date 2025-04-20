@@ -393,7 +393,7 @@ export function initSubDocSocketIO(
     });
 
     initDoc.on("synced", () => {
-      const subDocText = initDoc.getText();
+      const subDocText = initDoc.getText(initDoc.guid);
       console.warn(initDoc.guid + ",synced:" + subDocText);
 
       // Add observer for the initial document
@@ -429,10 +429,10 @@ export function initSubDocSocketIO(
       const ss = Y.readClientsStructRefs(structDecoder, doc);
       console.log("refs:", ss);
       Y.applyUpdate(ydoc, updateVal);
-      const ytext = ydoc.getText();
+      const ytext = ydoc.getText(ydoc.guid);
       console.log("doc ytext:", ytext.toString());
     });
-    const ytext = ydoc.getText();
+    const ytext = ydoc.getText(ydoc.guid);
     console.log("doc ytext1:", ytext.toString());
   };
 

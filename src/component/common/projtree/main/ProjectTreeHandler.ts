@@ -79,7 +79,7 @@ export function handleFileSelected(
         let subDocEden = new Y.Doc();
         subDocEden.guid = fileItem.file_id;
         curYDoc.getMap().set(fileItem.file_id.toString(), subDocEden);
-        const subDocText = subDocEden.getText();
+        const subDocText = subDocEden.getText(subDocEden.guid);
         subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
           updateEditor(editorView, tr, event, subDocEden);
         });
