@@ -79,15 +79,15 @@ export function handleFileSelected(
         let subDocEden = new Y.Doc();
         subDocEden.guid = fileItem.file_id;
         const subDocText = subDocEden.getText(subDocEden.guid);
+        subDocEden.load();
         // @ts-ignore
-        subDocEden.on("synced", (e) => {
+        subDocEden.on("synced", () => {
           console.log("subDocEden synced");
           console.log(subDocText);
         });
         subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
           updateEditor(editorView, tr, event, subDocEden);
         });
-        subDocEden.load();
         curYDoc.getMap().set(fileItem.file_id.toString(), subDocEden);
         provider.addSubdoc(subDocEden);
         console.info("newest docs:" + JSON.stringify(provider.docs));
