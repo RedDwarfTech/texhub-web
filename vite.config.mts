@@ -34,6 +34,7 @@ export default defineConfig({
     sourcemap: 'hidden',
     rollupOptions: {
       output: {
+        sourcemapExcludeSources: false,
         manualChunks: {
           react: ["react", "react-router-dom", "react-dom"],
           reddwarf: ["rd-component", "rdjs-wheel"],
