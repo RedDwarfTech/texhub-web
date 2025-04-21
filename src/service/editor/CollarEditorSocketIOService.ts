@@ -101,7 +101,7 @@ const doSocketIOConn = (
       token: getAccessToken(),
     },
   };
-  
+
   const wsProvider: any = SingleClientProvider.getInstance(
     readConfig("socketUrl"),
     enableSubDoc ? editorAttr.projectId : editorAttr.docId,
@@ -204,7 +204,7 @@ export function initSocketIOEditor(
   if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
     activeEditorView.destroy();
   }
-  if(SingleClientProvider.getCurrentRoom() !== editorAttr.docId){
+  if (SingleClientProvider.getCurrentRoom() !== editorAttr.docId) {
     // user siwtch docs
     SingleClientProvider.destroy();
   }
@@ -327,44 +327,7 @@ export function initSubDocSocketIO(
     gc: false,
   };
   let rootYdoc: Y.Doc = new Y.Doc(rootDocOpt);
-  // @ts-ignore
-  rootYdoc.on("subdocs", (props: SubDocEventProps) => {
-    console.warn("trigger sub docs");
-    props.loaded.forEach((subdoc: Y.Doc) => {
-      console.warn("add sub docs:" + subdoc.guid);
 
-      // Add event listeners before adding to provider
-      // @ts-ignore
-      subdoc.on("update", (update: Uint8Array, origin: any) => {
-        console.log("Subdoc update received:", {
-          docId: subdoc.guid,
-          updateLength: update.length,
-          origin: origin,
-        });
-      });
-
-      const subDocText = subdoc.getText();
-      subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-        console.log("Subdoc text changed:", {
-          docId: subdoc.guid,
-          delta: event.delta,
-          currentText: subDocText.toString(),
-        });
-        updateEditor(editorView, tr, event, subdoc);
-      });
-
-      // @ts-ignore
-      subdoc.on("synced", () => {
-        console.log("Subdoc synced:", {
-          docId: subdoc.guid,
-          content: subDocText.toString(),
-        });
-      });
-
-      wsProvider.addSubdoc(subdoc);
-    });
-  });
-  setCurYDoc(rootYdoc);
   const ytext: Y.Text = rootYdoc.getText(editorAttr.projectId);
   const undoManager = new Y.UndoManager(ytext);
   // init room with project id
@@ -373,6 +336,11 @@ export function initSubDocSocketIO(
     editorAttr,
     true
   );
+  // @ts-ignore
+  rootYdoc.on("subdocs", (props: SubDocEventProps) => {
+    handleSubDocChanged(props, editorView, wsProvider);
+  });
+  setCurYDoc(rootYdoc);
   // initial last doc
   if (projInfo && projInfo.tree) {
     initialSub(editorAttr.docId, rootYdoc);
@@ -500,5 +468,77 @@ export const updateEditor = (
     // @ts-ignore
     changes,
     annotations: [ySyncAnnotation.of(conf)],
+  });
+};
+
+const handleSubDocChanged = (
+  props: SubDocEventProps,
+  editorView: EditorView | undefined,
+  wsProvider: SocketIOClientProvider
+) => {
+  if (props && props.added && props.added.size > 0) {
+    handleSubDocAdded(props, editorView, wsProvider);
+  }
+  if (props && props.removed && props.removed.size > 0) {
+    handleSubDocRemoved(props, wsProvider);
+  }
+  if (props && props.loaded && props.loaded.size > 0) {
+    handleLoadSubDoc(props.loaded);
+  }
+};
+
+const handleLoadSubDoc = (subdocs: Set<Y.Doc>) => {
+  subdocs.forEach((subdoc: Y.Doc) => {
+    console.log("load sub doc:" + subdoc.guid);
+  });
+};
+
+const handleSubDocAdded = (
+  props: SubDocEventProps,
+  editorView: EditorView | undefined,
+  wsProvider: SocketIOClientProvider
+) => {
+  props.loaded.forEach((subdoc: Y.Doc) => {
+    console.warn("add sub docs:" + subdoc.guid);
+
+    // Add event listeners before adding to provider
+    // @ts-ignore
+    subdoc.on("update", (update: Uint8Array, origin: any) => {
+      console.log("Subdoc update received:", {
+        docId: subdoc.guid,
+        updateLength: update.length,
+        origin: origin,
+      });
+    });
+
+    const subDocText = subdoc.getText();
+    subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
+      console.log("Subdoc text changed:", {
+        docId: subdoc.guid,
+        delta: event.delta,
+        currentText: subDocText.toString(),
+      });
+      updateEditor(editorView, tr, event, subdoc);
+    });
+
+    // @ts-ignore
+    subdoc.on("synced", () => {
+      console.log("Subdoc synced:", {
+        docId: subdoc.guid,
+        content: subDocText.toString(),
+      });
+    }); 
+
+    wsProvider.addSubdoc(subdoc);
+  });
+};
+
+const handleSubDocRemoved = (
+  props: SubDocEventProps,
+  wsProvider: SocketIOClientProvider
+) => {
+  props.removed.forEach((subdoc) => {
+    console.warn("remove sub doc:" + subdoc.guid);
+    wsProvider.removeSubdoc(subdoc);
   });
 };

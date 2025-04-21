@@ -70,7 +70,6 @@ export function handleFileSelected(
       if (legacySubDoc) {
         console.warn("destroy the legacy file", selectedFile);
         legacySubDoc.destroy();
-        //provider.removeSubdoc(legacySubDoc);
       }
       let subDoc: any = curYDoc.getMap().get(fileItem.id.toString());
       if (subDoc) {
@@ -89,7 +88,6 @@ export function handleFileSelected(
           updateEditor(editorView, tr, event, subDocEden);
         });
         curYDoc.getMap().set(fileItem.file_id.toString(), subDocEden);
-        provider.addSubdoc(subDocEden);
         console.info("newest docs:" + JSON.stringify(provider.docs));
       }
     }
