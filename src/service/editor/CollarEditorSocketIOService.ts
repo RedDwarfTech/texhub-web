@@ -327,7 +327,6 @@ export function initSubDocSocketIO(
     gc: false,
   };
   let rootYdoc: Y.Doc = new Y.Doc(rootDocOpt);
-
   const ytext: Y.Text = rootYdoc.getText(editorAttr.projectId);
   const undoManager = new Y.UndoManager(ytext);
   // init room with project id
@@ -336,11 +335,6 @@ export function initSubDocSocketIO(
     editorAttr,
     true
   );
-  // @ts-ignore
-  rootYdoc.on("subdocs", (props: SubDocEventProps) => {
-    handleSubDocChanged(props, editorView, wsProvider);
-  });
-  setCurYDoc(rootYdoc);
   // initial last doc
   if (projInfo && projInfo.tree) {
     initialSub(editorAttr.docId, rootYdoc);
@@ -427,6 +421,12 @@ export function initSubDocSocketIO(
   });
   setEditorInstance(editorView);
   setSocketIOProvider(wsProvider);
+
+  // @ts-ignore
+  rootYdoc.on("subdocs", (props: SubDocEventProps) => {
+    handleSubDocChanged(props, editorView, wsProvider);
+  });
+  setCurYDoc(rootYdoc);
 }
 
 const initialSub = (fileId: string, rootDoc: Y.Doc) => {
