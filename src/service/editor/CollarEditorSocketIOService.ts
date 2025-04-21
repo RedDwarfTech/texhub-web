@@ -389,13 +389,13 @@ export function initSubDocSocketIO(
       const doc = transaction.doc;
       let structDecoder = new Y.UpdateDecoderV1(decoder);
       const ss = Y.readClientsStructRefs(structDecoder, doc);
-      console.log("refs:", ss);
+      console.log("root docrefs:", ss);
       Y.applyUpdate(ydoc, updateVal);
       const ytext = ydoc.getText(ydoc.guid);
-      console.log("doc ytext:", ytext.toString());
+      console.log("root doc ytext:", ytext.toString());
     });
     const ytext = ydoc.getText(ydoc.guid);
-    console.log("doc ytext1:", ytext.toString());
+    console.log("rootdoc ytext1:", ytext.toString());
   };
 
   const texEditorState: EditorState = EditorState.create({
@@ -477,23 +477,30 @@ const handleSubDocChanged = (
   wsProvider: SocketIOClientProvider
 ) => {
   if (props && props.added && props.added.size > 0) {
-    handleLoadSubDoc(props.loaded);
+    // use added to sync documents in the background
+    handleSubDocAdd(props, editorView, wsProvider);
   }
   if (props && props.removed && props.removed.size > 0) {
+    // use removed to sync documents in the background
     handleSubDocRemoved(props, wsProvider);
   }
   if (props && props.loaded && props.loaded.size > 0) {
-    handleSubDocAdded(props, editorView, wsProvider);
+    // use loaded to fill document content
+    handleLoadedSubDoc(props.loaded);
   }
 };
 
-const handleLoadSubDoc = (subdocs: Set<Y.Doc>) => {
+const handleLoadedSubDoc = (subdocs: Set<Y.Doc>) => {
   subdocs.forEach((subdoc: Y.Doc) => {
-    console.log("load sub doc:" + subdoc.guid);
+    let subDocText = subdoc.getText();
+    let subDocTextString1 = subDocText.toString();
+    let subDocTextString = subdoc.getText(subdoc.guid);
+    let subDocTextString2 = subDocTextString.toString();
+    console.log("trigger subdoc loaded to fill content:" + subdoc.guid);
   });
 };
 
-const handleSubDocAdded = (
+const handleSubDocAdd = (
   props: SubDocEventProps,
   editorView: EditorView | undefined,
   wsProvider: SocketIOClientProvider
@@ -527,7 +534,7 @@ const handleSubDocAdded = (
         docId: subdoc.guid,
         content: subDocText.toString(),
       });
-    }); 
+    });
 
     wsProvider.addSubdoc(subdoc);
   });
@@ -538,7 +545,7 @@ const handleSubDocRemoved = (
   wsProvider: SocketIOClientProvider
 ) => {
   props.removed.forEach((subdoc) => {
-    console.warn("remove sub doc:" + subdoc.guid);
-    wsProvider.removeSubdoc(subdoc);
+    //console.warn("remove sub doc:" + subdoc.guid);
+    //wsProvider.removeSubdoc(subdoc);
   });
 };

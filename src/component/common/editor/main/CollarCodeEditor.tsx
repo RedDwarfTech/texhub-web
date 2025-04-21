@@ -61,7 +61,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }, []);
 
   React.useEffect(()=>{
-    console.warn("editorText update" + editorText);
+    console.warn("editorText update:" + editorText);
   },[editorText]);
 
   React.useEffect(() => {
