@@ -477,13 +477,13 @@ const handleSubDocChanged = (
   wsProvider: SocketIOClientProvider
 ) => {
   if (props && props.added && props.added.size > 0) {
-    handleSubDocAdded(props, editorView, wsProvider);
+    handleLoadSubDoc(props.loaded);
   }
   if (props && props.removed && props.removed.size > 0) {
     handleSubDocRemoved(props, wsProvider);
   }
   if (props && props.loaded && props.loaded.size > 0) {
-    handleLoadSubDoc(props.loaded);
+    handleSubDocAdded(props, editorView, wsProvider);
   }
 };
 
