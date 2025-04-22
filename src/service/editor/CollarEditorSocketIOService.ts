@@ -335,10 +335,7 @@ export function initSubDocSocketIO(
     editorAttr,
     true
   );
-  // initial last doc
-  if (projInfo && projInfo.tree) {
-    initialSub(editorAttr.docId, rootYdoc);
-  }
+  
   // load the initial subdocument
   let initDoc: any = rootYdoc.getMap().get(editorAttr.docId);
   if (initDoc) {
@@ -426,6 +423,10 @@ export function initSubDocSocketIO(
   rootYdoc.on("subdocs", (props: SubDocEventProps) => {
     handleSubDocChanged(props, editorView, wsProvider);
   });
+  // initial last doc
+  if (projInfo && projInfo.tree) {
+    initialSub(editorAttr.docId, rootYdoc);
+  }
   setCurYDoc(rootYdoc);
 }
 
@@ -433,7 +434,7 @@ const initialSub = (fileId: string, rootDoc: Y.Doc) => {
   if (fileId) {
     const subDoc: Y.Doc = new Y.Doc();
     subDoc.guid = fileId;
-    rootDoc.subdocs.add(subDoc);
+    rootDoc.getMap().set(fileId, subDoc);
   }
 };
 
