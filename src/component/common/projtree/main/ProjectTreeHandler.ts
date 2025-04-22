@@ -88,7 +88,8 @@ export function handleFileSelected(
           updateEditor(editorView, tr, event, subDocEden);
         });
         console.info("newest docs:" + JSON.stringify(provider.docs));
-        curYDoc.subdocs.add(subDocEden);
+        curYDoc.getMap().set(fileItem.file_id.toString(), subDocEden);
+        // curYDoc.subdocs.add(subDocEden);
       }
     }
   }

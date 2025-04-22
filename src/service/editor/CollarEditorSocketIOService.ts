@@ -492,10 +492,35 @@ const handleSubDocChanged = (
 const handleLoadedSubDoc = (subdocs: Set<Y.Doc>) => {
   subdocs.forEach((subdoc: Y.Doc) => {
     let subDocText = subdoc.getText();
-    let subDocTextString1 = subDocText.toString();
-    let subDocTextString = subdoc.getText(subdoc.guid);
-    let subDocTextString2 = subDocTextString.toString();
+    let subDocTextString = subDocText.toString();
+    if (!subDocTextString || subDocTextString.length === 0) {
+      console.error("subdoc text is null:" + subdoc.guid);
+      return;
+    }
     console.log("trigger subdoc loaded to fill content:" + subdoc.guid);
+    debugger;
+    // Get the current editor view from Redux store
+    const { editorView } = store.getState().projEditor;
+    if (editorView) {
+      // Update CodeMirror content
+      editorView.dispatch({
+        changes: {
+          from: 0,
+          to: editorView.state.doc.length,
+          insert: subDocTextString,
+        },
+      });
+
+      // Add observer for future changes
+      subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
+        console.log("Subdoc text changed:", {
+          docId: subdoc.guid,
+          delta: event.delta,
+          currentText: subDocTextString,
+        });
+        updateEditor(editorView, tr, event, subdoc);
+      });
+    }
   });
 };
 
