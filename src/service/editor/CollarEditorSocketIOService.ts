@@ -431,10 +431,9 @@ export function initSubDocSocketIO(
 
 const initialSub = (fileId: string, rootDoc: Y.Doc) => {
   if (fileId) {
-    const folder = rootDoc.getMap();
     const subDoc: Y.Doc = new Y.Doc();
     subDoc.guid = fileId;
-    folder.set(fileId, subDoc);
+    rootDoc.subdocs.add(subDoc);
   }
 };
 

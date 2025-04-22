@@ -87,8 +87,8 @@ export function handleFileSelected(
         subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
           updateEditor(editorView, tr, event, subDocEden);
         });
-        curYDoc.getMap().set(fileItem.file_id.toString(), subDocEden);
         console.info("newest docs:" + JSON.stringify(provider.docs));
+        curYDoc.subdocs.add(subDocEden);
       }
     }
   }
