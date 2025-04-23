@@ -32,7 +32,8 @@ import { getAccessToken } from "@/component/common/cache/Cache";
 import { ProjInfo } from "@/model/proj/ProjInfo.js";
 import { SubDocEventProps } from "@/model/props/yjs/subdoc/SubDocEventProps.js";
 import { ySyncAnnotation, ySyncFacet } from "rdy-codemirror.next";
-import { DocOpts } from "rdyjs/dist/src/utils/Doc";
+// @ts-ignore
+import { DocOpts } from "rdyjs/dist/src/utils/Doc.mjs";
 import store from "@/redux/store/store";
 // @ts-ignore
 import { decoding } from "rdlib0";
@@ -335,7 +336,7 @@ export function initSubDocSocketIO(
     editorAttr,
     true
   );
-  
+
   // load the initial subdocument
   let initDoc: any = rootYdoc.getMap().get(editorAttr.docId);
   if (initDoc) {
@@ -377,6 +378,35 @@ export function initSubDocSocketIO(
     });
     const doc = new Y.Doc();
     showDocContent(update, doc);
+  });
+
+  // @ts-ignore
+  rootYdoc.on("afterTransaction", function (tr, doc) {
+    // 这里可以访问事务完成后的文档内容
+
+    // 1. 检查事务中有哪些改变
+    // @ts-ignore
+    tr.changed.forEach((changeSet, sharedType) => {
+      // sharedType是被修改的共享类型(如Y.Map, Y.Array, Y.Text等)
+
+      if (sharedType instanceof Y.Map) {
+        console.log("Y.Map被修改：");
+        // 遍历所有被修改的键
+        // @ts-ignore
+        changeSet.forEach((value, key) => {
+          console.log(`  - 键 ${key} 被修改为:`, sharedType.get(key));
+        });
+      } else if (sharedType instanceof Y.Array) {
+        console.log("Y.Array被修改：", sharedType.toArray());
+      } else if (sharedType instanceof Y.Text) {
+        console.log("Y.Text被修改：", sharedType.toString());
+      }
+    });
+
+    // 2. 获取指定共享类型的完整内容
+    if (doc.getMap("texhubsubdoc")) {
+      console.log("myMap当前内容：", doc.getMap("texhubsubdoc").toJSON());
+    }
   });
 
   const showDocContent = (updateVal: Uint8Array, ydoc: Y.Doc) => {
@@ -434,7 +464,7 @@ const initialSub = (fileId: string, rootDoc: Y.Doc) => {
   if (fileId) {
     const subDoc: Y.Doc = new Y.Doc();
     subDoc.guid = fileId;
-    rootDoc.getMap().set(fileId, subDoc);
+    rootDoc.getMap("texhubsubdoc").set(fileId, subDoc);
   }
 };
 

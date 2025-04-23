@@ -69,7 +69,7 @@ export function handleFileSelected(
       let legacySubDoc: any = curYDoc.getMap().get(selectedFile.file_id);
       if (legacySubDoc) {
         console.warn("destroy the legacy file", selectedFile);
-        //legacySubDoc.destroy();
+        // legacySubDoc.destroy();
       }
       let subDoc: any = curYDoc.getMap().get(fileItem.file_id.toString());
       if (subDoc) {
@@ -88,6 +88,37 @@ export function handleFileSelected(
           updateEditor(editorView, tr, event, subDocEden);
         });
         console.info("newest docs:" + JSON.stringify(provider.docs));
+        // @ts-ignore
+        subDocEden.on('afterTransaction', function(tr, doc) {
+          // 这里可以访问事务完成后的文档内容
+          debugger;
+          
+          // 1. 检查事务中有哪些改变
+          // @ts-ignore
+          tr.changed.forEach((changeSet, sharedType) => {
+            // sharedType是被修改的共享类型(如Y.Map, Y.Array, Y.Text等)
+            
+            if (sharedType instanceof Y.Map) {
+              console.log('Y.Map被修改：');
+              // 遍历所有被修改的键
+              // @ts-ignore
+              changeSet.forEach((value, key) => {
+                console.log(`  - 键 ${key} 被修改为:`, sharedType.get(key));
+              });
+            } 
+            else if (sharedType instanceof Y.Array) {
+              console.log('Y.Array被修改：', sharedType.toArray());
+            }
+            else if (sharedType instanceof Y.Text) {
+              console.log('Y.Text被修改：', sharedType.toString());
+            }
+          });
+          
+          // 2. 获取指定共享类型的完整内容
+          if (doc.getMap('texhubsubdoc')) {
+            console.log('myMap当前内容：', doc.getMap('myMap').toJSON());
+          }
+        });
         curYDoc.getMap().set(fileItem.file_id.toString(), subDocEden);
         // curYDoc.subdocs.add(subDocEden);
       }
