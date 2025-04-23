@@ -411,6 +411,8 @@ export function initSubDocSocketIO(
         console.log("subDoc guid:", ydoc.guid);
         const subDocText = ydoc.getText(ydoc.guid);
         console.log("sub Doc Text:", subDocText.toString());
+        const subDocText1 = ydoc.getText();
+        console.log("sub Doc Text1:", subDocText1.toString());
       })
       console.log("root myMap当前内容：", doc.getMap("texhubsubdoc").toJSON());
     }
