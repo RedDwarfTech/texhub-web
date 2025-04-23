@@ -99,24 +99,24 @@ export function handleFileSelected(
             // sharedType是被修改的共享类型(如Y.Map, Y.Array, Y.Text等)
             
             if (sharedType instanceof Y.Map) {
-              console.log('Y.Map被修改：');
+              console.log('subDocEdenY.Map被修改：');
               // 遍历所有被修改的键
               // @ts-ignore
               changeSet.forEach((value, key) => {
-                console.log(`  - 键 ${key} 被修改为:`, sharedType.get(key));
+                console.log(`  - subDocEden键 ${key} 被修改为:`, sharedType.get(key));
               });
             } 
             else if (sharedType instanceof Y.Array) {
-              console.log('Y.Array被修改：', sharedType.toArray());
+              console.log('subDocEdenY.Array被修改：', sharedType.toArray());
             }
             else if (sharedType instanceof Y.Text) {
-              console.log('Y.Text被修改：', sharedType.toString());
+              console.log('subDocEdenY.Text被修改：', sharedType.toString());
             }
           });
           
           // 2. 获取指定共享类型的完整内容
           if (doc.getMap('texhubsubdoc')) {
-            console.log('myMap当前内容：', doc.getMap('myMap').toJSON());
+            console.log('subDocEdenmyMap当前内容：', doc.getMap('texhubsubdoc').toJSON());
           }
         });
         curYDoc.getMap().set(fileItem.file_id.toString(), subDocEden);
