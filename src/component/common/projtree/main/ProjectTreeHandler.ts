@@ -66,10 +66,11 @@ export function handleFileSelected(
     let subdoc = localStorage.getItem("subdoc");
     if (subdoc && subdoc === "subdoc") {
       // destroy the legacy select file
-      let legacySubDoc: any = curYDoc.getMap("texhubsubdoc").get(selectedFile.file_id);
+      let legacySubDoc: any= curYDoc.getMap("texhubsubdoc").get(selectedFile.file_id);
       if (legacySubDoc) {
         console.warn("destroy the legacy file", selectedFile);
         legacySubDoc.destroy();
+        curYDoc.getMap("texhubsubdoc").delete(selectedFile.file_id);
       }
       let subDoc: any = curYDoc.getMap("texhubsubdoc").get(fileItem.file_id.toString());
       if (subDoc) {
@@ -120,7 +121,6 @@ export function handleFileSelected(
           }
         });
         curYDoc.getMap("texhubsubdoc").set(fileItem.file_id.toString(), subDocEden);
-        // curYDoc.subdocs.add(subDocEden);
       }
     }
   }
