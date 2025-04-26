@@ -66,12 +66,12 @@ export function handleFileSelected(
     let subdoc = localStorage.getItem("subdoc");
     if (subdoc && subdoc === "subdoc") {
       // destroy the legacy select file
-      let legacySubDoc: any = curYDoc.getMap().get(selectedFile.file_id);
+      let legacySubDoc: any = curYDoc.getMap("texhubsubdoc").get(selectedFile.file_id);
       if (legacySubDoc) {
         console.warn("destroy the legacy file", selectedFile);
         legacySubDoc.destroy();
       }
-      let subDoc: any = curYDoc.getMap().get(fileItem.file_id.toString());
+      let subDoc: any = curYDoc.getMap("texhubsubdoc").get(fileItem.file_id.toString());
       if (subDoc) {
         subDoc.load();
       } else {
@@ -119,7 +119,7 @@ export function handleFileSelected(
             console.log('subDocEdenmyMap当前内容：', doc.getMap('texhubsubdoc').toJSON());
           }
         });
-        curYDoc.getMap().set(fileItem.file_id.toString(), subDocEden);
+        curYDoc.getMap("texhubsubdoc").set(fileItem.file_id.toString(), subDocEden);
         // curYDoc.subdocs.add(subDocEden);
       }
     }
