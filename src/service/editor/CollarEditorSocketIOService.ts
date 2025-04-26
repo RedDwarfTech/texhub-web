@@ -148,7 +148,7 @@ const doSocketIOConn = (
     // some additional context, for example the XMLHttpRequest object
     console.error(err.context);
   });
-  wsProvider.on("message", (event: MessageEvent) => {});
+  wsProvider.on("message", (event: MessageEvent) => { });
   wsProvider.on("status", (event: any) => {
     if (event.status === "connected") {
       setWsConnState("connected");
@@ -502,6 +502,10 @@ export const updateEditor = (
     } else {
       pos += d.retain!;
     }
+  }
+  if (changes.length === 0) {
+    console.warn("No changes found in the delta.");
+    return
   }
   editorView.dispatch({
     // @ts-ignore
