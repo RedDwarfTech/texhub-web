@@ -609,7 +609,7 @@ const handleSubDocRemoved = (
   wsProvider: SocketIOClientProvider
 ) => {
   props.removed.forEach((subdoc) => {
-    //console.warn("remove sub doc:" + subdoc.guid);
-    //wsProvider.removeSubdoc(subdoc);
+    console.warn("handleSubDocRemoved remove sub doc:" + subdoc.guid);
+    wsProvider.removeSubdoc(subdoc);
   });
 };

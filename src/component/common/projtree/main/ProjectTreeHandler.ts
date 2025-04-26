@@ -69,7 +69,7 @@ export function handleFileSelected(
       let legacySubDoc: any = curYDoc.getMap().get(selectedFile.file_id);
       if (legacySubDoc) {
         console.warn("destroy the legacy file", selectedFile);
-        // legacySubDoc.destroy();
+        legacySubDoc.destroy();
       }
       let subDoc: any = curYDoc.getMap().get(fileItem.file_id.toString());
       if (subDoc) {
