@@ -66,12 +66,11 @@ export function handleFileSelected(
     let subdoc = localStorage.getItem("subdoc");
     if (subdoc && subdoc === "subdoc") {
       // destroy the legacy select file
-      let legacySubDoc: any= curYDoc.getMap("texhubsubdoc").get(selectedFile.file_id);
+      let legacySubDoc: any = curYDoc.getMap("texhubsubdoc").get(selectedFile.file_id);
       if (legacySubDoc) {
-        console.warn("destroy the legacy file", selectedFile);
-        legacySubDoc.destroy();
-        curYDoc.getMap("texhubsubdoc").delete(selectedFile.file_id);
+        legacyFileDestroy(legacySubDoc, selectedFile, curYDoc, editorView);
       }
+
       let subDoc: any = curYDoc.getMap("texhubsubdoc").get(fileItem.file_id.toString());
       if (subDoc) {
         subDoc.load();
@@ -90,15 +89,15 @@ export function handleFileSelected(
         });
         console.info("newest docs:" + JSON.stringify(provider.docs));
         // @ts-ignore
-        subDocEden.on('afterTransaction', function(tr, doc) {
+        subDocEden.on('afterTransaction', function (tr, doc) {
           // 这里可以访问事务完成后的文档内容
           debugger;
-          
+
           // 1. 检查事务中有哪些改变
           // @ts-ignore
           tr.changed.forEach((changeSet, sharedType) => {
             // sharedType是被修改的共享类型(如Y.Map, Y.Array, Y.Text等)
-            
+
             if (sharedType instanceof Y.Map) {
               console.log('subDocEdenY.Map被修改：');
               // 遍历所有被修改的键
@@ -106,7 +105,7 @@ export function handleFileSelected(
               changeSet.forEach((value, key) => {
                 console.log(`  - subDocEden键 ${key} 被修改为:`, sharedType.get(key));
               });
-            } 
+            }
             else if (sharedType instanceof Y.Array) {
               console.log('subDocEdenY.Array被修改：', sharedType.toArray());
             }
@@ -114,7 +113,7 @@ export function handleFileSelected(
               console.log('subDocEdenY.Text被修改：', sharedType.toString());
             }
           });
-          
+
           // 2. 获取指定共享类型的完整内容
           if (doc.getMap('texhubsubdoc')) {
             console.log('subDocEdenmyMap当前内容：', doc.getMap('texhubsubdoc').toJSON());
@@ -174,5 +173,26 @@ export function handleFileAdd() {
   if (modal) {
     var myModal = new bootstrap.Modal(modal);
     myModal.show();
+  }
+}
+
+export const legacyFileDestroy = (
+  legacySubDoc: any,
+  selectedFile: TexFileModel,
+  curYDoc: Y.Doc,
+  editorView: EditorView | undefined,
+) => {
+  console.warn("destroy the legacy file", selectedFile);
+  legacySubDoc.destroy();
+  curYDoc.getMap("texhubsubdoc").delete(selectedFile.file_id);
+  // clear the legacy codemirror editor
+  if (editorView) {
+    editorView.dispatch({
+      changes: {
+        from: 0,
+        to: editorView.state.doc.length,
+        insert: ""
+      },
+    });
   }
 }
