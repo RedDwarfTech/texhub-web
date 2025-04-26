@@ -381,40 +381,14 @@ export function initSubDocSocketIO(
   });
 
   // @ts-ignore
-  rootYdoc.on("afterTransaction", function (tr, doc) {
-    // 这里可以访问事务完成后的文档内容
-
-    // 1. 检查事务中有哪些改变
-    // @ts-ignore
-    tr.changed.forEach((changeSet, sharedType) => {
-      // sharedType是被修改的共享类型(如Y.Map, Y.Array, Y.Text等)
-
-      if (sharedType instanceof Y.Map) {
-        console.log("root Y.Map被修改：");
-        // 遍历所有被修改的键
-        // @ts-ignore
-        changeSet.forEach((value, key) => {
-          console.log(`  - root键 ${key} 被修改为:`, sharedType.get(key));
-        });
-      } else if (sharedType instanceof Y.Array) {
-        console.log("root Y.Array被修改：", sharedType.toArray());
-      } else if (sharedType instanceof Y.Text) {
-        console.log("root Y.Text被修改：", sharedType.toString());
-      }
-    });
-
-    // 2. 获取指定共享类型的完整内容
+  rootYdoc.on("afterTransaction", function (tr: Y.Transaction, doc: Y.Doc) {
     if (doc.getMap("texhubsubdoc")) {
-      // @ts-ignore
-      doc.getMap("texhubsubdoc").forEach((value, key) => {
+      doc.getMap("texhubsubdoc").forEach((value: any, key: any) => {
         let ydoc = value;
         console.log("subDoc guid:", ydoc.guid);
         const subDocText = ydoc.getText(ydoc.guid);
         console.log("sub Doc Text:", subDocText.toString());
-        const subDocText1 = ydoc.getText();
-        console.log("sub Doc Text1:", subDocText1.toString());
       })
-      console.log("root myMap当前内容：", doc.getMap("texhubsubdoc").toJSON());
     }
   });
 
