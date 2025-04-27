@@ -390,12 +390,12 @@ const initialFisrtSubDoc = (
   if (fileId) {
     const subDoc: Y.Doc = new Y.Doc();
     subDoc.guid = fileId;
-    rootDoc.getMap("texhubsubdoc").set(fileId, subDoc);
     const subDocText = subDoc.getText(subDoc.guid);
     subDoc.load();
     subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
       updateEditor(editorView, tr, event, subDoc);
     });
+    rootDoc.getMap("texhubsubdoc").set(fileId, subDoc);
   }
 };
 
