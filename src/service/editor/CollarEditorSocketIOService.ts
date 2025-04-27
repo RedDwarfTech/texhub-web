@@ -363,7 +363,7 @@ export function initSubDocSocketIO(
           delta: event.delta,
           currentText: subDocText.toString(),
         });
-        updateEditor(editorView, tr, event, initDoc);
+        // updateEditor(editorView, tr, event, initDoc);
       });
     });
   } else {
@@ -536,7 +536,7 @@ const handleLoadedSubDoc = (subdocs: Set<Y.Doc>) => {
           delta: event.delta,
           currentText: subDocTextString,
         });
-        updateEditor(editorView, tr, event, subdoc);
+        // updateEditor(editorView, tr, event, subdoc);
       });
     }
   });
@@ -567,7 +567,7 @@ const handleSubDocAdd = (
         delta: event.delta,
         currentText: subDocText.toString(),
       });
-      updateEditor(editorView, tr, event, subdoc);
+      // updateEditor(editorView, tr, event, subdoc);
     });
 
     // @ts-ignore

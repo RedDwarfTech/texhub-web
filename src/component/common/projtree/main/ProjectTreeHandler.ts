@@ -8,7 +8,6 @@ import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 import { getProjectInfo } from "@/service/project/ProjectService";
 import * as bootstrap from "bootstrap";
 import * as Y from "rdyjs";
-import { updateEditor } from "@/service/editor/CollarEditorSocketIOService";
 import { EditorView } from "@codemirror/view";
 import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider.js";
 
@@ -70,7 +69,6 @@ export function handleFileSelected(
       if (legacySubDoc) {
         legacyFileDestroy(legacySubDoc, selectedFile, curYDoc, editorView);
       }
-
       let subDoc: any = curYDoc.getMap("texhubsubdoc").get(fileItem.file_id.toString());
       if (subDoc) {
         subDoc.load();
@@ -85,15 +83,11 @@ export function handleFileSelected(
           console.log(subDocText);
         });
         subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-          updateEditor(editorView, tr, event, subDocEden);
+          // updateEditor(editorView, tr, event, subDocEden);
         });
         console.info("newest docs:" + JSON.stringify(provider.docs));
         // @ts-ignore
         subDocEden.on('afterTransaction', function (tr, doc) {
-          // 这里可以访问事务完成后的文档内容
-          debugger;
-
-          // 1. 检查事务中有哪些改变
           // @ts-ignore
           tr.changed.forEach((changeSet, sharedType) => {
             // sharedType是被修改的共享类型(如Y.Map, Y.Array, Y.Text等)
