@@ -148,7 +148,7 @@ const doSocketIOConn = (
     // some additional context, for example the XMLHttpRequest object
     console.error(err.context);
   });
-  wsProvider.on("message", (event: MessageEvent) => { });
+  wsProvider.on("message", (event: MessageEvent) => {});
   wsProvider.on("status", (event: any) => {
     if (event.status === "connected") {
       setWsConnState("connected");
@@ -337,76 +337,14 @@ export function initSubDocSocketIO(
     true
   );
 
-  // load the initial subdocument
-  let initDoc: any = rootYdoc.getMap("texhubsubdoc").get(editorAttr.docId);
-  if (initDoc) {
-    console.warn("load initial doc:" + editorAttr.docId);
-    initDoc.load();
-
-    // Add event listeners before loading
-    initDoc.on("update", (update: Uint8Array, origin: any) => {
-      console.log("Initial doc update received:", {
-        docId: initDoc.guid,
-        updateLength: update.length,
-        origin: origin,
-      });
-    });
-
-    initDoc.on("synced", () => {
-      const subDocText = initDoc.getText(initDoc.guid);
-      console.warn(initDoc.guid + ",synced:" + subDocText);
-
-      // Add observer for the initial document
-      subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-        console.log("Initial doc text changed:", {
-          docId: initDoc.guid,
-          delta: event.delta,
-          currentText: subDocText.toString(),
-        });
-        // updateEditor(editorView, tr, event, initDoc);
-      });
-    });
-  } else {
-    console.error("did not found initial doc:" + editorAttr.docId);
-  }
-
   // @ts-ignore
-  rootYdoc.on("update", (update: any, origin: any) => {
-    console.log("Root doc update:", {
-      updateLength: update.length,
-      origin: origin,
-    });
-    const doc = new Y.Doc();
-    showDocContent(update, doc);
-  });
-
-  // @ts-ignore
-  rootYdoc.on("afterTransaction", function (tr: Y.Transaction, doc: Y.Doc) {
-    if (doc.getMap("texhubsubdoc")) {
-      doc.getMap("texhubsubdoc").forEach((value: any, key: any) => {
-        let ydoc = value;
-        console.log("subDoc guid:", ydoc.guid);
-        const subDocText = ydoc.getText(ydoc.guid);
-        console.log("sub Doc Text:", subDocText.toString());
-      })
+  rootYdoc.on("synced", () => {
+    console.warn("root doc synced");
+    // initial last doc
+    if (projInfo && projInfo.tree) {
+      //initialSub(editorAttr.docId, rootYdoc);
     }
   });
-
-  const showDocContent = (updateVal: Uint8Array, ydoc: Y.Doc) => {
-    const decoder = decoding.createDecoder(updateVal);
-    Y.transact(ydoc, (transaction) => {
-      transaction.local = false;
-      const doc = transaction.doc;
-      let structDecoder = new Y.UpdateDecoderV1(decoder);
-      const ss = Y.readClientsStructRefs(structDecoder, doc);
-      console.log("root docrefs:", ss);
-      Y.applyUpdate(ydoc, updateVal);
-      const ytext = ydoc.getText(ydoc.guid);
-      console.log("root doc ytext:", ytext.toString());
-    });
-    const ytext = ydoc.getText(ydoc.guid);
-    console.log("rootdoc ytext1:", ytext.toString());
-  };
 
   const texEditorState: EditorState = EditorState.create({
     doc: ytext.toString(),
@@ -436,18 +374,27 @@ export function initSubDocSocketIO(
   rootYdoc.on("subdocs", (props: SubDocEventProps) => {
     handleSubDocChanged(props, editorView, wsProvider);
   });
-  // initial last doc
-  if (projInfo && projInfo.tree) {
-    initialSub(editorAttr.docId, rootYdoc);
-  }
   setCurYDoc(rootYdoc);
 }
 
-const initialSub = (fileId: string, rootDoc: Y.Doc) => {
+const initialSub = (
+  fileId: string,
+  rootDoc: Y.Doc,
+  editorView: EditorView | undefined
+) => {
   if (fileId) {
     const subDoc: Y.Doc = new Y.Doc();
     subDoc.guid = fileId;
     rootDoc.getMap("texhubsubdoc").set(fileId, subDoc);
+    // @ts-ignore
+    subDoc.on("synced", () => {
+      const subDocText = subDoc.getText(subDoc.guid);
+      console.warn(subDoc.guid + ",synced:" + subDocText);
+      // Add observer for the initial document
+      subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
+        updateEditor(editorView, tr, event, subDoc);
+      });
+    });
   }
 };
 
@@ -479,7 +426,7 @@ export const updateEditor = (
   }
   if (changes.length === 0) {
     console.warn("No changes found in the delta.");
-    return
+    return;
   }
   editorView.dispatch({
     // @ts-ignore
