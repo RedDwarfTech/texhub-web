@@ -103,7 +103,7 @@ const doSocketIOConn = (
     },
   };
 
-  const wsProvider: any = SingleClientProvider.getInstance(
+  const wsProvider: SocketIOClientProvider = SingleClientProvider.getInstance(
     readConfig("socketUrl"),
     enableSubDoc ? editorAttr.projectId : editorAttr.docId,
     ydoc,
@@ -133,10 +133,12 @@ const doSocketIOConn = (
   const permanentUserData = new Y.PermanentUserData(ydoc);
   permanentUserData.setUserMapping(ydoc, ydoc.clientID, ydocUser.name);
   wsProvider.awareness.setLocalStateField("user", ydocUser);
+  // @ts-ignore
   wsProvider.on("auth", (event: any) => {
     // https://discuss.yjs.dev/t/how-to-refresh-the-wsprovider-params-when-token-expire/2131
     handleWsAuth(event, wsProvider, editorAttr, ydoc);
   });
+  // @ts-ignore
   wsProvider.on("connect_error", (err: any) => {
     console.error("connection error:" + editorAttr.docId, err);
     // the reason of the error, for example "xhr poll error"
@@ -148,7 +150,9 @@ const doSocketIOConn = (
     // some additional context, for example the XMLHttpRequest object
     console.error(err.context);
   });
+  // @ts-ignore
   wsProvider.on("message", (event: MessageEvent) => {});
+  // @ts-ignore
   wsProvider.on("status", (event: any) => {
     if (event.status === "connected") {
       setWsConnState("connected");
@@ -336,6 +340,11 @@ export function initSubDocSocketIO(
     editorAttr,
     true
   );
+
+  // @ts-ignore
+  wsProvider.on("synced", () => {
+    console.warn("wsProvider root doc synced");
+  });
 
   // @ts-ignore
   rootYdoc.on("synced", () => {
