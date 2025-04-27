@@ -340,21 +340,18 @@ export function initSubDocSocketIO(
     editorAttr,
     true
   );
-
   // @ts-ignore
   wsProvider.on("synced", () => {
     console.warn("wsProvider root doc synced");
+    // initial last doc
+    if (projInfo && projInfo.tree) {
+      initialFisrtSubDoc(editorAttr.docId, rootYdoc, editorView);
+    }
   });
-
   // @ts-ignore
   rootYdoc.on("synced", () => {
     console.warn("root doc synced");
-    // initial last doc
-    if (projInfo && projInfo.tree) {
-      //initialSub(editorAttr.docId, rootYdoc);
-    }
   });
-
   const texEditorState: EditorState = EditorState.create({
     doc: ytext.toString(),
     extensions: createExtensions({
@@ -378,7 +375,6 @@ export function initSubDocSocketIO(
   });
   setEditorInstance(editorView);
   setSocketIOProvider(wsProvider);
-
   // @ts-ignore
   rootYdoc.on("subdocs", (props: SubDocEventProps) => {
     handleSubDocChanged(props, editorView, wsProvider);
@@ -386,7 +382,7 @@ export function initSubDocSocketIO(
   setCurYDoc(rootYdoc);
 }
 
-const initialSub = (
+const initialFisrtSubDoc = (
   fileId: string,
   rootDoc: Y.Doc,
   editorView: EditorView | undefined
@@ -395,14 +391,10 @@ const initialSub = (
     const subDoc: Y.Doc = new Y.Doc();
     subDoc.guid = fileId;
     rootDoc.getMap("texhubsubdoc").set(fileId, subDoc);
-    // @ts-ignore
-    subDoc.on("synced", () => {
-      const subDocText = subDoc.getText(subDoc.guid);
-      console.warn(subDoc.guid + ",synced:" + subDocText);
-      // Add observer for the initial document
-      subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-        updateEditor(editorView, tr, event, subDoc);
-      });
+    const subDocText = subDoc.getText(subDoc.guid);
+    subDoc.load();
+    subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
+      updateEditor(editorView, tr, event, subDoc);
     });
   }
 };
