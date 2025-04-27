@@ -10,6 +10,7 @@ import * as bootstrap from "bootstrap";
 import * as Y from "rdyjs";
 import { EditorView } from "@codemirror/view";
 import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider.js";
+import { updateEditor } from "@/service/editor/CollarEditorSocketIOService";
 
 export function handleFileTreeUpdate(
   tree: TexFileModel[],
@@ -83,7 +84,7 @@ export function handleFileSelected(
           console.log(subDocText);
         });
         subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-          // updateEditor(editorView, tr, event, subDocEden);
+          updateEditor(editorView, tr, event, subDocEden);
         });
         console.info("newest docs:" + JSON.stringify(provider.docs));
         // @ts-ignore
