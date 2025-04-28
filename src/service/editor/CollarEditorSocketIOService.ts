@@ -377,7 +377,7 @@ export function initSubDocSocketIO(
   setSocketIOProvider(wsProvider);
   // @ts-ignore
   rootYdoc.on("subdocs", (props: SubDocEventProps) => {
-    handleSubDocChanged(props, editorView, wsProvider);
+    handleSubDocChanged(props, wsProvider);
   });
   setCurYDoc(rootYdoc);
 }
@@ -438,12 +438,11 @@ export const updateEditor = (
 
 const handleSubDocChanged = (
   props: SubDocEventProps,
-  editorView: EditorView | undefined,
   wsProvider: SocketIOClientProvider
 ) => {
   if (props && props.added && props.added.size > 0) {
     // use added to sync documents in the background
-    handleSubDocAdd(props, editorView, wsProvider);
+    handleSubDocAdd(props, wsProvider);
   }
   if (props && props.removed && props.removed.size > 0) {
     // use removed to sync documents in the background
@@ -492,40 +491,9 @@ const handleLoadedSubDoc = (subdocs: Set<Y.Doc>) => {
 
 const handleSubDocAdd = (
   props: SubDocEventProps,
-  editorView: EditorView | undefined,
   wsProvider: SocketIOClientProvider
 ) => {
   props.loaded.forEach((subdoc: Y.Doc) => {
-    console.warn("add sub docs:" + subdoc.guid);
-
-    // Add event listeners before adding to provider
-    // @ts-ignore
-    subdoc.on("update", (update: Uint8Array, origin: any) => {
-      console.log("Subdoc update received:", {
-        docId: subdoc.guid,
-        updateLength: update.length,
-        origin: origin,
-      });
-    });
-
-    const subDocText = subdoc.getText();
-    subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-      console.log("Subdoc text changed:", {
-        docId: subdoc.guid,
-        delta: event.delta,
-        currentText: subDocText.toString(),
-      });
-      // updateEditor(editorView, tr, event, subdoc);
-    });
-
-    // @ts-ignore
-    subdoc.on("synced", () => {
-      console.log("Subdoc synced:", {
-        docId: subdoc.guid,
-        content: subDocText.toString(),
-      });
-    });
-
     wsProvider.addSubdoc(subdoc);
   });
 };
