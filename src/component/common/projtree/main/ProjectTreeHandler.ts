@@ -69,7 +69,7 @@ export function handleFileSelected(
       if (oldSelectedFile) {
         // destroy the legacy select file
         let subDocs = curYDoc.getMap("texhubsubdoc");
-        let legacySubDoc: any = subDocs.get(oldSelectedFile.file_id);
+        let legacySubDoc: any = subDocs.get(oldSelectedFile.file_id.toString());
         if (legacySubDoc) {
           legacyFileDestroy(legacySubDoc, oldSelectedFile, curYDoc, editorView);
         } else {
