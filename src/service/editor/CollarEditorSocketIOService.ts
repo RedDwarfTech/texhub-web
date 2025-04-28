@@ -504,6 +504,6 @@ const handleSubDocRemoved = (
 ) => {
   props.removed.forEach((subdoc) => {
     console.warn("handleSubDocRemoved remove sub doc:" + subdoc.guid);
-    wsProvider.removeSubdoc(subdoc);
+    //wsProvider.removeSubdoc(subdoc);
   });
 };
