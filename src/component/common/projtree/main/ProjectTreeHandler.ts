@@ -69,9 +69,9 @@ export function handleFileSelected(
       if (oldSelectedFile) {
         // destroy the legacy select file
         let subDocs: Y.Map<Y.Doc> = curYDoc.getMap("texhubsubdoc");
-        let legacySubDoc: any = subDocs._map.get(oldSelectedFile.file_id.toString());
+        let legacySubDoc: Y.Item | undefined = subDocs._map.get(oldSelectedFile.file_id.toString());
         if (legacySubDoc) {
-          legacyFileDestroy(legacySubDoc, oldSelectedFile, curYDoc, editorView);
+          legacyFileDestroy(oldSelectedFile, curYDoc, editorView);
         } else {
           console.error(
             "did not get the legacy subdoc",
@@ -162,13 +162,11 @@ export function handleFileAdd() {
 }
 
 export const legacyFileDestroy = (
-  legacySubDoc: any,
   selectedFile: TexFileModel,
   curYDoc: Y.Doc,
   editorView: EditorView | undefined
 ) => {
   console.warn("destroy the legacy file", selectedFile);
-  legacySubDoc.destroy();
   curYDoc.getMap("texhubsubdoc").delete(selectedFile.file_id);
   // clear the legacy codemirror editor
   if (editorView) {
