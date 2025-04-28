@@ -11,6 +11,7 @@ import * as Y from "rdyjs";
 import { EditorView } from "@codemirror/view";
 import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider.js";
 import { updateEditor } from "@/service/editor/CollarEditorSocketIOService";
+import { setCurYDoc } from "@/service/project/editor/EditorService";
 
 export function handleFileTreeUpdate(
   tree: TexFileModel[],
@@ -99,6 +100,7 @@ export function handleFileSelected(
         curYDoc
           .getMap("texhubsubdoc")
           .set(newSelectedFile.file_id.toString(), subDocEden);
+        setCurYDoc(curYDoc);
       }
     }
   }
