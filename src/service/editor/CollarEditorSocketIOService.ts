@@ -37,6 +37,8 @@ import { DocOpts } from "rdyjs/dist/src/utils/Doc.mjs";
 import store from "@/redux/store/store";
 // @ts-ignore
 import { decoding } from "rdlib0";
+import { TexFileModel } from "@/model/file/TexFileModel";
+import { handleFileSelected } from "@/component/common/projtree/main/ProjectTreeHandler";
 
 export const usercolors = [
   { color: "#30bced", light: "#30bced33" },
@@ -320,7 +322,7 @@ export function initSubDocSocketIO(
   editorAttr: EditorAttr,
   activeEditorView: EditorView | undefined,
   edContainer: RefObject<HTMLDivElement>,
-  projInfo: ProjInfo
+  file: TexFileModel
 ) {
   if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
     activeEditorView.destroy();
@@ -344,8 +346,8 @@ export function initSubDocSocketIO(
   wsProvider.on("synced", () => {
     console.warn("wsProvider root doc synced");
     // initial last doc
-    if (projInfo && projInfo.tree) {
-      initialFisrtSubDoc(editorAttr.docId, rootYdoc, editorView);
+    if (file) {
+      initialFisrtSubDoc(file, rootYdoc, editorView);
     }
   });
   // @ts-ignore
@@ -383,20 +385,11 @@ export function initSubDocSocketIO(
 }
 
 const initialFisrtSubDoc = (
-  fileId: string,
+  file: TexFileModel,
   rootDoc: Y.Doc,
   editorView: EditorView | undefined
 ) => {
-  if (fileId) {
-    const subDoc: Y.Doc = new Y.Doc();
-    subDoc.guid = fileId;
-    const subDocText = subDoc.getText(subDoc.guid);
-    subDoc.load();
-    subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-      updateEditor(editorView, tr, event, subDoc);
-    });
-    rootDoc.getMap("texhubsubdoc").set(fileId, subDoc);
-  }
+  handleFileSelected(file, null, rootDoc, editorView);
 };
 
 export const updateEditor = (

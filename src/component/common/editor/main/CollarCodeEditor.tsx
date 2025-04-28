@@ -166,7 +166,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     };
     const subdoc = localStorage.getItem("subdoc");
     if (subdoc && subdoc === "subdoc") {
-      initSubDocSocketIO(editorAttr, activeEditorView, edContainer, projInfo);
+      initSubDocSocketIO(editorAttr, activeEditorView, edContainer, file);
     } else {
       initSocketIOEditor(editorAttr, activeEditorView, edContainer);
     }

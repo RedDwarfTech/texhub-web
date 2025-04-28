@@ -53,41 +53,52 @@ export function handleExpandFolderEvent(
 }
 
 export function handleFileSelected(
-  fileItem: TexFileModel,
-  selectedFile: TexFileModel,
+  newSelectedFile: TexFileModel,
+  oldSelectedFile: TexFileModel | null,
   curYDoc: Y.Doc,
-  editorView: EditorView | undefined,
-  provider: SocketIOClientProvider
+  editorView: EditorView | undefined
 ) {
-  if (selectedFile && fileItem.file_id === selectedFile.file_id) return;
-  chooseFile(fileItem);
-  if (fileItem.file_type !== TeXFileType.FOLDER) {
-    switchFile(fileItem);
+  if (oldSelectedFile && newSelectedFile.file_id === oldSelectedFile.file_id)
+    return;
+  chooseFile(newSelectedFile);
+  if (newSelectedFile.file_type !== TeXFileType.FOLDER) {
+    switchFile(newSelectedFile);
     let subdoc = localStorage.getItem("subdoc");
     if (subdoc && subdoc === "subdoc") {
-      // destroy the legacy select file
-      let legacySubDoc: any = curYDoc.getMap("texhubsubdoc").get(selectedFile.file_id);
-      if (legacySubDoc) {
-        legacyFileDestroy(legacySubDoc, selectedFile, curYDoc, editorView);
+      if (oldSelectedFile) {
+        // destroy the legacy select file
+        let legacySubDoc: any = curYDoc
+          .getMap("texhubsubdoc")
+          .get(oldSelectedFile.file_id);
+        if (legacySubDoc) {
+          legacyFileDestroy(legacySubDoc, oldSelectedFile, curYDoc, editorView);
+        }
       }
-      let subDoc: any = curYDoc.getMap("texhubsubdoc").get(fileItem.file_id.toString());
+      let subDoc: any = curYDoc
+        .getMap("texhubsubdoc")
+        .get(newSelectedFile.file_id.toString());
       if (subDoc) {
         subDoc.load();
       } else {
         let subDocEden = new Y.Doc();
-        subDocEden.guid = fileItem.file_id;
+        subDocEden.guid = newSelectedFile.file_id;
         const subDocText = subDocEden.getText(subDocEden.guid);
         subDocEden.load();
         subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
           updateEditor(editorView, tr, event, subDocEden);
         });
         // @ts-ignore
-        subDocEden.on('afterTransaction', function (tr, doc) {
-          if (doc.getMap('texhubsubdoc')) {
-            console.log('subDocEdenmyMap当前内容：', doc.getMap('texhubsubdoc').toJSON());
+        subDocEden.on("afterTransaction", function (tr, doc) {
+          if (doc.getMap("texhubsubdoc")) {
+            console.log(
+              "subDocEdenmyMap当前内容：",
+              doc.getMap("texhubsubdoc").toJSON()
+            );
           }
         });
-        curYDoc.getMap("texhubsubdoc").set(fileItem.file_id.toString(), subDocEden);
+        curYDoc
+          .getMap("texhubsubdoc")
+          .set(newSelectedFile.file_id.toString(), subDocEden);
       }
     }
   }
@@ -148,7 +159,7 @@ export const legacyFileDestroy = (
   legacySubDoc: any,
   selectedFile: TexFileModel,
   curYDoc: Y.Doc,
-  editorView: EditorView | undefined,
+  editorView: EditorView | undefined
 ) => {
   console.warn("destroy the legacy file", selectedFile);
   legacySubDoc.destroy();
@@ -159,8 +170,8 @@ export const legacyFileDestroy = (
       changes: {
         from: 0,
         to: editorView.state.doc.length,
-        insert: ""
+        insert: "",
       },
     });
   }
-}
+};

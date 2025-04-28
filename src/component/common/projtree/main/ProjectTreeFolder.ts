@@ -157,7 +157,7 @@ export const ProjectTreeFolder = {
         );
         setCurFileTree(upatedItems);
       } else {
-        handleFileSelected(pathNode, selectedFile, ydoc, editorView, provider);
+        handleFileSelected(pathNode, selectedFile, ydoc, editorView);
       }
     }
   },
