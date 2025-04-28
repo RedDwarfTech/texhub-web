@@ -494,6 +494,7 @@ const handleSubDocAdd = (
   wsProvider: SocketIOClientProvider
 ) => {
   props.loaded.forEach((subdoc: Y.Doc) => {
+    console.log("add sub doc:" + subdoc.guid);
     wsProvider.addSubdoc(subdoc);
   });
 };
