@@ -92,15 +92,6 @@ export function handleFileSelected(
         subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
           updateEditor(editorView, tr, event, subDocEden);
         });
-        // @ts-ignore
-        subDocEden.on("afterTransaction", function (tr, doc) {
-          if (doc.getMap("texhubsubdoc")) {
-            console.log(
-              "subDocEdenmyMap当前内容：",
-              doc.getMap("texhubsubdoc").toJSON()
-            );
-          }
-        });
         curYDoc
           .getMap("texhubsubdoc")
           .set(newSelectedFile.file_id.toString(), subDocEden);

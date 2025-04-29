@@ -342,14 +342,13 @@ export function initSubDocSocketIO(
     editorAttr,
     true
   );
-  // @ts-ignore
-  wsProvider.on("synced", () => {
-    console.warn("wsProvider root doc synced");
-    // initial last doc
-    if (file) {
-      initialFisrtSubDoc(file, rootYdoc, editorView);
-    }
-  });
+// @ts-ignore
+wsProvider.on("synced", () => {
+  // initial last doc
+  if (file) {
+    initialFisrtSubDoc(file, rootYdoc, editorView);
+  }
+});
   // @ts-ignore
   rootYdoc.on("synced", () => {
     console.warn("root doc synced");
