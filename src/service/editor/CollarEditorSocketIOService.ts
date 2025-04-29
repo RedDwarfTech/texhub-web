@@ -116,7 +116,7 @@ const doSocketIOConn = (
       params: {
         // https://self-issued.info/docs/draft-ietf-oauth-v2-bearer.html#query-param
         access_token: localStorage.getItem(WheelGlobal.ACCESS_TOKEN_NAME) ?? "",
-        docId: editorAttr.docId,
+        docId: enableSubDoc ? editorAttr.projectId : editorAttr.docId,
         // from: "web_tex_editor",
       },
     }
