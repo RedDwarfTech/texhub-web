@@ -63,10 +63,14 @@ const AppBody: React.FC<AppBodyProps> = (props: AppBodyProps) => {
           </div>
         </div>
         <div style={{ width: "20%", minWidth: 100 }}>
-          <Previewer
-            projectId={pid as string}
-            viewModel={"default"}
-          ></Previewer>
+          {pid ? (
+            <Previewer
+              projectId={pid as string}
+              viewModel={"default"}
+            ></Previewer>
+          ) : (
+            <div>Loading...</div>
+          )}
         </div>
       </Split>
     </div>

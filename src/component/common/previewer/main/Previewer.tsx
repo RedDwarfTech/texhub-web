@@ -243,7 +243,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   };
 
   const createMarkup = () => {
-    let formatted = curLogText?.replace(/\n/g, "<br/>");
+    let formatted = curLogText.replace(/\n/g, "<br/>");
     return { __html: formatted };
   };
 
@@ -472,7 +472,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     return (
       <div className={styles.previewPageNav}>
         <input
-          value={curPages}
+          value={curPages || 1}
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
             handleNavPageChange(e);
           }}
@@ -488,7 +488,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
           }}
         ></input>
         <div>/</div>
-        <div>{numPages}</div>
+        <div>{numPages || 1}</div>
       </div>
     );
   };

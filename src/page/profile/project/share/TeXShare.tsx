@@ -159,7 +159,6 @@ const TeXShare: React.FC<ShareProps> = (props: ShareProps) => {
               type="checkbox"
               value=""
               id="checkboxLink"
-              checked
             ></input>
             <label className="form-check-label">链接分享</label>
           </div>

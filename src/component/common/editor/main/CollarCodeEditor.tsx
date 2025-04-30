@@ -40,7 +40,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const { projInfo, projConf, insertContext, replaceContext } = useSelector(
     (state: AppState) => state.proj
   );
-  const { connState, editorView, texEditorSocketIOWs, editorText } = useSelector(
+  const { connState, editorView, texEditorSocketIOWs } = useSelector(
     (state: AppState) => state.projEditor
   );
   const [wsSocketIOProvider, setWsSocketIOProvider] =
@@ -59,10 +59,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       SingleClientProvider.destroy();
     };
   }, []);
-
-  React.useEffect(()=>{
-    console.warn("editorText update:" + editorText);
-  },[editorText]);
 
   React.useEffect(() => {
     if (curYDoc) {

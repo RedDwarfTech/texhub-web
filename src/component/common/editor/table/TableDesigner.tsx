@@ -127,6 +127,7 @@ const TableDesigner: React.FC<TableDesignerProps> = (
           <div className="modal-body">
             <div className={styles.tableAction}>
               <table>
+                <tbody>
                 <tr>
                   <th>
                     <PlusRowBefore
@@ -156,8 +157,10 @@ const TableDesigner: React.FC<TableDesignerProps> = (
                     ></PlusRowRemove>
                   </th>
                 </tr>
+                </tbody>
               </table>
               <table>
+              <tbody>
                 <tr>
                   <th>
                     <PlusColumnBefore
@@ -187,8 +190,10 @@ const TableDesigner: React.FC<TableDesignerProps> = (
                     ></PlusColumnRemove>
                   </th>
                 </tr>
+                </tbody>
               </table>
               <table>
+              <tbody>
                 <tr>
                   <th>
                     <BorderBottom width={"20px"} height={"20px"}></BorderBottom>
@@ -203,6 +208,7 @@ const TableDesigner: React.FC<TableDesignerProps> = (
                     <BorderRight width={"20px"} height={"20px"}></BorderRight>
                   </th>
                 </tr>
+                </tbody>
               </table>
             </div>
             <hr />
