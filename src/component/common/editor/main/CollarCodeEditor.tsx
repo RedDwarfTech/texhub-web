@@ -44,7 +44,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     (state: AppState) => state.projEditor
   );
   const [wsSocketIOProvider, setWsSocketIOProvider] =
-      useState<SocketIOClientProvider>();
+    useState<SocketIOClientProvider>();
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
@@ -130,6 +130,9 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }, [projConf]);
 
   React.useEffect(() => {
+    if (activeFile && activeFile.file_type !== TreeFileType.Folder) {
+      localStorage.setItem(activeKey, JSON.stringify(activeFile));
+    }
     let subDoc = localStorage.getItem("subdoc");
     if (subDoc && subDoc === "subdoc") {
       return;
@@ -267,7 +270,14 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
               let activeFileJson = localStorage.getItem(activeKey);
               if (activeFileJson) {
                 let activeFile: TexFileModel = JSON.parse(activeFileJson);
-                handleSrcTreeNav(props, curProjInfo, activeFile, curDoc!, activeEditorView, wsSocketIOProvider!);
+                handleSrcTreeNav(
+                  props,
+                  curProjInfo,
+                  activeFile,
+                  curDoc!,
+                  activeEditorView,
+                  wsSocketIOProvider!
+                );
               }
             }
           }}

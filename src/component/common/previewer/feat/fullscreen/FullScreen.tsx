@@ -1,5 +1,5 @@
 import React from "react";
-import Previewer from "../../main/Previewer";
+import Previewer from "@/component/common/previewer/main/Previewer";
 
 const FullScreen: React.FC = ({}) => {
   const params = new URLSearchParams(window.location.search);
