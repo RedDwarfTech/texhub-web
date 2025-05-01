@@ -162,7 +162,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   React.useEffect(() => {
     if (projConf && Object.keys(projConf).length > 0) {
-      if (projConf.confYype == ProjConfType.Theme) {
+      if (projConf.confYype === ProjConfType.Theme) {
         const currentTheme = themeMap.get(projConf.confValue);
         if (currentTheme) {
           if (!activeEditorView) return;

@@ -3,7 +3,7 @@ import { addFile, chooseFile, switchFile } from "@/service/file/FileService";
 import { ProjectTreeFolder } from "./ProjectTreeFolder";
 import { toast } from "react-toastify";
 import { TeXFileType } from "@/model/enum/TeXFileType";
-import { ResponseHandler } from "rdjs-wheel";
+import { BaseMethods, ResponseHandler } from "rdjs-wheel";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 import { getProjectInfo } from "@/service/project/ProjectService";
 import * as bootstrap from "bootstrap";
@@ -82,7 +82,7 @@ export function handleFileSelected(
       let subDoc: any = curRootYDoc
         .getMap("texhubsubdoc")
         .get(newSelectedFile.file_id.toString());
-      if (subDoc) {
+      if (subDoc && !BaseMethods.isNull(subDoc)) {
         setCurSubYDoc(subDoc);
         subDoc.load();
       } else {
