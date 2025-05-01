@@ -72,7 +72,7 @@ export function handleFileSelected(
       let subDocs: Y.Map<Y.Doc> = curRootYDoc.getMap("texhubsubdoc");
       if (oldSelectedFile) {
         // destroy the legacy select file
-        let legacySubDoc: Y.Item | undefined = subDocs._map.get(
+        let legacySubDoc: Y.Doc | undefined = subDocs.get(
           oldSelectedFile.file_id.toString()
         );
         if (legacySubDoc) {
@@ -84,7 +84,9 @@ export function handleFileSelected(
           );
         }
       }
-      let subDoc: any = subDocs._map.get(newSelectedFile.file_id.toString());
+      let subDoc: Y.Doc | undefined = subDocs.get(
+        newSelectedFile.file_id.toString()
+      );
       if (subDoc && !BaseMethods.isNull(subDoc)) {
         setCurSubYDoc(subDoc);
         subDoc.load();
