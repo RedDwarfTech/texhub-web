@@ -89,13 +89,10 @@ export function handleFileSelected(
         let subDocEden = new Y.Doc();
         subDocEden.guid = newSelectedFile.file_id;
         const subDocText = subDocEden.getText(subDocEden.guid);
-        subDocEden.load();
+        // subDocEden.load();
         subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
           updateEditor(editorView, tr, event, subDocEden);
         });
-        curRootYDoc
-          .getMap("texhubsubdoc")
-          .set(newSelectedFile.file_id.toString(), subDocEden);
         setCurRootYDoc(curRootYDoc);
         setCurSubYDoc(subDocEden);
       }

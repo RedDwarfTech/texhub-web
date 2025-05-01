@@ -31,7 +31,10 @@ import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/soc
 import SingleClientProvider from "texhub-broadcast/dist/websocket/conn/single_client_provider";
 import { EditorState } from "@codemirror/state";
 import { createExtensions } from "../foundation/extensions/extensions";
-import { setEditorInstance } from "@/service/project/editor/EditorService";
+import {
+  setCurRootYDoc,
+  setEditorInstance,
+} from "@/service/project/editor/EditorService";
 
 export type EditorProps = {
   projectId: string;
@@ -84,6 +87,11 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         parent: edContainer.current!,
       });
       setEditorInstance(editorView);
+      curSubYDoc.load();
+      if (curRootDoc) {
+        curRootDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, curSubYDoc);
+        setCurRootYDoc(curRootDoc);
+      }
     }
   }, [curSubYDoc]);
 
