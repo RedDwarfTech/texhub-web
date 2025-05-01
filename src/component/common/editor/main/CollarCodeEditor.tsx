@@ -42,7 +42,7 @@ export type EditorProps = {
 
 const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<HTMLDivElement>(null);
-  const [curRootDoc, setCurRootDoc] = useState<Y.Doc>();
+  const [curEditorRootDoc, setCurEditorRootDoc] = useState<Y.Doc>();
   const { activeFile } = useSelector((state: AppState) => state.file);
   const { projInfo, projConf, insertContext, replaceContext } = useSelector(
     (state: AppState) => state.proj
@@ -56,7 +56,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
   const activeKey = readConfig("projActiveFile") + props.projectId;
-  const { curSubYDoc } = useSelector((state: AppState) => state.projEditor);
+  const { curSubYDoc, curRootYDoc } = useSelector((state: AppState) => state.projEditor);
   const { t } = useTranslation();
 
   React.useEffect(() => {
@@ -88,9 +88,9 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       });
       setEditorInstance(editorView);
       curSubYDoc.load();
-      if (curRootDoc) {
-        curRootDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, curSubYDoc);
-        setCurRootYDoc(curRootDoc);
+      if (curEditorRootDoc) {
+        curEditorRootDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, curSubYDoc);
+        setCurRootYDoc(curEditorRootDoc);
       }
     }
   }, [curSubYDoc]);
@@ -102,10 +102,10 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }, [editorView]);
 
   React.useEffect(() => {
-    if (curRootDoc) {
-      setCurRootDoc(curRootDoc);
+    if (curRootYDoc) {
+      setCurEditorRootDoc(curRootYDoc);
     }
-  }, [curRootDoc]);
+  }, [curRootYDoc]);
 
   React.useEffect(() => {
     if (texEditorSocketIOWs) {
@@ -309,7 +309,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
                   props,
                   curProjInfo,
                   activeFile,
-                  curRootDoc!,
+                  curEditorRootDoc!,
                   activeEditorView,
                   wsSocketIOProvider!
                 );
