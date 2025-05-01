@@ -342,17 +342,14 @@ export function initSubDocSocketIO(
     editorAttr,
     true
   );
-// @ts-ignore
-wsProvider.on("synced", () => {
-  // initial last doc
-  if (file) {
-    initialFisrtSubDoc(file, rootYdoc, editorView);
-  }
-});
   // @ts-ignore
-  rootYdoc.on("synced", () => {
-    console.warn("root doc synced");
+  wsProvider.on("synced", () => {
+    // initial last doc
+    if (file) {
+      initialFisrtSubDoc(file, rootYdoc, editorView);
+    }
   });
+
   const texEditorState: EditorState = EditorState.create({
     doc: ytext.toString(),
     extensions: createExtensions({
