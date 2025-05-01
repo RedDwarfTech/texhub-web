@@ -95,6 +95,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       curSubYDoc.load();
       let sub = curEditorRootDoc?.getMap("texhubsubdoc").get(curSubYDoc.guid);
       if (curEditorRootDoc && BaseMethods.isNull(sub)) {
+        debugger;
         curEditorRootDoc
           .getMap("texhubsubdoc")
           .set(curSubYDoc.guid, curSubYDoc);

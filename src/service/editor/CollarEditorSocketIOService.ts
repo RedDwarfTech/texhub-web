@@ -79,7 +79,7 @@ const handleWsAuth = (
 };
 
 const doSocketIOConn = (
-  ydoc: Y.Doc,
+  rootYDoc: Y.Doc,
   editorAttr: EditorAttr,
   enableSubDoc: boolean
 ): any => {
@@ -108,7 +108,7 @@ const doSocketIOConn = (
   const wsProvider: SocketIOClientProvider = SingleClientProvider.getInstance(
     readConfig("socketUrl"),
     enableSubDoc ? editorAttr.projectId : editorAttr.docId,
-    ydoc,
+    rootYDoc,
     enableSubDoc,
     options,
     {
@@ -132,13 +132,13 @@ const doSocketIOConn = (
     color: userColor.color,
     colorLight: userColor.light,
   };
-  const permanentUserData = new Y.PermanentUserData(ydoc);
-  permanentUserData.setUserMapping(ydoc, ydoc.clientID, ydocUser.name);
+  const permanentUserData = new Y.PermanentUserData(rootYDoc);
+  permanentUserData.setUserMapping(rootYDoc, rootYDoc.clientID, ydocUser.name);
   wsProvider.awareness.setLocalStateField("user", ydocUser);
   // @ts-ignore
   wsProvider.on("auth", (event: any) => {
     // https://discuss.yjs.dev/t/how-to-refresh-the-wsprovider-params-when-token-expire/2131
-    handleWsAuth(event, wsProvider, editorAttr, ydoc);
+    handleWsAuth(event, wsProvider, editorAttr, rootYDoc);
   });
   // @ts-ignore
   wsProvider.on("connect_error", (err: any) => {
@@ -340,6 +340,10 @@ export function initSubDocSocketIO(
   wsProvider.on("synced", () => {
     // initial last doc
     if (file) {
+      // remove all subdocs
+      // when run this first doc init, there contains 2 subdoc
+      // still did not found where to add this 2 subdoc
+      rootYdoc.subdocs.clear();
       initialFisrtSubDoc(file, rootYdoc, activeEditorView);
     }
   });
