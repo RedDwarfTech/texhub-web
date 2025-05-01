@@ -321,7 +321,6 @@ function initEditorView(
 export function initSubDocSocketIO(
   editorAttr: EditorAttr,
   activeEditorView: EditorView | undefined,
-  edContainer: RefObject<HTMLDivElement>,
   file: TexFileModel
 ) {
   let rootDocOpt = {

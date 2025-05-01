@@ -40,7 +40,6 @@ export type EditorProps = {
 const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<HTMLDivElement>(null);
   const [curRootDoc, setCurRootDoc] = useState<Y.Doc>();
-  const [curSubDoc, setCurSubDoc] = useState<Y.Doc>();
   const { activeFile } = useSelector((state: AppState) => state.file);
   const { projInfo, projConf, insertContext, replaceContext } = useSelector(
     (state: AppState) => state.proj
@@ -66,8 +65,8 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }, []);
 
   React.useEffect(() => {
-    if (curSubYDoc) {
-      setCurSubDoc(curSubYDoc);
+    if (!BaseMethods.isNull(curSubYDoc)) {
+      console.log("curSubYDoc", curSubYDoc);
       let ytext = curSubYDoc.getText(curSubYDoc.guid);
       const undoManager = new Y.UndoManager(ytext);
       const texEditorState: EditorState = EditorState.create({
@@ -93,6 +92,12 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       setActiveEditorView(editorView);
     }
   }, [editorView]);
+
+  React.useEffect(() => {
+    if (curRootDoc) {
+      setCurRootDoc(curRootDoc);
+    }
+  }, [curRootDoc]);
 
   React.useEffect(() => {
     if (texEditorSocketIOWs) {
@@ -187,7 +192,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     };
     const subdoc = localStorage.getItem("subdoc");
     if (subdoc && subdoc === "subdoc") {
-      initSubDocSocketIO(editorAttr, activeEditorView, edContainer, file);
+      initSubDocSocketIO(editorAttr, activeEditorView, file);
     } else {
       initSocketIOEditor(editorAttr, activeEditorView, edContainer);
     }
