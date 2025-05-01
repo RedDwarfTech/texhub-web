@@ -11,7 +11,10 @@ import * as Y from "rdyjs";
 import { EditorView } from "@codemirror/view";
 import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider.js";
 import { updateEditor } from "@/service/editor/CollarEditorSocketIOService";
-import { setCurRootYDoc, setCurSubYDoc } from "@/service/project/editor/EditorService";
+import {
+  setCurRootYDoc,
+  setCurSubYDoc,
+} from "@/service/project/editor/EditorService";
 
 export function handleFileTreeUpdate(
   tree: TexFileModel[],
@@ -66,10 +69,12 @@ export function handleFileSelected(
     switchFile(newSelectedFile);
     let subdoc = localStorage.getItem("subdoc");
     if (subdoc && subdoc === "subdoc") {
+      let subDocs: Y.Map<Y.Doc> = curRootYDoc.getMap("texhubsubdoc");
       if (oldSelectedFile) {
         // destroy the legacy select file
-        let subDocs: Y.Map<Y.Doc> = curRootYDoc.getMap("texhubsubdoc");
-        let legacySubDoc: Y.Item | undefined = subDocs._map.get(oldSelectedFile.file_id.toString());
+        let legacySubDoc: Y.Item | undefined = subDocs._map.get(
+          oldSelectedFile.file_id.toString()
+        );
         if (legacySubDoc) {
           legacyFileDestroy(oldSelectedFile, curRootYDoc, editorView);
         } else {
@@ -79,9 +84,7 @@ export function handleFileSelected(
           );
         }
       }
-      let subDoc: any = curRootYDoc
-        .getMap("texhubsubdoc")
-        .get(newSelectedFile.file_id.toString());
+      let subDoc: any = subDocs._map.get(newSelectedFile.file_id.toString());
       if (subDoc && !BaseMethods.isNull(subDoc)) {
         setCurSubYDoc(subDoc);
         subDoc.load();
