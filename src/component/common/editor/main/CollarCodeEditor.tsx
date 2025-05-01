@@ -24,10 +24,14 @@ import { BaseMethods } from "rdjs-wheel";
 import {
   initSocketIOEditor,
   initSubDocSocketIO,
+  metadata,
 } from "@/service/editor/CollarEditorSocketIOService";
 import * as Y from "rdyjs";
 import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider.js";
 import SingleClientProvider from "texhub-broadcast/dist/websocket/conn/single_client_provider";
+import { EditorState } from "@codemirror/state";
+import { createExtensions } from "../foundation/extensions/extensions";
+import { setEditorInstance } from "@/service/project/editor/EditorService";
 
 export type EditorProps = {
   projectId: string;
@@ -35,7 +39,8 @@ export type EditorProps = {
 
 const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<HTMLDivElement>(null);
-  const [curDoc, setCurDoc] = useState<Y.Doc>();
+  const [curRootDoc, setCurRootDoc] = useState<Y.Doc>();
+  const [curSubDoc, setCurSubDoc] = useState<Y.Doc>();
   const { activeFile } = useSelector((state: AppState) => state.file);
   const { projInfo, projConf, insertContext, replaceContext } = useSelector(
     (state: AppState) => state.proj
@@ -49,7 +54,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
   const activeKey = readConfig("projActiveFile") + props.projectId;
-  const { curYDoc } = useSelector((state: AppState) => state.projEditor);
+  const { curSubYDoc } = useSelector((state: AppState) => state.projEditor);
   const { t } = useTranslation();
 
   React.useEffect(() => {
@@ -61,10 +66,27 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }, []);
 
   React.useEffect(() => {
-    if (curYDoc) {
-      setCurDoc(curYDoc);
+    if (curSubYDoc) {
+      setCurSubDoc(curSubYDoc);
+      let ytext = curSubYDoc.getText(curSubYDoc.guid);
+      const undoManager = new Y.UndoManager(ytext);
+      const texEditorState: EditorState = EditorState.create({
+        doc: ytext.toString(),
+        extensions: createExtensions({
+          ytext: ytext,
+          wsProvider: wsSocketIOProvider,
+          undoManager: undoManager,
+          docName: curSubYDoc.guid,
+          metadata: metadata,
+        }),
+      });
+      const editorView: EditorView = new EditorView({
+        state: texEditorState,
+        parent: edContainer.current!,
+      });
+      setEditorInstance(editorView);
     }
-  }, [curYDoc]);
+  }, [curSubYDoc]);
 
   React.useEffect(() => {
     if (editorView) {
@@ -274,7 +296,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
                   props,
                   curProjInfo,
                   activeFile,
-                  curDoc!,
+                  curRootDoc!,
                   activeEditorView,
                   wsSocketIOProvider!
                 );

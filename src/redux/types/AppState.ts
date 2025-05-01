@@ -56,7 +56,8 @@ export interface AppState {
         curHistory: ProjHisotry,
     },
     projEditor: {
-        curYDoc: Y.Doc,
+        curRootYDoc: Y.Doc,
+        curSubYDoc: Y.Doc,
         editorView: EditorView,
         texEditorSocketIOWs: SocketIOClientProvider,
         connState: string,

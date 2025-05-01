@@ -6,7 +6,8 @@ import * as Y from "rdyjs";
 const initState: AppState["projEditor"] = {
   editorView: {} as EditorView,
   texEditorSocketIOWs: {} as SocketIOClientProvider,
-  curYDoc: {} as Y.Doc,
+  curRootYDoc: {} as Y.Doc,
+  curSubYDoc: {} as Y.Doc,
   connState: "",
   editorText: "",
 };
@@ -28,10 +29,15 @@ const EditorReducer = (state = initState, action: any) => {
         ...state,
         texEditorSocketIOWs: action.data,
       };
-    case "SET_CUR_YDOC":
+    case "SET_CUR_ROOT_YDOC":
       return {
         ...state,
-        curYDoc: action.data,
+        curRootYDoc: action.data,
+      };
+    case "SET_CUR_SUB_YDOC":
+      return {
+        ...state,
+        curSubYDoc: action.data,
       };
     case "SET_WS_CON_STATE":
       return {

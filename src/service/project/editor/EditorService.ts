@@ -17,8 +17,13 @@ export function setSocketIOProvider(ws: SocketIOClientProvider) {
   return XHRClient.dispathAction(ws, actionTypeString, store);
 }
 
-export function setCurYDoc(ydoc: Y.Doc) {
-  const actionTypeString: string = CollarEditorActionType[CollarEditorActionType.SET_CUR_YDOC];
+export function setCurRootYDoc(ydoc: Y.Doc) {
+  const actionTypeString: string = CollarEditorActionType[CollarEditorActionType.SET_CUR_ROOT_YDOC];
+  return XHRClient.dispathAction(ydoc, actionTypeString, store);
+}
+
+export function setCurSubYDoc(ydoc: Y.Doc) {
+  const actionTypeString: string = CollarEditorActionType[CollarEditorActionType.SET_CUR_SUB_YDOC];
   return XHRClient.dispathAction(ydoc, actionTypeString, store);
 }
 

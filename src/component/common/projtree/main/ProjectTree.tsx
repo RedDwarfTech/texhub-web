@@ -36,13 +36,13 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const divRef = props.treeDivRef;
   const [curTabName, setCurTabName] = useState("tree");
   const [createFileName, setCreateFileName] = useState("");
-  const [curDoc, setCurDoc] = useState<Y.Doc>();
+  const [curRootDoc, setCurRootDoc] = useState<Y.Doc>();
   const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
   const { fileTree, treeSelectItem, curFileTree } = useSelector(
     (state: AppState) => state.file
   );
   const { projInfo, srcFocus } = useSelector((state: AppState) => state.proj);
-  const { curYDoc, texEditorSocketIOWs } = useSelector(
+  const { curRootYDoc, texEditorSocketIOWs } = useSelector(
     (state: AppState) => state.projEditor
   );
   const [wsSocketIOProvider, setWsSocketIOProvider] =
@@ -85,10 +85,10 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   }, [editorView]);
 
   React.useEffect(() => {
-    if (curYDoc) {
-      setCurDoc(curYDoc);
+    if (curRootYDoc) {
+      setCurRootDoc(curRootYDoc);
     }
-  }, [curYDoc]);
+  }, [curRootYDoc]);
 
   React.useEffect(() => {
     if (texEditorSocketIOWs) {
@@ -218,7 +218,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       paths,
       props.projectId,
       selectedFile,
-      curDoc!,
+      curRootDoc!,
       activeEditorView,
       wsSocketIOProvider!
     );
@@ -373,7 +373,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   ) => {
     e.preventDefault();
     e.stopPropagation();
-    handleFileSelected(fileItem, selectedFile, curDoc!, editorView);
+    handleFileSelected(fileItem, selectedFile, curRootDoc!, editorView);
   };
 
   const handleFileInputChange = (event: any) => {
@@ -389,7 +389,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         name_paths,
         props.projectId,
         selectedFile,
-        curDoc!,
+        curRootDoc!,
         editorView,
         wsSocketIOProvider!
       );

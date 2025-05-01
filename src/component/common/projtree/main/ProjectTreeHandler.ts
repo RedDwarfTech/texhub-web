@@ -11,7 +11,7 @@ import * as Y from "rdyjs";
 import { EditorView } from "@codemirror/view";
 import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider.js";
 import { updateEditor } from "@/service/editor/CollarEditorSocketIOService";
-import { setCurYDoc } from "@/service/project/editor/EditorService";
+import { setCurRootYDoc, setCurSubYDoc } from "@/service/project/editor/EditorService";
 
 export function handleFileTreeUpdate(
   tree: TexFileModel[],
@@ -56,7 +56,7 @@ export function handleExpandFolderEvent(
 export function handleFileSelected(
   newSelectedFile: TexFileModel,
   oldSelectedFile: TexFileModel | null,
-  curYDoc: Y.Doc,
+  curRootYDoc: Y.Doc,
   editorView: EditorView | undefined
 ) {
   if (oldSelectedFile && newSelectedFile.file_id === oldSelectedFile.file_id)
@@ -68,10 +68,10 @@ export function handleFileSelected(
     if (subdoc && subdoc === "subdoc") {
       if (oldSelectedFile) {
         // destroy the legacy select file
-        let subDocs: Y.Map<Y.Doc> = curYDoc.getMap("texhubsubdoc");
+        let subDocs: Y.Map<Y.Doc> = curRootYDoc.getMap("texhubsubdoc");
         let legacySubDoc: Y.Item | undefined = subDocs._map.get(oldSelectedFile.file_id.toString());
         if (legacySubDoc) {
-          legacyFileDestroy(oldSelectedFile, curYDoc, editorView);
+          legacyFileDestroy(oldSelectedFile, curRootYDoc, editorView);
         } else {
           console.error(
             "did not get the legacy subdoc",
@@ -79,10 +79,11 @@ export function handleFileSelected(
           );
         }
       }
-      let subDoc: any = curYDoc
+      let subDoc: any = curRootYDoc
         .getMap("texhubsubdoc")
         .get(newSelectedFile.file_id.toString());
       if (subDoc) {
+        setCurSubYDoc(subDoc);
         subDoc.load();
       } else {
         let subDocEden = new Y.Doc();
@@ -92,10 +93,11 @@ export function handleFileSelected(
         subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
           updateEditor(editorView, tr, event, subDocEden);
         });
-        curYDoc
+        curRootYDoc
           .getMap("texhubsubdoc")
           .set(newSelectedFile.file_id.toString(), subDocEden);
-        setCurYDoc(curYDoc);
+        setCurRootYDoc(curRootYDoc);
+        setCurSubYDoc(subDocEden);
       }
     }
   }
@@ -154,11 +156,11 @@ export function handleFileAdd() {
 
 export const legacyFileDestroy = (
   selectedFile: TexFileModel,
-  curYDoc: Y.Doc,
+  curRootYDoc: Y.Doc,
   editorView: EditorView | undefined
 ) => {
   console.warn("destroy the legacy file", selectedFile);
-  curYDoc.getMap("texhubsubdoc").delete(selectedFile.file_id);
+  curRootYDoc.getMap("texhubsubdoc").delete(selectedFile.file_id);
   // clear the legacy codemirror editor
   if (editorView) {
     editorView.dispatch({

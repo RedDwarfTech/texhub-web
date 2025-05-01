@@ -20,7 +20,7 @@ import { RefObject } from "react";
 import { projHasFile } from "../project/ProjectService";
 import { Metadata } from "@/component/common/editor/foundation/extensions/language";
 import {
-  setCurYDoc,
+  setCurRootYDoc,
   setEditorInstance,
   setEditorText,
   setSocketIOProvider,
@@ -189,7 +189,7 @@ export function restoreFromHistory(version: number, docId: string) {
   }
 }
 
-const metadata: Metadata = {
+export const metadata: Metadata = {
   labels: new Set<string>([]),
   packageNames: new Set<string>([]),
   commands: [],
@@ -222,7 +222,7 @@ export function initSocketIOEditor(
     gc: false,
   };
   ydoc = new Y.Doc(docOpt);
-  setCurYDoc(ydoc);
+  setCurRootYDoc(ydoc);
   const ytext: Y.Text = ydoc.getText(editorAttr.docId);
   let wsProvider: SocketIOClientProvider = doSocketIOConn(
     ydoc,
@@ -324,9 +324,6 @@ export function initSubDocSocketIO(
   edContainer: RefObject<HTMLDivElement>,
   file: TexFileModel
 ) {
-  if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
-    activeEditorView.destroy();
-  }
   let rootDocOpt = {
     guid: editorAttr.projectId,
     collectionid: editorAttr.projectId,
@@ -334,8 +331,6 @@ export function initSubDocSocketIO(
     gc: false,
   };
   let rootYdoc: Y.Doc = new Y.Doc(rootDocOpt);
-  const ytext: Y.Text = rootYdoc.getText(editorAttr.projectId);
-  const undoManager = new Y.UndoManager(ytext);
   // init room with project id
   let wsProvider: SocketIOClientProvider = doSocketIOConn(
     rootYdoc,
@@ -346,38 +341,15 @@ export function initSubDocSocketIO(
   wsProvider.on("synced", () => {
     // initial last doc
     if (file) {
-      initialFisrtSubDoc(file, rootYdoc, editorView);
+      initialFisrtSubDoc(file, rootYdoc, activeEditorView);
     }
   });
-
-  const texEditorState: EditorState = EditorState.create({
-    doc: ytext.toString(),
-    extensions: createExtensions({
-      ytext: ytext,
-      wsProvider: wsProvider,
-      undoManager: undoManager,
-      docName: rootDocOpt.guid,
-      metadata: metadata,
-    }),
-  });
-  if (
-    edContainer.current &&
-    edContainer.current.children &&
-    edContainer.current.children.length > 0
-  ) {
-    return;
-  }
-  const editorView: EditorView = new EditorView({
-    state: texEditorState,
-    parent: edContainer.current!,
-  });
-  setEditorInstance(editorView);
   setSocketIOProvider(wsProvider);
   // @ts-ignore
   rootYdoc.on("subdocs", (props: SubDocEventProps) => {
     handleSubDocChanged(props, wsProvider);
   });
-  setCurYDoc(rootYdoc);
+  setCurRootYDoc(rootYdoc);
 }
 
 const initialFisrtSubDoc = (

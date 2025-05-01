@@ -13,7 +13,7 @@ import { RefObject } from "react";
 import { projHasFile } from "../project/ProjectService";
 import { Metadata } from "@/component/common/editor/foundation/extensions/language";
 import {
-  setCurYDoc,
+  setCurRootYDoc,
   setEditorInstance,
 } from "../project/editor/EditorService";
 
@@ -108,7 +108,7 @@ export function initEditor(
     gc: false,
   };
   ydoc = new Y.Doc(docOpt);
-  setCurYDoc(ydoc);
+  setCurRootYDoc(ydoc);
   const ytext: Y.Text = ydoc.getText(editorAttr.docId);
   const undoManager = new Y.UndoManager(ytext);
   let wsProvider: any = doWsConn(ydoc, editorAttr);
