@@ -88,6 +88,9 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         state: texEditorState,
         parent: edContainer.current!,
       });
+      if(activeEditorView){
+        activeEditorView?.destroy();
+      }
       setEditorInstance(editorView);
       curSubYDoc.load();
       let sub = curEditorRootDoc?.getMap("texhubsubdoc").get(curSubYDoc.guid);
