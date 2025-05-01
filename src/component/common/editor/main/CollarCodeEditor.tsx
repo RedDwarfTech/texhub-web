@@ -88,7 +88,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         state: texEditorState,
         parent: edContainer.current!,
       });
-      if(activeEditorView){
+      if(activeEditorView && !BaseMethods.isNull(activeEditorView)){
         activeEditorView?.destroy();
       }
       setEditorInstance(editorView);
