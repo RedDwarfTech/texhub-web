@@ -56,7 +56,9 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
   const activeKey = readConfig("projActiveFile") + props.projectId;
-  const { curSubYDoc, curRootYDoc } = useSelector((state: AppState) => state.projEditor);
+  const { curSubYDoc, curRootYDoc } = useSelector(
+    (state: AppState) => state.projEditor
+  );
   const { t } = useTranslation();
 
   React.useEffect(() => {
@@ -88,9 +90,14 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       });
       setEditorInstance(editorView);
       curSubYDoc.load();
-      if (curEditorRootDoc) {
-        curEditorRootDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, curSubYDoc);
+      let sub = curEditorRootDoc?.getMap("texhubsubdoc").get(curSubYDoc.guid);
+      if (curEditorRootDoc && BaseMethods.isNull(sub)) {
+        curEditorRootDoc
+          .getMap("texhubsubdoc")
+          .set(curSubYDoc.guid, curSubYDoc);
         setCurRootYDoc(curEditorRootDoc);
+      } else {
+        console.log("subdoc already exists", sub);
       }
     }
   }, [curSubYDoc]);
