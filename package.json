@@ -138,7 +138,8 @@
     "overrides": {
       "pdfjs-dist": "^4.9.155",
       "rdlib0": "^0.2.106",
-      "rdy-protocols": "^1.0.14"
+      "rdy-protocols": "^1.0.14",
+      "rdyjs": "^13.6.32"
     }
   },
   "overrides": {
@@ -146,6 +147,7 @@
       "pdfjs-dist": "4.9.155"
     },
     "rdlib0": "^0.2.106",
-    "rdy-protocols": "^1.0.14"
+    "rdy-protocols": "^1.0.14",
+    "rdyjs": "^13.6.32"
   }
 }
