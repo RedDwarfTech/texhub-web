@@ -11,7 +11,7 @@
     "@codemirror/legacy-modes": "^6.5.1",
     "@codemirror/search": "^6.5.10",
     "@codemirror/state": "^6.5.2",
-    "@codemirror/view": "^6.36.6",
+    "@codemirror/view": "^6.36.7",
     "@fingerprintjs/fingerprintjs": "^4.6.2",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
@@ -148,6 +148,9 @@
     },
     "rdlib0": "^0.2.106",
     "rdy-protocols": "^1.0.14",
-    "rdyjs": "^13.6.32"
+    "rdyjs": "^13.6.32",
+    "texhub-broadcast": {
+      "pg": "false"
+    }
   }
 }
