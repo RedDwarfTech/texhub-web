@@ -9,7 +9,6 @@ import { getProjectInfo } from "@/service/project/ProjectService";
 import * as bootstrap from "bootstrap";
 import * as Y from "rdyjs";
 import { EditorView } from "@codemirror/view";
-import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider.js";
 import { updateEditor } from "@/service/editor/CollarEditorSocketIOService";
 import {
   setCurRootYDoc,

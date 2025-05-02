@@ -45,7 +45,6 @@ export default defineConfig({
       },
       // https://github.com/brianc/node-postgres/issues/2987
       external: ["pg", "pg-cloudflare", "cloudflare:sockets"],
-
     },
   },
   resolve: {
