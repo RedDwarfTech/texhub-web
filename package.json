@@ -89,7 +89,7 @@
     "vite-plugin-top-level-await": "^1.5.0",
     "vite-plugin-wasm": "^3.4.1",
     "web-vitals": "^4.2.4",
-    "pg": "^8.14.1"
+    "pg": "8.10.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -140,7 +140,8 @@
       "pdfjs-dist": "^4.9.155",
       "rdlib0": "^0.2.106",
       "rdy-protocols": "^1.0.14",
-      "rdyjs": "^13.6.32"
+      "rdyjs": "^13.6.32",
+      "pg": "8.10.0"
     }
   },
   "overrides": {
@@ -149,6 +150,7 @@
     },
     "rdlib0": "^0.2.106",
     "rdy-protocols": "^1.0.14",
-    "rdyjs": "^13.6.32"
+    "rdyjs": "^13.6.32",
+    "pg": "8.10.0"
   }
 }

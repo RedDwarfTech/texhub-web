@@ -32,13 +32,11 @@ export default defineConfig({
     "process.env": process.env,
   },
   css: {},
-  optimizeDeps: {
-    exclude: ["pg", "pg-cloudflare"],
-  },
   build: {
     outDir: "build",
     sourcemap: "hidden",
     rollupOptions: {
+      external:["cloudflare:sockets"],
       output: {
         sourcemapExcludeSources: false,
         manualChunks: {
@@ -46,15 +44,12 @@ export default defineConfig({
           reddwarf: ["rd-component", "rdjs-wheel"],
         },
       },
-      // https://github.com/brianc/node-postgres/issues/2987
-      external: ["pg", "pg-cloudflare", "cloudflare:sockets"],
     },
   },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
-      "~bootstrap": path.resolve(__dirname, "node_modules/bootstrap"),
-      'pg': path.resolve(__dirname, 'node_modules/pg/lib/index.js')
+      "~bootstrap": path.resolve(__dirname, "node_modules/bootstrap")
     },
   },
   server: {
