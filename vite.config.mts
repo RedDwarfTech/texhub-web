@@ -26,12 +26,12 @@ export default defineConfig({
     }) as PluginOption,
   ],
   define: {
-    'process.env': process.env
+    "process.env": process.env,
   },
   css: {},
   build: {
     outDir: "build",
-    sourcemap: 'hidden',
+    sourcemap: "hidden",
     rollupOptions: {
       output: {
         sourcemapExcludeSources: false,
@@ -40,6 +40,7 @@ export default defineConfig({
           reddwarf: ["rd-component", "rdjs-wheel"],
         },
       },
+      external: ["pg-cloudflare"],
     },
   },
   resolve: {
