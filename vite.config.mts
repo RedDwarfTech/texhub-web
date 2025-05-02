@@ -29,6 +29,9 @@ export default defineConfig({
     "process.env": process.env,
   },
   css: {},
+  optimizeDeps: {
+    exclude: ["pg", "pg-cloudflare"],
+  },
   build: {
     outDir: "build",
     sourcemap: "hidden",
@@ -41,7 +44,8 @@ export default defineConfig({
         },
       },
       // https://github.com/brianc/node-postgres/issues/2987
-      external: ["pg","pg-cloudflare"],
+      external: ["pg", "pg-cloudflare", "cloudflare:sockets"],
+
     },
   },
   resolve: {
