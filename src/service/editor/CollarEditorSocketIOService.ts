@@ -439,16 +439,6 @@ const handleLoadedSubDoc = (subdocs: Set<Y.Doc>) => {
           insert: subDocTextString,
         },
       });
-
-      // Add observer for future changes
-      subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-        console.log("Subdoc text changed:", {
-          docId: subdoc.guid,
-          delta: event.delta,
-          currentText: subDocTextString,
-        });
-        // updateEditor(editorView, tr, event, subdoc);
-      });
     }
   });
 };
