@@ -29,7 +29,7 @@ export default defineConfig({
     }) as PluginOption,
   ],
   define: {
-    "process.env": process.env,
+    "process.env": {},
   },
   css: {},
   build: {
