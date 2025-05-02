@@ -54,6 +54,7 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "src"),
       "~bootstrap": path.resolve(__dirname, "node_modules/bootstrap"),
+      'pg': path.resolve(__dirname, 'node_modules/pg/lib/index.js')
     },
   },
   server: {
