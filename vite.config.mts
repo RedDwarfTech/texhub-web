@@ -39,7 +39,9 @@ export default defineConfig({
           react: ["react", "react-router-dom", "react-dom"],
           reddwarf: ["rd-component", "rdjs-wheel"],
         },
-      }
+      },
+      // https://github.com/brianc/node-postgres/issues/2987
+      external: ["pg","pg-cloudflare"],
     },
   },
   resolve: {
