@@ -39,8 +39,7 @@ export default defineConfig({
           react: ["react", "react-router-dom", "react-dom"],
           reddwarf: ["rd-component", "rdjs-wheel"],
         },
-      },
-      external: ["pg-cloudflare"],
+      }
     },
   },
   resolve: {

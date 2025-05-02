@@ -81,7 +81,7 @@
     "rollup-plugin-visualizer": "^5.14.0",
     "sass": "^1.87.0",
     "socket.io-client": "^4.8.1",
-    "texhub-broadcast": "1.0.69",
+    "texhub-broadcast": "1.0.70",
     "ts-node": "^10.9.2",
     "uuid": "^11.1.0",
     "vite": "^5.4.19",
