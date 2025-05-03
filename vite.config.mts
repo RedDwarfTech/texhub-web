@@ -33,6 +33,7 @@ export default defineConfig({
   ],
   css: {},
   build: {
+    commonjsOptions: { include: [] },
     outDir: "build",
     sourcemap: "hidden",
     rollupOptions: {
