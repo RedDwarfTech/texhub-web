@@ -11,6 +11,7 @@ overrides:
   rdyjs: ^13.6.32
   react: ^18.2.0
   react-dom: ^18.2.0
+  react-redux: ^8.1.3
 
 importers:
 
@@ -78,7 +79,7 @@ importers:
         version: 3.4.0
       '@reduxjs/toolkit':
         specifier: ^2.7.0
-        version: 2.7.0(react-redux@9.2.0(@types/react@18.3.20)(react@18.3.1)(redux@5.0.1))(react@18.3.1)
+        version: 2.7.0(react-redux@8.1.3(@types/react-dom@18.3.7(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(redux@5.0.1))(react@18.3.1)
       '@testing-library/jest-dom':
         specifier: ^5.17.0
         version: 5.17.0
@@ -171,7 +172,7 @@ importers:
         version: 7.40.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       rd-component:
         specifier: ^0.1.170
-        version: 0.1.170(@fingerprintjs/fingerprintjs@4.6.2)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@reduxjs/toolkit@2.7.0(react-redux@9.2.0(@types/react@18.3.20)(react@18.3.1)(redux@5.0.1))(react@18.3.1))(@types/node@22.15.3)(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(react-dom@18.3.1(react@18.3.1))(react-redux@9.2.0(@types/react@18.3.20)(react@18.3.1)(redux@5.0.1))(react-router-dom@7.5.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(redux@5.0.1)(rollup@2.79.2)(ts-node@10.9.2(@swc/core@1.11.24)(@types/node@22.15.3)(typescript@4.9.5))(typescript@4.9.5)(uuid@11.1.0)(vite@6.3.4(@types/node@22.15.3)(jiti@1.21.7)(sass@1.87.0)(terser@5.39.0)(yaml@2.7.1))
+        version: 0.1.170(@fingerprintjs/fingerprintjs@4.6.2)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@reduxjs/toolkit@2.7.0(react-redux@8.1.3(@types/react-dom@18.3.7(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(redux@5.0.1))(react@18.3.1))(@types/node@22.15.3)(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(react-dom@18.3.1(react@18.3.1))(react-redux@8.1.3(@types/react-dom@18.3.7(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(redux@5.0.1))(react-router-dom@7.5.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(redux@5.0.1)(rollup@2.79.2)(ts-node@10.9.2(@swc/core@1.11.24)(@types/node@22.15.3)(typescript@4.9.5))(typescript@4.9.5)(uuid@11.1.0)(vite@6.3.4(@types/node@22.15.3)(jiti@1.21.7)(sass@1.87.0)(terser@5.39.0)(yaml@2.7.1))
       rdjs-wheel:
         specifier: 0.0.31
         version: 0.0.31(@jest/transform@29.7.0)(@jest/types@29.6.3)(@types/node@22.15.3)(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(rollup@2.79.2)(ts-node@10.9.2(@swc/core@1.11.24)(@types/node@22.15.3)(typescript@4.9.5))(typescript@4.9.5)(vite@6.3.4(@types/node@22.15.3)(jiti@1.21.7)(sass@1.87.0)(terser@5.39.0)(yaml@2.7.1))(webpack@5.99.7(@swc/core@1.11.24)(esbuild@0.18.20))
@@ -206,8 +207,8 @@ importers:
         specifier: ^9.2.1
         version: 9.2.1(@types/react@18.3.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-redux:
-        specifier: ^9.2.0
-        version: 9.2.0(@types/react@18.3.20)(react@18.3.1)(redux@5.0.1)
+        specifier: ^8.1.3
+        version: 8.1.3(@types/react-dom@18.3.7(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(redux@5.0.1)
       react-router-dom:
         specifier: ^7.5.3
         version: 7.5.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2105,7 +2106,7 @@ packages:
     resolution: {integrity: sha512-XVwolG6eTqwV0N8z/oDlN93ITCIGIop6leXlGJI/4EKy+0POYkR+ABHRSdGXY+0MQvJBP8yAzh+EYFxTuvmBiQ==}
     peerDependencies:
       react: ^18.2.0
-      react-redux: ^7.2.1 || ^8.1.3 || ^9.0.0
+      react-redux: ^8.1.3
     peerDependenciesMeta:
       react:
         optional: true
@@ -2886,8 +2887,8 @@ packages:
   '@types/unist@2.0.11':
     resolution: {integrity: sha512-CmBKiL6NNo/OqgmMn95Fk9Whlp2mtvIv+KNpQKN2F4SjvrEesubTRWGYSg+BnWZOnlCaSTU1sMpsBOzgbYhnsA==}
 
-  '@types/use-sync-external-store@0.0.6':
-    resolution: {integrity: sha512-zFDAD+tlpf2r4asuHEj0XH6pY6i0g5NeAHPn+15wk3BV6JA69eERFXC1gyGThDkVa1zCyKr5jox1+2LbV/AMLg==}
+  '@types/use-sync-external-store@0.0.3':
+    resolution: {integrity: sha512-EwmlvuaxPNej9+T4v5AuBPJa2x2UOJVdjCtDHgcDqitUeOtjnJKJ+apYjVcAoBEMjKW1VVFGZLUb5+qqa09XFA==}
 
   '@types/uuid@9.0.8':
     resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
@@ -7568,7 +7569,7 @@ packages:
       '@reduxjs/toolkit': ^2.2.1
       react: ^18.2.0
       react-dom: ^18.2.0
-      react-redux: ^8.0.5
+      react-redux: ^8.1.3
       react-router-dom: ^7.0.2
       redux: ^4.2.1
       uuid: ^11.1.0
@@ -7686,14 +7687,23 @@ packages:
       '@types/react':
         optional: true
 
-  react-redux@9.2.0:
-    resolution: {integrity: sha512-ROY9fvHhwOD9ySfrF0wmvu//bKCQ6AeZZq1nJNtbDC+kk5DuSuNX/n6YWYF/SYy7bSba4D4FSz8DJeKY/S/r+g==}
+  react-redux@8.1.3:
+    resolution: {integrity: sha512-n0ZrutD7DaX/j9VscF+uTALI3oUPa/pO4Z3soOBIjuRn/FzVu6aehhysxZCLi6y7duMf52WNZGMl7CtuK5EnRw==}
     peerDependencies:
-      '@types/react': ^18.2.25 || ^19
+      '@types/react': ^16.8 || ^17.0 || ^18.0
+      '@types/react-dom': ^16.8 || ^17.0 || ^18.0
       react: ^18.2.0
-      redux: ^5.0.0
+      react-dom: ^18.2.0
+      react-native: '>=0.59'
+      redux: ^4 || ^5.0.0-beta.0
     peerDependenciesMeta:
       '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+      react-dom:
+        optional: true
+      react-native:
         optional: true
       redux:
         optional: true
@@ -9255,8 +9265,8 @@ packages:
       utf-8-validate:
         optional: true
 
-  ws@8.18.1:
-    resolution: {integrity: sha512-RKW2aJZMXeMxVpnZ6bck+RswznaxmzdULiBr6KY7XkTnW8uvt0iT9H5DkHUChXrc+uurzwa0rVI16n/Xzjdz1w==}
+  ws@8.18.2:
+    resolution: {integrity: sha512-DMricUmwGZUVr++AEAe2uiVM7UoO9MAVZMDu05UQOaUII0lp+zOzLLU4Xqh/JvTqklB1T4uELaaPBKyjE1r4fQ==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -11369,7 +11379,7 @@ snapshots:
     dependencies:
       '@redis/client': 1.6.0
 
-  '@reduxjs/toolkit@2.7.0(react-redux@9.2.0(@types/react@18.3.20)(react@18.3.1)(redux@5.0.1))(react@18.3.1)':
+  '@reduxjs/toolkit@2.7.0(react-redux@8.1.3(@types/react-dom@18.3.7(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(redux@5.0.1))(react@18.3.1)':
     dependencies:
       '@standard-schema/spec': 1.0.0
       '@standard-schema/utils': 0.3.0
@@ -11379,7 +11389,7 @@ snapshots:
       reselect: 5.1.1
     optionalDependencies:
       react: 18.3.1
-      react-redux: 9.2.0(@types/react@18.3.20)(react@18.3.1)(redux@5.0.1)
+      react-redux: 8.1.3(@types/react-dom@18.3.7(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(redux@5.0.1)
 
   '@rollup/plugin-babel@5.3.1(@babel/core@7.27.1)(@types/babel__core@7.20.5)(rollup@2.79.2)':
     dependencies:
@@ -11761,7 +11771,7 @@ snapshots:
       util: 0.12.5
       util-deprecate: 1.0.2
       watchpack: 2.4.2
-      ws: 8.18.1
+      ws: 8.18.2
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -12364,7 +12374,7 @@ snapshots:
 
   '@types/unist@2.0.11': {}
 
-  '@types/use-sync-external-store@0.0.6': {}
+  '@types/use-sync-external-store@0.0.3': {}
 
   '@types/uuid@9.0.8': {}
 
@@ -17956,13 +17966,13 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  rd-component@0.1.170(@fingerprintjs/fingerprintjs@4.6.2)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@reduxjs/toolkit@2.7.0(react-redux@9.2.0(@types/react@18.3.20)(react@18.3.1)(redux@5.0.1))(react@18.3.1))(@types/node@22.15.3)(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(react-dom@18.3.1(react@18.3.1))(react-redux@9.2.0(@types/react@18.3.20)(react@18.3.1)(redux@5.0.1))(react-router-dom@7.5.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(redux@5.0.1)(rollup@2.79.2)(ts-node@10.9.2(@swc/core@1.11.24)(@types/node@22.15.3)(typescript@4.9.5))(typescript@4.9.5)(uuid@11.1.0)(vite@6.3.4(@types/node@22.15.3)(jiti@1.21.7)(sass@1.87.0)(terser@5.39.0)(yaml@2.7.1)):
+  rd-component@0.1.170(@fingerprintjs/fingerprintjs@4.6.2)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@reduxjs/toolkit@2.7.0(react-redux@8.1.3(@types/react-dom@18.3.7(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(redux@5.0.1))(react@18.3.1))(@types/node@22.15.3)(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(react-dom@18.3.1(react@18.3.1))(react-redux@8.1.3(@types/react-dom@18.3.7(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(redux@5.0.1))(react-router-dom@7.5.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(redux@5.0.1)(rollup@2.79.2)(ts-node@10.9.2(@swc/core@1.11.24)(@types/node@22.15.3)(typescript@4.9.5))(typescript@4.9.5)(uuid@11.1.0)(vite@6.3.4(@types/node@22.15.3)(jiti@1.21.7)(sass@1.87.0)(terser@5.39.0)(yaml@2.7.1)):
     dependencies:
       '@babel/core': 7.27.1
       '@babel/preset-env': 7.27.1(@babel/core@7.27.1)
       '@babel/preset-typescript': 7.27.1(@babel/core@7.27.1)
       '@fingerprintjs/fingerprintjs': 4.6.2
-      '@reduxjs/toolkit': 2.7.0(react-redux@9.2.0(@types/react@18.3.20)(react@18.3.1)(redux@5.0.1))(react@18.3.1)
+      '@reduxjs/toolkit': 2.7.0(react-redux@8.1.3(@types/react-dom@18.3.7(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(redux@5.0.1))(react@18.3.1)
       '@types/react': 18.3.20
       '@types/redux-logger': 3.0.13
       '@types/uuid': 9.0.8
@@ -17972,7 +17982,7 @@ snapshots:
       query-string: 8.2.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      react-redux: 9.2.0(@types/react@18.3.20)(react@18.3.1)(redux@5.0.1)
+      react-redux: 8.1.3(@types/react-dom@18.3.7(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(redux@5.0.1)
       react-router-dom: 7.5.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-toastify: 9.1.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-turnstile: 1.1.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -18184,13 +18194,19 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.20
 
-  react-redux@9.2.0(@types/react@18.3.20)(react@18.3.1)(redux@5.0.1):
+  react-redux@8.1.3(@types/react-dom@18.3.7(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(redux@5.0.1):
     dependencies:
-      '@types/use-sync-external-store': 0.0.6
+      '@babel/runtime': 7.27.1
+      '@types/hoist-non-react-statics': 3.3.6
+      '@types/use-sync-external-store': 0.0.3
+      hoist-non-react-statics: 3.3.2
       react: 18.3.1
+      react-is: 18.3.1
       use-sync-external-store: 1.5.0(react@18.3.1)
     optionalDependencies:
       '@types/react': 18.3.20
+      '@types/react-dom': 18.3.7(@types/react@18.3.20)
+      react-dom: 18.3.1(react@18.3.1)
       redux: 5.0.1
 
   react-refresh@0.11.0: {}
@@ -19834,7 +19850,7 @@ snapshots:
       sockjs: 0.3.24
       spdy: 4.0.2
       webpack-dev-middleware: 5.3.4(webpack@5.99.7(@swc/core@1.11.24)(esbuild@0.18.20))
-      ws: 8.18.1
+      ws: 8.18.2
     optionalDependencies:
       webpack: 5.99.7(@swc/core@1.11.24)(esbuild@0.18.20)
     transitivePeerDependencies:
@@ -20143,7 +20159,7 @@ snapshots:
 
   ws@8.17.1: {}
 
-  ws@8.18.1: {}
+  ws@8.18.2: {}
 
   xml-name-validator@3.0.0: {}
 
