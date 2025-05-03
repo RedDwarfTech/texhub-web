@@ -5,12 +5,14 @@ import { visualizer } from "rollup-plugin-visualizer";
 import svgr from "vite-plugin-svgr";
 import wasm from "vite-plugin-wasm";
 import topLevelAwait from "vite-plugin-top-level-await";
+import nodePolyfills from 'rollup-plugin-polyfill-node';
 
 export default defineConfig({
   ssr: {
     external: ['pg', 'pg-native'],
   },
   plugins: [
+    nodePolyfills( /* options */ ),
     react(),
     svgr({
       svgrOptions: {
