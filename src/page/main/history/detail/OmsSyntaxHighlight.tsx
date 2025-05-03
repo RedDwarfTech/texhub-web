@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import React from 'react';
+import * as React from 'react';
 
 export type OmsProps = {
   textContent: string;

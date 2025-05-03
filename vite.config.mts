@@ -5,15 +5,21 @@ import { visualizer } from "rollup-plugin-visualizer";
 import svgr from "vite-plugin-svgr";
 import wasm from "vite-plugin-wasm";
 import topLevelAwait from "vite-plugin-top-level-await";
-import nodePolyfills from 'rollup-plugin-polyfill-node';
-import replace from '@rollup/plugin-replace';
+import nodePolyfills from "rollup-plugin-polyfill-node";
+import replace from "@rollup/plugin-replace";
+import { nodeResolve } from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 
 export default defineConfig({
   plugins: [
+    commonjs(),
+    nodeResolve({
+      exportConditions: ['module']
+    }),
     replace({
-      "process.env.NODE_ENV": JSON.stringify("development")
-  }),
-    nodePolyfills( /* options */ ),
+      "process.env.NODE_ENV": JSON.stringify("development"),
+    }),
+    nodePolyfills(/* options */),
     react(),
     svgr({
       svgrOptions: {
@@ -37,6 +43,7 @@ export default defineConfig({
     outDir: "build",
     sourcemap: "hidden",
     rollupOptions: {
+      external:["pg-cloudflare"],
       output: {
         sourcemapExcludeSources: false,
         manualChunks: {
@@ -49,7 +56,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
-      "~bootstrap": path.resolve(__dirname, "node_modules/bootstrap")
+      "~bootstrap": path.resolve(__dirname, "node_modules/bootstrap"),
     },
   },
   server: {
