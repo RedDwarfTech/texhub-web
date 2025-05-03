@@ -95,6 +95,9 @@
     "vite-plugin-wasm": "^3.4.1",
     "web-vitals": "^4.2.4"
   },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.9.5"
+  },
   "scripts": {
     "start": "react-scripts start",
     "test": "jest",
