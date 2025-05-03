@@ -43,8 +43,13 @@ export default defineConfig({
     outDir: "build",
     sourcemap: "hidden",
     rollupOptions: {
-      external:[""],
+      external:['react', 'react-dom', 'react/jsx-runtime'],
       output: {
+        globals: {
+          'react-dom': 'ReactDom',
+          react: 'React',
+          'react/jsx-runtime': 'ReactJsxRuntime',
+        },
         sourcemapExcludeSources: false,
         manualChunks: {
           react: ["react", "react-router-dom", "react-dom"],
