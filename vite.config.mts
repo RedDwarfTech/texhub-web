@@ -52,7 +52,7 @@ export default defineConfig({
         },
         sourcemapExcludeSources: false,
         manualChunks: {
-          react: ["react", "react-router-dom", "react-dom"],
+          react: ["react-router-dom"],
           reddwarf: ["rd-component", "rdjs-wheel"],
         },
       },
