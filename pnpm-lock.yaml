@@ -182,7 +182,7 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1
       pdfjs-dist:
-        specifier: ^4.10.38
+        specifier: ^4.9.155
         version: 4.10.38
       query-string:
         specifier: ^8.2.0
@@ -286,6 +286,9 @@ importers:
       vite:
         specifier: 5.1.4
         version: 5.1.4(@types/node@22.15.3)(sass@1.87.0)(terser@5.39.0)
+      vite-plugin-node-polyfills:
+        specifier: ^0.23.0
+        version: 0.23.0(rollup@2.79.2)(vite@5.1.4(@types/node@22.15.3)(sass@1.87.0)(terser@5.39.0))
       vite-plugin-svgr:
         specifier: ^4.3.0
         version: 4.3.0(rollup@2.79.2)(typescript@4.9.5)(vite@5.1.4(@types/node@22.15.3)(sass@1.87.0)(terser@5.39.0))
@@ -330,8 +333,8 @@ importers:
         specifier: ^4.9.5
         version: 4.9.5
       vite-plugin-node-stdlib-browser:
-        specifier: ^0.2.1
-        version: 0.2.1(node-stdlib-browser@1.3.1)(rollup@2.79.2)(vite@5.1.4(@types/node@22.15.3)(sass@1.87.0)(terser@5.39.0))
+        specifier: ^0.1.0
+        version: 0.1.1(node-stdlib-browser@1.3.1)(rollup@2.79.2)(vite@5.1.4(@types/node@22.15.3)(sass@1.87.0)(terser@5.39.0))
     optionalDependencies:
       '@rollup/rollup-linux-x64-gnu':
         specifier: 4.9.5
@@ -2152,6 +2155,11 @@ packages:
     peerDependenciesMeta:
       rollup:
         optional: true
+
+  '@rollup/plugin-inject@4.0.4':
+    resolution: {integrity: sha512-4pbcU4J/nS+zuHk+c+OL3WtmEQhqxlZ9uqfjQMQDOHOPld7PsCd8k5LWs8h5wjwJN7MgnAn768F2sDxEP4eNFQ==}
+    peerDependencies:
+      rollup: ^1.20.0 || ^2.0.0
 
   '@rollup/plugin-inject@5.0.5':
     resolution: {integrity: sha512-2+DEJbNBoPROPkgTDNe8/1YXWcqxbN5DTjASVIOx8HS+pITXushyNiBV56RB08zuptzz8gT3YfkqriTBVycepg==}
@@ -9165,11 +9173,16 @@ packages:
     peerDependencies:
       vite: '>=2.9.0'
 
-  vite-plugin-node-stdlib-browser@0.2.1:
-    resolution: {integrity: sha512-6u2i613Dkqj5KaTNIrnZvE6y3/awWAp0S5TjucTvGxdhetftB1Mgvblc+nwYzlw6sntPlac8UOC7ttXNh+LZKA==}
+  vite-plugin-node-polyfills@0.23.0:
+    resolution: {integrity: sha512-4n+Ys+2bKHQohPBKigFlndwWQ5fFKwaGY6muNDMTb0fSQLyBzS+jjUNRZG9sKF0S/Go4ApG6LFnUGopjkILg3w==}
+    peerDependencies:
+      vite: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
+
+  vite-plugin-node-stdlib-browser@0.1.1:
+    resolution: {integrity: sha512-KsvUWxiVBJwb8DDOl5XP6E7qq2VMSWtLe8HOu7wuVhSejGAeSqDq+64WLcPvfpuW/ExEDIEMt17JDrEaofr0fQ==}
     peerDependencies:
       node-stdlib-browser: ^1.2.0
-      vite: ^2.0.0 || ^3.0.0 || ^4.0.0
+      vite: ^2.0.0 || ^3.0.0
 
   vite-plugin-svgr@4.3.0:
     resolution: {integrity: sha512-Jy9qLB2/PyWklpYy0xk0UU3TlU0t2UMpJXZvf+hWII1lAmRHrOUKi11Uw8N3rxoNk7atZNYO3pR3vI1f7oi+6w==}
@@ -11628,6 +11641,13 @@ snapshots:
       magic-string: 0.30.17
       picomatch: 4.0.2
     optionalDependencies:
+      rollup: 2.79.2
+
+  '@rollup/plugin-inject@4.0.4(rollup@2.79.2)':
+    dependencies:
+      '@rollup/pluginutils': 3.1.0(rollup@2.79.2)
+      estree-walker: 2.0.2
+      magic-string: 0.25.9
       rollup: 2.79.2
 
   '@rollup/plugin-inject@5.0.5(rollup@2.79.2)':
@@ -20240,9 +20260,17 @@ snapshots:
       - rollup
       - supports-color
 
-  vite-plugin-node-stdlib-browser@0.2.1(node-stdlib-browser@1.3.1)(rollup@2.79.2)(vite@5.1.4(@types/node@22.15.3)(sass@1.87.0)(terser@5.39.0)):
+  vite-plugin-node-polyfills@0.23.0(rollup@2.79.2)(vite@5.1.4(@types/node@22.15.3)(sass@1.87.0)(terser@5.39.0)):
     dependencies:
       '@rollup/plugin-inject': 5.0.5(rollup@2.79.2)
+      node-stdlib-browser: 1.3.1
+      vite: 5.1.4(@types/node@22.15.3)(sass@1.87.0)(terser@5.39.0)
+    transitivePeerDependencies:
+      - rollup
+
+  vite-plugin-node-stdlib-browser@0.1.1(node-stdlib-browser@1.3.1)(rollup@2.79.2)(vite@5.1.4(@types/node@22.15.3)(sass@1.87.0)(terser@5.39.0)):
+    dependencies:
+      '@rollup/plugin-inject': 4.0.4(rollup@2.79.2)
       node-stdlib-browser: 1.3.1
       vite: 5.1.4(@types/node@22.15.3)(sass@1.87.0)(terser@5.39.0)
     transitivePeerDependencies:
