@@ -10,7 +10,7 @@ import replace from "@rollup/plugin-replace";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
-import nodePolyfills from 'vite-plugin-node-stdlib-browser'
+import nodePolyfills from 'vite-plugin-node-stdlib-browser';
 
 export default defineConfig({
   define: {
