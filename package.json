@@ -142,7 +142,7 @@
       "rdy-protocols": "^1.0.14",
       "rdyjs": "^13.6.32",
       "react": "^19.1.0",
-      "react-dom": "^19.0.0",
+      "react-dom": "^19.1.0",
       "react-redux": "^9.0.0",
       "@reduxjs/toolkit": "^2.7.0",
       "redux": "^5.0.1"
@@ -156,7 +156,7 @@
     "rdy-protocols": "^1.0.14",
     "rdyjs": "^13.6.32",
     "react": "^19.1.0",
-    "react-dom": "^19.0.0",
+    "react-dom": "^19.1.0",
     "react-redux": "^9.0.0",
     "@reduxjs/toolkit": "^2.7.0",
     "redux": "^5.0.1"
