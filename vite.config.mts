@@ -43,7 +43,7 @@ export default defineConfig({
     outDir: "build",
     sourcemap: "hidden",
     rollupOptions: {
-      external:['react', 'react-dom', 'react/jsx-runtime'],
+      external:['react', 'react-dom'],
       output: {
         globals: {
           'react-dom': 'ReactDom',
