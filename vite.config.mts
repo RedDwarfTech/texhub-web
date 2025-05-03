@@ -43,7 +43,7 @@ export default defineConfig({
     outDir: "build",
     sourcemap: "hidden",
     rollupOptions: {
-      external:["pg-cloudflare"],
+      external:[""],
       output: {
         sourcemapExcludeSources: false,
         manualChunks: {
