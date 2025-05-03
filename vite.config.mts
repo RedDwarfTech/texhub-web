@@ -6,12 +6,13 @@ import svgr from "vite-plugin-svgr";
 import wasm from "vite-plugin-wasm";
 import topLevelAwait from "vite-plugin-top-level-await";
 import nodePolyfills from 'rollup-plugin-polyfill-node';
+import replace from '@rollup/plugin-replace';
 
 export default defineConfig({
-  ssr: {
-    external: ['pg', 'pg-native'],
-  },
   plugins: [
+    replace({
+      "process.env.NODE_ENV": JSON.stringify("development")
+  }),
     nodePolyfills( /* options */ ),
     react(),
     svgr({
@@ -30,15 +31,11 @@ export default defineConfig({
       open: true,
     }) as PluginOption,
   ],
-  define: {
-    "process.env": process.env,
-  },
   css: {},
   build: {
     outDir: "build",
     sourcemap: "hidden",
     rollupOptions: {
-      external:["cloudflare:sockets"],
       output: {
         sourcemapExcludeSources: false,
         manualChunks: {
