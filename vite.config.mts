@@ -11,13 +11,14 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 
 export default defineConfig({
+  define: {
+    'process.env': JSON.stringify({
+      NODE_ENV: 'development'
+    })},
   plugins: [
     commonjs(),
     nodeResolve({
       exportConditions: ['module']
-    }),
-    replace({
-      "process.env.NODE_ENV": JSON.stringify("development"),
     }),
     nodePolyfills(/* options */),
     react(),

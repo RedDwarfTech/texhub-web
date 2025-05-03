@@ -87,7 +87,7 @@
     "rollup-plugin-visualizer": "^5.14.0",
     "sass": "^1.87.0",
     "socket.io-client": "^4.8.1",
-    "texhub-broadcast": "1.0.75",
+    "texhub-broadcast": "1.0.76",
     "ts-node": "^10.9.2",
     "uuid": "^11.1.0",
     "vite": "5.1.4",
@@ -157,8 +157,7 @@
       "react-dom": "18.1.0",
       "react-redux": "9.0.1",
       "@reduxjs/toolkit": "^2.7.0",
-      "redux": "^5.0.1",
-      "pg": "8.10.0"
+      "redux": "^5.0.1"
     }
   },
   "overrides": {
@@ -172,7 +171,6 @@
     "react-dom": "18.1.0",
     "react-redux": "9.0.1",
     "@reduxjs/toolkit": "^2.7.0",
-    "redux": "^5.0.1",
-    "pg": "8.10.0"
+    "redux": "^5.0.1"
   }
 }
