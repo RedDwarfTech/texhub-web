@@ -10,7 +10,15 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/index.tsx"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@19.1.0",
+          "react-dom": "https://esm.sh/react-dom@19.1.0",
+          "react/jsx-runtime": "https://esm.sh/react@19.1.0?external=react/jsx-runtime"
+        }
+      }
+    </script>
     <script>
     const lang = navigator.language || 'en';
     const translations = {
@@ -33,14 +41,6 @@
     const { title } = translations[lang] || translations.en;
     document.getElementById('title').textContent = title;
     </script>
-    <script type="importmap">
-      {
-        "imports": {
-          "react": "https://esm.sh/react@19.1.0",
-          "react-dom": "https://esm.sh/react-dom@19.1.0",
-          "react/jsx-runtime": "https://esm.sh/react@19.1.0?external=react/jsx-runtime"
-        }
-      }
-    </script>
+    <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>
