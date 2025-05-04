@@ -5,12 +5,8 @@ import { visualizer } from "rollup-plugin-visualizer";
 import svgr from "vite-plugin-svgr";
 import wasm from "vite-plugin-wasm";
 import topLevelAwait from "vite-plugin-top-level-await";
-import nodePolyfills from "rollup-plugin-polyfill-node";
-import replace from "@rollup/plugin-replace";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
-import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
-import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 export default defineConfig({
   define: {
@@ -23,7 +19,6 @@ export default defineConfig({
     nodeResolve({
       exportConditions: ["module"],
     }),
-    nodePolyfills(),
     react(),
     svgr({
       svgrOptions: {
