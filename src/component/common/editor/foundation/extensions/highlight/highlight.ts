@@ -24,6 +24,7 @@ export const highlight_extension = StateField.define({
     const highlight_decoration = Decoration.mark({
         attributes: { style: "background-color: yellow" }
     });
+    // @ts-ignore
     curEditorView.dispatch({
         effects: highlight_effect.of([highlight_decoration.range(from, to)])
     });
@@ -34,6 +35,7 @@ export const highlightUnselection = () => {
         return;
     }
     const filterMarks = StateEffect.define();
+    // @ts-ignore
     curEditorView.dispatch({
         effects: filterMarks.of(null)
     })

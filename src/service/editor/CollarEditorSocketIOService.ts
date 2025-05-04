@@ -63,16 +63,16 @@ const handleWsAuth = (
 ) => {
   if (event.status === "failed") {
     wsProvider.shouldConnect = false;
-    wsProvider.ws?.close(1000, "failed when connect");
+    wsProvider.ws?.close();
   }
   if (event.status === "expired") {
     RequestHandler.handleWebAccessTokenExpire().then((res) => {
       if (ResponseHandler.responseSuccess(res)) {
-        wsProvider.ws?.close(1000, "expired refresh success");
+        wsProvider.ws?.close();
         wsProvider = doSocketIOConn(ydoc, editorAttr, false);
       } else {
         wsProvider.shouldConnect = false;
-        wsProvider.ws?.close(1000, "expired refresh failed");
+        wsProvider.ws?.close();
       }
     });
   }
