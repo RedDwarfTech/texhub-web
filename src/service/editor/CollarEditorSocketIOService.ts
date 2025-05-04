@@ -210,10 +210,10 @@ export function initSocketIOEditor(
   if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
     activeEditorView.destroy();
   }
-  //if (SingleClientProvider.getCurrentRoom() !== editorAttr.docId) {
+  if (SingleClientProvider.getCurrentRoom() !== editorAttr.docId) {
     // user siwtch docs
-    //SingleClientProvider.destroy();
-  //}
+    SingleClientProvider.destroy();
+  }
   let docOpt: DocOpts = {
     guid: editorAttr.docId,
     collectionid: editorAttr.projectId,
