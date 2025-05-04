@@ -182,7 +182,7 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1
       pdfjs-dist:
-        specifier: ^4.9.155
+        specifier: ^4.10.38
         version: 4.10.38
       query-string:
         specifier: ^8.2.0
@@ -275,8 +275,8 @@ importers:
         specifier: ^4.8.1
         version: 4.8.1
       texhub-broadcast:
-        specifier: 1.0.79
-        version: 1.0.79
+        specifier: 1.0.83
+        version: 1.0.83
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.11.24)(@types/node@22.15.3)(typescript@4.9.5)
@@ -8779,8 +8779,8 @@ packages:
     resolution: {integrity: sha512-cAGWPIyOHU6zlmg88jwm7VRyXnMN7iV68OGAbYDk/Mh/xC/pzVPlQtY6ngoIH/5/tciuhGfvESU8GrHrcxD56w==}
     engines: {node: '>=8'}
 
-  texhub-broadcast@1.0.79:
-    resolution: {integrity: sha512-IEn6OdemDv9qBr5JdcvvFBo2tS7QQ7Cg/WEGgY0+uBefHy3vvdXb4XVegNEvoe6Mq661/cxhH0qa2/sbvUxcow==}
+  texhub-broadcast@1.0.83:
+    resolution: {integrity: sha512-m5MXmJ7kNMGBnN4CgSYozaoWx+tIX8Z1ije9wAcqMM9s/xRX/3Ps35WVo3GS0D2Ht95brIJsNWgOZvk/q/cWJg==}
     engines: {node: '>=20.0.0'}
 
   text-table@0.2.0:
@@ -8908,7 +8908,7 @@ packages:
       typescript: '>=2.4.1'
 
   tsc-alias@1.8.15:
-    resolution: {integrity: sha512-hpuglrm2DoHZE62L8ntYqRNiSQ7J8kvIxEsajzY/QfGOm7EcdhgG5asqoWYi2E2KX0SqUuhOTnV8Ry8D/TnsEA==}
+    resolution: {integrity: sha512-hpuglrm2DoHZE62L8ntYqRNiSQ7J8kvIxEsajzY/QfGOm7EcdhgG5asqoWYi2E2KX0SqUuhOTnV8Ry8D/TnsEA==, tarball: https://registry.npmmirror.com/tsc-alias/-/tsc-alias-1.8.13.tgz}
     engines: {node: '>=16.20.2'}
     deprecated: '[WARNING] Use 1.8.13 instead of 1.8.15, reason: https://github.com/justkey007/tsc-alias/issues/244'
     hasBin: true
@@ -19833,7 +19833,7 @@ snapshots:
       glob: 7.2.3
       minimatch: 3.1.2
 
-  texhub-broadcast@1.0.79:
+  texhub-broadcast@1.0.83:
     dependencies:
       '@socket.io/admin-ui': 0.5.1(socket.io@4.8.1)
       dotenv: 16.5.0

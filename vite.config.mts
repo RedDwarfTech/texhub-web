@@ -48,7 +48,8 @@ export default defineConfig({
     sourcemap: "hidden",
     rollupOptions: {
       treeshake: 'smallest',
-      external: ["react", "react-dom", "react/jsx-runtime","pg","pg-protocol"],
+      external: ["react", "react-dom", "react/jsx-runtime","pg","pg-protocol","meilisearch"
+      ],
       output: {
         globals: {
           "react-dom": "ReactDom",

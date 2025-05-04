@@ -1,6 +1,6 @@
 import { EditorView } from "@codemirror/view";
 //import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
-import SingleClientProvider from "texhub-broadcast/dist/websocket/conn/single_client_provider";
+//import { SingleClientProvider } from "texhub-broadcast";
 import * as Y from "rdyjs";
 // @ts-ignore
 import * as random from "rdlib0/random";
@@ -104,6 +104,8 @@ const doSocketIOConn = (
       token: getAccessToken(),
     },
   };
+  const wsProvider: any = null;
+  /** 
   const wsProvider: any = SingleClientProvider.getInstance(
     readConfig("socketUrl"),
     enableSubDoc ? editorAttr.projectId : editorAttr.docId,
@@ -119,7 +121,7 @@ const doSocketIOConn = (
         // from: "web_tex_editor",
       },
     }
-  );
+  );*/
   const uInfo = localStorage.getItem("userInfo");
   if (!uInfo) {
     console.error("user info is null", uInfo);
@@ -210,10 +212,10 @@ export function initSocketIOEditor(
   if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
     activeEditorView.destroy();
   }
-  if (SingleClientProvider.getCurrentRoom() !== editorAttr.docId) {
+  //if (SingleClientProvider.getCurrentRoom() !== editorAttr.docId) {
     // user siwtch docs
-    SingleClientProvider.destroy();
-  }
+    //SingleClientProvider.destroy();
+  //}
   let docOpt: DocOpts = {
     guid: editorAttr.docId,
     collectionid: editorAttr.projectId,
