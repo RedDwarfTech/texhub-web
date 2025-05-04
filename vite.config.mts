@@ -47,15 +47,8 @@ export default defineConfig({
     outDir: "build",
     sourcemap: "hidden",
     rollupOptions: {
-      treeshake: 'smallest',
-      external: ["react", "react-dom", "react/jsx-runtime","pg","pg-protocol","meilisearch"
-      ],
+      external: [],
       output: {
-        globals: {
-          "react-dom": "ReactDom",
-          react: "React",
-          "react/jsx-runtime": "ReactJsxRuntime",
-        },
         sourcemapExcludeSources: false,
         manualChunks: {
           react: ["react-router-dom"],
