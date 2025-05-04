@@ -10,6 +10,7 @@
   </head>
   <body>
     <div id="root"></div>
+    <script type="module" src="/src/index.tsx"></script>
     <script type="importmap">
       {
         "imports": {
@@ -41,6 +42,5 @@
     const { title } = translations[lang] || translations.en;
     document.getElementById('title').textContent = title;
     </script>
-    <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>
