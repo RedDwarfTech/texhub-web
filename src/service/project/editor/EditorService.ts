@@ -3,7 +3,7 @@ import store from "@/redux/store/store";
 import { EditorView } from "codemirror";
 import { XHRClient } from "rd-component";
 import * as Y from 'rdyjs';
-import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
+//import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
 
 export function setEditorInstance(view: EditorView) {
   const actionTypeString: string =
@@ -11,7 +11,7 @@ export function setEditorInstance(view: EditorView) {
   return XHRClient.dispathAction(view, actionTypeString, store);
 }
 
-export function setSocketIOProvider(ws: SocketIOClientProvider) {
+export function setSocketIOProvider(ws: any) {
   const actionTypeString: string =
     CollarEditorActionType[CollarEditorActionType.INITIAL_SOCKETIO_WS];
   return XHRClient.dispathAction(ws, actionTypeString, store);

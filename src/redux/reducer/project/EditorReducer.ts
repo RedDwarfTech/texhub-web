@@ -1,11 +1,11 @@
 import { AppState } from "@/redux/types/AppState";
 import { EditorView } from "@codemirror/view";
-import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
+//import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
 import * as Y from "rdyjs";
 
 const initState: AppState["projEditor"] = {
   editorView: {} as EditorView,
-  texEditorSocketIOWs: {} as SocketIOClientProvider,
+  texEditorSocketIOWs: {} as any,
   curRootYDoc: {} as Y.Doc,
   curSubYDoc: {} as Y.Doc,
   connState: "",

@@ -20,7 +20,7 @@ import * as Y from 'rdyjs';
 import { ProjCollarModel } from "@/model/proj/share/ProjCollarModel";
 import { EditorView } from "codemirror";
 import { CompileResultType } from "@/model/proj/compile/CompileResultType";
-import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
+//import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
 
 /**
  * the legacy proj contains too much state fields that make
@@ -59,7 +59,7 @@ export interface AppState {
         curRootYDoc: Y.Doc,
         curSubYDoc: Y.Doc,
         editorView: EditorView,
-        texEditorSocketIOWs: SocketIOClientProvider,
+        texEditorSocketIOWs: any,
         connState: string,
         editorText: string
     },

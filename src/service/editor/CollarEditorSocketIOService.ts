@@ -1,5 +1,5 @@
 import { EditorView } from "@codemirror/view";
-import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
+//import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
 import SingleClientProvider from "texhub-broadcast/dist/websocket/conn/single_client_provider";
 import * as Y from "rdyjs";
 // @ts-ignore
@@ -104,8 +104,7 @@ const doSocketIOConn = (
       token: getAccessToken(),
     },
   };
-
-  const wsProvider: SocketIOClientProvider = SingleClientProvider.getInstance(
+  const wsProvider: any = SingleClientProvider.getInstance(
     readConfig("socketUrl"),
     enableSubDoc ? editorAttr.projectId : editorAttr.docId,
     rootYDoc,
@@ -224,11 +223,7 @@ export function initSocketIOEditor(
   ydoc = new Y.Doc(docOpt);
   setCurRootYDoc(ydoc);
   const ytext: Y.Text = ydoc.getText(editorAttr.docId);
-  let wsProvider: SocketIOClientProvider = doSocketIOConn(
-    ydoc,
-    editorAttr,
-    false
-  );
+  let wsProvider: any = doSocketIOConn(ydoc, editorAttr, false);
   ydoc.on("update", (update: any, origin: any) => {
     handleYDocUpdate(editorAttr, ytext, ydoc);
   });
@@ -265,7 +260,7 @@ export function initSocketIOEditor(
 
 function initEditorView(
   docOpts: DocOpts,
-  wsProvider: SocketIOClientProvider,
+  wsProvider: any,
   edContainer: RefObject<HTMLDivElement>
 ) {
   // Get initial editor text from Redux store
@@ -331,11 +326,7 @@ export function initSubDocSocketIO(
   };
   let rootYdoc: Y.Doc = new Y.Doc(rootDocOpt);
   // init room with project id
-  let wsProvider: SocketIOClientProvider = doSocketIOConn(
-    rootYdoc,
-    editorAttr,
-    true
-  );
+  let wsProvider: any = doSocketIOConn(rootYdoc, editorAttr, true);
   // @ts-ignore
   wsProvider.on("synced", () => {
     // initial last doc
@@ -400,10 +391,7 @@ export const updateEditor = (
   });
 };
 
-const handleSubDocChanged = (
-  props: SubDocEventProps,
-  wsProvider: SocketIOClientProvider
-) => {
+const handleSubDocChanged = (props: SubDocEventProps, wsProvider: any) => {
   if (props && props.added && props.added.size > 0) {
     // use added to sync documents in the background
     handleSubDocAdd(props, wsProvider);
@@ -443,20 +431,14 @@ const handleLoadedSubDoc = (subdocs: Set<Y.Doc>) => {
   });
 };
 
-const handleSubDocAdd = (
-  props: SubDocEventProps,
-  wsProvider: SocketIOClientProvider
-) => {
+const handleSubDocAdd = (props: SubDocEventProps, wsProvider: any) => {
   props.loaded.forEach((subdoc: Y.Doc) => {
     console.log("add sub doc:" + subdoc.guid);
     wsProvider.addSubdoc(subdoc);
   });
 };
 
-const handleSubDocRemoved = (
-  props: SubDocEventProps,
-  wsProvider: SocketIOClientProvider
-) => {
+const handleSubDocRemoved = (props: SubDocEventProps, wsProvider: any) => {
   props.removed.forEach((subdoc) => {
     console.warn("handleSubDocRemoved remove sub doc:" + subdoc.guid);
     //wsProvider.removeSubdoc(subdoc);

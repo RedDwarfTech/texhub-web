@@ -1,5 +1,5 @@
 import { EditorView } from "@codemirror/view";
-import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
+//import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
 import * as Y from 'rdyjs';
 
 export type editorAction =
@@ -25,7 +25,7 @@ export interface setCollarEditorAction {
 
 export interface setCollarEditorWsSocketIOAction {
   type: CollarEditorActionType.INITIAL_SOCKETIO_WS;
-  data: SocketIOClientProvider;
+  data: any;
 }
 
 export interface setYDocAction {

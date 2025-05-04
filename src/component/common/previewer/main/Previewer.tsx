@@ -41,7 +41,7 @@ import {
   setCurPdfPage,
 } from "@/service/project/preview/PreviewService";
 import { usePreviewHandler } from "./usePreviewHandler";
-import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider.js";
+//import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider.js";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
 
 export type PreviwerProps = {
@@ -86,7 +86,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   } = useSelector((state: AppState) => state.proj);
   const { t } = useTranslation();
   const [wsSocketIOProvider, setWsSocketIOProvider] =
-    useState<SocketIOClientProvider>();
+    useState<any>();
 
   React.useEffect(() => {
     let devModelFlag = localStorage.getItem("devModel");
