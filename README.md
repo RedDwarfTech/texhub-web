@@ -2,7 +2,7 @@
 
 ## Introduce
 
-This project is the frontend of TeXHub.
+This project is the frontend of TeXHub. TeXHub was the same as Overleaf/TeXPage that you can write LaTeX document online with collaboration.
 
 ## Develop
 
