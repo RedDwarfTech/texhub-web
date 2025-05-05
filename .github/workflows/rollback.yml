@@ -11,13 +11,13 @@ jobs:
   rollback:
     runs-on: ubuntu-latest
     steps:
-      - name: 检出目标 Tag 代码
+      - name: Check tag code
         uses: actions/checkout@v4
         with:
-          ref: refs/tags/${{ github.event.inputs.tag }}  # 关键点：直接引用 Tag
-          fetch-depth: 0  # 获取完整历史
+          ref: refs/tags/${{ github.event.inputs.tag }}
+          fetch-depth: 0
 
-      - name: 获取 Tag 信息
+      - name: Get tag info
         id: tag-info
         run: |
           echo "TAG=${{ github.event.inputs.tag }}" >> $GITHUB_OUTPUT
