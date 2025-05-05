@@ -9,7 +9,7 @@ env:
 
 jobs:
   call-build:
-    uses: RedDwarfTech/rd-workflow/.github/workflows/web-app-publish-k8s.yml@main
+    uses: RedDwarfTech/rd-workflow/tree/main/.github/workflow/web-app-publish-k8s.yml@main
     with:
       target: stage
       node-version: $NODE_VERSION
