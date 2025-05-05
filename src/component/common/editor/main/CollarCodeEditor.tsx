@@ -27,7 +27,7 @@ import {
   metadata,
 } from "@/service/editor/CollarEditorSocketIOService";
 import * as Y from "rdyjs";
-//import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider.js";
+import { SocketIOClientProvider } from "@/component/common/collar/collar";
 import { SingleClientProvider } from "texhub-broadcast";
 import { EditorState } from "@codemirror/state";
 import { createExtensions } from "../foundation/extensions/extensions";
@@ -51,7 +51,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     (state: AppState) => state.projEditor
   );
   const [wsSocketIOProvider, setWsSocketIOProvider] =
-    useState<any>();
+    useState<SocketIOClientProvider>();
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();

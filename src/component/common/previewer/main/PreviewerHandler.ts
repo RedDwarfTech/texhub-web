@@ -13,7 +13,7 @@ import { ResponseHandler } from "rdjs-wheel";
 import { scrollToOffset } from "../doc/PDFPreviewHandle";
 import { VariableSizeList } from "react-window";
 import { readConfig } from "@/config/app/config-reader";
-//import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider.js";
+import { SocketIOClientProvider } from "texhub-broadcast";
 
 /**
  * get the source location by pdf file position
@@ -47,17 +47,6 @@ export const handleOpenInBrowserDirect = (projectId: string) => {
         window.open(res.result, "_blank");
       }
     });
-  }
-};
-
-export const switchFile = (wsSocketIOProvider: any) => {
-  if (wsSocketIOProvider) {
-    let msg = {
-      socketId: "111",
-      fileId: "1ba933f88ff540f9adc9ff9b39f38ff5",
-      controlType: 1,
-    };
-    wsSocketIOProvider.sendExtMsg(msg);
   }
 };
 

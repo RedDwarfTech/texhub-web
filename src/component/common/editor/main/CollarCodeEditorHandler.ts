@@ -8,7 +8,7 @@ import { getPdfPosition } from "@/service/project/ProjectService";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { ProjectTreeFolder } from "../../projtree/main/ProjectTreeFolder";
 import * as Y from "rdyjs";
-//import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider.js";
+import { SocketIOClientProvider } from "texhub-broadcast";
 
 export const getCursorPos = (
   editor: EditorView
@@ -35,7 +35,7 @@ export const handleSrcTreeNav = (
   selectedFile: TexFileModel,
   ydoc: Y.Doc,
   activeEditorView: EditorView | undefined,
-  provider: any
+  provider: SocketIOClientProvider
 ) => {
   if (BaseMethods.isNull(props)) {
     return;

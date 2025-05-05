@@ -31,8 +31,7 @@ import {
   debugApp,
   handleDownloadPdf,
   handleOpenInBrowserDirect,
-  handleSrcLocate,
-  switchFile,
+  handleSrcLocate
 } from "./PreviewerHandler";
 import { VariableSizeList } from "react-window";
 import {
@@ -41,7 +40,6 @@ import {
   setCurPdfPage,
 } from "@/service/project/preview/PreviewService";
 import { usePreviewHandler } from "./usePreviewHandler";
-//import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider.js";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
 
 export type PreviwerProps = {
@@ -85,8 +83,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     remoteCompileResult,
   } = useSelector((state: AppState) => state.proj);
   const { t } = useTranslation();
-  const [wsSocketIOProvider, setWsSocketIOProvider] =
-    useState<any>();
 
   React.useEffect(() => {
     let devModelFlag = localStorage.getItem("devModel");
@@ -100,12 +96,6 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   React.useEffect(() => {
     setTexCompileResult(compileResultType);
   }, [compileResultType]);
-
-  React.useEffect(() => {
-    if (texEditorSocketIOWs) {
-      setWsSocketIOProvider(texEditorSocketIOWs);
-    }
-  }, [texEditorSocketIOWs]);
 
   React.useEffect(() => {
     getLatestCompile(projectId);
@@ -307,7 +297,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
               data-bs-toggle="tooltip"
               title={t("btn_debug_app")}
               onClick={() => {
-                switchFile(wsSocketIOProvider!);
+                
               }}
             >
               <i className="fa-solid fa-check"></i>
