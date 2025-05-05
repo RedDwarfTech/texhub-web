@@ -8,11 +8,14 @@ env:
   NODE_VERSION: 20
 
 jobs:
+  call-build:
+    uses: RedDwarfTech/rd-workflow/.github/workflows/web-app-publish-k8s.yml@main
+    with:
+      target: stage
+      node-version: $NODE_VERSION
   build:
     runs-on: ubuntu-22.04
     steps:
-      - name: web application reuseable workflow
-        uses: RedDwarfTech/rd-workflow/.github/workflows/web-app-publish-k8s.yml@main
       - uses: pnpm/action-setup@v3
         with:
           version: 9
