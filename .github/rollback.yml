@@ -1,0 +1,31 @@
+name: Rollback by Tag
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: '要回滚的 Git Tag (例如 v1.2.3)'
+        required: true
+        type: string
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出目标 Tag 代码
+        uses: actions/checkout@v4
+        with:
+          ref: refs/tags/${{ github.event.inputs.tag }}  # 关键点：直接引用 Tag
+          fetch-depth: 0  # 获取完整历史
+
+      - name: 获取 Tag 信息
+        id: tag-info
+        run: |
+          echo "TAG=${{ github.event.inputs.tag }}" >> $GITHUB_OUTPUT
+          echo "COMMIT=$(git rev-parse ${{ github.event.inputs.tag }})" >> $GITHUB_OUTPUT
+
+      - name: 部署回滚版本
+        run: |
+          echo "正在回滚到 Tag: ${{ steps.tag-info.outputs.TAG }} (Commit: ${{ steps.tag-info.outputs.COMMIT }})"
+          # 调用你的部署脚本（示例为 Kubernetes）
+          kubectl set image deployment/my-app \
+            my-app=your-registry/app:${{ steps.tag-info.outputs.TAG }}

@@ -2,7 +2,7 @@ name: tex-web-pro
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, feature/* ]
 
 jobs:
   build:
