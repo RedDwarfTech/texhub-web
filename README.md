@@ -2,7 +2,11 @@
 
 ## Introduce
 
-This project is the frontend of TeXHub. TeXHub was the same as Overleaf/TeXPage that you can write LaTeX document online with collaboration.
+This project is the frontend of TeXHub. TeXHub was the same as Overleaf/TeXPage that you can write LaTeX document online with collaboration. For now we have these component:
+
+- TeXHub web(this project)
+- the TeXHub backend provide rest api
+- the LaTeX document render engine
 
 ## Develop
 
