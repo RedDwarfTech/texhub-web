@@ -6,7 +6,9 @@ This project is the frontend of TeXHub. TeXHub was the same as Overleaf/TeXPage 
 
 - TeXHub web(this project)
 - the TeXHub backend provide rest api
+- the TeXHub backend provide collaborate communication
 - the LaTeX document render engine
+
 
 ## Develop
 
