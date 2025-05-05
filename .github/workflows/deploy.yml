@@ -12,7 +12,7 @@ jobs:
     uses: RedDwarfTech/rd-workflow/.github/workflows/web-app-publish-k8s.yml@main
     with:
       target: stage
-      node-version: $NODE_VERSION
+      #node-version: $NODE_VERSION
   build:
     runs-on: ubuntu-22.04
     steps:
