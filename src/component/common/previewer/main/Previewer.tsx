@@ -31,7 +31,7 @@ import {
   debugApp,
   handleDownloadPdf,
   handleOpenInBrowserDirect,
-  handleSrcLocate
+  handleSrcLocate,
 } from "./PreviewerHandler";
 import { VariableSizeList } from "react-window";
 import {
@@ -45,9 +45,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.m
 export type PreviwerProps = {
   projectId: string;
   viewModel: string;
+  curPage?: number;
 };
 
-const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
+const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   const [curPdfUrl, setCurPdfUrl] = useState<string>("");
   const [compStatus, setCompStatus] = useState<CompileStatus>(
     CompileStatus.COMPLETE
@@ -61,14 +62,11 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     CompileResultType.SUCCESS
   );
   const [numPages, setNumPages] = useState<number>();
-  const [curPages, setCurPages] = useState<number>();
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [devModel, setDevModel] = useState<boolean>();
   const virtualListRef = React.useRef<VariableSizeList>(null);
-  const { texEditorSocketIOWs } = useSelector(
-    (state: AppState) => state.projEditor
-  );
   const { handleScrollTop, handleZoomIn, handleFullScreen, handleZoomOut } =
-    usePreviewHandler(projectId, viewModel);
+    usePreviewHandler(props.projectId, props.viewModel);
   const { curPage } = useSelector((state: AppState) => state.preview);
   const {
     texPdfUrl,
@@ -98,15 +96,17 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   }, [compileResultType]);
 
   React.useEffect(() => {
-    getLatestCompile(projectId);
-  }, [projectId]);
+    getLatestCompile(props.projectId);
+  }, [props.projectId]);
 
   React.useEffect(() => {
     if (curPage && curPage >= 0) {
-      setCurPages(curPage);
+      setCurrentPage(curPage);
+    } else if (props.curPage) {
+      setCurrentPage(props.curPage);
     } else {
-      let cp = getCurPdfPage(projectId);
-      setCurPages(cp);
+      let cp = getCurPdfPage(props.projectId);
+      setCurrentPage(cp);
     }
   }, [curPage]);
 
@@ -119,10 +119,10 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   React.useEffect(() => {
     if (latestComp && Object.keys(latestComp).length > 0) {
       if (latestComp.path && latestComp.path.length > 0) {
-        let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + projectId;
+        let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + props.projectId;
         updatePdfUrl(newPdfUrl);
       } else {
-        compile(projectId.toString());
+        compile(props.projectId.toString());
       }
     }
   }, [latestComp]);
@@ -134,7 +134,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
     let proj_id = remoteCompileResult.project_id;
     let vid = remoteCompileResult.out_path;
     if (proj_id && vid) {
-      let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + projectId;
+      let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + props.projectId;
       updatePdfUrl(newPdfUrl);
     }
   }, [remoteCompileResult]);
@@ -270,14 +270,14 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   }, []);
 
   const renderPdfView = () => {
-    if (!curPdfUrl || !projectId) {
+    if (!curPdfUrl || !props.projectId) {
       return <div>Loading...</div>;
     }
     return (
       <MemoizedPDFPreview
         curPdfUrl={curPdfUrl}
-        projId={projectId}
-        viewModel={viewModel}
+        projId={props.projectId}
+        viewModel={props.viewModel}
         setPageNum={setPageNum}
         virtualListRef={virtualListRef}
         pdfOptions={opt}
@@ -296,9 +296,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
               className={styles.previewIconButton}
               data-bs-toggle="tooltip"
               title={t("btn_debug_app")}
-              onClick={() => {
-                
-              }}
+              onClick={() => {}}
             >
               <i className="fa-solid fa-check"></i>
             </button>
@@ -311,7 +309,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
               data-bs-toggle="tooltip"
               title={t("btn_debug_app")}
               onClick={() => {
-                debugApp(virtualListRef, projectId);
+                debugApp(virtualListRef, props.projectId);
               }}
             >
               <i className="fa-solid fa-check"></i>
@@ -323,7 +321,11 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
             title={t("btn_restore_scroll")}
             onClick={() => {
               if (virtualListRef && virtualListRef.current) {
-                restorePdfOffset(projectId, viewModel, virtualListRef);
+                restorePdfOffset(
+                  props.projectId,
+                  props.viewModel,
+                  virtualListRef
+                );
               }
             }}
           >
@@ -334,12 +336,12 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
             data-bs-toggle="tooltip"
             title={t("btn_open_in_broswer")}
             onClick={() => {
-              handleOpenInBrowserDirect(projectId);
+              handleOpenInBrowserDirect(props.projectId);
             }}
           >
             <i className="fa-brands fa-chrome"></i>
           </button>
-          {viewModel === "fullscreen" ? (
+          {props.viewModel === "fullscreen" ? (
             <button
               className={styles.previewIconButton}
               data-bs-toggle="tooltip"
@@ -351,7 +353,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
               <i className="fa-solid fa-expand"></i>
             </button>
           ) : null}
-          {viewModel === "fullscreen" ? (
+          {props.viewModel === "fullscreen" ? (
             <button
               className={styles.previewIconButton}
               data-bs-toggle="tooltip"
@@ -368,7 +370,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
             data-bs-toggle="tooltip"
             title={t("btn_scroll_top")}
             onClick={() => {
-              handleScrollTop(virtualListRef, projectId, viewModel);
+              handleScrollTop(virtualListRef, props.projectId, props.viewModel);
             }}
           >
             <i className="fa-solid fa-arrow-up"></i>
@@ -380,7 +382,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
             onClick={() => {
               if (!BaseMethods.isNull(curProjInfo)) {
                 handleSrcLocate(
-                  projectId,
+                  props.projectId,
                   curProjInfo!,
                   t("msg_empty_proj_info")
                 );
@@ -427,7 +429,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
             title={t("btn_fullscreen")}
             id="fullscreenbutton"
             onClick={() => {
-              handleFullScreen();
+              handleFullScreen(currentPage);
             }}
           >
             <i className="fa fa-maximize"></i>
@@ -455,14 +457,14 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
 
   const handleNavPageChange = (e: any) => {
     let val = e.target.value;
-    setCurPdfPage(val, projectId, "handleNavPageChange");
+    setCurPdfPage(val, props.projectId, "handleNavPageChange");
   };
 
   const renderPageNaviation = () => {
     return (
       <div className={styles.previewPageNav}>
         <input
-          value={curPages || 1}
+          value={currentPage || 1}
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
             handleNavPageChange(e);
           }}
@@ -484,7 +486,7 @@ const Previewer: React.FC<PreviwerProps> = ({ projectId, viewModel }) => {
   };
 
   const renderLeftTab = () => {
-    if (viewModel === "fullscreen") {
+    if (props.viewModel === "fullscreen") {
       return (
         <div className={styles.leftAction}>
           <button

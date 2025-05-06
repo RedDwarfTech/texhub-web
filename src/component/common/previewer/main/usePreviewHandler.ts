@@ -21,12 +21,12 @@ export const usePreviewHandler = (projectId: string, viewModel: string) => {
     }
   };
 
-  const handleFullScreen = async () => {
+  const handleFullScreen = async (curPage: number) => {
     if (!projectId) {
       toast.warn(t("msg_empty_proj_info"));
       return;
     }
-    let url = "/preview/fullscreen?projId=" + projectId;
+    let url = "/preview/fullscreen?projId=" + projectId + "&curPage=" + curPage;
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
