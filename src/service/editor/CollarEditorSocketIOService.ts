@@ -229,6 +229,9 @@ export function initSocketIOEditor(
   });
 
   const undoManager = new Y.UndoManager(ytext);
+  if(!wsProvider){
+    return;
+  }
 
   const texEditorState: EditorState = EditorState.create({
     doc: ytext.toString(),
