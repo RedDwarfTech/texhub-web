@@ -89,6 +89,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   }, [editorView]);
 
   React.useEffect(() => {
+    console.log("addFileResp");
     if (addFileResp) {
       // refresh the dependencies info by listen the add file action
       // when the access token invalid will refresh the access token and redispath this action
