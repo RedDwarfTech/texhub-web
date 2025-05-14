@@ -31,6 +31,10 @@ import { useTranslation } from "react-i18next";
 import * as Y from "rdyjs";
 import { EditorView } from "@codemirror/view";
 import { SocketIOClientProvider } from "@/component/common/collar/collar";
+import { toast } from "react-toastify";
+import { ResponseHandler } from "rdjs-wheel";
+import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo.js";
+import { getProjectInfo } from "@/service/project/ProjectService.js";
 
 const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const divRef = props.treeDivRef;
@@ -38,7 +42,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const [createFileName, setCreateFileName] = useState("");
   const [curRootDoc, setCurRootDoc] = useState<Y.Doc>();
   const [texFileTree, setTexFileTree] = useState<TexFileModel[]>([]);
-  const { fileTree, treeSelectItem, curFileTree } = useSelector(
+  const { fileTree, treeSelectItem, curFileTree, addFileResp } = useSelector(
     (state: AppState) => state.file
   );
   const { projInfo, srcFocus } = useSelector((state: AppState) => state.proj);
@@ -83,6 +87,22 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       setActiveEditorView(editorView);
     }
   }, [editorView]);
+
+  React.useEffect(() => {
+    if (addFileResp) {
+      // refresh the dependencies info by listen the add file action
+      // when the access token invalid will refresh the access token and redispath this action
+      // this will let the app refresh token silence
+      if (ResponseHandler.responseSuccess(addFileResp)) {
+        let req: QueryProjInfo = {
+          project_id: pid?.toString(),
+        };
+        getProjectInfo(req);
+      } else {
+        toast.error(addFileResp.msg);
+      }
+    }
+  }, [addFileResp]);
 
   React.useEffect(() => {
     if (curRootYDoc) {

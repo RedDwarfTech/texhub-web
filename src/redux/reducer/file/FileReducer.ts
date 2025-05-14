@@ -8,7 +8,8 @@ const initState: AppState["file"] = {
     activeFile: {} as TexFileModel,
     treeSelectItem: {} as TexFileModel,
     mainFile: {} as TexFileModel,
-    curFileTree: [] as TexFileModel[]
+    curFileTree: [] as TexFileModel[],
+    addFileResp: {} as any
 };
 
 const FileReducer = (state = initState, action: any) => {
@@ -52,6 +53,11 @@ const FileReducer = (state = initState, action: any) => {
             return {
                 ...state,
                 curFileTree: action.data
+            };
+        case "ADD_FILE":
+            return {
+                ...state,
+                addFileResp: action.data
             };
         default:
             break;

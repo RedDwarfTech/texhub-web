@@ -121,16 +121,7 @@ export function handleFileCreateConfirm(
     parent: parentId,
     file_type: TeXFileType.TEX,
   };
-  addFile(params).then((resp) => {
-    if (ResponseHandler.responseSuccess(resp)) {
-      let req: QueryProjInfo = {
-        project_id: pid?.toString(),
-      };
-      getProjectInfo(req);
-    } else {
-      toast.error(resp.msg);
-    }
-  });
+  addFile(params);
 }
 
 export function handleProjSearch(

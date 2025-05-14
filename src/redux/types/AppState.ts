@@ -78,7 +78,8 @@ export interface AppState {
         folderTree: TexFileModel,
         activeFile: TexFileModel,
         treeSelectItem: TexFileModel,
-        mainFile: TexFileModel
+        mainFile: TexFileModel,
+        addFileResp: any
     },
     snippet: {
         snippets: TexSnippetModel[],
