@@ -141,7 +141,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         setCurPdfScrollOffset(
           scrollOffset,
           projId,
-          viewModel,
           "handleWindowPdfScroll"
         );
       }

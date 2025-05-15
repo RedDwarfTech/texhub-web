@@ -23,8 +23,7 @@ export const scrollToPage = (
 export const scrollToOffset = (
   offset: number,
   virtualListRef: React.RefObject<VariableSizeList>,
-  projId: string,
-  viewModel: string
+  projId: string
 ) => {
   if (virtualListRef.current) {
     console.warn("trigger scrolltooffset:" + offset);
@@ -32,7 +31,6 @@ export const scrollToOffset = (
     setCurPdfScrollOffset(
       offset,
       projId,
-      viewModel,
       "project attribute update"
     );
   }
