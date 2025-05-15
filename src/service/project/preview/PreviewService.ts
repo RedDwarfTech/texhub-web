@@ -24,7 +24,7 @@ export function getCurPdfScale(projId: string, viewModel: string) {
   }
 }
 
-export function setCurPdfPage(pageNo: number, projId: string, src: string) {
+export function setAndDispatchPdfPage(pageNo: number, projId: string, src: string) {
   const actionTypeString: string =
     PreviewActionType[PreviewActionType.SET_CUR_PAGE];
   localStorage.setItem(readConfig("pdfCurPage") + projId, pageNo.toString());

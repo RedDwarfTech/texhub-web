@@ -37,7 +37,7 @@ import { VariableSizeList } from "react-window";
 import {
   getCurPdfPage,
   setContextCompileResultType,
-  setCurPdfPage,
+  setAndDispatchPdfPage,
 } from "@/service/project/preview/PreviewService";
 import { usePreviewHandler } from "./usePreviewHandler";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
@@ -103,7 +103,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     if (curPage && curPage >= 0) {
       setCurrentPage(curPage);
     } else if (props.curPage) {
-      setCurrentPage(props.curPage);
+      setAndDispatchPdfPage(props.curPage, props.projectId, "fullscreennav");
     } else {
       let cp = getCurPdfPage(props.projectId);
       setCurrentPage(cp);
@@ -457,7 +457,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
 
   const handleNavPageChange = (e: any) => {
     let val = e.target.value;
-    setCurPdfPage(val, props.projectId, "handleNavPageChange");
+    setAndDispatchPdfPage(val, props.projectId, "handleNavPageChange");
   };
 
   const renderPageNaviation = () => {

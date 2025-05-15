@@ -21,7 +21,7 @@ import { PDFPreviewProps } from "@/model/props/proj/pdf/PDFPreviewProps";
 import {
   getCurPdfScale,
   getCurPdfScrollOffset,
-  setCurPdfPage,
+  setAndDispatchPdfPage,
   setCurPdfScrollOffset,
   setDocLoadTime,
 } from "@/service/project/preview/PreviewService";
@@ -102,7 +102,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     React.useEffect(() => {
       if (pdfFocus && pdfFocus.length > 0) {
         let pageNum = pdfFocus[0].page;
-        setCurPdfPage(pageNum, projId, "pdfFocus");
+        setAndDispatchPdfPage(pageNum, projId, "pdfFocus");
         setCurPdfPosition(pdfFocus);
         if (virtualListRef.current) {
           scrollToPage(pageNum, virtualListRef);
@@ -191,7 +191,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
             itemSize={(pageIndex) => getPageHeight(pageIndex, width)}
             onItemsRendered={(props: ListOnItemsRenderedProps) => {
-              setCurPdfPage(
+              setAndDispatchPdfPage(
                 props.overscanStopIndex,
                 projId,
                 "IntersectionObserver"
