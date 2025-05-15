@@ -80,8 +80,17 @@ export function scaleCurPdfScrollOffset(scale: number, projId: string) {
   }
 }
 
-export function getCurPdfScrollOffset(projId: string, viewModel: string) {
-  const key = viewModel + ":" + readConfig("pdfScrollKey") + projId;
+/**
+ * at first time, we seperate the pdf full screen scroll location with preview 
+ * when we using the TeXHub, it seems fullscreen view use the same pdf scroll location are efficient
+ * so we remove the viewModel parameters
+ * 
+ * @param projId 
+ * @param viewModel 
+ * @returns 
+ */
+export function getCurPdfScrollOffset(projId: string) {
+  const key = readConfig("pdfScrollKey") + projId;
   let offset = localStorage.getItem(key);
   if (offset) {
     return Number(offset);

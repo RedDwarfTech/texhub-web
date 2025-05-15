@@ -56,7 +56,7 @@ export const restorePdfOffset = (
   virtualListRef: React.RefObject<VariableSizeList>
 ) => {
   if (virtualListRef.current) {
-    let fullScreenOffset = getCurPdfScrollOffset(projId, viewModel);
+    let fullScreenOffset = getCurPdfScrollOffset(projId);
     if (fullScreenOffset) {
       scrollToOffset(fullScreenOffset, virtualListRef,projId, viewModel);
     }
