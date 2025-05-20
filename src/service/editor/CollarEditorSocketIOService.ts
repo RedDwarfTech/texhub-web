@@ -261,61 +261,6 @@ export function initSocketIOEditor(
   setSocketIOProvider(wsProvider);
 }
 
-function initEditorView(
-  docOpts: DocOpts,
-  wsProvider: SocketIOClientProvider,
-  edContainer: RefObject<HTMLDivElement>
-) {
-  // Get initial editor text from Redux store
-  const { editorText } = store.getState().projEditor;
-
-  const ytext = new Y.Text(editorText || "");
-  const undoManager = new Y.UndoManager(ytext);
-
-  const texEditorState: EditorState = EditorState.create({
-    doc: editorText || "",
-    extensions: createExtensions({
-      ytext: ytext,
-      wsProvider: wsProvider,
-      undoManager: undoManager,
-      docName: docOpts.guid,
-      metadata: metadata,
-    }),
-  });
-
-  if (
-    edContainer.current &&
-    edContainer.current.children &&
-    edContainer.current.children.length > 0
-  ) {
-    return;
-  }
-
-  const editorView: EditorView = new EditorView({
-    state: texEditorState,
-    parent: edContainer.current!,
-  });
-
-  // Subscribe to editorText changes
-  store.subscribe(() => {
-    const { editorText: newEditorText } = store.getState().projEditor;
-    console.log("newEditorText:" + newEditorText);
-    if (newEditorText !== editorText) {
-      // Update editor content when editorText changes
-      editorView.dispatch({
-        changes: {
-          from: 0,
-          to: editorView.state.doc.length,
-          insert: newEditorText || "",
-        },
-      });
-    }
-  });
-
-  setEditorInstance(editorView);
-  setSocketIOProvider(wsProvider);
-}
-
 export function initSubDocSocketIO(
   editorAttr: EditorAttr,
   activeEditorView: EditorView | undefined,

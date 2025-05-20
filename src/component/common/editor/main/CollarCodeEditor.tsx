@@ -74,6 +74,10 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       console.log("curSubYDoc", curSubYDoc);
       let ytext = curSubYDoc.getText(curSubYDoc.guid);
       const undoManager = new Y.UndoManager(ytext);
+      if (!wsSocketIOProvider) {
+        console.error("wsSocketIOProvider is null");
+        return;
+      }
       const texEditorState: EditorState = EditorState.create({
         doc: ytext.toString(),
         extensions: createExtensions({
@@ -88,7 +92,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         state: texEditorState,
         parent: edContainer.current!,
       });
-      if(activeEditorView && !BaseMethods.isNull(activeEditorView)){
+      if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
         activeEditorView?.destroy();
       }
       setEditorInstance(editorView);
