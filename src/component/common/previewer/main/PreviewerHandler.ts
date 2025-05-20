@@ -63,7 +63,7 @@ export const debugApp = (
       "fullscreen:" + readConfig("pdfScrollKey") + projectId;
     let fullScroll = localStorage.getItem(keyFullscreen);
     console.log("fullScroll:" + fullScroll);
-    scrollToOffset(parseInt(offset), virtualListRef, projectId, "fullscreen");
+    scrollToOffset(parseInt(offset), virtualListRef, projectId);
   }
 };
 

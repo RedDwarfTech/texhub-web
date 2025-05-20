@@ -17,7 +17,7 @@ export const usePreviewHandler = (projectId: string, viewModel: string) => {
     viewModel: string
   ) => {
     if (virtualListRef && virtualListRef.current) {
-      scrollToOffset(0, virtualListRef, projectId, viewModel);
+      scrollToOffset(0, virtualListRef, projectId);
     }
   };
 

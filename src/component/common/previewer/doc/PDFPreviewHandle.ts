@@ -56,7 +56,7 @@ export const restorePdfOffset = (
   if (virtualListRef.current) {
     let fullScreenOffset = getCurPdfScrollOffset(projId);
     if (fullScreenOffset) {
-      scrollToOffset(fullScreenOffset, virtualListRef,projId, viewModel);
+      scrollToOffset(fullScreenOffset, virtualListRef,projId);
     }
   }
 };
