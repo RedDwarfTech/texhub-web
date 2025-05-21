@@ -315,8 +315,8 @@ const initialFisrtSubDoc = (
     updateEditor(editorView, tr, event, firstSubDoc);
   });
   rootDoc.getMap("texhubsubdoc").set(file.file_id, firstSubDoc);
-  firstSubDoc.load();
   setCurRootYDoc(rootDoc);
+  setCurSubYDoc(firstSubDoc);
 };
 
 export const updateEditor = (
