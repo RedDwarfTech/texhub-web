@@ -21,6 +21,7 @@ import { projHasFile } from "../project/ProjectService";
 import { Metadata } from "@/component/common/editor/foundation/extensions/language";
 import {
   setCurRootYDoc,
+  setCurSubYDoc,
   setEditorInstance,
   setEditorText,
   setSocketIOProvider,
@@ -103,7 +104,7 @@ const doSocketIOConn = (
     auth: {
       token: getAccessToken(),
     },
-  }; 
+  };
   const wsProvider: any = SingleClientProvider.getInstance(
     readConfig("socketUrl"),
     enableSubDoc ? editorAttr.projectId : editorAttr.docId,
@@ -223,13 +224,17 @@ export function initSocketIOEditor(
   ydoc = new Y.Doc(docOpt);
   setCurRootYDoc(ydoc);
   const ytext: Y.Text = ydoc.getText(editorAttr.docId);
-  let wsProvider: SocketIOClientProvider = doSocketIOConn(ydoc, editorAttr, false);
+  let wsProvider: SocketIOClientProvider = doSocketIOConn(
+    ydoc,
+    editorAttr,
+    false
+  );
   ydoc.on("update", (update: any, origin: any) => {
     handleYDocUpdate(editorAttr, ytext, ydoc);
   });
 
   const undoManager = new Y.UndoManager(ytext);
-  if(!wsProvider){
+  if (!wsProvider) {
     return;
   }
 
@@ -274,15 +279,19 @@ export function initSubDocSocketIO(
   };
   let rootYdoc: Y.Doc = new Y.Doc(rootDocOpt);
   // init room with project id
-  let wsProvider: SocketIOClientProvider = doSocketIOConn(rootYdoc, editorAttr, true);
+  let wsProvider: SocketIOClientProvider = doSocketIOConn(
+    rootYdoc,
+    editorAttr,
+    true
+  );
   // @ts-ignore
   wsProvider.on("synced", () => {
+    debugger;
     // initial last doc
     if (file) {
       // remove all subdocs
       // when run this first doc init, there contains 2 subdoc
       // still did not found where to add this 2 subdoc
-      rootYdoc.subdocs.clear();
       initialFisrtSubDoc(file, rootYdoc, activeEditorView);
     }
   });
@@ -299,7 +308,15 @@ const initialFisrtSubDoc = (
   rootDoc: Y.Doc,
   editorView: EditorView | undefined
 ) => {
-  handleFileSelected(file, null, rootDoc, editorView);
+  let firstSubDoc = new Y.Doc();
+  firstSubDoc.guid = file.file_id;
+  const subDocText = firstSubDoc.getText(firstSubDoc.guid);
+  subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
+    updateEditor(editorView, tr, event, firstSubDoc);
+  });
+  rootDoc.getMap("texhubsubdoc").set(file.file_id, firstSubDoc);
+  firstSubDoc.load();
+  setCurRootYDoc(rootDoc);
 };
 
 export const updateEditor = (
@@ -339,7 +356,10 @@ export const updateEditor = (
   });
 };
 
-const handleSubDocChanged = (props: SubDocEventProps, wsProvider: SocketIOClientProvider) => {
+const handleSubDocChanged = (
+  props: SubDocEventProps,
+  wsProvider: SocketIOClientProvider
+) => {
   if (props && props.added && props.added.size > 0) {
     // use added to sync documents in the background
     handleSubDocAdd(props, wsProvider);
@@ -379,14 +399,20 @@ const handleLoadedSubDoc = (subdocs: Set<Y.Doc>) => {
   });
 };
 
-const handleSubDocAdd = (props: SubDocEventProps, wsProvider: SocketIOClientProvider) => {
+const handleSubDocAdd = (
+  props: SubDocEventProps,
+  wsProvider: SocketIOClientProvider
+) => {
   props.loaded.forEach((subdoc: Y.Doc) => {
     console.log("add sub doc:" + subdoc.guid);
     wsProvider.addSubdoc(subdoc);
   });
 };
 
-const handleSubDocRemoved = (props: SubDocEventProps, wsProvider: SocketIOClientProvider) => {
+const handleSubDocRemoved = (
+  props: SubDocEventProps,
+  wsProvider: SocketIOClientProvider
+) => {
   props.removed.forEach((subdoc) => {
     console.warn("handleSubDocRemoved remove sub doc:" + subdoc.guid);
     //wsProvider.removeSubdoc(subdoc);
