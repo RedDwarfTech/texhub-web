@@ -62,6 +62,10 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const { t } = useTranslation();
 
   const handleVisibilityChange = () => {
+    if (!wsSocketIOProvider) {
+      console.warn("provider is null");
+      return;
+    }
     let connected = wsSocketIOProvider?.ws?.connected;
     if (connected) {
       console.log("connected is ok");
