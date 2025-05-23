@@ -39,7 +39,6 @@ import store from "@/redux/store/store";
 // @ts-ignore
 import { decoding } from "rdlib0";
 import { TexFileModel } from "@/model/file/TexFileModel";
-import { handleFileSelected } from "@/component/common/projtree/main/ProjectTreeHandler";
 
 export const usercolors = [
   { color: "#30bced", light: "#30bced33" },

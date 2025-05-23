@@ -61,11 +61,24 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   );
   const { t } = useTranslation();
 
+  const handleVisibilityChange = () => {
+    let connected = wsSocketIOProvider?.ws?.connected;
+    if (connected) {
+      console.log("connected is ok");
+    } else {
+      console.error("disconnected......");
+      window.location.href = "/doc/tab";
+    }
+  };
+
   React.useEffect(() => {
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
       // try to delete the last state project info to avoid websocket connect to previous project through main file id
       delProjInfo();
       SingleClientProvider.destroy();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
 
