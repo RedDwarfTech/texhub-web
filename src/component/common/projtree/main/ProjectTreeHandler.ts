@@ -82,22 +82,14 @@ export function handleFileSelected(
         console.error("did not get the legacy subdoc", oldSelectedFile.file_id);
       }
     }
-    let subDoc: Y.Doc | undefined = subDocs.get(
-      newSelectedFile.file_id.toString()
-    );
-    if (subDoc && !BaseMethods.isNull(subDoc)) {
-      setCurSubYDoc(subDoc);
-      subDoc.load();
-    } else {
-      let subDocEden = new Y.Doc();
-      subDocEden.guid = newSelectedFile.file_id;
-      const subDocText = subDocEden.getText(subDocEden.guid);
-      subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-        updateEditor(editorView, tr, event, subDocEden);
-      });
-      setCurRootYDoc(curRootYDoc);
-      setCurSubYDoc(subDocEden);
-    }
+    let subDocEden = new Y.Doc();
+    subDocEden.guid = newSelectedFile.file_id;
+    const subDocText = subDocEden.getText(subDocEden.guid);
+    subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
+      updateEditor(editorView, tr, event, subDocEden);
+    });
+    setCurRootYDoc(curRootYDoc);
+    setCurSubYDoc(subDocEden);
   }
 }
 
