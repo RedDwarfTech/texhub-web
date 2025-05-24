@@ -27,7 +27,6 @@ import {
   metadata,
 } from "@/service/editor/CollarEditorSocketIOService";
 import * as Y from "rdyjs";
-import { SocketIOClientProvider } from "@/component/common/collar/collar";
 import { SingleClientProvider } from "texhub-broadcast";
 import { EditorState } from "@codemirror/state";
 import { createExtensions } from "../foundation/extensions/extensions";
@@ -50,8 +49,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const { connState, editorView, texEditorSocketIOWs } = useSelector(
     (state: AppState) => state.projEditor
   );
-  const [wsSocketIOProvider, setWsSocketIOProvider] =
-    useState<SocketIOClientProvider>();
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
@@ -62,11 +59,11 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const { t } = useTranslation();
 
   const handleVisibilityChange = () => {
-    if (!wsSocketIOProvider || !wsSocketIOProvider) {
+    if (!texEditorSocketIOWs) {
       console.warn("provider is null");
       return;
     }
-    let connected = wsSocketIOProvider?.ws?.connected;
+    let connected = texEditorSocketIOWs?.ws?.connected;
     if (connected) {
       console.log("connected is ok");
     } else {
@@ -88,15 +85,15 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       console.log("curSubYDoc", curSubYDoc);
       let ytext = curSubYDoc.getText(curSubYDoc.guid);
       const undoManager = new Y.UndoManager(ytext);
-      if (!wsSocketIOProvider) {
-        console.error("wsSocketIOProvider is null");
+      if (!texEditorSocketIOWs) {
+        console.error("texEditorSocketIOWs is null");
         return;
       }
       const texEditorState: EditorState = EditorState.create({
         doc: ytext.toString(),
         extensions: createExtensions({
           ytext: ytext,
-          wsProvider: wsSocketIOProvider,
+          wsProvider: texEditorSocketIOWs,
           undoManager: undoManager,
           docName: curSubYDoc.guid,
           metadata: metadata,
@@ -139,7 +136,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   React.useEffect(() => {
     if (texEditorSocketIOWs) {
       document.addEventListener("visibilitychange", handleVisibilityChange);
-      setWsSocketIOProvider(texEditorSocketIOWs);
     }
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
@@ -344,7 +340,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
                   activeFile,
                   curEditorRootDoc!,
                   activeEditorView,
-                  wsSocketIOProvider!
+                  texEditorSocketIOWs!
                 );
               }
             }
