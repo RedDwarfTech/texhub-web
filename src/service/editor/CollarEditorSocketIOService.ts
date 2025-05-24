@@ -104,6 +104,8 @@ const doSocketIOConn = (
       token: getAccessToken(),
     },
   };
+  let sid = localStorage.getItem("shortFileId");
+  let enableShortFileId = sid && sid.toString() === "short";
   const wsProvider: any = SingleClientProvider.getInstance(
     readConfig("socketUrl"),
     enableSubDoc ? editorAttr.projectId : editorAttr.docId,
@@ -116,7 +118,8 @@ const doSocketIOConn = (
         // https://self-issued.info/docs/draft-ietf-oauth-v2-bearer.html#query-param
         access_token: localStorage.getItem(WheelGlobal.ACCESS_TOKEN_NAME) ?? "",
         docId: enableSubDoc ? editorAttr.projectId : editorAttr.docId,
-        docIntId: editorAttr.docIntId
+        docIntId: editorAttr.docIntId,
+        enableSid: enableShortFileId
         // from: "web_tex_editor",
       },
     }

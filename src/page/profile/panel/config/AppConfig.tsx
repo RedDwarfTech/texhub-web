@@ -132,6 +132,36 @@ const AppConfig: React.FC = () => {
     }
   };
 
+  const renderShortFileIdInput = () => {
+    if (
+      localStorage.getItem("shortFileId") &&
+      localStorage.getItem("shortFileId")?.toString() === "short"
+    ) {
+      return (
+        <input
+          className="form-check-input"
+          type="checkbox"
+          id="flexSwitchCheckChecked"
+          onChange={() => {
+            localStorage.setItem("shortFileId", "normal");
+          }}
+          checked
+        />
+      );
+    } else {
+      return (
+        <input
+          className="form-check-input"
+          type="checkbox"
+          id="flexSwitchCheckChecked"
+          onChange={() => {
+            localStorage.setItem("shortFileId", "short");
+          }}
+        />
+      );
+    }
+  };
+
   return (
     <div>
       <div className="card" style={{ marginBottom: "20px" }}>
@@ -182,6 +212,12 @@ const AppConfig: React.FC = () => {
             <div className="form-check form-switch">
               {renderSubDocInput()}
               <label className="form-check-label">subDocument</label>
+            </div>
+          </div>
+          <div className="col mb-3">
+            <div className="form-check form-switch">
+              {renderShortFileIdInput()}
+              <label className="form-check-label">Short File ID</label>
             </div>
           </div>
         </div>
