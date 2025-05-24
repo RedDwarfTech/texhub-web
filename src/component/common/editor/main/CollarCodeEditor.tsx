@@ -60,15 +60,13 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     (state: AppState) => state.projEditor
   );
   const { t } = useTranslation();
-  // https://github.com/facebook/react/issues/14042
-  const socketRef = useRef(wsSocketIOProvider);
 
   const handleVisibilityChange = () => {
-    if (!socketRef || !socketRef.current) {
+    if (!wsSocketIOProvider || !wsSocketIOProvider) {
       console.warn("provider is null");
       return;
     }
-    let connected = socketRef.current?.ws?.connected;
+    let connected = wsSocketIOProvider?.ws?.connected;
     if (connected) {
       console.log("connected is ok");
     } else {
@@ -78,13 +76,10 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   };
 
   React.useEffect(() => {
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
     return () => {
       // try to delete the last state project info to avoid websocket connect to previous project through main file id
       delProjInfo();
       SingleClientProvider.destroy();
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
 
@@ -143,9 +138,12 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   React.useEffect(() => {
     if (texEditorSocketIOWs) {
-      debugger;
+      document.addEventListener("visibilitychange", handleVisibilityChange);
       setWsSocketIOProvider(texEditorSocketIOWs);
     }
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [texEditorSocketIOWs]);
 
   React.useEffect(() => {
