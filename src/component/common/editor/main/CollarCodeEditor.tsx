@@ -60,13 +60,15 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     (state: AppState) => state.projEditor
   );
   const { t } = useTranslation();
+  // https://github.com/facebook/react/issues/14042
+  const socketRef = useRef(wsSocketIOProvider);
 
   const handleVisibilityChange = () => {
-    if (!wsSocketIOProvider) {
+    if (!socketRef || !socketRef.current) {
       console.warn("provider is null");
       return;
     }
-    let connected = wsSocketIOProvider?.ws?.connected;
+    let connected = socketRef.current?.ws?.connected;
     if (connected) {
       console.log("connected is ok");
     } else {
@@ -141,6 +143,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   React.useEffect(() => {
     if (texEditorSocketIOWs) {
+      debugger;
       setWsSocketIOProvider(texEditorSocketIOWs);
     }
   }, [texEditorSocketIOWs]);
