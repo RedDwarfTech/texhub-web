@@ -67,39 +67,36 @@ export function handleFileSelected(
   if (newSelectedFile.file_type !== TeXFileType.FOLDER) {
     switchFile(newSelectedFile);
     let subdoc = localStorage.getItem("subdoc");
-    if (subdoc && subdoc === "subdoc") {
-      let subDocs: Y.Map<Y.Doc> = curRootYDoc.getMap("texhubsubdoc");
-      if (oldSelectedFile && !BaseMethods.isNull(oldSelectedFile)) {
-        // destroy the legacy select file
-        let legacySubDoc: Y.Doc | undefined = subDocs.get(
-          oldSelectedFile.file_id
-        );
-        if (legacySubDoc) {
-          legacyFileDestroy(oldSelectedFile, curRootYDoc, editorView);
-        } else {
-          console.error(
-            "did not get the legacy subdoc",
-            oldSelectedFile.file_id
-          );
-        }
-      }
-      let subDoc: Y.Doc | undefined = subDocs.get(
-        newSelectedFile.file_id.toString()
+    if (!subdoc || subdoc !== "subdoc") {
+      return;
+    }
+    let subDocs: Y.Map<Y.Doc> = curRootYDoc.getMap("texhubsubdoc");
+    if (oldSelectedFile && !BaseMethods.isNull(oldSelectedFile)) {
+      // destroy the legacy select file
+      let legacySubDoc: Y.Doc | undefined = subDocs.get(
+        oldSelectedFile.file_id
       );
-      if (subDoc && !BaseMethods.isNull(subDoc)) {
-        setCurSubYDoc(subDoc);
-        subDoc.load();
+      if (legacySubDoc) {
+        legacyFileDestroy(oldSelectedFile, curRootYDoc, editorView);
       } else {
-        let subDocEden = new Y.Doc();
-        subDocEden.guid = newSelectedFile.file_id;
-        const subDocText = subDocEden.getText(subDocEden.guid);
-        // subDocEden.load();
-        subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-          updateEditor(editorView, tr, event, subDocEden);
-        });
-        setCurRootYDoc(curRootYDoc);
-        setCurSubYDoc(subDocEden);
+        console.error("did not get the legacy subdoc", oldSelectedFile.file_id);
       }
+    }
+    let subDoc: Y.Doc | undefined = subDocs.get(
+      newSelectedFile.file_id.toString()
+    );
+    if (subDoc && !BaseMethods.isNull(subDoc)) {
+      setCurSubYDoc(subDoc);
+      subDoc.load();
+    } else {
+      let subDocEden = new Y.Doc();
+      subDocEden.guid = newSelectedFile.file_id;
+      const subDocText = subDocEden.getText(subDocEden.guid);
+      subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
+        updateEditor(editorView, tr, event, subDocEden);
+      });
+      setCurRootYDoc(curRootYDoc);
+      setCurSubYDoc(subDocEden);
     }
   }
 }

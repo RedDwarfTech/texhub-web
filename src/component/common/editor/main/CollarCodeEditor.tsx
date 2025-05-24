@@ -140,7 +140,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [texEditorSocketIOWs]);
+  }, [texEditorSocketIOWs, handleVisibilityChange]);
 
   React.useEffect(() => {
     if (projInfo && Object.keys(projInfo).length > 0) {
