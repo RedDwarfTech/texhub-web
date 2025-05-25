@@ -77,10 +77,22 @@ export function handleFileSelected(
         oldSelectedFile.file_id
       );
       if (legacySubDoc) {
-        legacyFileDestroy(oldSelectedFile, curRootYDoc, editorView);
+        clearLegacyEditor(oldSelectedFile, curRootYDoc, editorView);
       } else {
         console.error("did not get the legacy subdoc", oldSelectedFile.file_id);
       }
+    }
+    let existsDoc = subDocs.get(newSelectedFile.file_id);
+    if (existsDoc && !BaseMethods.isNull(existsDoc)) {
+      // use the exists doc
+      // if every time use new doc, it will make other clients edit this doc invalid
+      const subDocText = existsDoc.getText(newSelectedFile.file_id);
+      subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
+        updateEditor(editorView, tr, event, subDocEden);
+      });
+      setCurRootYDoc(curRootYDoc);
+      setCurSubYDoc(existsDoc);
+      return;
     }
     let subDocEden = new Y.Doc();
     subDocEden.guid = newSelectedFile.file_id;
@@ -135,13 +147,13 @@ export function handleFileAdd() {
   }
 }
 
-export const legacyFileDestroy = (
+export const clearLegacyEditor = (
   selectedFile: TexFileModel,
   curRootYDoc: Y.Doc,
   editorView: EditorView | undefined
 ) => {
   console.warn("destroy the legacy file", selectedFile);
-  curRootYDoc.getMap("texhubsubdoc").delete(selectedFile.file_id);
+  // curRootYDoc.getMap("texhubsubdoc").delete(selectedFile.file_id);
   // clear the legacy codemirror editor
   if (editorView) {
     editorView.dispatch({
