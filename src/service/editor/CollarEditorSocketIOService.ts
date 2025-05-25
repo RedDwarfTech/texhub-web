@@ -78,7 +78,7 @@ const handleWsAuth = (
   }
 };
 
-const doSocketIOConn = (
+export const doSocketIOConn = (
   rootYDoc: Y.Doc,
   editorAttr: EditorAttr,
   enableSubDoc: boolean

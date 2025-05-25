@@ -70,6 +70,7 @@ export function handleFileSelected(
     if (!subdoc || subdoc !== "subdoc") {
       return;
     }
+    debugger
     let subDocs: Y.Map<Y.Doc> = curRootYDoc.getMap("texhubsubdoc");
     if (oldSelectedFile && !BaseMethods.isNull(oldSelectedFile)) {
       // destroy the legacy select file

@@ -82,7 +82,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   React.useEffect(() => {
     if (!BaseMethods.isNull(curSubYDoc)) {
-      curSubYDoc.load();
       console.log("curSubYDoc", curSubYDoc);
       let ytext = curSubYDoc.getText(curSubYDoc.guid);
       const undoManager = new Y.UndoManager(ytext);
@@ -107,6 +106,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
         activeEditorView?.destroy();
       }
+      curSubYDoc.load();
       setEditorInstance(editorView);
       if (curEditorRootDoc) {
         debugger;
@@ -115,7 +115,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
           .set(curSubYDoc.guid, curSubYDoc);
         setCurRootYDoc(curEditorRootDoc);
       }
-      curSubYDoc.load();
     }
   }, [curSubYDoc]);
 

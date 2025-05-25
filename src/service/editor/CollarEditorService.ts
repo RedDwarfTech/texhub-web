@@ -4,18 +4,15 @@ import * as Y from "rdyjs";
 import * as random from "rdlib0/random";
 import { createExtensions } from "@/component/common/editor/foundation/extensions/extensions";
 import { Compartment, EditorState } from "@codemirror/state";
-import {
-  BaseMethods,
-  UserModel,
-} from "rdjs-wheel";
+import { BaseMethods } from "rdjs-wheel";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { RefObject } from "react";
-import { projHasFile } from "../project/ProjectService";
 import { Metadata } from "@/component/common/editor/foundation/extensions/language";
 import {
   setCurRootYDoc,
   setEditorInstance,
 } from "../project/editor/EditorService";
+import { doSocketIOConn } from "./CollarEditorSocketIOService";
 
 export const usercolors = [
   { color: "#30bced", light: "#30bced33" },
@@ -29,28 +26,6 @@ export const usercolors = [
 ];
 export const themeConfig = new Compartment();
 export const userColor = usercolors[random.uint32() % usercolors.length];
-
-const doWsConn = (ydoc: any, editorAttr: EditorAttr): any => {
-  let contains = projHasFile(editorAttr.docId, editorAttr.projectId);
-  if (!contains) {
-    console.error("initial the file do not belong the project");
-  }
-  const wsProvider = null;
-  const uInfo = localStorage.getItem("userInfo");
-  if (!uInfo) {
-    console.error("user info is null", uInfo);
-    return wsProvider;
-  }
-  const user: UserModel = JSON.parse(uInfo);
-  const ydocUser = {
-    name: user.nickname,
-    color: userColor.color,
-    colorLight: userColor.light,
-  };
-  const permanentUserData = new Y.PermanentUserData(ydoc);
-  permanentUserData.setUserMapping(ydoc, ydoc.clientID, ydocUser.name);
-  return wsProvider;
-};
 
 let history: Uint8Array[] = [];
 var ydoc: Y.Doc;
@@ -111,7 +86,7 @@ export function initEditor(
   setCurRootYDoc(ydoc);
   const ytext: Y.Text = ydoc.getText(editorAttr.docId);
   const undoManager = new Y.UndoManager(ytext);
-  let wsProvider: any = doWsConn(ydoc, editorAttr);
+  let wsProvider: any = doSocketIOConn(ydoc, editorAttr, false);
   const texEditorState = EditorState.create({
     doc: ytext.toString(),
     extensions: createExtensions({
