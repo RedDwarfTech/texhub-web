@@ -119,7 +119,7 @@ const doSocketIOConn = (
         access_token: localStorage.getItem(WheelGlobal.ACCESS_TOKEN_NAME) ?? "",
         docId: enableSubDoc ? editorAttr.projectId : editorAttr.docId,
         docIntId: editorAttr.docIntId,
-        enableSid: enableShortFileId
+        enableSid: enableShortFileId,
         // from: "web_tex_editor",
       },
     }
@@ -329,8 +329,8 @@ export const updateEditor = (
   doc: Y.Doc
 ) => {
   console.log("subdocument observed:", doc.guid);
-  if (!editorView) {
-    console.error("EditorView is null:");
+  if (!editorView || BaseMethods.isNull(editorView)) {
+    console.error("EditorView is null:", editorView);
     return;
   }
   let conf = editorView.state.facet(ySyncFacet);
