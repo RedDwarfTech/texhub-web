@@ -82,18 +82,6 @@ export function handleFileSelected(
         console.error("did not get the legacy subdoc", oldSelectedFile.file_id);
       }
     }
-    let existsDoc = subDocs.get(newSelectedFile.file_id);
-    if (existsDoc && !BaseMethods.isNull(existsDoc)) {
-      // use the exists doc
-      // if every time use new doc, it will make other clients edit this doc invalid
-      const subDocText = existsDoc.getText(newSelectedFile.file_id);
-      subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-        updateEditor(editorView, tr, event, existsDoc);
-      });
-      setCurRootYDoc(curRootYDoc);
-      setCurSubYDoc(existsDoc);
-      return;
-    }
     let subDocEden = new Y.Doc();
     subDocEden.guid = newSelectedFile.file_id;
     const subDocText = subDocEden.getText(subDocEden.guid);
