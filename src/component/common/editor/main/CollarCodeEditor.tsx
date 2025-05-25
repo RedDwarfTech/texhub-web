@@ -82,6 +82,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   React.useEffect(() => {
     if (!BaseMethods.isNull(curSubYDoc)) {
+      curSubYDoc.load();
       console.log("curSubYDoc", curSubYDoc);
       let ytext = curSubYDoc.getText(curSubYDoc.guid);
       const undoManager = new Y.UndoManager(ytext);
@@ -107,7 +108,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         activeEditorView?.destroy();
       }
       setEditorInstance(editorView);
-      curSubYDoc.load();
       let existDoc = curEditorRootDoc
         ?.getMap("texhubsubdoc")
         .get(curSubYDoc.guid);
