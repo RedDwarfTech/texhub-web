@@ -224,6 +224,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       name: file.name,
       theme: themeMap.get("Solarized Light")!,
     };
+   
     const subdoc = localStorage.getItem("subdoc");
     if (subdoc && subdoc === "subdoc") {
       initSubDocSocketIO(editorAttr, activeEditorView, file);

@@ -39,6 +39,7 @@ import store from "@/redux/store/store";
 // @ts-ignore
 import { decoding } from "rdlib0";
 import { TexFileModel } from "@/model/file/TexFileModel";
+import { TeXFileType } from "@/model/enum/TeXFileType";
 
 export const usercolors = [
   { color: "#30bced", light: "#30bced33" },
@@ -120,6 +121,7 @@ export const doSocketIOConn = (
         docId: enableSubDoc ? editorAttr.projectId : editorAttr.docId,
         docIntId: editorAttr.docIntId,
         enableSid: enableShortFileId,
+        docType: enableSubDoc ? TeXFileType.PROJECT : TeXFileType.TEX,
         // from: "web_tex_editor",
       },
     }
