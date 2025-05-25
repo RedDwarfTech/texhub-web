@@ -115,6 +115,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
           .set(curSubYDoc.guid, curSubYDoc);
         setCurRootYDoc(curEditorRootDoc);
       }
+      curSubYDoc.load();
     }
   }, [curSubYDoc]);
 
