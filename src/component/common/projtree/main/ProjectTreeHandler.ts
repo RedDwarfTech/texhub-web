@@ -88,7 +88,7 @@ export function handleFileSelected(
       // if every time use new doc, it will make other clients edit this doc invalid
       const subDocText = existsDoc.getText(newSelectedFile.file_id);
       subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-        updateEditor(editorView, tr, event, subDocEden);
+        updateEditor(editorView, tr, event, existsDoc);
       });
       setCurRootYDoc(curRootYDoc);
       setCurSubYDoc(existsDoc);
