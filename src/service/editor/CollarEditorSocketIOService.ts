@@ -292,9 +292,7 @@ export function initSubDocSocketIO(
   // @ts-ignore
   wsProvider.on("synced", () => {
     debugger;
-    // initial last doc
     if (file) {
-      // remove all subdocs
       // when run this first doc init, there contains 2 subdoc
       // still did not found where to add this 2 subdoc
       initialFisrtSubDoc(file, rootYdoc, activeEditorView);
@@ -319,6 +317,7 @@ const initialFisrtSubDoc = (
   subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
     updateEditor(editorView, tr, event, firstSubDoc);
   });
+  console.log("initial first doc:" + file.file_id);
   rootDoc.getMap("texhubsubdoc").set(file.file_id, firstSubDoc);
   setCurRootYDoc(rootDoc);
   setCurSubYDoc(firstSubDoc);
