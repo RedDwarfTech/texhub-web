@@ -289,8 +289,12 @@ export function initSubDocSocketIO(
     editorAttr,
     true
   );
+  
+  console.log("WebSocket provider created:", wsProvider);
+  
   // @ts-ignore
   wsProvider.on("synced", () => {
+    console.log("WebSocket provider synced");
     debugger;
     if (file) {
       // when run this first doc init, there contains 2 subdoc
@@ -298,6 +302,13 @@ export function initSubDocSocketIO(
       initialFisrtSubDoc(file, rootYdoc, activeEditorView);
     }
   });
+  
+  // Add connection status listener
+  // @ts-ignore
+  wsProvider.on("connectionStatus", (status: any) => {
+    console.log("WebSocket provider connection status:", status);
+  });
+  
   setSocketIOProvider(wsProvider);
   // @ts-ignore
   rootYdoc.on("subdocs", (props: SubDocEventProps) => {

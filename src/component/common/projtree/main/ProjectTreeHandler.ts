@@ -83,20 +83,33 @@ export function handleFileSelected(
         console.error("did not get the legacy subdoc", oldSelectedFile.file_id);
       }
     }
+    let chooseSubDoc: Y.Doc | undefined = subDocs.get(
+      newSelectedFile.file_id
+    );
+    if(chooseSubDoc && !BaseMethods.isNull(chooseFile)){
+      chooseSubDoc.load();
+      // @ts-ignore
+      chooseSubDoc.on("synced", () => {
+        console.log("subdoc syned:" + chooseSubDoc.guid);
+        subDocText.toString(); // => "some initial content"
+        setCurSubYDoc(chooseSubDoc);
+      });
+      const subDocText = chooseSubDoc.getText(chooseSubDoc.guid);
+      subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
+        updateEditor(editorView, tr, event, subDocEden);
+      });
+      setCurRootYDoc(curRootYDoc);
+      return;
+    }
     let subDocEden = new Y.Doc();
     subDocEden.guid = newSelectedFile.file_id;
     const subDocText = subDocEden.getText(subDocEden.guid);
     subDocEden.load();
-    // @ts-ignore
-    subDocEden.on("synced", () => {
-      console.log("subdoc syned:" + subDocEden.guid);
-      subDocText.toString(); // => "some initial content"
-      setCurSubYDoc(subDocEden);
-    });
     subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
       updateEditor(editorView, tr, event, subDocEden);
     });
     setCurRootYDoc(curRootYDoc);
+    setCurSubYDoc(subDocEden);
   }
 }
 
