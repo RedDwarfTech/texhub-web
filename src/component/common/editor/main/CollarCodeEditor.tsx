@@ -106,7 +106,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
         activeEditorView?.destroy();
       }
-      curSubYDoc.load();
       setEditorInstance(editorView);
       if (curEditorRootDoc) {
         debugger;

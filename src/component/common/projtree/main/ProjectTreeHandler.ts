@@ -70,7 +70,7 @@ export function handleFileSelected(
     if (!subdoc || subdoc !== "subdoc") {
       return;
     }
-    debugger
+    debugger;
     let subDocs: Y.Map<Y.Doc> = curRootYDoc.getMap("texhubsubdoc");
     if (oldSelectedFile && !BaseMethods.isNull(oldSelectedFile)) {
       // destroy the legacy select file
@@ -86,11 +86,17 @@ export function handleFileSelected(
     let subDocEden = new Y.Doc();
     subDocEden.guid = newSelectedFile.file_id;
     const subDocText = subDocEden.getText(subDocEden.guid);
+    subDocEden.load();
+    // @ts-ignore
+    subDocEden.on("synced", () => {
+      console.log("subdoc syned:" + subDocEden.guid);
+      subDocText.toString(); // => "some initial content"
+      setCurSubYDoc(subDocEden);
+    });
     subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
       updateEditor(editorView, tr, event, subDocEden);
     });
     setCurRootYDoc(curRootYDoc);
-    setCurSubYDoc(subDocEden);
   }
 }
 
