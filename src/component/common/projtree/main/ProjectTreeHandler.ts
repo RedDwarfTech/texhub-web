@@ -83,10 +83,8 @@ export function handleFileSelected(
         console.error("did not get the legacy subdoc", oldSelectedFile.file_id);
       }
     }
-    let chooseSubDoc: Y.Doc | undefined = subDocs.get(
-      newSelectedFile.file_id
-    );
-    if(chooseSubDoc && !BaseMethods.isNull(chooseFile)){
+    let chooseSubDoc: Y.Doc | undefined = subDocs.get(newSelectedFile.file_id);
+    if (chooseSubDoc && !BaseMethods.isNull(chooseSubDoc)) {
       chooseSubDoc.load();
       // @ts-ignore
       chooseSubDoc.on("synced", () => {
