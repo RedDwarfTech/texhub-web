@@ -85,16 +85,26 @@ export function handleFileSelected(
     }
     let chooseSubDoc: Y.Doc | undefined = subDocs.get(newSelectedFile.file_id);
     if (chooseSubDoc && !BaseMethods.isNull(chooseSubDoc)) {
+      console.log("Found existing subdoc:", chooseSubDoc.guid);
+      const subDocText = chooseSubDoc.getText(chooseSubDoc.guid);
       chooseSubDoc.load();
+      
       // @ts-ignore
       chooseSubDoc.on("synced", () => {
-        console.log("subdoc syned:" + chooseSubDoc.guid);
-        subDocText.toString(); // => "some initial content"
+        console.log("subdoc synced:" + chooseSubDoc.guid);
+        const text = subDocText.toString();
+        console.log("subdoc content:", text);
         setCurSubYDoc(chooseSubDoc);
       });
-      const subDocText = chooseSubDoc.getText(chooseSubDoc.guid);
+      
+      // Add connection status listener
+      // @ts-ignore
+      chooseSubDoc.on("connectionStatus", (status: any) => {
+        console.log("SubDoc connection status:", status);
+      });
+      
       subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-        updateEditor(editorView, tr, event, subDocEden);
+        updateEditor(editorView, tr, event, chooseSubDoc);
       });
       setCurRootYDoc(curRootYDoc);
       return;
