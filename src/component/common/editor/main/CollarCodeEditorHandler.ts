@@ -34,8 +34,7 @@ export const handleSrcTreeNav = (
   curProjInfo: ProjInfo,
   selectedFile: TexFileModel,
   ydoc: Y.Doc,
-  activeEditorView: EditorView | undefined,
-  provider: SocketIOClientProvider
+  activeEditorView: EditorView | undefined
 ) => {
   if (BaseMethods.isNull(props)) {
     return;
@@ -49,8 +48,7 @@ export const handleSrcTreeNav = (
     props.projectId,
     selectedFile,
     ydoc,
-    activeEditorView,
-    provider
+    activeEditorView
   );
 };
 

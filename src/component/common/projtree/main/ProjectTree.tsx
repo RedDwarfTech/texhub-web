@@ -31,8 +31,7 @@ import { useTranslation } from "react-i18next";
 import * as Y from "rdyjs";
 import { EditorView } from "@codemirror/view";
 import { SocketIOClientProvider } from "@/component/common/collar/collar";
-import { toast } from "react-toastify";
-import { BaseMethods, ResponseHandler } from "rdjs-wheel";
+import { BaseMethods } from "rdjs-wheel";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo.js";
 import { getProjectInfo } from "@/service/project/ProjectService.js";
 
@@ -236,8 +235,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       props.projectId,
       selectedFile,
       curRootDoc!,
-      activeEditorView,
-      wsSocketIOProvider!
+      activeEditorView
     );
   };
 
@@ -408,8 +406,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         props.projectId,
         selectedFile,
         curRootDoc!,
-        editorView,
-        wsSocketIOProvider!
+        editorView
       );
     }
   }, [srcFocus, props.projectId]);

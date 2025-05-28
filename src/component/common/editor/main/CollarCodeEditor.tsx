@@ -108,7 +108,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       }
       setEditorInstance(editorView);
       if (curEditorRootDoc) {
-        debugger;
         curEditorRootDoc
           .getMap("texhubsubdoc")
           .set(curSubYDoc.guid, curSubYDoc);
@@ -223,7 +222,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       name: file.name,
       theme: themeMap.get("Solarized Light")!,
     };
-   
+
     const subdoc = localStorage.getItem("subdoc");
     if (subdoc && subdoc === "subdoc") {
       initSubDocSocketIO(editorAttr, activeEditorView, file);
@@ -336,8 +335,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
                   curProjInfo,
                   activeFile,
                   curEditorRootDoc!,
-                  activeEditorView,
-                  texEditorSocketIOWs!
+                  activeEditorView
                 );
               }
             }

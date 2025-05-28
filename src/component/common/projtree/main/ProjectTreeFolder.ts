@@ -130,7 +130,6 @@ export const ProjectTreeFolder = {
     selectedFile: TexFileModel,
     ydoc: Y.Doc,
     editorView: EditorView | undefined,
-    provider: any
   ) => {
     for (let i = 0; i < name_paths.length; i++) {
       // get the newest tree content to avoid the legacy override the newest update

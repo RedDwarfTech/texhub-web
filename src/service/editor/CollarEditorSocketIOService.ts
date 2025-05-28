@@ -121,6 +121,7 @@ export const doSocketIOConn = (
         docId: enableSubDoc ? editorAttr.projectId : editorAttr.docId,
         docIntId: editorAttr.docIntId,
         enableSid: enableShortFileId,
+        projId: editorAttr.projectId,
         docType: enableSubDoc ? TeXFileType.PROJECT : TeXFileType.TEX,
         // from: "web_tex_editor",
       },
