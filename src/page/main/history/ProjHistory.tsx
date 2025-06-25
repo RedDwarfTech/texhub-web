@@ -18,14 +18,7 @@ export type HistoryProps = {
 const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
 
     const { projHisPage } = useSelector((state: AppState) => state.proj);
-    const [histories, setHistories] = useState<ProjHisotry[]>([]);
     const { t } = useTranslation();
-
-    React.useEffect(() => {
-        if (projHisPage && projHisPage.data) {
-            setHistories(projHisPage.data);
-        }
-    }, [projHisPage]);
 
     const getHistoryDetail = (id: number) => {
         const hist: QueryHistoryDetail = {
@@ -54,11 +47,11 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     }
 
     const renderHistroy = () => {
-        if (!histories || histories.length === 0) {
+        if (!projHisPage.data || projHisPage.data.length === 0) {
             return;
         }
         const tagList: JSX.Element[] = [];
-        histories.forEach((item: ProjHisotry) => {
+        projHisPage.data.forEach((item: ProjHisotry) => {
             tagList.push(
                 <div key={item.id} className={styles.hiscard}>
                     <div>{t("label_file_name")}：{item.name}</div>

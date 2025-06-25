@@ -173,27 +173,7 @@ export const doSocketIOConn = (
   return wsProvider;
 };
 
-let history: Uint8Array[] = [];
 var ydoc: any;
-export function saveHistory(docId: string) {
-  const update = Y.encodeStateAsUpdate(ydoc);
-  history.push(update);
-  const snapshot = Y.snapshot(ydoc);
-  let snap: Uint8Array = Y.encodeSnapshot(snapshot);
-  const decoder = new TextDecoder("utf-8");
-  const snapString = decoder.decode(snap);
-  const text = ydoc.getText(docId);
-  console.log(text.toString());
-}
-
-export function restoreFromHistory(version: number, docId: string) {
-  if (ydoc) {
-    const snapshot = history[version];
-    Y.applyUpdate(ydoc, snapshot);
-    const txt = ydoc.getText(docId);
-    console.log(txt.toString());
-  }
-}
 
 export const metadata: Metadata = {
   labels: new Set<string>([]),

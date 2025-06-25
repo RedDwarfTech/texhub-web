@@ -464,7 +464,7 @@ export function projHistoryPage(history: QueryHistory) {
   }
   const config: AxiosRequestConfig = {
     method: "get",
-    url: "/tex/project/history/page",
+    url: "/tex/project/history/v1/page",
     params: params,
   };
   const actionTypeString: string =
