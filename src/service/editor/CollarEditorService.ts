@@ -40,15 +40,6 @@ export function saveHistory(docId: string) {
   console.log(text.toString());
 }
 
-export function restoreFromHistory(version: number, docId: string) {
-  if (ydoc) {
-    const snapshot = history[version];
-    Y.applyUpdate(ydoc, snapshot);
-    const txt = ydoc.getText(docId);
-    console.log(txt.toString());
-  }
-}
-
 const metadata: Metadata = {
   labels: new Set<string>([]),
   packageNames: new Set<string>([]),

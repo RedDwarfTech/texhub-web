@@ -46,6 +46,26 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         });
     }
 
+    const renderDiff = (diffStr: string) => {
+        if (!diffStr) return null;
+        let diffArr: any[] = [];
+        try {
+            diffArr = JSON.parse(diffStr);
+        } catch (e) {
+            return <div>diff 解析失败</div>;
+        }
+        return (
+            <pre style={{whiteSpace: 'pre-wrap', fontSize: '12px', margin: 0}}>
+                {diffArr.map((part, idx) => {
+                    let style = {};
+                    if (part.added) style = {background: '#e6ffe6', color: '#228B22'};
+                    else if (part.removed) style = {background: '#ffecec', color: '#d32f2f'};
+                    return <span key={idx} style={style}>{part.value}</span>;
+                })}
+            </pre>
+        );
+    };
+
     const renderHistroy = () => {
         if (!projHisPage.data || projHisPage.data.length === 0) {
             return;
@@ -55,6 +75,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
             tagList.push(
                 <div key={item.id} className={styles.hiscard}>
                     <div>{t("label_file_name")}：{item.name}</div>
+                    <div id="hisdiff">{renderDiff(item.diff)}</div>
                     <div>{t("label_time")}：{dayjs(item.updated_time).format('YYYY-MM-DD HH:mm:ss')}</div>
                     <div className={styles.footer}>
                         <div>
