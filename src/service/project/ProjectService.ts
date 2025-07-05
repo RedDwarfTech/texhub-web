@@ -449,7 +449,7 @@ export function getProjHistoryDetail(history: QueryHistoryDetail) {
   }
   const config: AxiosRequestConfig = {
     method: "get",
-    url: "/tex/fileversion/detail",
+    url: "/tex/fileversion/detail/v1",
     params: params,
   };
   const actionTypeString: string =
