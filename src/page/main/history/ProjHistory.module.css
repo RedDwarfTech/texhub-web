@@ -6,9 +6,53 @@
 }
 
 .hiscard {
-    background-color: #eae4e4;
-    border-radius: 5px;
-    margin-top: 10px;
+    background-color: #f9fafb;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 18px;
+    padding: 18px 20px 12px 20px;
+    transition: box-shadow 0.2s;
+    border: 1px solid #ececec;
+    position: relative;
+}
+.hiscard-hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.16);
+    background: #f5f7fa;
+}
+
+.diffblock {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    background: #fff;
+    padding: 10px 12px;
+    margin: 10px 0;
+    font-family: monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: auto;
+}
+
+.inforow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.btngroup {
+    display: flex;
+    gap: 12px;
+}
+
+.filename {
+    font-weight: 600;
+    font-size: 15px;
+    color: #2d3a4b;
+}
+
+.time {
+    font-size: 13px;
+    color: #888;
 }
 
 .footer {

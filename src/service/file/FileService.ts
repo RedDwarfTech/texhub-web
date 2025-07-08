@@ -101,17 +101,6 @@ export function downloadProjFile(req: DownloadFileReq) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function addFileVersion(params: TexFileVersion) {
-  const config: AxiosRequestConfig = {
-    method: "post",
-    url: "/tex/file/ver/add",
-    data: JSON.stringify(params),
-  };
-  const actionTypeString: string =
-    FileActionType[FileActionType.ADD_FILE_HISTORY];
-  return XHRClient.requestWithActionType(config, actionTypeString, store);
-}
-
 export function delTreeItem(params: any) {
   const config: AxiosRequestConfig = {
     method: "delete",

@@ -23,21 +23,16 @@ import {
   setCurRootYDoc,
   setCurSubYDoc,
   setEditorInstance,
-  setEditorText,
   setSocketIOProvider,
   setWsConnState,
 } from "../project/editor/EditorService";
-import { handleYDocUpdate } from "@/component/common/collar/ver/YjsEvent";
 import { ManagerOptions, SocketOptions } from "socket.io-client";
 import { getAccessToken } from "@/component/common/cache/Cache";
-import { ProjInfo } from "@/model/proj/ProjInfo.js";
 import { SubDocEventProps } from "@/model/props/yjs/subdoc/SubDocEventProps.js";
 import { ySyncAnnotation, ySyncFacet } from "rdy-codemirror.next";
 // @ts-ignore
 import { DocOpts } from "rdyjs/dist/src/utils/Doc.mjs";
 import store from "@/redux/store/store";
-// @ts-ignore
-import { decoding } from "rdlib0";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { TeXFileType } from "@/model/enum/TeXFileType";
 
@@ -216,7 +211,7 @@ export function initSocketIOEditor(
     false
   );
   ydoc.on("update", (update: any, origin: any) => {
-    handleYDocUpdate(editorAttr, ytext, ydoc);
+    
   });
 
   const undoManager = new Y.UndoManager(ytext);

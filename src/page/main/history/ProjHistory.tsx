@@ -46,52 +46,6 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         });
     }
 
-    const cardStyle: React.CSSProperties = {
-        borderRadius: '10px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-        background: '#f9fafb',
-        marginBottom: '18px',
-        padding: '18px 20px 12px 20px',
-        transition: 'box-shadow 0.2s',
-        border: '1px solid #ececec',
-        position: 'relative',
-    };
-    const cardHoverStyle: React.CSSProperties = {
-        ...cardStyle,
-        boxShadow: '0 4px 16px rgba(0,0,0,0.16)',
-        background: '#f5f7fa',
-    };
-    const diffBlockStyle: React.CSSProperties = {
-        border: '1px solid #e0e0e0',
-        borderRadius: '6px',
-        background: '#fff',
-        padding: '10px 12px',
-        margin: '10px 0',
-        fontFamily: 'monospace',
-        fontSize: '13px',
-        lineHeight: 1.7,
-        overflowX: 'auto',
-    };
-    const infoRowStyle: React.CSSProperties = {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 6,
-    };
-    const btnGroupStyle: React.CSSProperties = {
-        display: 'flex',
-        gap: '12px',
-    };
-    const fileNameStyle: React.CSSProperties = {
-        fontWeight: 600,
-        fontSize: '15px',
-        color: '#2d3a4b',
-    };
-    const timeStyle: React.CSSProperties = {
-        fontSize: '13px',
-        color: '#888',
-    };
-
     const renderDiff = (diffStr: string) => {
         if (!diffStr) return null;
         let diffArr: any[] = [];
@@ -101,7 +55,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
             return <div>diff 解析失败</div>;
         }
         return (
-            <div style={diffBlockStyle}>
+            <div className={styles.diffblock}>
                 <pre style={{whiteSpace: 'pre-wrap', fontSize: '13px', margin: 0, background: 'none', border: 'none', padding: 0}}>
                     {diffArr.map((part, idx) => {
                         let style = {};
@@ -124,18 +78,17 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
             tagList.push(
                 <div
                     key={item.id}
-                    className={styles.hiscard}
-                    style={hoverIdx === idx ? cardHoverStyle : cardStyle}
+                    className={hoverIdx === idx ? `${styles.hiscard} ${styles['hiscard-hover']}` : styles.hiscard}
                     onMouseEnter={() => setHoverIdx(idx)}
                     onMouseLeave={() => setHoverIdx(null)}
                 >
-                    <div style={infoRowStyle}>
-                        <span style={fileNameStyle}>{t("label_file_name")}：{item.name}</span>
-                        <span style={timeStyle}>{t("label_time")}：{dayjs(item.updated_time).format('YYYY-MM-DD HH:mm:ss')}</span>
+                    <div className={styles.inforow}>
+                        <span className={styles.filename}>{t("label_file_name")}：{item.name}</span>
+                        <span className={styles.time}>{t("label_time")}：{dayjs(item.updated_time).format('YYYY-MM-DD HH:mm:ss')}</span>
                     </div>
                     <div id="hisdiff">{renderDiff(item.diff)}</div>
                     <div className={styles.footer} style={{marginTop: 10}}>
-                        <div style={btnGroupStyle}>
+                        <div className={styles.btngroup}>
                             <button className="btn btn-primary"
                                 data-bs-toggle="modal"
                                 data-bs-target="#projHistoryDetail"
