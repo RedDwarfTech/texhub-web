@@ -61,7 +61,37 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
                         let style = {};
                         if (part.added) style = {background: '#e6ffe6', color: '#228B22'};
                         else if (part.removed) style = {background: '#ffecec', color: '#d32f2f'};
-                        return <span key={idx} style={style}>{part.value}</span>;
+
+                        const value = String(part.value);
+                        const elements: React.ReactNode[] = [];
+                        let lastIndex = 0;
+                        // 匹配所有换行符
+                        value.replace(/\n/g, (match, offset) => {
+                            if (offset > lastIndex) {
+                                elements.push(
+                                    <span key={idx + '-' + lastIndex} style={style}>
+                                        {value.slice(lastIndex, offset)}
+                                    </span>
+                                );
+                            }
+                            elements.push(
+                                <span key={idx + '-nl-' + offset} style={{...style, color: '#aaa', fontWeight: 'bold'}} title="换行">⏎</span>
+                            );
+                            lastIndex = offset + 1;
+                            return match;
+                        });
+                        if (lastIndex < value.length) {
+                            elements.push(
+                                <span key={idx + '-end'} style={style}>
+                                    {value.slice(lastIndex)}
+                                </span>
+                            );
+                        }
+                        // 如果没有换行符，直接渲染
+                        if (elements.length === 0) {
+                            return <span key={idx} style={style}>{value}</span>;
+                        }
+                        return elements;
                     })}
                 </pre>
             </div>
