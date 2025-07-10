@@ -1,0 +1,182 @@
+.orderContainer {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.orderTitle {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #333;
+  font-weight: 600;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.orderTable {
+  width: 100%;
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.tableHeader {
+  background-color: #f8f9fa;
+}
+
+.tableHeader th {
+  padding: 15px;
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 2px solid #dee2e6;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.orderRow {
+  transition: background-color 0.2s;
+}
+
+.orderRow:hover {
+  background-color: #f8f9fa;
+}
+
+.orderRow td, .orderRow th {
+  padding: 15px;
+  vertical-align: middle;
+  border-top: 1px solid #dee2e6;
+}
+
+.orderId {
+  font-family: monospace;
+  color: #495057;
+  font-weight: 500;
+}
+
+.subject {
+  font-weight: 500;
+  color: #212529;
+}
+
+.price {
+  font-weight: 600;
+  color: #28a745;
+}
+
+.time {
+  color: #6c757d;
+  white-space: nowrap;
+}
+
+.status {
+  text-align: center;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.status0 {
+  background-color: #e9ecef;
+  color: #495057;
+}
+
+.status1 {
+  background-color: #cff4fc;
+  color: #055160;
+}
+
+.status2 {
+  background-color: #d1e7dd;
+  color: #0f5132;
+}
+
+.status3 {
+  background-color: #f8d7da;
+  color: #842029;
+}
+
+.status4 {
+  background-color: #fff3cd;
+  color: #664d03;
+}
+
+.noData {
+  text-align: center;
+  padding: 30px !important;
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* 分页样式 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.paginationList {
+  display: flex;
+  padding-left: 0;
+  list-style: none;
+  border-radius: 0.25rem;
+}
+
+.pageItem {
+  margin: 0 2px;
+}
+
+.pageLink {
+  position: relative;
+  display: block;
+  padding: 0.5rem 0.75rem;
+  margin-left: -1px;
+  line-height: 1.25;
+  color: #007bff;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
+}
+
+.pageLink:hover {
+  z-index: 2;
+  color: #0056b3;
+  text-decoration: none;
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+}
+
+.pageItem.active .pageLink {
+  z-index: 3;
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.pageItem.disabled .pageLink {
+  color: #6c757d;
+  pointer-events: none;
+  cursor: not-allowed;
+  background-color: #fff;
+  border-color: #dee2e6;
+}
+
+.ellipsis .pageLink {
+  color: #6c757d;
+  pointer-events: none;
+}
