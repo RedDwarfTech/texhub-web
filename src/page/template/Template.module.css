@@ -1,29 +1,37 @@
 .tplBody{
     width: 100%;
     background-color: rgb(248, 248, 248);
-    height: 93.7vh;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
 .tplContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
     overflow: hidden;
 }
 
 .container {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     gap: 50px;
     flex-wrap: wrap;
     margin: 0 auto;
     width: 100%;
-    padding-top: 50px;
-    overflow-y: scroll;
-    height: 84.7vh;
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
 }
 
 .tplCard {
     width: 400px;
+    flex-shrink: 0;
 }
 
 .tplFilter {
@@ -31,14 +39,14 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    height: 9vh;
+    padding: 15px 0;
     width: 50%;
     margin: 0 auto;
+    flex-shrink: 0;
 }
 
 .pageAction {
-    height: 80px;
-    margin-bottom: 15px;
+    height: 60px;
     color: blue;
     display: flex;
     flex-direction: row;
@@ -47,4 +55,5 @@
     gap: 20px;
     background-color: rgb(248, 248, 248);
     text-decoration: underline;
+    flex-shrink: 0;
 }

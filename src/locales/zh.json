@@ -60,6 +60,8 @@
     "btn_restore": "还原",
     "btn_login": "登录",
     "btn_edit_nickname": "设置昵称",
+    "btn_prev_page": "上一页",
+    "btn_next_page": "下一页",
     "tab_all": "全部",
     "tab_proj_share": "分享",
     "tab_proj_share_admin": "管理",

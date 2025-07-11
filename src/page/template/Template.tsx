@@ -137,8 +137,8 @@ const Template: React.FC = () => {
         <div className={styles.container}>{renderTplPage()}</div>
       </div>
       <div className={styles.pageAction}>
-        <div onClick={(e) => handlePageUp(e)}>上一页</div>
-        <div onClick={(e) => handlePageDown(e)}>下一页</div>
+        <div onClick={(e) => handlePageUp(e)}>{t("btn_prev_page")}</div>
+        <div onClick={(e) => handlePageDown(e)}>{t("btn_next_page")}</div>
       </div>
     </div>
   );

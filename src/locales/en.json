@@ -61,6 +61,8 @@
     "btn_restore": "Restore",
     "btn_login": "Login",
     "btn_edit_nickname": "Edit nickname",
+    "btn_prev_page": "Previous",
+    "btn_next_page": "Next",
     "tab_all": "All",
     "tab_proj_share": "Share",
     "tab_proj_share_admin": "Admin",
