@@ -88,7 +88,7 @@ export function handleFileSelected(
       console.log("Found existing subdoc:", chooseSubDoc.guid);
       const subDocText = chooseSubDoc.getText(chooseSubDoc.guid);
       chooseSubDoc.load();
-      
+      setCurSubYDoc(chooseSubDoc);
       // @ts-ignore
       chooseSubDoc.on("synced", () => {
         console.log("subdoc synced:" + chooseSubDoc.guid);
