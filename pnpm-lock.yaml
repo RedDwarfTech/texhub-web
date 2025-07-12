@@ -135,7 +135,7 @@ importers:
         version: 1.8.1
       antd:
         specifier: ^5.24.9
-        version: 5.24.9(react-dom@18.1.0(react@18.1.0))(react@18.1.0)
+        version: 5.24.9(moment@2.30.1)(react-dom@18.1.0(react@18.1.0))(react@18.1.0)
       axios:
         specifier: ^1.9.0
         version: 1.9.0
@@ -191,8 +191,8 @@ importers:
         specifier: 7.40.0
         version: 7.40.0(react-dom@18.1.0(react@18.1.0))(react@18.1.0)
       rd-component:
-        specifier: ^0.1.170
-        version: 0.1.170(@fingerprintjs/fingerprintjs@4.6.2)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@reduxjs/toolkit@2.7.0(react-redux@9.0.1(@types/react-dom@18.3.7(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.1.0(react@18.1.0))(react@18.1.0)(redux@5.0.1))(react@18.1.0))(@types/node@22.15.3)(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(react-dom@18.1.0(react@18.1.0))(react-redux@9.0.1(@types/react-dom@18.3.7(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.1.0(react@18.1.0))(react@18.1.0)(redux@5.0.1))(react-router-dom@7.5.3(react-dom@18.1.0(react@18.1.0))(react@18.1.0))(react@18.1.0)(redux@5.0.1)(rollup@2.79.2)(ts-node@10.9.2(@swc/core@1.11.24)(@types/node@22.15.3)(typescript@5.8.3))(typescript@5.8.3)(uuid@11.1.0)(vite@5.1.4(@types/node@22.15.3)(sass@1.87.0)(terser@5.39.0))
+        specifier: ^0.1.172
+        version: 0.1.172(@fingerprintjs/fingerprintjs@4.6.2)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@reduxjs/toolkit@2.7.0(react-redux@9.0.1(@types/react-dom@18.3.7(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.1.0(react@18.1.0))(react@18.1.0)(redux@5.0.1))(react@18.1.0))(@types/node@22.15.3)(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(react-dom@18.1.0(react@18.1.0))(react-redux@9.0.1(@types/react-dom@18.3.7(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.1.0(react@18.1.0))(react@18.1.0)(redux@5.0.1))(react-router-dom@7.5.3(react-dom@18.1.0(react@18.1.0))(react@18.1.0))(react@18.1.0)(redux@5.0.1)(rollup@2.79.2)(ts-node@10.9.2(@swc/core@1.11.24)(@types/node@22.15.3)(typescript@5.8.3))(typescript@5.8.3)(uuid@11.1.0)(vite@5.1.4(@types/node@22.15.3)(sass@1.87.0)(terser@5.39.0))
       rdjs-wheel:
         specifier: 0.0.31
         version: 0.0.31(@jest/transform@29.7.0)(@jest/types@29.6.3)(@types/node@22.15.3)(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(rollup@2.79.2)(ts-node@10.9.2(@swc/core@1.11.24)(@types/node@22.15.3)(typescript@5.8.3))(typescript@5.8.3)(vite@5.1.4(@types/node@22.15.3)(sass@1.87.0)(terser@5.39.0))(webpack@5.99.7(@swc/core@1.11.24)(esbuild@0.18.20))
@@ -275,8 +275,8 @@ importers:
         specifier: ^4.8.1
         version: 4.8.1
       texhub-broadcast:
-        specifier: 1.0.84
-        version: 1.0.84
+        specifier: 1.0.87
+        version: 1.0.87
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.11.24)(@types/node@22.15.3)(typescript@5.8.3)
@@ -2751,8 +2751,15 @@ packages:
   '@types/cross-spawn@6.0.6':
     resolution: {integrity: sha512-fXRhhUkG4H3TQk5dBhQ7m/JDdSNHKwR2BBia62lhwEIq9xGiQKLxd6LymNhn47SjXhsUEPmxi+PKw2OkW4LLjA==}
 
+  '@types/debug@4.1.12':
+    resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
+
   '@types/detect-port@1.3.5':
     resolution: {integrity: sha512-Rf3/lB9WkDfIL9eEKaSYKc+1L/rNVYBjThk22JTqQw0YozXarX8YljFAz+HCoC6h4B4KwCMsBPZHaFezwT4BNA==}
+
+  '@types/diff@8.0.0':
+    resolution: {integrity: sha512-o7jqJM04gfaYrdCecCVMbZhNdG6T1MHg/oQoRFdERLV+4d+V7FijhiEAbFu0Usww84Yijk9yH58U4Jk4HbtzZw==}
+    deprecated: This is a stub types definition. diff provides its own type definitions, so you do not need this installed.
 
   '@types/ejs@3.1.5':
     resolution: {integrity: sha512-nv+GSx77ZtXiJzwKdsASqi+YQ5Z7vwHsTP0JY2SiQgjGckkBRKZnk8nIM+7oUZ1VCtuTz0+By4qVR7fqzp/Dfg==}
@@ -2843,6 +2850,9 @@ packages:
 
   '@types/mime@1.3.5':
     resolution: {integrity: sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==}
+
+  '@types/ms@2.1.0':
+    resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
   '@types/node-fetch@2.6.12':
     resolution: {integrity: sha512-8nneRWKCg3rMtF69nLQJnOYUcbafYeFSjqkw3jCRLsqkWFlHaoQrr5mXmofFGOx3DKn7UfmBMyov8ySvLRVldA==}
@@ -2944,6 +2954,9 @@ packages:
 
   '@types/uuid@9.0.8':
     resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
+
+  '@types/validator@13.15.2':
+    resolution: {integrity: sha512-y7pa/oEJJ4iGYBxOpfAKn5b9+xuihvzDVnC/OSvlVnGxVg0pOqmjiMafiJ1KVNQEaPZf9HsEp5icEwGg8uIe5Q==}
 
   '@types/ws@8.18.1':
     resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
@@ -4358,6 +4371,10 @@ packages:
     resolution: {integrity: sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==}
     engines: {node: '>=0.3.1'}
 
+  diff@8.0.2:
+    resolution: {integrity: sha512-sSuxWU5j5SR9QQji/o2qMvqRNYRDOcBTgsJ/DeCf4iSN4gW+gNMXM7wFIP+fdXZxoNiAnHUTGjCr+TSWXdRDKg==}
+    engines: {node: '>=0.3.1'}
+
   diffie-hellman@5.0.3:
     resolution: {integrity: sha512-kqag/Nl+f3GwyK25fhUMYj81BUOrZ9IuJsjIcDE5icNM9FJHAVm3VcUDxdLPoQtTuUylWm6ZIknYJwwaPxsUzg==}
 
@@ -4437,6 +4454,9 @@ packages:
   dotenv@16.5.0:
     resolution: {integrity: sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg==}
     engines: {node: '>=12'}
+
+  dottie@2.0.6:
+    resolution: {integrity: sha512-iGCHkfUc5kFekGiqhe8B/mdaurD+lakO9txNnTvKtA6PISrw86LgqHvRzWYPyoE2Ph5aMIrCw9/uko6XHTKCwA==}
 
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
@@ -5372,6 +5392,10 @@ packages:
   indent-string@4.0.0:
     resolution: {integrity: sha512-EdDDZu4A2OyIK7Lr/2zG+w5jmbuk1DVBnEwREQvBzspBJkCEbRa8GxU1lghYcaGJCnRWibjDXlq779X1/y5xwg==}
     engines: {node: '>=8'}
+
+  inflection@1.13.4:
+    resolution: {integrity: sha512-6I/HUDeYFfuNCVS3td055BaXBwKYuzw7K3ExVMStBowKo9oOAMJIXIHvdyR3iboTCp1b+1i5DSkIZTcwIktuDw==}
+    engines: {'0': node >= 0.4.0}
 
   inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
@@ -6421,6 +6445,12 @@ packages:
   module-alias@2.2.3:
     resolution: {integrity: sha512-23g5BFj4zdQL/b6tor7Ji+QY4pEfNH784BMslY9Qb0UnJWRAt+lQGLYmRaM0KDBwIG23ffEBELhZDP2rhi9f/Q==}
 
+  moment-timezone@0.5.48:
+    resolution: {integrity: sha512-f22b8LV1gbTO2ms2j2z13MuPogNoh5UzxL3nzNAYKGraILnbGc9NEE6dyiiiLv46DGRb8A4kg8UKWLjPthxBHw==}
+
+  moment@2.30.1:
+    resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
+
   ms@2.0.0:
     resolution: {integrity: sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A==}
 
@@ -6838,6 +6868,10 @@ packages:
 
   pg-connection-string@2.8.5:
     resolution: {integrity: sha512-Ni8FuZ8yAF+sWZzojvtLE2b03cqjO5jNULcHFfM9ZZ0/JXrgom5pBREbtnAw7oxsxJqHw9Nz/XWORUEL3/IFow==}
+
+  pg-hstore@2.3.4:
+    resolution: {integrity: sha512-N3SGs/Rf+xA1M2/n0JBiXFDVMzdekwLZLAO0g7mpDY9ouX+fDI7jS6kTq3JujmYbtNSJ53TJ0q4G98KVZSM4EA==}
+    engines: {node: '>= 0.8.x'}
 
   pg-int8@1.0.1:
     resolution: {integrity: sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==}
@@ -7763,8 +7797,8 @@ packages:
       react: 18.1.0
       react-dom: 18.1.0
 
-  rd-component@0.1.170:
-    resolution: {integrity: sha512-xs/CAXFLMeOkHebQRYSo7QF3CVyug0tsWSERblxECI/XYIUncGQaaM34fM5CXGiYxSQ3/qR7KBxUtfNYyVTx0Q==}
+  rd-component@0.1.172:
+    resolution: {integrity: sha512-c/OlKMhAYBgEwCZrP97Buz/WB43S4IUk+P6Bje2rTTAnhjRUYljwhbQIXQvDL7PJ04Dav+22JC2Kk2+YU/aH8Q==}
     peerDependencies:
       '@fingerprintjs/fingerprintjs': ^4.0.0
       '@reduxjs/toolkit': ^2.7.0
@@ -8148,6 +8182,9 @@ packages:
     resolution: {integrity: sha512-l+sSefzHpj5qimhFSE5a8nufZYAM3sBSVMAPtYkmC+4EH2anSGaEMXSD0izRQbu9nfyQ9y5JrVmp7E8oZrUjvA==}
     engines: {node: '>=8'}
 
+  retry-as-promised@7.1.1:
+    resolution: {integrity: sha512-hMD7odLOt3LkTjcif8aRZqi/hybjpLNgSk5oF5FCowfCjok6LukpN2bDX7R5wDmbgBQFn7YoBxSagmtXHaJYJw==}
+
   retry@0.13.1:
     resolution: {integrity: sha512-XQBQ3I8W1Cge0Seh+6gjj03LbmRFWuoszgK9ooCpwYIrhhoO80pfq4cUkU5DkknwfOfFteRwlZ56PYOGYyFWdg==}
     engines: {node: '>= 4'}
@@ -8325,6 +8362,43 @@ packages:
   send@0.19.0:
     resolution: {integrity: sha512-dW41u5VfLXu8SJh5bwRmyYUbAoSB3c9uQh6L8h/KtsFREPWpbX1lrljJo186Jc4nmci/sGUZ9a0a0J2zgfq2hw==}
     engines: {node: '>= 0.8.0'}
+
+  sequelize-pool@7.1.0:
+    resolution: {integrity: sha512-G9c0qlIWQSK29pR/5U2JF5dDQeqqHRragoyahj/Nx4KOOQ3CPPfzxnfqFPCSB7x5UgjOgnZ61nSxz+fjDpRlJg==}
+    engines: {node: '>= 10.0.0'}
+
+  sequelize@6.37.7:
+    resolution: {integrity: sha512-mCnh83zuz7kQxxJirtFD7q6Huy6liPanI67BSlbzSYgVNl5eXVdE2CN1FuAeZwG1SNpGsNRCV+bJAVVnykZAFA==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      ibm_db: '*'
+      mariadb: '*'
+      mysql2: '*'
+      oracledb: '*'
+      pg: '*'
+      pg-hstore: '*'
+      snowflake-sdk: '*'
+      sqlite3: '*'
+      tedious: '*'
+    peerDependenciesMeta:
+      ibm_db:
+        optional: true
+      mariadb:
+        optional: true
+      mysql2:
+        optional: true
+      oracledb:
+        optional: true
+      pg:
+        optional: true
+      pg-hstore:
+        optional: true
+      snowflake-sdk:
+        optional: true
+      sqlite3:
+        optional: true
+      tedious:
+        optional: true
 
   serialize-javascript@4.0.0:
     resolution: {integrity: sha512-GaNA54380uFefWghODBWEGisLZFj00nS5ACs6yHa9nLqlLpVLO8ChDGeKRjZnV4Nh4n0Qi7nhYZD/9fCPzEqkw==}
@@ -8779,8 +8853,8 @@ packages:
     resolution: {integrity: sha512-cAGWPIyOHU6zlmg88jwm7VRyXnMN7iV68OGAbYDk/Mh/xC/pzVPlQtY6ngoIH/5/tciuhGfvESU8GrHrcxD56w==}
     engines: {node: '>=8'}
 
-  texhub-broadcast@1.0.84:
-    resolution: {integrity: sha512-GgEAOZJp4y8wsPpBF1W2fniHCN8M3AvJ0Sse3MN5WYm2Om79iDjgLWv2SJlDvQHRjJiwbZyeU2Suh3OY/VYQww==}
+  texhub-broadcast@1.0.87:
+    resolution: {integrity: sha512-XKi6HbHpQXzEqmhbve2K437LHpM8JCVDb+EOi02n6aI19tmQlSXJ5efXwB7ok0+YoX+7D3E5HFf8HF8BaPr7Iw==}
     engines: {node: '>=20.0.0'}
 
   text-table@0.2.0:
@@ -8829,6 +8903,9 @@ packages:
   toidentifier@1.0.1:
     resolution: {integrity: sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==}
     engines: {node: '>=0.6'}
+
+  toposort-class@1.0.1:
+    resolution: {integrity: sha512-OsLcGGbYF3rMjPUf8oKktyvCiUxSbqMMS39m33MAjLTC1DVIH6x3WSt63/M77ihI09+Sdfk1AXvfhCEeUmC7mg==}
 
   tough-cookie@4.1.4:
     resolution: {integrity: sha512-Loo5UUvLD9ScZ6jh8beX1T6sO1w2/MpCRpEP7V280GKMVUQ0Jzar2U3UJPsrdbziLEMMhu3Ujnq//rhiFuIeag==}
@@ -8908,7 +8985,7 @@ packages:
       typescript: '>=2.4.1'
 
   tsc-alias@1.8.15:
-    resolution: {integrity: sha512-hpuglrm2DoHZE62L8ntYqRNiSQ7J8kvIxEsajzY/QfGOm7EcdhgG5asqoWYi2E2KX0SqUuhOTnV8Ry8D/TnsEA==, tarball: https://registry.npmmirror.com/tsc-alias/-/tsc-alias-1.8.13.tgz}
+    resolution: {integrity: sha512-hpuglrm2DoHZE62L8ntYqRNiSQ7J8kvIxEsajzY/QfGOm7EcdhgG5asqoWYi2E2KX0SqUuhOTnV8Ry8D/TnsEA==}
     engines: {node: '>=16.20.2'}
     deprecated: '[WARNING] Use 1.8.13 instead of 1.8.15, reason: https://github.com/justkey007/tsc-alias/issues/244'
     hasBin: true
@@ -9031,6 +9108,9 @@ packages:
 
   underscore@1.12.1:
     resolution: {integrity: sha512-hEQt0+ZLDVUMhebKxL4x1BTtDY7bavVofhZ9KZ4aI26X9SRaE+Y3m83XUL1UP2jn8ynjndwCCpEHdUG+9pP1Tw==}
+
+  underscore@1.13.7:
+    resolution: {integrity: sha512-GMXzWtsc57XAtguZgaQViUOzs0KTkk8ojr3/xAxXLITqf/3EMwxC0inyETfDFjH/Krbhuep0HNbbjI9i/q3F3g==}
 
   undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
@@ -9361,6 +9441,9 @@ packages:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
     engines: {node: '>= 8'}
     hasBin: true
+
+  wkx@0.5.0:
+    resolution: {integrity: sha512-Xng/d4Ichh8uN4l0FToV/258EjMGU9MGcA0HV2d9B/ZpZB3lqQm7nkOdZdm5GhKtLLhAE7PiVQwN4eN+2YJJUg==}
 
   word-wrap@1.2.5:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
@@ -12404,7 +12487,15 @@ snapshots:
     dependencies:
       '@types/node': 22.15.3
 
+  '@types/debug@4.1.12':
+    dependencies:
+      '@types/ms': 2.1.0
+
   '@types/detect-port@1.3.5': {}
+
+  '@types/diff@8.0.0':
+    dependencies:
+      diff: 8.0.2
 
   '@types/ejs@3.1.5': {}
 
@@ -12507,6 +12598,8 @@ snapshots:
   '@types/mime-types@2.1.4': {}
 
   '@types/mime@1.3.5': {}
+
+  '@types/ms@2.1.0': {}
 
   '@types/node-fetch@2.6.12':
     dependencies:
@@ -12615,6 +12708,8 @@ snapshots:
   '@types/use-sync-external-store@0.0.3': {}
 
   '@types/uuid@9.0.8': {}
+
+  '@types/validator@13.15.2': {}
 
   '@types/ws@8.18.1':
     dependencies:
@@ -12962,7 +13057,7 @@ snapshots:
 
   ansi-styles@6.2.1: {}
 
-  antd@5.24.9(react-dom@18.1.0(react@18.1.0))(react@18.1.0):
+  antd@5.24.9(moment@2.30.1)(react-dom@18.1.0(react@18.1.0))(react@18.1.0):
     dependencies:
       '@ant-design/colors': 7.2.0
       '@ant-design/cssinjs': 1.23.0(react-dom@18.1.0(react@18.1.0))(react@18.1.0)
@@ -12994,7 +13089,7 @@ snapshots:
       rc-motion: 2.9.5(react-dom@18.1.0(react@18.1.0))(react@18.1.0)
       rc-notification: 5.6.4(react-dom@18.1.0(react@18.1.0))(react@18.1.0)
       rc-pagination: 5.1.0(react-dom@18.1.0(react@18.1.0))(react@18.1.0)
-      rc-picker: 4.11.3(dayjs@1.11.13)(react-dom@18.1.0(react@18.1.0))(react@18.1.0)
+      rc-picker: 4.11.3(dayjs@1.11.13)(moment@2.30.1)(react-dom@18.1.0(react@18.1.0))(react@18.1.0)
       rc-progress: 4.0.0(react-dom@18.1.0(react@18.1.0))(react@18.1.0)
       rc-rate: 2.13.1(react-dom@18.1.0(react@18.1.0))(react@18.1.0)
       rc-resize-observer: 1.4.3(react-dom@18.1.0(react@18.1.0))(react@18.1.0)
@@ -14257,6 +14352,8 @@ snapshots:
 
   diff@4.0.2: {}
 
+  diff@8.0.2: {}
+
   diffie-hellman@5.0.3:
     dependencies:
       bn.js: 4.12.2
@@ -14341,6 +14438,8 @@ snapshots:
   dotenv@10.0.0: {}
 
   dotenv@16.5.0: {}
+
+  dottie@2.0.6: {}
 
   dunder-proto@1.0.1:
     dependencies:
@@ -15580,6 +15679,8 @@ snapshots:
   imurmurhash@0.1.4: {}
 
   indent-string@4.0.0: {}
+
+  inflection@1.13.4: {}
 
   inflight@1.0.6:
     dependencies:
@@ -17055,6 +17156,12 @@ snapshots:
 
   module-alias@2.2.3: {}
 
+  moment-timezone@0.5.48:
+    dependencies:
+      moment: 2.30.1
+
+  moment@2.30.1: {}
+
   ms@2.0.0: {}
 
   ms@2.1.3: {}
@@ -17440,6 +17547,10 @@ snapshots:
   performance-now@2.1.0: {}
 
   pg-connection-string@2.8.5: {}
+
+  pg-hstore@2.3.4:
+    dependencies:
+      underscore: 1.13.7
 
   pg-int8@1.0.1: {}
 
@@ -18277,7 +18388,7 @@ snapshots:
       react: 18.1.0
       react-dom: 18.1.0(react@18.1.0)
 
-  rc-picker@4.11.3(dayjs@1.11.13)(react-dom@18.1.0(react@18.1.0))(react@18.1.0):
+  rc-picker@4.11.3(dayjs@1.11.13)(moment@2.30.1)(react-dom@18.1.0(react@18.1.0))(react@18.1.0):
     dependencies:
       '@babel/runtime': 7.27.1
       '@rc-component/trigger': 2.2.6(react-dom@18.1.0(react@18.1.0))(react@18.1.0)
@@ -18289,6 +18400,7 @@ snapshots:
       react-dom: 18.1.0(react@18.1.0)
     optionalDependencies:
       dayjs: 1.11.13
+      moment: 2.30.1
 
   rc-progress@4.0.0(react-dom@18.1.0(react@18.1.0))(react@18.1.0):
     dependencies:
@@ -18457,7 +18569,7 @@ snapshots:
       react: 18.1.0
       react-dom: 18.1.0(react@18.1.0)
 
-  rd-component@0.1.170(@fingerprintjs/fingerprintjs@4.6.2)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@reduxjs/toolkit@2.7.0(react-redux@9.0.1(@types/react-dom@18.3.7(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.1.0(react@18.1.0))(react@18.1.0)(redux@5.0.1))(react@18.1.0))(@types/node@22.15.3)(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(react-dom@18.1.0(react@18.1.0))(react-redux@9.0.1(@types/react-dom@18.3.7(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.1.0(react@18.1.0))(react@18.1.0)(redux@5.0.1))(react-router-dom@7.5.3(react-dom@18.1.0(react@18.1.0))(react@18.1.0))(react@18.1.0)(redux@5.0.1)(rollup@2.79.2)(ts-node@10.9.2(@swc/core@1.11.24)(@types/node@22.15.3)(typescript@5.8.3))(typescript@5.8.3)(uuid@11.1.0)(vite@5.1.4(@types/node@22.15.3)(sass@1.87.0)(terser@5.39.0)):
+  rd-component@0.1.172(@fingerprintjs/fingerprintjs@4.6.2)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@reduxjs/toolkit@2.7.0(react-redux@9.0.1(@types/react-dom@18.3.7(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.1.0(react@18.1.0))(react@18.1.0)(redux@5.0.1))(react@18.1.0))(@types/node@22.15.3)(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(react-dom@18.1.0(react@18.1.0))(react-redux@9.0.1(@types/react-dom@18.3.7(@types/react@18.3.20))(@types/react@18.3.20)(react-dom@18.1.0(react@18.1.0))(react@18.1.0)(redux@5.0.1))(react-router-dom@7.5.3(react-dom@18.1.0(react@18.1.0))(react@18.1.0))(react@18.1.0)(redux@5.0.1)(rollup@2.79.2)(ts-node@10.9.2(@swc/core@1.11.24)(@types/node@22.15.3)(typescript@5.8.3))(typescript@5.8.3)(uuid@11.1.0)(vite@5.1.4(@types/node@22.15.3)(sass@1.87.0)(terser@5.39.0)):
     dependencies:
       '@babel/core': 7.27.1
       '@babel/preset-env': 7.27.1(@babel/core@7.27.1)
@@ -19031,6 +19143,8 @@ snapshots:
       onetime: 5.1.2
       signal-exit: 3.0.7
 
+  retry-as-promised@7.1.1: {}
+
   retry@0.13.1: {}
 
   reusify@1.1.0: {}
@@ -19235,6 +19349,32 @@ snapshots:
       on-finished: 2.4.1
       range-parser: 1.2.1
       statuses: 2.0.1
+    transitivePeerDependencies:
+      - supports-color
+
+  sequelize-pool@7.1.0: {}
+
+  sequelize@6.37.7(pg-hstore@2.3.4)(pg@8.10.0):
+    dependencies:
+      '@types/debug': 4.1.12
+      '@types/validator': 13.15.2
+      debug: 4.4.0
+      dottie: 2.0.6
+      inflection: 1.13.4
+      lodash: 4.17.21
+      moment: 2.30.1
+      moment-timezone: 0.5.48
+      pg-connection-string: 2.8.5
+      retry-as-promised: 7.1.1
+      semver: 7.7.1
+      sequelize-pool: 7.1.0
+      toposort-class: 1.0.1
+      uuid: 8.3.2
+      validator: 13.15.0
+      wkx: 0.5.0
+    optionalDependencies:
+      pg: 8.10.0
+      pg-hstore: 2.3.4
     transitivePeerDependencies:
       - supports-color
 
@@ -19833,9 +19973,11 @@ snapshots:
       glob: 7.2.3
       minimatch: 3.1.2
 
-  texhub-broadcast@1.0.84:
+  texhub-broadcast@1.0.87:
     dependencies:
       '@socket.io/admin-ui': 0.5.1(socket.io@4.8.1)
+      '@types/diff': 8.0.0
+      diff: 8.0.2
       dotenv: 16.5.0
       esm-module-alias: 2.2.1
       express: 4.21.2
@@ -19849,19 +19991,28 @@ snapshots:
       module-alias: 2.2.3
       p-queue: 8.1.0
       pg: 8.10.0
+      pg-hstore: 2.3.4
       prom-client: 14.2.0
       rdlib0: 0.2.106
       rdy-protocols: 1.0.14(rdyjs@13.6.32)
       rdyjs: 13.6.32
       redis: 4.7.0
+      sequelize: 6.37.7(pg-hstore@2.3.4)(pg@8.10.0)
       socket.io: 4.8.1
       socket.io-client: 4.8.1
       uuid: 11.1.0
     transitivePeerDependencies:
       - bufferutil
       - encoding
+      - ibm_db
+      - mariadb
+      - mysql2
+      - oracledb
       - pg-native
+      - snowflake-sdk
+      - sqlite3
       - supports-color
+      - tedious
       - utf-8-validate
 
   text-table@0.2.0: {}
@@ -19902,6 +20053,8 @@ snapshots:
   toggle-selection@1.0.6: {}
 
   toidentifier@1.0.1: {}
+
+  toposort-class@1.0.1: {}
 
   tough-cookie@4.1.4:
     dependencies:
@@ -20106,6 +20259,8 @@ snapshots:
       which-boxed-primitive: 1.1.1
 
   underscore@1.12.1: {}
+
+  underscore@1.13.7: {}
 
   undici-types@5.26.5: {}
 
@@ -20507,6 +20662,10 @@ snapshots:
   which@2.0.2:
     dependencies:
       isexe: 2.0.0
+
+  wkx@0.5.0:
+    dependencies:
+      '@types/node': 22.15.3
 
   word-wrap@1.2.5: {}
 
