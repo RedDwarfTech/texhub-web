@@ -5,7 +5,7 @@ import React from "react";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import { themeConfig } from "@/service/editor/CollarEditorService";
+import { themeConfig } from "@/config/app/global-conf";
 import { themeMap } from "@/component/common/editor/foundation/extensions/theme/theme";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { delProjInfo, projHasFile } from "@/service/project/ProjectService";

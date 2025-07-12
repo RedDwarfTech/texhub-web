@@ -1,4 +1,4 @@
-import { themeConfig } from "@/service/editor/CollarEditorService";
+import { themeConfig } from "@/config/app/global-conf";
 import {
   defaultHighlightStyle,
   syntaxHighlighting,
