@@ -1,15 +1,187 @@
-.docBody{
+.docBody {
     width: 100%;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    display: flex;
 }
 
-.docContainer{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    width: 80%;
+.docSidebar {
+    width: 280px;
+    background-color: #fff;
+    border-right: 1px solid #e9ecef;
+    padding: 20px 0;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.docMain {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+.docContainer {
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .docItem {
-    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.docItem h6 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 15px;
+}
+
+.docItem p {
+    color: #6c757d;
+    margin-bottom: 30px;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.docLinks {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.docLinkCard {
+    background-color: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 20px;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.docLinkCard:hover {
+    border-color: #007bff;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
+    transform: translateY(-2px);
+    text-decoration: none;
+    color: inherit;
+}
+
+.docLinkTitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.docLinkDesc {
+    color: #6c757d;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.sidebarTitle {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    padding: 0 20px 15px 20px;
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 20px;
+}
+
+.sidebarNav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebarNavItem {
+    padding: 12px 20px;
+    color: #6c757d;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+    font-weight: 500;
+}
+
+.sidebarNavItem:hover {
+    background-color: #f8f9fa;
+    color: #007bff;
+    border-left-color: #007bff;
+}
+
+.sidebarNavItem.active {
+    background-color: #e7f3ff;
+    color: #007bff;
+    border-left-color: #007bff;
+    font-weight: 600;
+}
+
+.subNav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: #f8f9fa;
+}
+
+.subNavItem {
+    padding: 8px 20px 8px 40px;
+    color: #6c757d;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-left: 2px solid transparent;
+    font-size: 0.9rem;
+}
+
+.subNavItem:hover {
+    background-color: #e9ecef;
+    color: #007bff;
+    border-left-color: #007bff;
+}
+
+.subNavItem.active {
+    background-color: #d1ecf1;
+    color: #007bff;
+    border-left-color: #007bff;
+    font-weight: 500;
+}
+
+.noContent {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px dashed #dee2e6;
+}
+
+.noContent p {
+    margin: 0;
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .docBody {
+        flex-direction: column;
+    }
+    
+    .docSidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .docMain {
+        padding: 20px;
+    }
+    
+    .docLinks {
+        grid-template-columns: 1fr;
+    }
 }
