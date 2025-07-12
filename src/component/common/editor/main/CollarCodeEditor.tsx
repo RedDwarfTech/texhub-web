@@ -46,7 +46,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const { projInfo, projConf, insertContext, replaceContext } = useSelector(
     (state: AppState) => state.proj
   );
-  const { connState, editorView, texEditorSocketIOWs } = useSelector(
+  const { editorView, texEditorSocketIOWs } = useSelector(
     (state: AppState) => state.projEditor
   );
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
@@ -281,16 +281,16 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   const handleTables = () => {};
 
-  const renderConnState = (connState: string) => {
-    switch (connState) {
-      case "connected":
-        return <i className={`fa-solid fa-wifi ${styles.stateConnect}`}></i>;
-      case "disconnected":
-        return <i className={`fa-solid fa-wifi ${styles.stateDisconnect}`}></i>;
-      case "connecting":
-        return <i className={`fa-solid fa-wifi ${styles.stateConnecting}`}></i>;
-      default:
-        return <i className={`fa-solid fa-wifi ${styles.stateDisconnect}`}></i>;
+  const renderConnState = () => {
+    if (!texEditorSocketIOWs) {
+      console.warn("provider is null");
+      return;
+    }
+    let connected = texEditorSocketIOWs?.ws?.connected;
+    if(connected){
+      return <i className={`fa-solid fa-wifi ${styles.stateConnect}`}></i>;
+    }else{
+      return <i className={`fa-solid fa-wifi ${styles.stateDisconnect}`}></i>;
     }
   };
 
@@ -298,23 +298,17 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
    * if the websocket connect disconnected
    * Try to reconnect the editor websocket
    */
-  const tryReconnect = (connState: string) => {
-    if (BaseMethods.isNull(connState)) {
+  const tryReconnect = () => {
+    if (!texEditorSocketIOWs) {
+      console.warn("provider is null");
       return;
     }
-    switch (connState) {
-      case "connected":
-        break;
-      case "disconnected":
-        toast.info("try to reconnecting...");
-        initByActiveFile(activeFile);
-        break;
-      case "connecting":
-        toast.info("try to reconnecting...");
-        initByActiveFile(activeFile);
-        break;
-      default:
-        break;
+    let connected = texEditorSocketIOWs?.ws?.connected;
+    if (connected) {
+      console.log("connected is ok");
+    } else {
+      // try reconnect
+      console.log("try reconnect");
     }
   };
 
@@ -400,10 +394,10 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
           data-bs-toggle="modal"
           data-bs-target=""
           onClick={() => {
-            tryReconnect(connState);
+            tryReconnect();
           }}
         >
-          {renderConnState(connState)}
+          {renderConnState()}
         </button>
       </div>
       <div ref={edContainer} className={styles.editorContainer}></div>
