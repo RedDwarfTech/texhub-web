@@ -37,12 +37,15 @@ export default defineConfig({
     }) as PluginOption,
   ],
   css: {},
+  optimizeDeps:{
+    exclude: ['wkx', 'sequelize']
+  },
   build: {
     commonjsOptions: { include: [] },
     outDir: "build",
     sourcemap: "hidden",
     rollupOptions: {
-      external: [],
+      external: ['sequelize'],
       output: {
         sourcemapExcludeSources: false,
         manualChunks: {
@@ -56,6 +59,7 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "src"),
       "~bootstrap": path.resolve(__dirname, "node_modules/bootstrap"),
+      'sequelize': path.resolve(__dirname, 'src/empty.js'),
     },
   },
   server: {
