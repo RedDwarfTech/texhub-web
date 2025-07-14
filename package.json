@@ -158,7 +158,7 @@
       "react": "18.1.0",
       "react-dom": "18.1.0",
       "react-redux": "9.0.1",
-      "@reduxjs/toolkit": "^2.7.0",
+      "@reduxjs/toolkit": "^2.8.2",
       "redux": "^5.0.1"
     }
   },
@@ -172,7 +172,7 @@
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-redux": "9.0.1",
-    "@reduxjs/toolkit": "^2.7.0",
+    "@reduxjs/toolkit": "^2.8.2",
     "redux": "^5.0.1"
   }
 }
