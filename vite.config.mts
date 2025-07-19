@@ -43,7 +43,7 @@ export default defineConfig({
   build: {
     commonjsOptions: { include: [] },
     outDir: "build",
-    sourcemap: "hidden",
+    sourcemap: true,
     rollupOptions: {
       external: ['sequelize'],
       output: {
