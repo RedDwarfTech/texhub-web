@@ -113,8 +113,8 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
                     onMouseLeave={() => setHoverIdx(null)}
                 >
                     <div className={styles.inforow}>
-                        <span className={styles.filename}>{t("label_file_name")}：{item.name}</span>
-                        <span className={styles.time}>{t("label_time")}：{dayjs(item.updated_time).format('YYYY-MM-DD HH:mm:ss')}</span>
+                        <div className={styles.filename}>{t("label_file_name")}：{item.name}</div>
+                        <div className={styles.time}>{t("label_time")}：{dayjs(item.created_time).format('YYYY-MM-DD HH:mm:ss')}</div>
                     </div>
                     <div id="hisdiff">{renderDiff(item.diff)}</div>
                     <div className={styles.footer} style={{marginTop: 10}}>

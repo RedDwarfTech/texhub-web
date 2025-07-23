@@ -38,15 +38,16 @@ export default defineConfig({
   ],
   css: {},
   optimizeDeps:{
-    exclude: ['wkx', 'sequelize']
+    exclude: []
   },
   build: {
     commonjsOptions: { include: [] },
     outDir: "build",
     sourcemap: true,
     rollupOptions: {
-      external: ['sequelize'],
+      external: [],
       output: {
+        sourcemap: true,
         sourcemapExcludeSources: false,
         manualChunks: {
           react: ["react-router-dom"],
