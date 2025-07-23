@@ -464,7 +464,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     return (
       <div className={styles.previewPageNav}>
         <input
-          value={currentPage || 1}
+          value={currentPage || undefined}
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
             handleNavPageChange(e);
           }}

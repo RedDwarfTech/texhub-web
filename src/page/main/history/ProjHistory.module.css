@@ -48,6 +48,11 @@
     font-weight: 600;
     font-size: 15px;
     color: #2d3a4b;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+    cursor: help;
 }
 
 .time {
