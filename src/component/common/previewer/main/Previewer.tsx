@@ -100,15 +100,19 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   }, [props.projectId]);
 
   React.useEffect(() => {
-    if (curPage && curPage >= 0) {
-      setCurrentPage(curPage);
-    } else if (props.curPage) {
-      setAndDispatchPdfPage(props.curPage, props.projectId, "fullscreennav");
-    } else {
-      let cp = getCurPdfPage(props.projectId);
-      setCurrentPage(cp);
-    }
-  }, [curPage]);
+  if (curPage && curPage >= 0) {
+    setCurrentPage(curPage);
+  }
+}, [curPage]);
+
+React.useEffect(() => {
+  if (!curPage && props.curPage) {
+    setAndDispatchPdfPage(props.curPage, props.projectId, "fullscreennav");
+  } else if (!curPage && !props.curPage) {
+    let cp = getCurPdfPage(props.projectId);
+    setCurrentPage(cp);
+  }
+}, [props.curPage, props.projectId]);
 
   React.useEffect(() => {
     if (projInfo && Object.keys(projInfo).length > 0) {
