@@ -62,7 +62,6 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     CompileResultType.SUCCESS
   );
   const [numPages, setNumPages] = useState<number>();
-  const [currentPage, setCurrentPage] = useState<number>(1);
   const [devModel, setDevModel] = useState<boolean>();
   const virtualListRef = React.useRef<VariableSizeList>(null);
   const { handleScrollTop, handleZoomIn, handleFullScreen, handleZoomOut } =
@@ -98,21 +97,6 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   React.useEffect(() => {
     getLatestCompile(props.projectId);
   }, [props.projectId]);
-
-  React.useEffect(() => {
-  if (curPage && curPage >= 0) {
-    setCurrentPage(curPage);
-  }
-}, [curPage]);
-
-React.useEffect(() => {
-  if (!curPage && props.curPage) {
-    setAndDispatchPdfPage(props.curPage, props.projectId, "fullscreennav");
-  } else if (!curPage && !props.curPage) {
-    let cp = getCurPdfPage(props.projectId);
-    setCurrentPage(cp);
-  }
-}, [props.curPage, props.projectId]);
 
   React.useEffect(() => {
     if (projInfo && Object.keys(projInfo).length > 0) {
@@ -285,6 +269,7 @@ React.useEffect(() => {
         setPageNum={setPageNum}
         virtualListRef={virtualListRef}
         pdfOptions={opt}
+        curPdfPage={props.curPage}
       ></MemoizedPDFPreview>
     );
   };
@@ -300,7 +285,7 @@ React.useEffect(() => {
               className={styles.previewIconButton}
               data-bs-toggle="tooltip"
               title={t("btn_debug_app")}
-              onClick={() => {}}
+              onClick={() => { }}
             >
               <i className="fa-solid fa-check"></i>
             </button>
@@ -433,7 +418,7 @@ React.useEffect(() => {
             title={t("btn_fullscreen")}
             id="fullscreenbutton"
             onClick={() => {
-              handleFullScreen(currentPage);
+              handleFullScreen(curPage);
             }}
           >
             <i className="fa fa-maximize"></i>
@@ -468,7 +453,7 @@ React.useEffect(() => {
     return (
       <div className={styles.previewPageNav}>
         <input
-          value={currentPage || undefined}
+          value={curPage || undefined}
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
             handleNavPageChange(e);
           }}

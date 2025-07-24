@@ -7,5 +7,6 @@ export interface PDFPreviewProps {
   viewModel: string;
   setPageNum: (page: number) => void;
   virtualListRef: React.RefObject<VariableSizeList>;
-  pdfOptions: Options
+  pdfOptions: Options,
+  curPdfPage?: number,
 }

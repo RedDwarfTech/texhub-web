@@ -40,6 +40,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     setPageNum,
     virtualListRef,
     pdfOptions,
+    curPdfPage,
   }) => {
     let cachedScale = getCurPdfScale(projId, viewModel);
     const { pdfFocus, projAttr } = useSelector((state: AppState) => state.proj);
@@ -190,11 +191,21 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
             itemSize={(pageIndex) => getPageHeight(pageIndex, width)}
             onItemsRendered={(props: ListOnItemsRenderedProps) => {
-              setAndDispatchPdfPage(
-                props.overscanStopIndex,
-                projId,
-                "IntersectionObserver"
-              );
+              if (curPdfPage && curPdfPage > 0) {
+                setAndDispatchPdfPage(curPdfPage, projId, "fullscreennav");
+                let cp = curPdfPage;
+                setTimeout(() => {
+                  scrollToPage(cp, virtualListRef);
+                }, 1000);
+
+                curPdfPage = undefined;
+              } else {
+                setAndDispatchPdfPage(
+                  props.overscanStopIndex,
+                  projId,
+                  "IntersectionObserver"
+                );
+              }
             }}
           >
             {({
@@ -222,7 +233,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
     };
 
-    const onResize = (size: Size) => {};
+    const onResize = (size: Size) => { };
 
     // avoid the cached expired token
     if (
