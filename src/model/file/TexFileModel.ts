@@ -1,7 +1,7 @@
 export interface TexFileModel { 
-    id: number; 
+    id: string; 
     name: string;
-    template_id: number;
+    template_id: string;
     created_time: string;
     updated_time: string;
     file_path: string;
