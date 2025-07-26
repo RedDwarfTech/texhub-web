@@ -34,9 +34,10 @@
 
 .inforow {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: left;
     margin-bottom: 6px;
+    flex-direction: column;
 }
 
 .btngroup {
@@ -51,7 +52,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 200px;
+    max-width: 300px;
     cursor: help;
 }
 
