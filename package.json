@@ -144,6 +144,7 @@
     "@types/react-copy-to-clipboard": "^5.0.7",
     "@types/react-syntax-highlighter": "^15.5.13",
     "@types/react-window": "^1.8.8",
+    "@types/react-window-infinite-loader": "^1.0.9",
     "@types/redux-logger": "^3.0.13",
     "jest": "^29.7.0",
     "ts-jest": "^29.4.0",
