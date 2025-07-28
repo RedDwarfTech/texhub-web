@@ -3,6 +3,6 @@ export interface ProjHisotry {
     content: string;
     updated_time: number;
     created_time: string;
-    id: number;
+    id: string;
     diff: string;
 }

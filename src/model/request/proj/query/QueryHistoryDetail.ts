@@ -1,3 +1,3 @@
 export interface QueryHistoryDetail { 
-    id: number;
+    id: string;
 }

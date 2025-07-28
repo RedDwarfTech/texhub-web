@@ -18,20 +18,17 @@ export type HistoryItemProps = {
 
 const HistoryItem: React.FC<HistoryItemProps> = (props: HistoryItemProps) => {
 
-    const { projHisPage } = useSelector((state: AppState) => state.proj);
     const { t } = useTranslation();
     const [hoverIdx, setHoverIdx] = useState<number | null>(null);
-    const [historyList, setHistoryList] = useState<ProjHisotry[]>([]);
-    const [loading, setLoading] = useState(false);
 
-    const getHistoryDetail = (id: number) => {
+    const getHistoryDetail = (id: string) => {
         const hist: QueryHistoryDetail = {
             id: id
         };
         getProjHistoryDetail(hist);
     }
 
-    const restoreProjHistories = (snapId: number) => {
+    const restoreProjHistories = (snapId: string) => {
         const hist: QueryHistoryDetail = {
             id: snapId
         };
@@ -39,13 +36,6 @@ const HistoryItem: React.FC<HistoryItemProps> = (props: HistoryItemProps) => {
             if (ResponseHandler.responseSuccess(resp)) {
                 let snapshot = resp.result.content;
                 replaceTextToEditor(snapshot);
-                /**if(snapshot && curDoc){
-                    let ss: Uint8Array = base64ToUint8Array(snapshot);
-                    const decoded = Y.decodeSnapshot(ss);
-                    const docRestored = Y.createDocFromSnapshot(curDoc, decoded);
-                    replaceTextToEditor(docRestored);
-                    console.log(docRestored);
-                }**/
             }
         });
     }

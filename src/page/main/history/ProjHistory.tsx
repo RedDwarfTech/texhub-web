@@ -9,6 +9,9 @@ import HistoryItem from "./item/HistoryItem";
 import AutoSizer, { Size } from "react-virtualized-auto-sizer";
 import InfiniteLoader from "react-window-infinite-loader";
 import List from "react-window-infinite-loader";
+import { ProjHisotry } from "@/model/proj/history/ProjHistory";
+import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
+import { projHistoryPage } from "@/service/project/ProjectService";
 
 export type HistoryProps = {
     projectId: string;
@@ -19,6 +22,17 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     const { projHisPage } = useSelector((state: AppState) => state.proj);
     const { t } = useTranslation();
     const virtualListRef = React.useRef<VariableSizeList>(null);
+    const [historyList, setHistoryList] = useState<ProjHisotry[]>([]);
+
+    React.useEffect(() => {
+        if (projHisPage && projHisPage.data && projHisPage.data.length > 0) {
+            let legacyList = historyList;
+            projHisPage.data.forEach((item) => {
+                legacyList.push(item);
+            });
+            setHistoryList(legacyList);
+        }
+    }, [projHisPage]);
 
     const handleWindowPdfScroll = (e: ListOnScrollProps) => {
         const scrollOffset = e.scrollOffset;
@@ -26,68 +40,45 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
 
     const onResize = (size: Size) => { };
 
-    const loadMoreItems = (startIndex: number, stopIndex: number) => {
+    // 获取 id 最小的元素
+    const getMinIdItem = () => {
+        if (historyList.length === 0) return null;
 
-    }
-
-    // Render an item or a loading indicator.
-    const Item = ({ index, style }: { index: number; style: React.CSSProperties }) => {
-        let content;
-        if (!isItemLoaded(index)) {
-            content = "Loading...";
-        } else {
-            if (!projHisPage || !projHisPage.data || projHisPage.data.length === 0) {
-                return null;
-            }
-            content = projHisPage.data[index].name;
-        }
-
-        return <div style={style}>{content}</div>;
+        // 使用 BigInt 进行比较（适用于超大整数）
+        return historyList.reduce((minItem, currentItem) => {
+            const currentId = BigInt(currentItem.id);
+            const minId = BigInt(minItem.id);
+            return currentId < minId ? currentItem : minItem;
+        });
     };
 
+    const loadMoreItems = (startIndex: number, stopIndex: number) => {
+        const minId = getMinIdItem()?.id || null;
+        const hist: QueryHistory = {
+            project_id: props.projectId,
+            offset: minId,
+        };
+        projHistoryPage(hist);
+    }
+
     const isItemLoaded = (index: number) => {
-        if (!projHisPage || !projHisPage.data || projHisPage.data.length === 0) {
+        if (!historyList || historyList.length === 0) {
             return false;
         }
-        return index < projHisPage!.data!.length;
+        return index < historyList.length;
     };
 
     const renderElement = (index: number, style: React.CSSProperties) => {
-        if (!projHisPage || !projHisPage.data || projHisPage.data.length === 0) {
+        if (!historyList || historyList.length === 0) {
             return null;
         }
-        if (projHisPage.data[index] === undefined) {
+        if (historyList[index] === undefined) {
             return null;
         }
-        return (<div style={style}>
-            {<HistoryItem item={projHisPage!.data![index]} projectId={props.projectId} idx={index} />}
+        return (<div>
+            {<HistoryItem item={historyList[index]} projectId={props.projectId} idx={index} />}
         </div>);
     }
-
-    const renderScrollList = (width: number, height: number) => (
-        <InfiniteLoader
-            isItemLoaded={isItemLoaded}
-            itemCount={100}
-            loadMoreItems={loadMoreItems}
-        >
-            {({ onItemsRendered, ref }) => (
-                <VariableSizeList
-                    height={height}
-                    width={width}
-                    itemCount={100}
-                    itemSize={(pageIndex) => { return 100 }}
-                    //itemSize={180}
-                    onItemsRendered={onItemsRendered}
-                    ref={ref}
-                    {...props}
-                >
-                    {({ index, style }) => (
-                        renderElement(index, style)
-                    )}
-                </VariableSizeList>
-            )}
-        </InfiniteLoader>
-    );
 
     const renderList = (width: number, height: number) => {
         return (
@@ -106,7 +97,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
                         itemCount={10}
                         overscanCount={0}
                         onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
-                        itemSize={(pageIndex) => { return 100 }}
+                        itemSize={(pageIndex) => { return 200 }}
                         onItemsRendered={(props: ListOnItemsRenderedProps) => {
 
                         }}
@@ -118,12 +109,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
                             index: number;
                             style: React.CSSProperties;
                         }) => {
-                            if (!projHisPage || !projHisPage.data || projHisPage.data.length === 0) {
-                                return null;
-                            }
-                            return (
-                                <HistoryItem item={projHisPage.data[index]} projectId={props.projectId} idx={index} />
-                            );
+                            return renderElement(index, style);
                         }}
                     </VariableSizeList>
                 )}
