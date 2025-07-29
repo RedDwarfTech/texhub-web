@@ -3,23 +3,40 @@ import { QueryHistoryDetail } from "@/model/request/proj/query/QueryHistoryDetai
 import { AppState } from "@/redux/types/AppState";
 import { getProjHistoryDetail, replaceTextToEditor } from "@/service/project/ProjectService";
 import { EntityList, ResponseHandler } from "rdjs-wheel";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import styles from "./HistoryItem.module.css";
 import ProjHistoryDetail from "../detail/ProjHistoryDetail";
 import dayjs from "dayjs";
+import React from "react";
 
 export type HistoryItemProps = {
     item: ProjHisotry,
     projectId: string;
     idx: number;
+    onSizeMeasured: (index: number, height: number) => void;
 };
 
 const HistoryItem: React.FC<HistoryItemProps> = (props: HistoryItemProps) => {
 
     const { t } = useTranslation();
     const [hoverIdx, setHoverIdx] = useState<number | null>(null);
+
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    // 测量并通知父组件高度变化
+    React.useEffect(() => {
+        if (containerRef.current && props.onSizeMeasured) {
+            const observer = new ResizeObserver((entries) => {
+                const height = entries[0].contentRect.height;
+                props.onSizeMeasured(props.idx, height);
+            });
+
+            observer.observe(containerRef.current);
+            return () => observer.disconnect();
+        }
+    }, [props.onSizeMeasured, props.idx]);
 
     const getHistoryDetail = (id: string) => {
         const hist: QueryHistoryDetail = {
@@ -49,7 +66,7 @@ const HistoryItem: React.FC<HistoryItemProps> = (props: HistoryItemProps) => {
             return <div>diff 解析失败</div>;
         }
         return (
-            <div className={styles.diffblock}>
+            <div className={styles.diffblock} ref={containerRef}>
                 <pre style={{ whiteSpace: 'pre-wrap', fontSize: '13px', margin: 0, background: 'none', border: 'none', padding: 0 }}>
                     {diffArr.map((part, idx) => {
                         let style = {};

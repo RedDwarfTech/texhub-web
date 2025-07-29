@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import styles from "./ProjHistory.module.css";
 import { AppState } from "@/redux/types/AppState";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ProjHistoryDetail from "./detail/ProjHistoryDetail";
 import { FixedSizeList, ListOnItemsRenderedProps, ListOnScrollProps, VariableSizeList } from "react-window";
@@ -23,14 +23,13 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     const { t } = useTranslation();
     const virtualListRef = React.useRef<VariableSizeList>(null);
     const [historyList, setHistoryList] = useState<ProjHisotry[]>([]);
+    const loadingRef = useRef(false);
+    const sizeMap = useRef(new Map<number, number>());
+    const getItemSize = (index: number) => sizeMap.current.get(index) || 200;
 
     React.useEffect(() => {
-        if (projHisPage && projHisPage.data && projHisPage.data.length > 0) {
-            let legacyList = historyList;
-            projHisPage.data.forEach((item) => {
-                legacyList.push(item);
-            });
-            setHistoryList(legacyList);
+        if (projHisPage?.data && projHisPage?.data?.length && projHisPage?.data?.length > 0) {
+            setHistoryList(prev => [...prev, ...projHisPage.data || []]);
         }
     }, [projHisPage]);
 
@@ -53,12 +52,19 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     };
 
     const loadMoreItems = (startIndex: number, stopIndex: number) => {
-        const minId = getMinIdItem()?.id || null;
-        const hist: QueryHistory = {
-            project_id: props.projectId,
-            offset: minId,
-        };
-        projHistoryPage(hist);
+        debugger
+        if (loadingRef.current) return;
+        loadingRef.current = true;
+        try {
+            const minId = getMinIdItem()?.id || null;
+            const hist: QueryHistory = {
+                project_id: props.projectId,
+                offset: minId,
+            };
+            projHistoryPage(hist);
+        } finally {
+            loadingRef.current = false;
+        }
     }
 
     const isItemLoaded = (index: number) => {
@@ -66,6 +72,13 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
             return false;
         }
         return index < historyList.length;
+    };
+
+    const onSizeMeasured = (index: number, height: number) => {
+        if (sizeMap.current.get(index) !== height) {
+            sizeMap.current.set(index, height);
+            virtualListRef.current?.resetAfterIndex(index);
+        }
     };
 
     const renderElement = (index: number, style: React.CSSProperties) => {
@@ -76,7 +89,10 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
             return null;
         }
         return (<div>
-            {<HistoryItem item={historyList[index]} projectId={props.projectId} idx={index} />}
+            {<HistoryItem item={historyList[index]}
+                projectId={props.projectId}
+                onSizeMeasured={(h) => onSizeMeasured(index, h)}
+                idx={index} />}
         </div>);
     }
 
@@ -84,7 +100,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         return (
             <InfiniteLoader
                 isItemLoaded={isItemLoaded}
-                itemCount={100}
+                itemCount={10}
                 loadMoreItems={loadMoreItems}
             >
                 {({ onItemsRendered, ref }) => (
@@ -95,9 +111,9 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
                         height={height}
                         estimatedItemSize={500}
                         itemCount={10}
-                        overscanCount={0}
+                        overscanCount={5}
                         onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
-                        itemSize={(pageIndex) => { return 200 }}
+                        itemSize={(pageIndex) => { return getItemSize(pageIndex) }}
                         onItemsRendered={(props: ListOnItemsRenderedProps) => {
 
                         }}
@@ -122,7 +138,6 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
             {({ width, height }: { width: number; height: number }) => (
                 <div style={{
                     height: "100vh",
-                    // do not setting the width to make it auto fit
                     width: width + 10,
                     display: "flex",
                     flexDirection: "column",
@@ -147,7 +162,6 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
                         aria-label="Close"></button>
                 </div>
                 <div className={`offcanvas-body ${styles.offcanvasOverride}`}>
-
                     {historyListComponent()}
                 </div>
             </div>
