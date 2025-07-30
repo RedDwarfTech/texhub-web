@@ -25,7 +25,6 @@ const HistoryItem: React.FC<HistoryItemProps> = (props: HistoryItemProps) => {
 
     const containerRef = useRef<HTMLDivElement>(null);
 
-    // 测量并通知父组件高度变化
     React.useEffect(() => {
         if (containerRef.current && props.onSizeMeasured) {
             const observer = new ResizeObserver((entries) => {
@@ -66,7 +65,7 @@ const HistoryItem: React.FC<HistoryItemProps> = (props: HistoryItemProps) => {
             return <div>diff 解析失败</div>;
         }
         return (
-            <div className={styles.diffblock} ref={containerRef}>
+            <div className={styles.diffblock}>
                 <pre style={{ whiteSpace: 'pre-wrap', fontSize: '13px', margin: 0, background: 'none', border: 'none', padding: 0 }}>
                     {diffArr.map((part, idx) => {
                         let style = {};
@@ -112,6 +111,7 @@ const HistoryItem: React.FC<HistoryItemProps> = (props: HistoryItemProps) => {
     const renderHistroyItem = (item: ProjHisotry, idx: number) => {
         return (<div
             key={item.id}
+            ref={containerRef}
             className={hoverIdx === idx ? `${styles.hiscard} ${styles['hiscard-hover']}` : styles.hiscard}
             onMouseEnter={() => setHoverIdx(idx)}
             onMouseLeave={() => setHoverIdx(null)}
