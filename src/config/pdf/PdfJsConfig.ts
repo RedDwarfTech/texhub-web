@@ -1,6 +1,6 @@
 import { pdfjs } from "react-pdf";
 import { getAccessToken } from "@/component/common/cache/Cache";
-import { Options } from "react-pdf/dist/cjs/shared/types";
+import { Options } from "react-pdf/dist/shared/types";
 
 export const pdfJsOptions: Options = {
   cMapUrl: `/pdfjs-dist/${pdfjs.version}/cmaps/`,

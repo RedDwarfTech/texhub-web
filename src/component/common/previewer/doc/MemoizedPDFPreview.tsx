@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Document } from "react-pdf";
 import styles from "./MemoizedPDFPreview.module.css";
-import { DocumentCallback } from "react-pdf/dist/cjs/shared/types";
+import { DocumentCallback } from "react-pdf/dist/shared/types";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import {

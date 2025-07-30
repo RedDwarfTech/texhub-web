@@ -1,4 +1,4 @@
-import { Options } from "react-pdf/dist/cjs/shared/types";
+import { Options } from "react-pdf/dist/shared/types";
 import { VariableSizeList } from "react-window";
 
 export interface PDFPreviewProps {
