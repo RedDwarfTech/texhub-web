@@ -100,7 +100,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         return (
             <InfiniteLoader
                 isItemLoaded={isItemLoaded}
-                itemCount={10}
+                itemCount={historyList.length || 0}
                 loadMoreItems={loadMoreItems}
             >
                 {({ onItemsRendered, ref }) => (
@@ -110,7 +110,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
                         width={width}
                         height={height}
                         estimatedItemSize={500}
-                        itemCount={10}
+                        itemCount={historyList.length || 0}
                         overscanCount={5}
                         onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
                         itemSize={(pageIndex) => { return getItemSize(pageIndex) }}
