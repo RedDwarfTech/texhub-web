@@ -29,7 +29,7 @@ const HistoryItem: React.FC<HistoryItemProps> = (props: HistoryItemProps) => {
         if (containerRef.current && props.onSizeMeasured) {
             const observer = new ResizeObserver((entries) => {
                 const height = entries[0].contentRect.height;
-                props.onSizeMeasured(props.idx, height);
+                props.onSizeMeasured(props.idx, height + 40);
             });
 
             observer.observe(containerRef.current);
@@ -97,7 +97,6 @@ const HistoryItem: React.FC<HistoryItemProps> = (props: HistoryItemProps) => {
                                 </span>
                             );
                         }
-                        // 如果没有换行符，直接渲染
                         if (elements.length === 0) {
                             return <span key={idx} style={style}>{value}</span>;
                         }
