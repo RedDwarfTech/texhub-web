@@ -69,6 +69,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
       const hist: QueryHistory = {
         project_id: props.projectId,
         offset: minId,
+        pageSize: 10
       };
       projHistoryPage(hist);
     } finally {
@@ -118,6 +119,16 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     }
   );
 
+  const onItemsRenderedImpl = ({
+    visibleStartIndex,
+    visibleStopIndex,
+  }: ListOnItemsRenderedProps) => {
+    // 如果可见区域的最后一项是最后一项，则加载更多
+    if (visibleStopIndex === historyList.length - 1) {
+      loadMoreItems(visibleStopIndex, visibleStopIndex + 1);
+    }
+  };
+
   const renderList = (width: number, height: number) => {
     return (
       <InfiniteLoader
@@ -138,7 +149,9 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
             itemSize={(pageIndex) => {
               return getItemSize(pageIndex);
             }}
-            onItemsRendered={(props: ListOnItemsRenderedProps) => {}}
+            onItemsRendered={(props: ListOnItemsRenderedProps) => {
+              onItemsRenderedImpl(props);
+            }}
           >
             {({
               index,
