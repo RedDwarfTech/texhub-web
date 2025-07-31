@@ -69,7 +69,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
       const hist: QueryHistory = {
         project_id: props.projectId,
         offset: minId,
-        pageSize: 10
+        page_size: 10
       };
       projHistoryPage(hist);
     } finally {
