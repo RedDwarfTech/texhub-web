@@ -3,6 +3,7 @@ import { AppState } from "@/redux/types/AppState";
 import React, { useRef, useState } from "react";
 import { ProjHisotry } from "@/model/proj/history/ProjHistory";
 import OmsSyntaxHighlight from "./OmsSyntaxHighlight";
+import { useTranslation } from "react-i18next";
 
 export type HistoryProps = {
   projectId: string;
@@ -12,6 +13,7 @@ const ProjHistoryDetail: React.FC<HistoryProps> = (props: HistoryProps) => {
   const { curHistory } = useSelector((state: AppState) => state.proj);
   const [currentHistory, setCurrentHistory] = useState<ProjHisotry>();
   const delProjCancelRef = useRef<HTMLButtonElement>(null);
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     setCurrentHistory(curHistory);
@@ -27,7 +29,7 @@ const ProjHistoryDetail: React.FC<HistoryProps> = (props: HistoryProps) => {
       <div className="modal-dialog modal-lg">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">版本详情</h5>
+            <h5 className="modal-title">{t("title_version_detail")}</h5>
             <button
               type="button"
               className="btn-close"

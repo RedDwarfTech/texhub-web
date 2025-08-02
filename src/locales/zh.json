@@ -136,6 +136,7 @@
     "title_dev_model": "开发模式",
     "title_socket_channel": "Websocket通道",
     "title_create_folder": "创建文件夹",
+    "title_version_detail": "版本详情",
     "label_create_time": "创建时间",
     "label_update_time": "更新时间",
     "label_time": "时间",
