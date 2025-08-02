@@ -114,7 +114,7 @@ const EHeader: React.FC = () => {
 
   const handleSettings = (mainFile: TexFileModel) => {};
 
-  const handleProjHist = (mainFile: TexFileModel) => {
+  const showProjHistory = (mainFile: TexFileModel) => {
     const hist: QueryHistory = {
       project_id: mainFile.project_id,
       page_size: 10
@@ -163,7 +163,7 @@ const EHeader: React.FC = () => {
           data-bs-target="#projHistory"
           aria-controls="offcanvasExample"
           onClick={() => {
-            handleProjHist(mainFile);
+            showProjHistory(mainFile);
           }}
         >
           <i className="fa-solid fa-timeline"></i> {t("btn_history")}

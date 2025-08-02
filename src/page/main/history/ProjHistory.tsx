@@ -5,7 +5,6 @@ import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ProjHistoryDetail from "./detail/ProjHistoryDetail";
 import {
-  FixedSizeList,
   ListOnItemsRenderedProps,
   ListOnScrollProps,
   VariableSizeList,
@@ -13,7 +12,6 @@ import {
 import HistoryItem from "./item/HistoryItem";
 import AutoSizer, { Size } from "react-virtualized-auto-sizer";
 import InfiniteLoader from "react-window-infinite-loader";
-import List from "react-window-infinite-loader";
 import { ProjHisotry } from "@/model/proj/history/ProjHistory";
 import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
 import { projHistoryPage } from "@/service/project/ProjectService";
@@ -41,6 +39,9 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
       projHisPage?.data?.length > 0
     ) {
       setHistoryList((prev) => [...prev, ...(projHisPage.data || [])]);
+    }
+    return () => {
+      setHistoryList([]);
     }
   }, [projHisPage]);
 

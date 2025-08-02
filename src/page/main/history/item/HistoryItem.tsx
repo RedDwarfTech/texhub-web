@@ -1,13 +1,10 @@
 import { ProjHisotry } from "@/model/proj/history/ProjHistory";
 import { QueryHistoryDetail } from "@/model/request/proj/query/QueryHistoryDetail";
-import { AppState } from "@/redux/types/AppState";
 import { getProjHistoryDetail, replaceTextToEditor } from "@/service/project/ProjectService";
-import { EntityList, ResponseHandler } from "rdjs-wheel";
+import { ResponseHandler } from "rdjs-wheel";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 import styles from "./HistoryItem.module.css";
-import ProjHistoryDetail from "../detail/ProjHistoryDetail";
 import dayjs from "dayjs";
 import React from "react";
 
