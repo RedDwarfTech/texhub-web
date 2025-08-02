@@ -131,7 +131,6 @@ const HistoryItem: React.FC<HistoryItemProps> = (props: HistoryItemProps) => {
                     <button className="btn btn-outline-primary" onClick={() => { restoreProjHistories(item.id) }} style={{ fontSize: '13px', padding: '4px 16px' }}>{t("btn_restore")}</button>
                 </div>
             </div>
-            <ProjHistoryDetail projectId={props.projectId}></ProjHistoryDetail>
         </div>);
     }
 
