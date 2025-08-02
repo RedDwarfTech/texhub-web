@@ -1,11 +1,6 @@
+import { OmsProps } from '@/model/props/component/OmsProps.js';
 import { useState } from 'react';
 import * as React from 'react';
-
-export type OmsProps = {
-  textContent: string;
-  language: string;
-  darkMode?: boolean;
-}
 
 const OmsSyntaxHighlight: React.FC<OmsProps> = (props: OmsProps) => {
   const { textContent, darkMode, language = 'txt' } = props;
@@ -37,6 +32,8 @@ const OmsSyntaxHighlight: React.FC<OmsProps> = (props: OmsProps) => {
       style={darkMode ? ThemeDark : ThemeLight}
       language={language}
       PreTag='div'
+      wrapLines={true}
+      wrapLongLines={true}
       codeTagProps={{
         style: {
           fontSize: "inherit",
