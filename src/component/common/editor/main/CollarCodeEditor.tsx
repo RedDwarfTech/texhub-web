@@ -82,41 +82,37 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }, []);
 
   React.useEffect(() => {
-    if (isEnableSubDoc()) {
+    if (BaseMethods.isNull(curSubYDoc)) {
       return;
     }
-    if (!BaseMethods.isNull(curSubYDoc)) {
-      console.log("curSubYDoc", curSubYDoc);
-      let ytext = curSubYDoc.getText(curSubYDoc.guid);
-      const undoManager = new Y.UndoManager(ytext);
-      if (!texEditorSocketIOWs) {
-        console.error("texEditorSocketIOWs is null");
-        return;
-      }
-      const texEditorState: EditorState = EditorState.create({
-        doc: ytext.toString(),
-        extensions: createExtensions({
-          ytext: ytext,
-          wsProvider: texEditorSocketIOWs,
-          undoManager: undoManager,
-          docName: curSubYDoc.guid,
-          metadata: metadata,
-        }),
-      });
-      const editorView: EditorView = new EditorView({
-        state: texEditorState,
-        parent: edContainer.current!,
-      });
-      if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
-        activeEditorView?.destroy();
-      }
-      setEditorInstance(editorView);
-      if (curEditorRootDoc) {
-        curEditorRootDoc
-          .getMap("texhubsubdoc")
-          .set(curSubYDoc.guid, curSubYDoc);
-        setCurRootYDoc(curEditorRootDoc);
-      }
+    console.log("curSubYDoc", curSubYDoc);
+    let ytext = curSubYDoc.getText(curSubYDoc.guid);
+    const undoManager = new Y.UndoManager(ytext);
+    if (!texEditorSocketIOWs) {
+      console.error("texEditorSocketIOWs is null");
+      return;
+    }
+    const texEditorState: EditorState = EditorState.create({
+      doc: ytext.toString(),
+      extensions: createExtensions({
+        ytext: ytext,
+        wsProvider: texEditorSocketIOWs,
+        undoManager: undoManager,
+        docName: curSubYDoc.guid,
+        metadata: metadata,
+      }),
+    });
+    const editorView: EditorView = new EditorView({
+      state: texEditorState,
+      parent: edContainer.current!,
+    });
+    if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
+      activeEditorView?.destroy();
+    }
+    setEditorInstance(editorView);
+    if (curEditorRootDoc) {
+      curEditorRootDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, curSubYDoc);
+      setCurRootYDoc(curEditorRootDoc);
     }
   }, [curSubYDoc]);
 

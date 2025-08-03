@@ -192,10 +192,6 @@ export function initSocketIOEditor(
   if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
     activeEditorView.destroy();
   }
-  if(editorAttr.docIntId && parseInt(editorAttr.docIntId) > 100000){
-    console.error("docIntId is not valid", editorAttr.docIntId);
-    debugger;
-  }
   if (SingleClientProvider.getCurrentRoom() !== editorAttr.docId) {
     // user siwtch docs
     SingleClientProvider.destroy();

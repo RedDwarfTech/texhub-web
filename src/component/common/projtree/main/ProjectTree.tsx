@@ -388,7 +388,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   ) => {
     e.preventDefault();
     e.stopPropagation();
-    debugger
     handleFileSelected(fileItem, selectedFile, curRootDoc!, editorView);
   };
 
