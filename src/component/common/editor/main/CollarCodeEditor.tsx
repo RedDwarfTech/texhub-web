@@ -221,6 +221,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       name: file.name,
       theme: themeMap.get("Solarized Light")!,
     };
+
     if (isEnableSubDoc()) {
       initSubDocSocketIO(editorAttr, activeEditorView, file);
     } else {

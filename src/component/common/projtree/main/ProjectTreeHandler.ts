@@ -67,7 +67,7 @@ export function handleFileSelected(
   chooseFile(newSelectedFile);
   if (newSelectedFile.file_type !== TeXFileType.FOLDER) {
     switchFile(newSelectedFile);
-    if (isEnableSubDoc()) {
+    if (!isEnableSubDoc()) {
       return;
     }
     debugger;
