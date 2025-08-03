@@ -79,6 +79,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
   };
 
   const isItemLoaded = (index: number) => {
+    return false;
     if (!historyList || historyList.length === 0) {
       return false;
     }
@@ -151,7 +152,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
               return getItemSize(pageIndex);
             }}
             onItemsRendered={(props: ListOnItemsRenderedProps) => {
-              onItemsRenderedImpl(props);
+              //onItemsRenderedImpl(props);
             }}
           >
             {({

@@ -1,3 +1,4 @@
+import { isEnableSubDoc } from "@/common/EnvUtil.js";
 import { saveGithubToken } from "@/service/profile/AppConfigService";
 import { ResponseHandler } from "rdjs-wheel";
 import React from "react";
@@ -103,10 +104,7 @@ const AppConfig: React.FC = () => {
   };
 
   const renderSubDocInput = () => {
-    if (
-      localStorage.getItem("subdoc") &&
-      localStorage.getItem("subdoc")?.toString() === "subdoc"
-    ) {
+    if (isEnableSubDoc()) {
       return (
         <input
           className="form-check-input"

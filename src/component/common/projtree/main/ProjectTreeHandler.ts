@@ -14,6 +14,7 @@ import {
   setCurRootYDoc,
   setCurSubYDoc,
 } from "@/service/project/editor/EditorService";
+import { isEnableSubDoc } from "@/common/EnvUtil.js";
 
 export function handleFileTreeUpdate(
   tree: TexFileModel[],
@@ -66,8 +67,7 @@ export function handleFileSelected(
   chooseFile(newSelectedFile);
   if (newSelectedFile.file_type !== TeXFileType.FOLDER) {
     switchFile(newSelectedFile);
-    let subdoc = localStorage.getItem("subdoc");
-    if (!subdoc || subdoc !== "subdoc") {
+    if (isEnableSubDoc()) {
       return;
     }
     debugger;
@@ -96,13 +96,13 @@ export function handleFileSelected(
         console.log("subdoc content:", text);
         setCurSubYDoc(chooseSubDoc);
       });
-      
+
       // Add connection status listener
       // @ts-ignore
       chooseSubDoc.on("connectionStatus", (status: any) => {
         console.log("SubDoc connection status:", status);
       });
-      
+
       subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
         updateEditor(editorView, tr, event, chooseSubDoc);
       });

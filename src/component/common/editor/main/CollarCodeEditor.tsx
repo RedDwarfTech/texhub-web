@@ -34,6 +34,7 @@ import {
   setCurRootYDoc,
   setEditorInstance,
 } from "@/service/project/editor/EditorService";
+import { isEnableSubDoc } from "@/common/EnvUtil.js";
 
 export type EditorProps = {
   projectId: string;
@@ -81,6 +82,9 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }, []);
 
   React.useEffect(() => {
+    if (isEnableSubDoc()) {
+      return;
+    }
     if (!BaseMethods.isNull(curSubYDoc)) {
       console.log("curSubYDoc", curSubYDoc);
       let ytext = curSubYDoc.getText(curSubYDoc.guid);
@@ -192,8 +196,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     if (activeFile && activeFile.file_type !== TreeFileType.Folder) {
       localStorage.setItem(activeKey, JSON.stringify(activeFile));
     }
-    let subDoc = localStorage.getItem("subdoc");
-    if (subDoc && subDoc === "subdoc") {
+    if (isEnableSubDoc()) {
       return;
     }
     initByActiveFile(activeFile);
@@ -222,9 +225,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       name: file.name,
       theme: themeMap.get("Solarized Light")!,
     };
-
-    const subdoc = localStorage.getItem("subdoc");
-    if (subdoc && subdoc === "subdoc") {
+    if (isEnableSubDoc()) {
       initSubDocSocketIO(editorAttr, activeEditorView, file);
     } else {
       initSocketIOEditor(editorAttr, activeEditorView, edContainer);
@@ -287,9 +288,9 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       return;
     }
     let connected = texEditorSocketIOWs?.ws?.connected;
-    if(connected){
+    if (connected) {
       return <i className={`fa-solid fa-wifi ${styles.stateConnect}`}></i>;
-    }else{
+    } else {
       return <i className={`fa-solid fa-wifi ${styles.stateDisconnect}`}></i>;
     }
   };
