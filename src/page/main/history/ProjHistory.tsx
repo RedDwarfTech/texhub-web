@@ -38,10 +38,11 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
       projHisPage?.data?.length &&
       projHisPage?.data?.length > 0
     ) {
-      setHistoryList((prev) => [...prev, ...(projHisPage.data || [])]);
-    }
-    return () => {
-      setHistoryList([]);
+      setHistoryList((prev) => {
+        const ids = new Set(prev.map((item) => item.id));
+        const newItems = projHisPage!.data!.filter((item) => !ids.has(item.id));
+        return [...prev, ...newItems];
+      });
     }
   }, [projHisPage]);
 
@@ -61,18 +62,18 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     });
   };
 
-  const loadMoreItems = (startIndex: number, stopIndex: number) => {
-    debugger;
+  const loadMoreItems = async (startIndex: number, stopIndex: number) => {
     if (loadingRef.current) return;
     loadingRef.current = true;
+
     try {
       const minId = getMinIdItem()?.id || null;
       const hist: QueryHistory = {
         project_id: props.projectId,
         offset: minId,
-        page_size: 10
+        page_size: 5,
       };
-      projHistoryPage(hist);
+      await projHistoryPage(hist);
     } finally {
       loadingRef.current = false;
     }
@@ -126,6 +127,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
   }: ListOnItemsRenderedProps) => {
     // 如果可见区域的最后一项是最后一项，则加载更多
     if (visibleStopIndex === historyList.length - 1) {
+      console.log("Loading more items...historyList:", historyList.length);
       loadMoreItems(visibleStopIndex, visibleStopIndex + 1);
     }
   };
@@ -151,7 +153,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
               return getItemSize(pageIndex);
             }}
             onItemsRendered={(props: ListOnItemsRenderedProps) => {
-              //onItemsRenderedImpl(props);
+              onItemsRenderedImpl(props);
             }}
           >
             {({

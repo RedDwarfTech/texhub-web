@@ -117,7 +117,7 @@ const EHeader: React.FC = () => {
   const showProjHistory = (mainFile: TexFileModel) => {
     const hist: QueryHistory = {
       project_id: mainFile.project_id,
-      page_size: 10
+      page_size: 5
     };
     projHistoryPage(hist);
   };
