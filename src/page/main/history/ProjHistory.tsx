@@ -79,7 +79,6 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
   };
 
   const isItemLoaded = (index: number) => {
-    return false;
     if (!historyList || historyList.length === 0) {
       return false;
     }
@@ -141,7 +140,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         {({ onItemsRendered, ref }) => (
           <VariableSizeList
             key={"projHistoryScrollList"}
-            ref={virtualListRef}
+            ref={ref}
             width={width}
             height={height}
             estimatedItemSize={500}
