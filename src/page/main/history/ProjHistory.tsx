@@ -34,16 +34,12 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
   );
 
   React.useEffect(() => {
-    var myOffcanvas = document.getElementById("projHistory");
-    if(myOffcanvas) {
-      myOffcanvas.addEventListener("hidden.bs.offcanvas", function () {
-        setHistoryList([]);
-      });
-    }
-  },[]);
+    return () => {
+      setHistoryList([]);
+    };
+  }, []);
 
   React.useEffect(() => {
-    
     if (
       projHisPage?.data &&
       projHisPage?.data?.length &&
