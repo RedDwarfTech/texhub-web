@@ -16,6 +16,7 @@ import { ProjHisotry } from "@/model/proj/history/ProjHistory";
 import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
 import { projHistoryPage } from "@/service/project/ProjectService";
 import { off } from "process";
+import { dispathAction } from "@/service/common/CommonService.js";
 
 export type HistoryProps = {
   projectId: string;
@@ -34,10 +35,18 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
   );
 
   React.useEffect(() => {
+    var myOffcanvas = document.getElementById("projHistory");
+    if(myOffcanvas) {
+      myOffcanvas.addEventListener("hidden.bs.offcanvas", function () {
+        dispathAction("PROJ_HISTORY_PAGE",[]);
+        setHistoryList([]);
+      });
+    }
     return () => {
+      dispathAction("PROJ_HISTORY_PAGE",[]);
       setHistoryList([]);
-    };
-  }, []);
+    }
+  },[]);
 
   React.useEffect(() => {
     if (
