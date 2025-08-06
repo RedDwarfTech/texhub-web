@@ -15,6 +15,7 @@ import InfiniteLoader from "react-window-infinite-loader";
 import { ProjHisotry } from "@/model/proj/history/ProjHistory";
 import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
 import { projHistoryPage } from "@/service/project/ProjectService";
+import { off } from "process";
 
 export type HistoryProps = {
   projectId: string;
@@ -33,6 +34,16 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
   );
 
   React.useEffect(() => {
+    var myOffcanvas = document.getElementById("projHistory");
+    if(myOffcanvas) {
+      myOffcanvas.addEventListener("hidden.bs.offcanvas", function () {
+        setHistoryList([]);
+      });
+    }
+  },[]);
+
+  React.useEffect(() => {
+    
     if (
       projHisPage?.data &&
       projHisPage?.data?.length &&
