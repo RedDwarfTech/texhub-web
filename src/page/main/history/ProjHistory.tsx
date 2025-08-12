@@ -15,7 +15,6 @@ import InfiniteLoader from "react-window-infinite-loader";
 import { ProjHisotry } from "@/model/proj/history/ProjHistory";
 import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
 import { projHistoryPage } from "@/service/project/ProjectService";
-import { off } from "process";
 import { dispathAction } from "@/service/common/CommonService.js";
 
 export type HistoryProps = {
@@ -29,24 +28,29 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
   const [historyList, setHistoryList] = useState<ProjHisotry[]>([]);
   const loadingRef = useRef(false);
   const sizeMap = useRef(new Map<number, number>());
-  const getItemSize = (index: number) => sizeMap.current.get(index) || 200;
+  const getItemSize = (index: number) => {
+    const heightNew = sizeMap.current.get(index);
+    return heightNew || 20;
+  };
   const debounceTimers = useRef<Map<number, ReturnType<typeof setTimeout>>>(
     new Map()
   );
 
   React.useEffect(() => {
     var myOffcanvas = document.getElementById("projHistory");
-    if(myOffcanvas) {
+    if (myOffcanvas) {
       myOffcanvas.addEventListener("hidden.bs.offcanvas", function () {
-        dispathAction("PROJ_HISTORY_PAGE",[]);
+        dispathAction("PROJ_HISTORY_PAGE", []);
         setHistoryList([]);
+        sizeMap.current.clear();
       });
     }
     return () => {
-      dispathAction("PROJ_HISTORY_PAGE",[]);
+      dispathAction("PROJ_HISTORY_PAGE", []);
       setHistoryList([]);
-    }
-  },[]);
+      sizeMap.current.clear();
+    };
+  }, []);
 
   React.useEffect(() => {
     if (
@@ -102,7 +106,31 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     return index < historyList.length;
   };
 
+  React.useEffect(() => {
+    if (virtualListRef.current) {
+      virtualListRef.current.resetAfterIndex(0, true);
+    }
+  }, [historyList]);
+
+  function mergeRefs(...refs: any[]) {
+  return (instance: any) => {
+    refs.forEach(ref => {
+      if (!ref) return;
+      if (typeof ref === "function") {
+        ref(instance);
+      } else {
+        ref.current = instance;
+      }
+    });
+  };
+}
+
   const onSizeMeasured = (index: number, height: number) => {
+    const offcanvas = document.getElementById("projHistory");
+    if (!offcanvas || !offcanvas.classList.contains("show")) {
+      return;
+    }
+
     const prevHeight = sizeMap.current.get(index);
 
     if (prevHeight !== height) {
@@ -141,7 +169,6 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     visibleStartIndex,
     visibleStopIndex,
   }: ListOnItemsRenderedProps) => {
-    // 如果可见区域的最后一项是最后一项，则加载更多
     if (visibleStopIndex === historyList.length - 1) {
       console.log("Loading more items...historyList:", historyList.length);
       loadMoreItems(visibleStopIndex, visibleStopIndex + 1);
@@ -158,7 +185,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         {({ onItemsRendered, ref }) => (
           <VariableSizeList
             key={"projHistoryScrollList"}
-            ref={ref}
+            ref={mergeRefs(ref, virtualListRef)}
             width={width}
             height={height}
             estimatedItemSize={500}
@@ -169,6 +196,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
               return getItemSize(pageIndex);
             }}
             onItemsRendered={(props: ListOnItemsRenderedProps) => {
+              onItemsRendered(props); // 必须调用 InfiniteLoader 的
               onItemsRenderedImpl(props);
             }}
           >

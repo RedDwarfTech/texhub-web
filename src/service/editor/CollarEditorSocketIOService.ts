@@ -271,7 +271,6 @@ export function initSubDocSocketIO(
   // @ts-ignore
   wsProvider.on("synced", () => {
     console.log("WebSocket provider synced");
-    debugger;
     if (file) {
       // when run this first doc init, there contains 2 subdoc
       // still did not found where to add this 2 subdoc
@@ -373,7 +372,6 @@ const handleLoadedSubDoc = (subdocs: Set<Y.Doc>) => {
       return;
     }
     console.log("trigger subdoc loaded to fill content:" + subdoc.guid);
-    debugger;
     // Get the current editor view from Redux store
     const { editorView } = store.getState().projEditor;
     if (editorView) {
