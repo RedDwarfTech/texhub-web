@@ -30,7 +30,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
   const sizeMap = useRef(new Map<number, number>());
   const getItemSize = (index: number) => {
     const heightNew = sizeMap.current.get(index);
-    return heightNew || 20;
+    return heightNew || 200;
   };
   const debounceTimers = useRef<Map<number, ReturnType<typeof setTimeout>>>(
     new Map()
@@ -113,17 +113,17 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
   }, [historyList]);
 
   function mergeRefs(...refs: any[]) {
-  return (instance: any) => {
-    refs.forEach(ref => {
-      if (!ref) return;
-      if (typeof ref === "function") {
-        ref(instance);
-      } else {
-        ref.current = instance;
-      }
-    });
-  };
-}
+    return (instance: any) => {
+      refs.forEach((ref) => {
+        if (!ref) return;
+        if (typeof ref === "function") {
+          ref(instance);
+        } else {
+          ref.current = instance;
+        }
+      });
+    };
+  }
 
   const onSizeMeasured = (index: number, height: number) => {
     const offcanvas = document.getElementById("projHistory");
