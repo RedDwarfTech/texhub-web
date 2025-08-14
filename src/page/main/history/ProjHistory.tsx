@@ -188,7 +188,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
             ref={mergeRefs(ref, virtualListRef)}
             width={width}
             height={height}
-            estimatedItemSize={500}
+            estimatedItemSize={20}
             itemCount={historyList.length}
             overscanCount={5}
             onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
@@ -196,7 +196,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
               return getItemSize(pageIndex);
             }}
             onItemsRendered={(props: ListOnItemsRenderedProps) => {
-              onItemsRendered(props); // 必须调用 InfiniteLoader 的
+              onItemsRendered(props);
               onItemsRenderedImpl(props);
             }}
           >
