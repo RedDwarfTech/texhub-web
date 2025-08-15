@@ -32,9 +32,8 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     const heightNew = sizeMap.current.get(index);
     return heightNew || 200;
   };
-  const debounceTimers = useRef<Map<number, ReturnType<typeof setTimeout>>>(
-    new Map()
-  );
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingResetIndex = useRef<number | null>(null);
 
   React.useEffect(() => {
     var myOffcanvas = document.getElementById("projHistory");
@@ -136,17 +135,25 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     if (prevHeight !== height) {
       sizeMap.current.set(index, height);
 
-      const existingTimer = debounceTimers.current.get(index);
-      if (existingTimer) {
-        clearTimeout(existingTimer);
+      if (pendingResetIndex.current === null) {
+        pendingResetIndex.current = index;
+      } else {
+        pendingResetIndex.current = Math.min(pendingResetIndex.current, index);
       }
 
-      const timer = setTimeout(() => {
-        virtualListRef.current?.resetAfterIndex(index, true);
-        debounceTimers.current.delete(index);
-      }, 100);
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
 
-      debounceTimers.current.set(index, timer);
+      debounceTimer.current = setTimeout(() => {
+        if (pendingResetIndex.current !== null) {
+          virtualListRef.current?.resetAfterIndex(
+            pendingResetIndex.current,
+            true
+          );
+          pendingResetIndex.current = null;
+        }
+      }, 50);
     }
   };
 
@@ -188,7 +195,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
             ref={mergeRefs(ref, virtualListRef)}
             width={width}
             height={height}
-            estimatedItemSize={20}
+            estimatedItemSize={200}
             itemCount={historyList.length}
             overscanCount={5}
             onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
