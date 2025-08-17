@@ -27,6 +27,7 @@ import ProjHistory from "@/page/main/history/ProjHistory";
 import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
 import { CompileResultType } from "@/model/proj/compile/CompileResultType";
 import { setContextCompileResultType } from "@/service/project/preview/PreviewService";
+import { defaultHistoryPageSize } from "@/config/app/global-conf.js";
 
 const EHeader: React.FC = () => {
   const { fileTree } = useSelector((state: AppState) => state.file);
@@ -117,7 +118,7 @@ const EHeader: React.FC = () => {
   const showProjHistory = (mainFile: TexFileModel) => {
     const hist: QueryHistory = {
       project_id: mainFile.project_id,
-      page_size: 5
+      page_size: defaultHistoryPageSize
     };
     projHistoryPage(hist);
   };

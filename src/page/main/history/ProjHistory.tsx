@@ -16,6 +16,7 @@ import { ProjHisotry } from "@/model/proj/history/ProjHistory";
 import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
 import { projHistoryPage } from "@/service/project/ProjectService";
 import { dispathAction } from "@/service/common/CommonService.js";
+import { defaultHistoryItemHeight, defaultHistoryPageSize } from "@/config/app/global-conf.js";
 
 export type HistoryProps = {
   projectId: string;
@@ -26,11 +27,15 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
   const { t } = useTranslation();
   const virtualListRef = React.useRef<VariableSizeList>(null);
   const [historyList, setHistoryList] = useState<ProjHisotry[]>([]);
+  const [hasMore, setHasMore] = useState(true);
   const loadingRef = useRef(false);
-  const sizeMap = useRef(new Map<number, number>());
+  const sizeMap = useRef(new Map<string, number>());
   const getItemSize = (index: number) => {
-    const heightNew = sizeMap.current.get(index);
-    return heightNew || 200;
+    if (index >= historyList.length) return defaultHistoryItemHeight;
+    const item = historyList[index];
+    if (!item) return defaultHistoryItemHeight;
+    const heightNew = sizeMap.current.get(item.id);
+    return heightNew || defaultHistoryItemHeight;
   };
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingResetIndex = useRef<number | null>(null);
@@ -54,9 +59,12 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
   React.useEffect(() => {
     if (
       projHisPage?.data &&
-      projHisPage?.data?.length &&
-      projHisPage?.data?.length > 0
+      projHisPage?.data?.length
     ) {
+      if(projHisPage.data.length === 0){
+        setHasMore(false);
+        return
+      }
       setHistoryList((prev) => {
         const ids = new Set(prev.map((item) => item.id));
         const newItems = projHisPage!.data!.filter((item) => !ids.has(item.id));
@@ -90,7 +98,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
       const hist: QueryHistory = {
         project_id: props.projectId,
         offset: minId,
-        page_size: 5,
+        page_size: defaultHistoryPageSize,
       };
       await projHistoryPage(hist);
     } finally {
@@ -104,12 +112,6 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     }
     return index < historyList.length;
   };
-
-  React.useEffect(() => {
-    if (virtualListRef.current) {
-      virtualListRef.current.resetAfterIndex(0, true);
-    }
-  }, [historyList]);
 
   function mergeRefs(...refs: any[]) {
     return (instance: any) => {
@@ -130,10 +132,14 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
       return;
     }
 
-    const prevHeight = sizeMap.current.get(index);
+    if (index >= historyList.length) return;
+    const item = historyList[index];
+    if (!item) return;
+
+    const prevHeight = sizeMap.current.get(item.id);
 
     if (prevHeight !== height) {
-      sizeMap.current.set(index, height);
+      sizeMap.current.set(item.id, height);
 
       if (pendingResetIndex.current === null) {
         pendingResetIndex.current = index;
@@ -153,12 +159,16 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
           );
           pendingResetIndex.current = null;
         }
-      }, 50);
+      }, 500);
     }
   };
 
   const MemorizedRow = React.memo(
     ({ index, style }: { index: number; style: React.CSSProperties }) => {
+      if (index >= historyList.length || !historyList[index]) {
+        return <div style={style} />;
+      }
+      
       return (
         <div style={style}>
           <HistoryItem
@@ -169,24 +179,22 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
           />
         </div>
       );
+    },
+    (prevProps, nextProps) => {
+      return (
+        prevProps.index === nextProps.index &&
+        prevProps.style.height === nextProps.style.height &&
+        prevProps.style.top === nextProps.style.top
+      );
     }
   );
 
-  const onItemsRenderedImpl = ({
-    visibleStartIndex,
-    visibleStopIndex,
-  }: ListOnItemsRenderedProps) => {
-    if (visibleStopIndex === historyList.length - 1) {
-      console.log("Loading more items...historyList:", historyList.length);
-      loadMoreItems(visibleStopIndex, visibleStopIndex + 1);
-    }
-  };
-
   const renderList = (width: number, height: number) => {
+    console.log(historyList.length);
     return (
       <InfiniteLoader
         isItemLoaded={isItemLoaded}
-        itemCount={historyList.length}
+        itemCount={hasMore ? historyList.length + 1 : historyList.length}
         loadMoreItems={loadMoreItems}
       >
         {({ onItemsRendered, ref }) => (
@@ -195,16 +203,15 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
             ref={mergeRefs(ref, virtualListRef)}
             width={width}
             height={height}
-            estimatedItemSize={200}
+            estimatedItemSize={defaultHistoryItemHeight}
             itemCount={historyList.length}
-            overscanCount={5}
+            overscanCount={3}
             onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
             itemSize={(pageIndex) => {
               return getItemSize(pageIndex);
             }}
             onItemsRendered={(props: ListOnItemsRenderedProps) => {
               onItemsRendered(props);
-              onItemsRenderedImpl(props);
             }}
           >
             {({

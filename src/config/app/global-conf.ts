@@ -14,3 +14,5 @@ export const usercolors = [
 ];
 export const themeConfig = new Compartment();
 export const userColor = usercolors[random.uint32() % usercolors.length];
+export const defaultHistoryItemHeight = 20;
+export const defaultHistoryPageSize = 10;

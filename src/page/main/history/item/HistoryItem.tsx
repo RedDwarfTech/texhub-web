@@ -28,10 +28,17 @@ const HistoryItem: React.FC<HistoryItemProps> = (props: HistoryItemProps) => {
     if (containerRef.current && props.onSizeMeasured) {
       const observer = new ResizeObserver((entries) => {
         const height = entries[0].contentRect.height;
-        props.onSizeMeasured(props.idx, height + 40);
+        // 确保高度至少为最小值，并添加适当的边距
+        const finalHeight = Math.max(height + 40, 100);
+        props.onSizeMeasured(props.idx, finalHeight);
       });
 
       observer.observe(containerRef.current);
+      
+      // 初始测量
+      const initialHeight = Math.max(containerRef.current.offsetHeight + 40, 100);
+      props.onSizeMeasured(props.idx, initialHeight);
+      
       return () => observer.disconnect();
     }
   }, [props.onSizeMeasured, props.idx]);
