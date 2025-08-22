@@ -39,6 +39,7 @@ import {
 } from "@/service/project/ProjectService.js";
 import { QueryHistory } from "@/model/request/proj/query/QueryHistory.js";
 import { defaultHistoryPageSize } from "@/config/app/global-conf.js";
+import { Offcanvas } from "bootstrap";
 
 const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const divRef = props.treeDivRef;
@@ -179,6 +180,14 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       file_int_id: file.id,
     };
     projHistoryPage(hist);
+    // 通过 id 获取元素
+    const offcanvasEl = document.getElementById("projHistory");
+    if (offcanvasEl) {
+      // 创建或获取 offcanvas 实例
+      const bsOffcanvas = Offcanvas.getOrCreateInstance(offcanvasEl);
+      // 打开
+      bsOffcanvas.show();
+    }
   };
 
   const renderIcon = (item: TexFileModel) => {
