@@ -33,7 +33,12 @@ import { EditorView } from "@codemirror/view";
 import { SocketIOClientProvider } from "@/component/common/collar/collar";
 import { BaseMethods } from "rdjs-wheel";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo.js";
-import { getProjectInfo } from "@/service/project/ProjectService.js";
+import {
+  getProjectInfo,
+  projHistoryPage,
+} from "@/service/project/ProjectService.js";
+import { QueryHistory } from "@/model/request/proj/query/QueryHistory.js";
+import { defaultHistoryPageSize } from "@/config/app/global-conf.js";
 
 const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   const divRef = props.treeDivRef;
@@ -165,6 +170,15 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       var myModal = new bootstrap.Modal(modal);
       show ? myModal.show() : myModal.hide();
     }
+  };
+
+  const showHistory = (file: TexFileModel) => {
+    const hist: QueryHistory = {
+      project_id: file.project_id,
+      page_size: defaultHistoryPageSize,
+      file_int_id: file.id,
+    };
+    projHistoryPage(hist);
   };
 
   const renderIcon = (item: TexFileModel) => {
@@ -356,6 +370,16 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                       }}
                     >
                       {t("btn_move_to_folder")}
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      className="dropdown-item"
+                      onClick={(e) => {
+                        showHistory(item);
+                      }}
+                    >
+                      {t("btn_show_history")}
                     </div>
                   </li>
                 </ul>
