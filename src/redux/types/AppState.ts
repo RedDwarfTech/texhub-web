@@ -65,6 +65,7 @@ export interface AppState {
     },
     projTree: {
         hits: SearchResult[],
+        curHistoryFile: TexFileModel
     },
     tpl: {
         tplList: TemplateModel[],

@@ -46,7 +46,13 @@ export enum ProjectActionType {
     COPY_PROJ,
     DOWNLOAD_PROJ,
     EDITOR_INSERT_TEXT,
-    EDITOR_REPLACE_TEXT
+    EDITOR_REPLACE_TEXT,
+    CUR_HISTORY_FILE
+}
+
+export interface setCurFileAction {
+    type: ProjectActionType.CUR_HISTORY_FILE;
+    data: any;
 }
 
 export interface saveDocAction {

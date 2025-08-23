@@ -436,6 +436,12 @@ export function replaceTextToEditor(text: string) {
   return XHRClient.dispathAction(text, actionTypeString, store);
 }
 
+export function setHistoryVersionFile(file: TexFileModel) {
+  const actionTypeString: string =
+    ProjectActionType[ProjectActionType.CUR_HISTORY_FILE];
+  return XHRClient.dispathAction(file, actionTypeString, store);
+}
+
 export function setProjAttr(data: PreviewPdfAttribute) {
   const actionTypeString: string =
     ProjectActionType[ProjectActionType.PROJ_ATTR];

@@ -14,9 +14,16 @@ import AutoSizer, { Size } from "react-virtualized-auto-sizer";
 import InfiniteLoader from "react-window-infinite-loader";
 import { ProjHisotry } from "@/model/proj/history/ProjHistory";
 import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
-import { projHistoryPage } from "@/service/project/ProjectService";
+import {
+  projHistoryPage,
+  setHistoryVersionFile,
+} from "@/service/project/ProjectService";
 import { dispathAction } from "@/service/common/CommonService.js";
-import { defaultHistoryItemHeight, defaultHistoryPageSize } from "@/config/app/global-conf.js";
+import {
+  defaultHistoryItemHeight,
+  defaultHistoryPageSize,
+} from "@/config/app/global-conf.js";
+import { TexFileModel } from "@/model/file/TexFileModel.js";
 
 export type HistoryProps = {
   projectId: string;
@@ -24,6 +31,7 @@ export type HistoryProps = {
 
 const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
   const { projHisPage } = useSelector((state: AppState) => state.proj);
+  const { curHistoryFile } = useSelector((state: AppState) => state.projTree);
   const { t } = useTranslation();
   const virtualListRef = React.useRef<VariableSizeList>(null);
   const [historyList, setHistoryList] = useState<ProjHisotry[]>([]);
@@ -57,13 +65,10 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
   }, []);
 
   React.useEffect(() => {
-    if (
-      projHisPage?.data &&
-      projHisPage?.data?.length
-    ) {
-      if(projHisPage.data.length === 0){
+    if (projHisPage?.data && projHisPage?.data?.length) {
+      if (projHisPage.data.length === 0) {
         setHasMore(false);
-        return
+        return;
       }
       setHistoryList((prev) => {
         const ids = new Set(prev.map((item) => item.id));
@@ -99,6 +104,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         project_id: props.projectId,
         offset: minId,
         page_size: defaultHistoryPageSize,
+        file_int_id: curHistoryFile?.id || "",
       };
       await projHistoryPage(hist);
     } finally {
@@ -168,7 +174,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
       if (index >= historyList.length || !historyList[index]) {
         return <div style={style} />;
       }
-      
+
       return (
         <div style={style}>
           <HistoryItem
@@ -249,6 +255,10 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     </AutoSizer>
   );
 
+  const backToDefaultHistory = () => {
+    setHistoryVersionFile({} as TexFileModel);
+  };
+
   return (
     <div>
       <div
@@ -269,6 +279,14 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
           ></button>
         </div>
         <div className={`offcanvas-body ${styles.offcanvasOverride}`}>
+          {curHistoryFile ? (
+            <div>
+              <i
+                className="fa-solid fa-arrow-left"
+                onClick={() => backToDefaultHistory()}
+              ></i>
+            </div>
+          ) : null}
           {historyListComponent()}
         </div>
       </div>
