@@ -27,7 +27,7 @@ importers:
         version: 7.27.1(@babel/core@7.28.3)
       '@codemirror/autocomplete':
         specifier: github:overleaf/codemirror-autocomplete#v6.12.0-overleaf-2
-        version: https://codeload.github.com/overleaf/codemirror-autocomplete/tar.gz/2aff95fc5d6cda311537ed62066c9a0afbbbcad8(@codemirror/language@6.11.3)(@codemirror/state@6.5.2)(@codemirror/view@6.38.1)(@lezer/common@1.2.3)
+        version: git+https://git@github.com:overleaf/codemirror-autocomplete.git#2aff95fc5d6cda311537ed62066c9a0afbbbcad8(@codemirror/language@6.11.3)(@codemirror/state@6.5.2)(@codemirror/view@6.38.1)(@lezer/common@1.2.3)
       '@codemirror/lang-javascript':
         specifier: ^6.2.4
         version: 6.2.4
@@ -1028,8 +1028,8 @@ packages:
       '@codemirror/view': ^6.0.0
       '@lezer/common': ^1.0.0
 
-  '@codemirror/autocomplete@https://codeload.github.com/overleaf/codemirror-autocomplete/tar.gz/2aff95fc5d6cda311537ed62066c9a0afbbbcad8':
-    resolution: {tarball: https://codeload.github.com/overleaf/codemirror-autocomplete/tar.gz/2aff95fc5d6cda311537ed62066c9a0afbbbcad8}
+  '@codemirror/autocomplete@git+https://git@github.com:overleaf/codemirror-autocomplete.git#2aff95fc5d6cda311537ed62066c9a0afbbbcad8':
+    resolution: {commit: 2aff95fc5d6cda311537ed62066c9a0afbbbcad8, repo: git@github.com:overleaf/codemirror-autocomplete.git, type: git}
     version: 6.12.0
     peerDependencies:
       '@codemirror/language': ^6.0.0
@@ -8105,7 +8105,7 @@ snapshots:
       '@codemirror/view': 6.38.1
       '@lezer/common': 1.2.3
 
-  '@codemirror/autocomplete@https://codeload.github.com/overleaf/codemirror-autocomplete/tar.gz/2aff95fc5d6cda311537ed62066c9a0afbbbcad8(@codemirror/language@6.11.3)(@codemirror/state@6.5.2)(@codemirror/view@6.38.1)(@lezer/common@1.2.3)':
+  '@codemirror/autocomplete@git+https://git@github.com:overleaf/codemirror-autocomplete.git#2aff95fc5d6cda311537ed62066c9a0afbbbcad8(@codemirror/language@6.11.3)(@codemirror/state@6.5.2)(@codemirror/view@6.38.1)(@lezer/common@1.2.3)':
     dependencies:
       '@codemirror/language': 6.11.3
       '@codemirror/state': 6.5.2

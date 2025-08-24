@@ -279,7 +279,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
           ></button>
         </div>
         <div className={`offcanvas-body ${styles.offcanvasOverride}`}>
-          {curHistoryFile ? (
+          {curHistoryFile && Object.keys(curHistoryFile).length > 0 ? (
             <div>
               <i
                 className="fa-solid fa-arrow-left"
