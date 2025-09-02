@@ -21,7 +21,7 @@ import { projHasFile } from "../project/ProjectService";
 import { Metadata } from "@/component/common/editor/foundation/extensions/language";
 import {
   setCurRootYDoc,
-  setCurSubYDoc,
+  setCurSubDoc,
   setEditorInstance,
   setSocketIOProvider,
   setWsConnState,
@@ -305,7 +305,7 @@ const initialFisrtSubDoc = (
   });
   console.log("initial first doc:" + file.file_id);
   setCurRootYDoc(rootDoc);
-  setCurSubYDoc(firstSubDoc);
+  setCurSubDoc(firstSubDoc);
 };
 
 export const updateEditor = (

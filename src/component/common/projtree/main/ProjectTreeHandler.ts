@@ -12,7 +12,7 @@ import { EditorView } from "@codemirror/view";
 import { updateEditor } from "@/service/editor/CollarEditorSocketIOService";
 import {
   setCurRootYDoc,
-  setCurSubYDoc,
+  setCurSubDoc,
 } from "@/service/project/editor/EditorService";
 import { isEnableSubDoc } from "@/common/EnvUtil.js";
 
@@ -87,13 +87,13 @@ export function handleFileSelected(
       console.log("Found existing subdoc:", chooseSubDoc.guid);
       const subDocText = chooseSubDoc.getText(chooseSubDoc.guid);
       chooseSubDoc.load();
-      setCurSubYDoc(chooseSubDoc);
+      setCurSubDoc(chooseSubDoc);
       // @ts-ignore
       chooseSubDoc.on("synced", () => {
         console.log("subdoc synced:" + chooseSubDoc.guid);
         const text = subDocText.toString();
         console.log("subdoc content:", text);
-        setCurSubYDoc(chooseSubDoc);
+        setCurSubDoc(chooseSubDoc);
       });
 
       // Add connection status listener
@@ -111,12 +111,12 @@ export function handleFileSelected(
     let subDocEden = new Y.Doc();
     subDocEden.guid = newSelectedFile.file_id;
     const subDocText = subDocEden.getText(subDocEden.guid);
-    subDocEden.load();
     subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
       updateEditor(editorView, tr, event, subDocEden);
     });
+    // subDocEden.load();
     setCurRootYDoc(curRootYDoc);
-    setCurSubYDoc(subDocEden);
+    setCurSubDoc(subDocEden);
   }
 }
 

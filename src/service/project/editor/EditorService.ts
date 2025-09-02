@@ -22,7 +22,7 @@ export function setCurRootYDoc(ydoc: Y.Doc) {
   return XHRClient.dispathAction(ydoc, actionTypeString, store);
 }
 
-export function setCurSubYDoc(ydoc: Y.Doc) {
+export function setCurSubDoc(ydoc: Y.Doc) {
   const actionTypeString: string = CollarEditorActionType[CollarEditorActionType.SET_CUR_SUB_YDOC];
   return XHRClient.dispathAction(ydoc, actionTypeString, store);
 }
