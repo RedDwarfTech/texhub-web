@@ -210,9 +210,7 @@ export function initSocketIOEditor(
     editorAttr,
     false
   );
-  ydoc.on("update", (update: any, origin: any) => {
-    
-  });
+  ydoc.on("update", (update: any, origin: any) => {});
 
   const undoManager = new Y.UndoManager(ytext);
   if (!wsProvider) {
@@ -265,9 +263,9 @@ export function initSubDocSocketIO(
     editorAttr,
     true
   );
-  
+
   console.log("WebSocket provider created:", wsProvider);
-  
+
   // @ts-ignore
   wsProvider.on("synced", () => {
     console.log("WebSocket provider synced");
@@ -277,13 +275,13 @@ export function initSubDocSocketIO(
       initialFisrtSubDoc(file, rootYdoc, activeEditorView);
     }
   });
-  
+
   // Add connection status listener
   // @ts-ignore
   wsProvider.on("connectionStatus", (status: any) => {
     console.log("WebSocket provider connection status:", status);
   });
-  
+
   setSocketIOProvider(wsProvider);
   // @ts-ignore
   rootYdoc.on("subdocs", (props: SubDocEventProps) => {
@@ -314,7 +312,7 @@ export const updateEditor = (
   event: Y.YTextEvent,
   doc: Y.Doc
 ) => {
-  console.log("subdocument observed:", doc.guid);
+  console.log("subdocument " + doc.guid + " observed:", doc.guid);
   if (!editorView || BaseMethods.isNull(editorView)) {
     console.error("EditorView is null:", editorView);
     return;
