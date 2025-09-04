@@ -392,6 +392,7 @@ const handleSubDocAdd = (
   props.loaded.forEach((subdoc: Y.Doc) => {
     console.log("add sub doc:" + subdoc.guid);
     wsProvider.addSubdoc(subdoc);
+    subdoc.getText(subdoc.guid).insert(0, "% Hello from subdoc: " + subdoc.guid + "\n");
   });
 };
 
