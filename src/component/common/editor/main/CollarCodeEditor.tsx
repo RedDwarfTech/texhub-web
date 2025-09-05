@@ -110,10 +110,15 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       activeEditorView?.destroy();
     }
     setEditorInstance(editorView);
-    if (curEditorRootDoc) {
-      curEditorRootDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, curSubYDoc);
-      setCurRootYDoc(curEditorRootDoc);
+    if (!curEditorRootDoc) {
+      return;
     }
+    if (curEditorRootDoc.getMap("texhubsubdoc").has(curSubYDoc.guid)) {
+      console.warn("already has the subdoc: " + curSubYDoc.guid);
+      return;
+    }
+    curEditorRootDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, curSubYDoc);
+    setCurRootYDoc(curEditorRootDoc);
   }, [curSubYDoc]);
 
   React.useEffect(() => {
