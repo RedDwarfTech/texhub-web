@@ -116,6 +116,7 @@ export function handleFileSelected(
     });
     // subDocEden.load();
     setCurRootYDoc(curRootYDoc);
+    console.log("handleFileSelected: create new subdoc:", subDocEden.guid);
     setCurSubDoc(subDocEden);
   }
 }
