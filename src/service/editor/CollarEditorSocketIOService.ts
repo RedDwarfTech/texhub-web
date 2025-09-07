@@ -1,6 +1,7 @@
 import { EditorView } from "@codemirror/view";
 import { SocketIOClientProvider } from "texhub-broadcast";
 import { SingleClientProvider } from "texhub-broadcast";
+import { DocMeta } from "texhub-broadcast";
 import * as Y from "rdyjs";
 // @ts-ignore
 import * as random from "rdlib0/random";
@@ -35,6 +36,7 @@ import { DocOpts } from "rdyjs/dist/src/utils/Doc.mjs";
 import store from "@/redux/store/store";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { TeXFileType } from "@/model/enum/TeXFileType";
+import { DocumentMetadata } from "@/model/types/metadata/metadata.js";
 
 export const usercolors = [
   { color: "#30bced", light: "#30bced33" },
@@ -297,6 +299,11 @@ const initialFisrtSubDoc = (
 ) => {
   let firstSubDoc = new Y.Doc();
   firstSubDoc.guid = file.file_id;
+  let docMetadata: DocMeta = {
+    name: file.name,
+    id: file.id
+  };
+  firstSubDoc.meta = docMetadata;
   const subDocText = firstSubDoc.getText(firstSubDoc.guid);
   subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
     updateEditor(editorView, tr, event, firstSubDoc);
@@ -312,7 +319,7 @@ export const updateEditor = (
   event: Y.YTextEvent,
   doc: Y.Doc
 ) => {
-  console.log("subdocument " + doc.guid + " observed:", doc.guid);
+  console.log("updateEditor subdocument " + doc.guid + " observed:", doc.guid);
   if (!editorView || BaseMethods.isNull(editorView)) {
     console.error("EditorView is null:", editorView);
     return;
@@ -392,7 +399,6 @@ const handleSubDocAdd = (
   props.loaded.forEach((subdoc: Y.Doc) => {
     console.log("add sub doc:" + subdoc.guid);
     wsProvider.addSubdoc(subdoc);
-    subdoc.getText(subdoc.guid).insert(0, "% Hello from subdoc: " + subdoc.guid + "\n");
   });
 };
 
