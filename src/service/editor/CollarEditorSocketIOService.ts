@@ -267,7 +267,10 @@ export function initSubDocSocketIO(
   );
 
   console.log("WebSocket provider created:", wsProvider);
-
+  // @ts-ignore
+  rootYdoc.on("subdocs", (props: SubDocEventProps) => {
+    handleSubDocChanged(props, wsProvider);
+  });
   // @ts-ignore
   wsProvider.on("synced", () => {
     console.log("WebSocket provider synced");
@@ -277,19 +280,12 @@ export function initSubDocSocketIO(
       initialFisrtSubDoc(file, rootYdoc, activeEditorView);
     }
   });
-
   // Add connection status listener
   // @ts-ignore
   wsProvider.on("connectionStatus", (status: any) => {
     console.log("WebSocket provider connection status:", status);
   });
-
   setSocketIOProvider(wsProvider);
-  // @ts-ignore
-  rootYdoc.on("subdocs", (props: SubDocEventProps) => {
-    handleSubDocChanged(props, wsProvider);
-  });
-  setCurRootYDoc(rootYdoc);
 }
 
 const initialFisrtSubDoc = (
@@ -301,7 +297,7 @@ const initialFisrtSubDoc = (
   firstSubDoc.guid = file.file_id;
   let docMetadata: DocMeta = {
     name: file.name,
-    id: file.id
+    id: file.id,
   };
   firstSubDoc.meta = docMetadata;
   const subDocText = firstSubDoc.getText(firstSubDoc.guid);
