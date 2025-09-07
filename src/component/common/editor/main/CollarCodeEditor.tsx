@@ -86,6 +86,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       return;
     }
     console.log("curSubYDoc", curSubYDoc);
+    console.log("curEditorRootDoc", curEditorRootDoc);
     let ytext = curSubYDoc.getText(curSubYDoc.guid);
     const undoManager = new Y.UndoManager(ytext);
     if (!texEditorSocketIOWs) {
