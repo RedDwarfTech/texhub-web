@@ -271,13 +271,14 @@ export function initSubDocSocketIO(
   rootYdoc.on("subdocs", (props: SubDocEventProps) => {
     handleSubDocChanged(props, wsProvider);
   });
+  setCurRootYDoc(rootYdoc);
   // @ts-ignore
   wsProvider.on("synced", () => {
     console.log("WebSocket provider synced");
     if (file) {
       // when run this first doc init, there contains 2 subdoc
       // still did not found where to add this 2 subdoc
-      initialFisrtSubDoc(file, rootYdoc, activeEditorView);
+      initialFisrtSubDoc(file, activeEditorView);
     }
   });
   // Add connection status listener
@@ -290,7 +291,6 @@ export function initSubDocSocketIO(
 
 const initialFisrtSubDoc = (
   file: TexFileModel,
-  rootDoc: Y.Doc,
   editorView: EditorView | undefined
 ) => {
   let firstSubDoc = new Y.Doc();
@@ -305,7 +305,6 @@ const initialFisrtSubDoc = (
     updateEditor(editorView, tr, event, firstSubDoc);
   });
   console.log("initial first doc:" + file.file_id);
-  setCurRootYDoc(rootDoc);
   setCurSubDoc(firstSubDoc);
 };
 
