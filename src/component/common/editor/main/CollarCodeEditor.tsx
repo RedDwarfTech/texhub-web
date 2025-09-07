@@ -111,7 +111,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       activeEditorView?.destroy();
     }
     setEditorInstance(editorView);
-    if (!curEditorRootDoc) {
+    if (!curEditorRootDoc || BaseMethods.isNull(curEditorRootDoc)) {
       return;
     }
     if (curEditorRootDoc.getMap("texhubsubdoc").has(curSubYDoc.guid)) {
