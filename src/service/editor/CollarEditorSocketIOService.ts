@@ -259,6 +259,12 @@ export function initSubDocSocketIO(
     gc: false,
   };
   let rootYdoc: Y.Doc = new Y.Doc(rootDocOpt);
+  let rootDocMetadata: DocMeta = {
+    name: file.name,
+    id: file.id,
+    src: "initSubDocSocketIO"
+  };
+  rootYdoc.meta = rootDocMetadata;
   // init room with project id
   let wsProvider: SocketIOClientProvider = doSocketIOConn(
     rootYdoc,
@@ -298,6 +304,7 @@ const initialFisrtSubDoc = (
   let docMetadata: DocMeta = {
     name: file.name,
     id: file.id,
+    src: "initialFisrtSubDoc"
   };
   firstSubDoc.meta = docMetadata;
   const subDocText = firstSubDoc.getText(firstSubDoc.guid);
