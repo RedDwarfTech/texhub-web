@@ -42,7 +42,6 @@ export type EditorProps = {
 
 const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const edContainer = useRef<HTMLDivElement>(null);
-  const [curEditorRootDoc, setCurEditorRootDoc] = useState<Y.Doc>();
   const { activeFile } = useSelector((state: AppState) => state.file);
   const { projInfo, projConf, insertContext, replaceContext } = useSelector(
     (state: AppState) => state.proj
@@ -86,7 +85,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       return;
     }
     console.log("curSubYDoc", curSubYDoc);
-    console.log("curEditorRootDoc", curEditorRootDoc);
+    console.log("curEditorRootDoc", curRootYDoc);
     let ytext = curSubYDoc.getText(curSubYDoc.guid);
     const undoManager = new Y.UndoManager(ytext);
     if (!texEditorSocketIOWs) {
@@ -111,15 +110,15 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       activeEditorView?.destroy();
     }
     setEditorInstance(editorView);
-    if (!curEditorRootDoc || BaseMethods.isNull(curEditorRootDoc)) {
+    if (!curRootYDoc || BaseMethods.isNull(curRootYDoc)) {
       return;
     }
-    if (curEditorRootDoc.getMap("texhubsubdoc").has(curSubYDoc.guid)) {
+    if (curRootYDoc.getMap("texhubsubdoc").has(curSubYDoc.guid)) {
       console.warn("already has the subdoc: " + curSubYDoc.guid);
       return;
     }
-    curEditorRootDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, curSubYDoc);
-    setCurRootYDoc(curEditorRootDoc);
+    curRootYDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, curSubYDoc);
+    setCurRootYDoc(curRootYDoc);
   }, [curSubYDoc]);
 
   React.useEffect(() => {
@@ -127,12 +126,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       setActiveEditorView(editorView);
     }
   }, [editorView]);
-
-  React.useEffect(() => {
-    if (curRootYDoc) {
-      setCurEditorRootDoc(curRootYDoc);
-    }
-  }, [curRootYDoc]);
 
   React.useEffect(() => {
     if (texEditorSocketIOWs) {
@@ -332,7 +325,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
                   props,
                   curProjInfo,
                   activeFile,
-                  curEditorRootDoc!,
+                  curRootYDoc!,
                   activeEditorView
                 );
               }
