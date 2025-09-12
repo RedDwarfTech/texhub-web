@@ -5,7 +5,6 @@ import { visualizer } from "rollup-plugin-visualizer";
 import svgr from "vite-plugin-svgr";
 import wasm from "vite-plugin-wasm";
 import topLevelAwait from "vite-plugin-top-level-await";
-import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 
 export default defineConfig({
@@ -16,9 +15,6 @@ export default defineConfig({
   },
   plugins: [
     commonjs(),
-    nodeResolve({
-      exportConditions: ["module"],
-    }),
     react(),
     svgr({
       svgrOptions: {
@@ -47,8 +43,6 @@ export default defineConfig({
     rollupOptions: {
       external: [],
       output: {
-        sourcemap: true,
-        sourcemapExcludeSources: false,
         manualChunks: {
           react: ["react-router-dom"],
           reddwarf: ["rd-component", "rdjs-wheel"],
