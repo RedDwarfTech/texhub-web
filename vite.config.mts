@@ -22,12 +22,11 @@ export default defineConfig({
       },
       include: "**/*.svg?react",
     }),
-    topLevelAwait(),
     wasm(),
     visualizer({
       gzipSize: true,
       brotliSize: true,
-      emitFile: false,
+      //emitFile: false,
       filename: "test.html",
       open: true,
     }) as PluginOption,
