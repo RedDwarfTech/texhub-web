@@ -77,7 +77,7 @@ export function handleFileSelected(
         oldSelectedFile.file_id
       );
       if (legacySubDoc) {
-        clearLegacyEditor(oldSelectedFile, curRootYDoc, editorView);
+        clearLegacyFile(oldSelectedFile, curRootYDoc, editorView);
       } else {
         console.error("did not get the legacy subdoc", oldSelectedFile.file_id);
       }
@@ -162,6 +162,14 @@ export function handleFileAdd() {
     myModal.show();
   }
 }
+
+export const clearLegacyFile = (
+  oldSelectedFile: TexFileModel,
+  curRootYDoc: Y.Doc,
+  editorView: EditorView | undefined) => {
+  curRootYDoc.getMap("texhubsubdoc").delete(oldSelectedFile.file_id);  
+  clearLegacyEditor(oldSelectedFile, curRootYDoc, editorView);
+};
 
 export const clearLegacyEditor = (
   selectedFile: TexFileModel,
