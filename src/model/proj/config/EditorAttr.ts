@@ -5,5 +5,6 @@ export interface EditorAttr {
     docId: string;
     docIntId: string;
     theme: Extension,
-    name: string
+    name: string,
+    docShowName: string,
 }

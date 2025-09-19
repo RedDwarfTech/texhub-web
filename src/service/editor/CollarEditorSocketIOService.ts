@@ -117,6 +117,7 @@ export const doSocketIOConn = (
         access_token: localStorage.getItem(WheelGlobal.ACCESS_TOKEN_NAME) ?? "",
         docId: enableSubDoc ? editorAttr.projectId : editorAttr.docId,
         docIntId: editorAttr.docIntId,
+        docShowName: editorAttr.docShowName,
         enableSid: enableShortFileId,
         projId: editorAttr.projectId,
         docType: enableSubDoc ? TeXFileType.PROJECT : TeXFileType.TEX,
