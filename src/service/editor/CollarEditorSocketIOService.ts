@@ -251,7 +251,7 @@ export function initSocketIOEditor(
 export function initSubDocSocketIO(
   editorAttr: EditorAttr,
   activeEditorView: EditorView | undefined,
-  file: TexFileModel
+  loadFile: TexFileModel
 ) {
   let rootDocOpt = {
     guid: editorAttr.projectId,
@@ -261,8 +261,8 @@ export function initSubDocSocketIO(
   };
   let rootYdoc: Y.Doc = new Y.Doc(rootDocOpt);
   let rootDocMetadata: DocMeta = {
-    name: file.name,
-    id: file.id,
+    name: editorAttr.projectId,
+    id: "-1",
     src: "initSubDocSocketIO"
   };
   rootYdoc.meta = rootDocMetadata;
@@ -282,10 +282,10 @@ export function initSubDocSocketIO(
   // @ts-ignore
   wsProvider.on("synced", () => {
     console.log("WebSocket provider synced");
-    if (file) {
+    if (loadFile) {
       // when run this first doc init, there contains 2 subdoc
       // still did not found where to add this 2 subdoc
-      initialFisrtSubDoc(file, activeEditorView);
+      initialFisrtSubDoc(loadFile, activeEditorView);
     }
   });
   // Add connection status listener

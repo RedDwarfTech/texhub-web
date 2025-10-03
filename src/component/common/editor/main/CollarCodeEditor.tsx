@@ -214,18 +214,18 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     }
   };
 
-  const preInitEditor = (file: TexFileModel) => {
+  const preInitEditor = (loadFile: TexFileModel) => {
     const editorAttr: EditorAttr = {
       projectId: props.projectId,
-      docIntId: file.id.toString(),
-      docId: file.file_id,
-      name: file.name,
+      docIntId: loadFile.id.toString(),
+      docId: loadFile.file_id,
+      name: loadFile.name,
       theme: themeMap.get("Solarized Light")!,
-      docShowName: file.name
+      docShowName: loadFile.name
     };
 
     if (isEnableSubDoc()) {
-      initSubDocSocketIO(editorAttr, activeEditorView, file);
+      initSubDocSocketIO(editorAttr, activeEditorView, loadFile);
     } else {
       initSocketIOEditor(editorAttr, activeEditorView, edContainer);
     }
