@@ -373,7 +373,7 @@ const handleSubDocChanged = (
 
 const handleLoadedSubDoc = (subdocs: Set<Y.Doc>) => {
   subdocs.forEach((subdoc: Y.Doc) => {
-    let subDocText = subdoc.getText();
+    let subDocText = subdoc.getText(subdoc.guid);
     let subDocTextString = subDocText.toString();
     if (!subDocTextString || subDocTextString.length === 0) {
       console.error("subdoc text is null:" + subdoc.guid);
