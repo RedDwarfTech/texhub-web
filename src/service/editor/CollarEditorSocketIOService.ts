@@ -367,7 +367,7 @@ const handleSubDocChanged = (
   }
   if (props && props.loaded && props.loaded.size > 0) {
     // use loaded to fill document content
-    handleLoadedSubDoc(props.loaded);
+    // handleLoadedSubDoc(props.loaded);
   }
 };
 
