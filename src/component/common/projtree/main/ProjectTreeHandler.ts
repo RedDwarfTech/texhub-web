@@ -103,7 +103,7 @@ export function handleFileSelected(
       });
 
       subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-        updateEditor(editorView, tr, event, chooseSubDoc);
+        updateEditor(tr, event, chooseSubDoc);
       });
       setCurRootYDoc(curRootYDoc);
       return;
@@ -112,7 +112,7 @@ export function handleFileSelected(
     subDocEden.guid = newSelectedFile.file_id;
     const subDocText = subDocEden.getText(subDocEden.guid);
     subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-      updateEditor(editorView, tr, event, subDocEden);
+      updateEditor(tr, event, subDocEden);
     });
     // subDocEden.load();
     setCurRootYDoc(curRootYDoc);
@@ -166,8 +166,9 @@ export function handleFileAdd() {
 export const clearLegacyFile = (
   oldSelectedFile: TexFileModel,
   curRootYDoc: Y.Doc,
-  editorView: EditorView | undefined) => {
-  curRootYDoc.getMap("texhubsubdoc").delete(oldSelectedFile.file_id);  
+  editorView: EditorView | undefined
+) => {
+  curRootYDoc.getMap("texhubsubdoc").delete(oldSelectedFile.file_id);
   clearLegacyEditor(oldSelectedFile, curRootYDoc, editorView);
 };
 

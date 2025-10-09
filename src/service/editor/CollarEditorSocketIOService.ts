@@ -250,7 +250,6 @@ export function initSocketIOEditor(
 
 export function initSubDocSocketIO(
   editorAttr: EditorAttr,
-  activeEditorView: EditorView | undefined,
   loadFile: TexFileModel
 ) {
   let rootDocOpt = {
@@ -263,7 +262,7 @@ export function initSubDocSocketIO(
   let rootDocMetadata: DocMeta = {
     name: editorAttr.projectId,
     id: "-1",
-    src: "initSubDocSocketIO"
+    src: "initSubDocSocketIO",
   };
   rootYdoc.meta = rootDocMetadata;
   // init room with project id
@@ -285,7 +284,7 @@ export function initSubDocSocketIO(
     if (loadFile) {
       // when run this first doc init, there contains 2 subdoc
       // still did not found where to add this 2 subdoc
-      initialFisrtSubDoc(loadFile, activeEditorView);
+      initialFisrtSubDoc(loadFile);
     }
   });
   // Add connection status listener
@@ -296,32 +295,29 @@ export function initSubDocSocketIO(
   setSocketIOProvider(wsProvider);
 }
 
-const initialFisrtSubDoc = (
-  file: TexFileModel,
-  editorView: EditorView | undefined
-) => {
+const initialFisrtSubDoc = (file: TexFileModel) => {
   let firstSubDoc = new Y.Doc();
   firstSubDoc.guid = file.file_id;
   let docMetadata: DocMeta = {
     name: file.name,
     id: file.id,
-    src: "initialFisrtSubDoc"
+    src: "initialFisrtSubDoc",
   };
   firstSubDoc.meta = docMetadata;
   const subDocText = firstSubDoc.getText(firstSubDoc.guid);
   subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-    updateEditor(editorView, tr, event, firstSubDoc);
+    updateEditor(tr, event, firstSubDoc);
   });
   console.log("initial first doc:" + file.file_id);
   setCurSubDoc(firstSubDoc);
 };
 
 export const updateEditor = (
-  editorView: EditorView | undefined,
   tr: Y.Transaction,
   event: Y.YTextEvent,
   doc: Y.Doc
 ) => {
+  const { editorView } = store.getState().projEditor;
   console.log("updateEditor subdocument " + doc.guid + " observed:", doc.guid);
   if (!editorView || BaseMethods.isNull(editorView)) {
     console.error("EditorView is null:", editorView);
