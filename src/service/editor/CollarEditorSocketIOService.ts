@@ -305,8 +305,9 @@ const initialFisrtSubDoc = (file: TexFileModel) => {
   };
   firstSubDoc.meta = docMetadata;
   const subDocText = firstSubDoc.getText(firstSubDoc.guid);
+  const { editorView } = store.getState().projEditor;
   subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-    updateEditor(tr, event, firstSubDoc);
+    updateEditor(tr, event, firstSubDoc, editorView!);
   });
   console.log("initial first doc:" + file.file_id);
   setCurSubDoc(firstSubDoc);
@@ -315,9 +316,9 @@ const initialFisrtSubDoc = (file: TexFileModel) => {
 export const updateEditor = (
   tr: Y.Transaction,
   event: Y.YTextEvent,
-  doc: Y.Doc
+  doc: Y.Doc,
+  editorView: EditorView 
 ) => {
-  const { editorView } = store.getState().projEditor;
   console.log("updateEditor subdocument " + doc.guid + " observed:", doc.guid);
   if (!editorView || BaseMethods.isNull(editorView)) {
     console.error("EditorView is null:", editorView);

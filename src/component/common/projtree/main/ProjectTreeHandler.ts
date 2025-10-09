@@ -15,6 +15,7 @@ import {
   setCurSubDoc,
 } from "@/service/project/editor/EditorService";
 import { isEnableSubDoc } from "@/common/EnvUtil.js";
+import store from "@/redux/store/store.js";
 
 export function handleFileTreeUpdate(
   tree: TexFileModel[],
@@ -77,6 +78,7 @@ export function handleFileSelected(
         oldSelectedFile.file_id
       );
       if (legacySubDoc) {
+        const { editorView } = store.getState().projEditor;
         clearLegacyFile(oldSelectedFile, curRootYDoc, editorView);
       } else {
         console.error("did not get the legacy subdoc", oldSelectedFile.file_id);
@@ -101,9 +103,9 @@ export function handleFileSelected(
       chooseSubDoc.on("connectionStatus", (status: any) => {
         console.log("SubDoc connection status:", status);
       });
-
+      const { editorView } = store.getState().projEditor;
       subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-        updateEditor(tr, event, chooseSubDoc);
+        updateEditor(tr, event, chooseSubDoc, editorView!);
       });
       setCurRootYDoc(curRootYDoc);
       return;
@@ -111,8 +113,9 @@ export function handleFileSelected(
     let subDocEden = new Y.Doc();
     subDocEden.guid = newSelectedFile.file_id;
     const subDocText = subDocEden.getText(subDocEden.guid);
+    const { editorView } = store.getState().projEditor;
     subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-      updateEditor(tr, event, subDocEden);
+      updateEditor(tr, event, subDocEden, editorView!);
     });
     // subDocEden.load();
     setCurRootYDoc(curRootYDoc);
