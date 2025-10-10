@@ -28,9 +28,6 @@ import {
 import { TeXFileType } from "@/model/enum/TeXFileType";
 import { DownloadFileReq } from "@/model/request/file/query/DownloadFileReq";
 import { useTranslation } from "react-i18next";
-import * as Y from "rdyjs";
-import { EditorView } from "@codemirror/view";
-import { SocketIOClientProvider } from "@/component/common/collar/collar";
 import { BaseMethods } from "rdjs-wheel";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo.js";
 import {
@@ -51,11 +48,9 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     (state: AppState) => state.file
   );
   const { projInfo, srcFocus } = useSelector((state: AppState) => state.proj);
-  const { curRootYDoc, texEditorSocketIOWs } = useSelector(
+  const { curRootYDoc } = useSelector(
     (state: AppState) => state.projEditor
   );
-  const [wsSocketIOProvider, setWsSocketIOProvider] =
-    useState<SocketIOClientProvider>();
   const pid = props.projectId;
   const selected = localStorage.getItem("proj-select-file:" + pid);
   const [selectedFile, setSelectedFile] = useState<TexFileModel>(
@@ -68,8 +63,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     null
   );
   const { t } = useTranslation();
-  const [activeEditorView, setActiveEditorView] = useState<EditorView>();
-  const { editorView } = useSelector((state: AppState) => state.projEditor);
 
   React.useEffect(() => {
     if (treeSelectItem) {
@@ -88,12 +81,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   }, [projInfo]);
 
   React.useEffect(() => {
-    if (editorView) {
-      setActiveEditorView(editorView);
-    }
-  }, [editorView]);
-
-  React.useEffect(() => {
     console.log("addFileResp");
     if (!BaseMethods.isNull(addFileResp)) {
       // refresh the dependencies info by listen the add file action
@@ -105,12 +92,6 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       getProjectInfo(req);
     }
   }, [addFileResp]);
-
-  React.useEffect(() => {
-    if (texEditorSocketIOWs) {
-      setWsSocketIOProvider(texEditorSocketIOWs);
-    }
-  }, [texEditorSocketIOWs]);
 
   React.useEffect(() => {
     if (curFileTree && Object.keys(curFileTree).length > 0) {
@@ -249,8 +230,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       paths,
       props.projectId,
       selectedFile,
-      curRootYDoc!,
-      activeEditorView
+      curRootYDoc!
     );
   };
 
@@ -413,7 +393,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   ) => {
     e.preventDefault();
     e.stopPropagation();
-    handleFileSelected(fileItem, selectedFile, curRootYDoc!, editorView);
+    handleFileSelected(fileItem, selectedFile, curRootYDoc!);
   };
 
   const handleFileInputChange = (event: any) => {
@@ -429,8 +409,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         name_paths,
         props.projectId,
         selectedFile,
-        curRootYDoc!,
-        editorView
+        curRootYDoc!
       );
     }
   }, [srcFocus, props.projectId]);

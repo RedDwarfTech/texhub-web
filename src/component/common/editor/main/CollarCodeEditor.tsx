@@ -9,7 +9,6 @@ import { themeConfig } from "@/config/app/global-conf";
 import { themeMap } from "@/component/common/editor/foundation/extensions/theme/theme";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { delProjInfo, projHasFile } from "@/service/project/ProjectService";
-import { toast } from "react-toastify";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { ProjConfType } from "@/model/proj/config/ProjConfType";
 import { readConfig } from "@/config/app/config-reader";
@@ -328,8 +327,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
                   props,
                   curProjInfo,
                   activeFile,
-                  curRootYDoc!,
-                  activeEditorView
+                  curRootYDoc!
                 );
               }
             }

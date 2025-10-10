@@ -60,8 +60,7 @@ export function handleExpandFolderEvent(
 export function handleFileSelected(
   newSelectedFile: TexFileModel,
   oldSelectedFile: TexFileModel | null,
-  curRootYDoc: Y.Doc,
-  editorView: EditorView | undefined
+  curRootYDoc: Y.Doc
 ) {
   if (oldSelectedFile && newSelectedFile.file_id === oldSelectedFile.file_id)
     return;
