@@ -1,15 +1,16 @@
 import { EditorView } from "@codemirror/view";
-//import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
-import * as Y from 'rdyjs';
+import * as Y from "rdyjs";
 
 export type editorAction =
   | setCollarEditorAction
   | setYDocAction
   | setCollarEditorWsSocketIOAction
-  | setWsConnStateAction;
+  | setWsConnStateAction
+  | clearCollarEditorAction;
 
 export enum CollarEditorActionType {
   INITIAL_EDITOR,
+  CLRAR_EDITOR,
   INITIAL_WS,
   INITIAL_SOCKETIO_WS,
   SET_CUR_ROOT_YDOC,
@@ -20,6 +21,11 @@ export enum CollarEditorActionType {
 
 export interface setCollarEditorAction {
   type: CollarEditorActionType.INITIAL_EDITOR;
+  data: EditorView;
+}
+
+export interface clearCollarEditorAction {
+  type: CollarEditorActionType.CLRAR_EDITOR;
   data: EditorView;
 }
 

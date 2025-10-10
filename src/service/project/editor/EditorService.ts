@@ -3,12 +3,17 @@ import store from "@/redux/store/store";
 import { EditorView } from "codemirror";
 import { XHRClient } from "rd-component";
 import * as Y from 'rdyjs';
-//import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
 
 export function setEditorInstance(view: EditorView) {
   const actionTypeString: string =
     CollarEditorActionType[CollarEditorActionType.INITIAL_EDITOR];
   return XHRClient.dispathAction(view, actionTypeString, store);
+}
+
+export function clearEditorInstance() {
+  const actionTypeString: string =
+    CollarEditorActionType[CollarEditorActionType.CLRAR_EDITOR];
+  return XHRClient.dispathAction(null, actionTypeString, store);
 }
 
 export function setSocketIOProvider(ws: any) {

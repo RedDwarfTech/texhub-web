@@ -30,13 +30,12 @@ import {
 import { ManagerOptions, SocketOptions } from "socket.io-client";
 import { getAccessToken } from "@/component/common/cache/Cache";
 import { SubDocEventProps } from "@/model/props/yjs/subdoc/SubDocEventProps.js";
-import { ySyncAnnotation, ySyncFacet } from "rdy-codemirror.next";
 // @ts-ignore
 import { DocOpts } from "rdyjs/dist/src/utils/Doc.mjs";
 import store from "@/redux/store/store";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { TeXFileType } from "@/model/enum/TeXFileType";
-import { DocumentMetadata } from "@/model/types/metadata/metadata.js";
+import { updateEditor } from "@/component/common/collar/CollarEditor.js";
 
 export const usercolors = [
   { color: "#30bced", light: "#30bced33" },
@@ -313,42 +312,6 @@ const initialFisrtSubDoc = (file: TexFileModel) => {
   setCurSubDoc(firstSubDoc);
 };
 
-export const updateEditor = (
-  tr: Y.Transaction,
-  event: Y.YTextEvent,
-  doc: Y.Doc,
-  editorView: EditorView 
-) => {
-  console.log("updateEditor subdocument " + doc.guid + " observed:", doc.guid);
-  if (!editorView || BaseMethods.isNull(editorView)) {
-    console.error("EditorView is null:", editorView);
-    return;
-  }
-  let conf = editorView.state.facet(ySyncFacet);
-  const delta = event.delta;
-  const changes = [];
-  let pos = 0;
-  for (let i = 0; i < delta.length; i++) {
-    const d = delta[i];
-    if (d.insert != null) {
-      changes.push({ from: pos, to: pos, insert: d.insert });
-    } else if (d.delete != null) {
-      changes.push({ from: pos, to: pos + d.delete, insert: "" });
-      pos += d.delete;
-    } else {
-      pos += d.retain!;
-    }
-  }
-  if (changes.length === 0) {
-    console.warn("No changes found in the delta.");
-    return;
-  }
-  editorView.dispatch({
-    // @ts-ignore
-    changes,
-    annotations: [ySyncAnnotation.of(conf)],
-  });
-};
 
 const handleSubDocChanged = (
   props: SubDocEventProps,

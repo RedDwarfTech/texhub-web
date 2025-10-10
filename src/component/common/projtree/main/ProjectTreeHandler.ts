@@ -3,19 +3,17 @@ import { addFile, chooseFile, switchFile } from "@/service/file/FileService";
 import { ProjectTreeFolder } from "./ProjectTreeFolder";
 import { toast } from "react-toastify";
 import { TeXFileType } from "@/model/enum/TeXFileType";
-import { BaseMethods, ResponseHandler } from "rdjs-wheel";
-import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
-import { getProjectInfo } from "@/service/project/ProjectService";
+import { BaseMethods } from "rdjs-wheel";
 import * as bootstrap from "bootstrap";
 import * as Y from "rdyjs";
 import { EditorView } from "@codemirror/view";
-import { updateEditor } from "@/service/editor/CollarEditorSocketIOService";
 import {
   setCurRootYDoc,
   setCurSubDoc,
 } from "@/service/project/editor/EditorService";
 import { isEnableSubDoc } from "@/common/EnvUtil.js";
 import store from "@/redux/store/store.js";
+import { updateEditor } from "../../collar/CollarEditor.js";
 
 export function handleFileTreeUpdate(
   tree: TexFileModel[],

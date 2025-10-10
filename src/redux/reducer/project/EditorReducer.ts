@@ -19,6 +19,11 @@ const EditorReducer = (state = initState, action: any) => {
         ...state,
         editorView: action.data,
       };
+    case "CLRAR_EDITOR":
+      return {
+        ...state,
+        editorView: action.data,
+      };
     case "INITIAL_WS":
       return {
         ...state,
