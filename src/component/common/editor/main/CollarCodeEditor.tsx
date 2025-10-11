@@ -115,10 +115,17 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       return;
     }
     if (curRootYDoc.getMap("texhubsubdoc").has(curSubYDoc.guid)) {
-      console.warn("already has the subdoc: " + curSubYDoc.guid);
-      curRootYDoc.getMap("texhubsubdoc").delete(curSubYDoc.guid);
+      // 先获取旧的 subdoc，做内容迁移
+      const oldDoc: any = curRootYDoc
+        .getMap("texhubsubdoc")
+        .get(curSubYDoc.guid);
+      const update = Y.encodeStateAsUpdate(oldDoc);
+      const newDoc = new Y.Doc({ guid: curSubYDoc.guid });
+      Y.applyUpdate(newDoc, update);
+      curRootYDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, newDoc);
+    } else {
+      curRootYDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, curSubYDoc);
     }
-    curRootYDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, curSubYDoc);
     setCurRootYDoc(curRootYDoc);
   }, [curSubYDoc]);
 
