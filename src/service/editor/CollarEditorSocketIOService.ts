@@ -303,12 +303,6 @@ const initialFisrtSubDoc = (file: TexFileModel) => {
     src: "initialFisrtSubDoc",
   };
   firstSubDoc.meta = docMetadata;
-  const subDocText = firstSubDoc.getText(firstSubDoc.guid);
-  const { editorView } = store.getState().projEditor;
-  subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-    console.log("first doc receive update,id:" + firstSubDoc.guid);
-    updateEditor(tr, event, firstSubDoc, editorView!);
-  });
   console.log("initial first doc:" + file.file_id);
   setCurSubDoc(firstSubDoc);
 };
