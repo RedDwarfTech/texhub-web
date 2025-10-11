@@ -116,11 +116,9 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     }
     if (curRootYDoc.getMap("texhubsubdoc").has(curSubYDoc.guid)) {
       console.warn("already has the subdoc: " + curSubYDoc.guid);
+    } else {
       curRootYDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, curSubYDoc);
-      setCurRootYDoc(curRootYDoc);
-      return;
     }
-    curRootYDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, curSubYDoc);
     setCurRootYDoc(curRootYDoc);
   }, [curSubYDoc]);
 
@@ -325,12 +323,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
               let activeFileJson = localStorage.getItem(activeKey);
               if (activeFileJson) {
                 let activeFile: TexFileModel = JSON.parse(activeFileJson);
-                handleSrcTreeNav(
-                  props,
-                  curProjInfo,
-                  activeFile,
-                  curRootYDoc!
-                );
+                handleSrcTreeNav(props, curProjInfo, activeFile, curRootYDoc!);
               }
             }
           }}
