@@ -9,7 +9,6 @@ import { themeConfig } from "@/config/app/global-conf";
 import { themeMap } from "@/component/common/editor/foundation/extensions/theme/theme";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { delProjInfo, projHasFile } from "@/service/project/ProjectService";
-import { toast } from "react-toastify";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { ProjConfType } from "@/model/proj/config/ProjConfType";
 import { readConfig } from "@/config/app/config-reader";
@@ -31,6 +30,7 @@ import { SingleClientProvider } from "texhub-broadcast";
 import { EditorState } from "@codemirror/state";
 import { createExtensions } from "../foundation/extensions/extensions";
 import {
+  clearEditorInstance,
   setCurRootYDoc,
   setEditorInstance,
 } from "@/service/project/editor/EditorService";
@@ -76,6 +76,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     return () => {
       // try to delete the last state project info to avoid websocket connect to previous project through main file id
       delProjInfo();
+      clearEditorInstance();
       SingleClientProvider.destroy();
     };
   }, []);
@@ -328,8 +329,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
                   props,
                   curProjInfo,
                   activeFile,
-                  curRootYDoc!,
-                  activeEditorView
+                  curRootYDoc!
                 );
               }
             }
