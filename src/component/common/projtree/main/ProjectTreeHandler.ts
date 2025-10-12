@@ -13,7 +13,6 @@ import {
 } from "@/service/project/editor/EditorService";
 import { isEnableSubDoc } from "@/common/EnvUtil.js";
 import store from "@/redux/store/store.js";
-import { updateEditor } from "../../collar/CollarEditor.js";
 
 export function handleFileTreeUpdate(
   tree: TexFileModel[],

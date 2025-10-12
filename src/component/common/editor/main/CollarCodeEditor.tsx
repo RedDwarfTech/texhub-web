@@ -35,7 +35,6 @@ import {
   setEditorInstance,
 } from "@/service/project/editor/EditorService";
 import { isEnableSubDoc } from "@/common/EnvUtil.js";
-import { updateEditor } from "../../collar/CollarEditor.js";
 
 export type EditorProps = {
   projectId: string;
@@ -126,14 +125,14 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       const subDocText = newDoc.getText(curSubYDoc.guid);
       subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
         console.log("doc(new) receive update,id:" + curSubYDoc.guid);
-        updateEditor(tr, event, newDoc, editorView!);
+        // updateEditor(tr, event, newDoc, editorView!);
       });
       curRootYDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, newDoc);
     } else {
       const subDocText = curSubYDoc.getText(curSubYDoc.guid);
       subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
         console.log("doc receive update,id:" + curSubYDoc.guid);
-        updateEditor(tr, event, curSubYDoc, editorView!);
+        // updateEditor(tr, event, curSubYDoc, editorView!);
       });
       curRootYDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, curSubYDoc);
     }

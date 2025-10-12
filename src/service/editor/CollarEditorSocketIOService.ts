@@ -35,7 +35,6 @@ import { DocOpts } from "rdyjs/dist/src/utils/Doc.mjs";
 import store from "@/redux/store/store";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { TeXFileType } from "@/model/enum/TeXFileType";
-import { updateEditor } from "@/component/common/collar/CollarEditor.js";
 
 export const usercolors = [
   { color: "#30bced", light: "#30bced33" },
