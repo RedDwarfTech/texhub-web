@@ -89,7 +89,7 @@ export function handleFileSelected(
       setCurSubDoc(chooseSubDoc);
       // @ts-ignore
       chooseSubDoc.on("synced", () => {
-        console.log("subdoc synced:" + chooseSubDoc.guid);
+        console.log("chooseSubDoc subdoc synced:" + chooseSubDoc.guid);
         const text = subDocText.toString();
         console.log("subdoc content:", text);
         setCurSubDoc(chooseSubDoc);
