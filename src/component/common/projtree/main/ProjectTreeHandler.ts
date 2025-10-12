@@ -102,7 +102,8 @@ export function handleFileSelected(
       });
       const { editorView } = store.getState().projEditor;
       subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-        updateEditor(tr, event, chooseSubDoc, editorView!);
+        console.log("doc receive update,id:" + chooseSubDoc!.guid);
+        // updateEditor(tr, event, chooseSubDoc, editorView!);
       });
       setCurRootYDoc(curRootYDoc);
       return;
