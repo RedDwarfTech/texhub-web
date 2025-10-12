@@ -113,7 +113,8 @@ export function handleFileSelected(
     const subDocText = subDocEden.getText(subDocEden.guid);
     const { editorView } = store.getState().projEditor;
     subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-      updateEditor(tr, event, subDocEden, editorView!);
+      console.log("doc(new) receive update,id:" + subDocEden.guid);
+      //updateEditor(tr, event, subDocEden, editorView!);
     });
     // subDocEden.load();
     setCurRootYDoc(curRootYDoc);
