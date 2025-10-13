@@ -30,6 +30,8 @@ import { SingleClientProvider } from "texhub-broadcast";
 import { EditorState } from "@codemirror/state";
 import { createExtensions } from "../foundation/extensions/extensions";
 import {
+  clearCurRootYDoc,
+  clearCurSubDoc,
   clearEditorInstance,
   setCurRootYDoc,
   setEditorInstance,
@@ -77,6 +79,8 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       // try to delete the last state project info to avoid websocket connect to previous project through main file id
       delProjInfo();
       clearEditorInstance();
+      clearCurRootYDoc();
+      clearCurSubDoc();
       SingleClientProvider.destroy();
     };
   }, []);

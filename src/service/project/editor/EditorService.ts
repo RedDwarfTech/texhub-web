@@ -22,9 +22,19 @@ export function setSocketIOProvider(ws: any) {
   return XHRClient.dispathAction(ws, actionTypeString, store);
 }
 
+export function clearCurRootYDoc() {
+  const actionTypeString: string = CollarEditorActionType[CollarEditorActionType.SET_CUR_ROOT_YDOC];
+  return XHRClient.dispathAction(null, actionTypeString, store);
+}
+
 export function setCurRootYDoc(ydoc: Y.Doc) {
   const actionTypeString: string = CollarEditorActionType[CollarEditorActionType.SET_CUR_ROOT_YDOC];
   return XHRClient.dispathAction(ydoc, actionTypeString, store);
+}
+
+export function clearCurSubDoc() {
+  const actionTypeString: string = CollarEditorActionType[CollarEditorActionType.SET_CUR_SUB_YDOC];
+  return XHRClient.dispathAction(null, actionTypeString, store);
 }
 
 export function setCurSubDoc(ydoc: Y.Doc) {
