@@ -98,7 +98,7 @@ export const doSocketIOConn = (
     path: "/sync",
     auth: {
       token: getAccessToken(),
-    },
+    }
   };
   let sid = localStorage.getItem("shortFileId");
   let enableShortFileId = sid && sid.toString() === "short";
