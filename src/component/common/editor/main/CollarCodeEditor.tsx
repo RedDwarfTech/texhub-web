@@ -38,6 +38,37 @@ import {
 } from "@/service/project/editor/EditorService";
 import { isEnableSubDoc } from "@/common/EnvUtil.js";
 
+// 重新绑定 codemirror 编辑器到新的 Y.Doc 文档
+const rebindEditorToYDoc = (
+  newDoc: Y.Doc,
+  guid: string,
+  texEditorSocketIOWs: any,
+  edContainer: React.RefObject<HTMLDivElement>,
+  activeEditorView: EditorView | undefined,
+  setEditorInstance: (view: EditorView) => void
+) => {
+  const newYText = newDoc.getText(guid);
+  const newUndoManager = new Y.UndoManager(newYText);
+  const newEditorState: EditorState = EditorState.create({
+    doc: newYText.toString(),
+    extensions: createExtensions({
+      ytext: newYText,
+      wsProvider: texEditorSocketIOWs,
+      undoManager: newUndoManager,
+      docName: newDoc.guid,
+      metadata: metadata,
+    }),
+  });
+  const newEditorView: EditorView = new EditorView({
+    state: newEditorState,
+    parent: edContainer.current!,
+  });
+  if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
+    activeEditorView?.destroy();
+  }
+  setEditorInstance(newEditorView);
+};
+
 export type EditorProps = {
   projectId: string;
 };
@@ -131,6 +162,14 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         console.log("doc(new) receive update,id:" + curSubYDoc.guid);
         // updateEditor(tr, event, newDoc, editorView!);
       });
+      rebindEditorToYDoc(
+        newDoc,
+        curSubYDoc.guid,
+        texEditorSocketIOWs,
+        edContainer,
+        activeEditorView,
+        setEditorInstance
+      );
       curRootYDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, newDoc);
     } else {
       const subDocText = curSubYDoc.getText(curSubYDoc.guid);
