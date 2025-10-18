@@ -59,6 +59,10 @@ const rebindEditorToYDoc = (
       metadata: metadata,
     }),
   });
+  // 清空编辑器容器，防止多个编辑器 DOM 残留
+  if (edContainer.current) {
+    edContainer.current.innerHTML = "";
+  }
   const newEditorView: EditorView = new EditorView({
     state: newEditorState,
     parent: edContainer.current!,
