@@ -60,7 +60,7 @@ export interface AppState {
         curSubYDoc: Y.Doc,
         editorView: EditorView,
         texEditorSocketIOWs: SocketIOClientProvider,
-        connState: string,
+        wsConnState: string,
         editorText: string
     },
     projTree: {

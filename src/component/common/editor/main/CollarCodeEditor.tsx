@@ -35,6 +35,7 @@ import {
   clearEditorInstance,
   setCurRootYDoc,
   setEditorInstance,
+  setWsConnState,
 } from "@/service/project/editor/EditorService";
 import { isEnableSubDoc } from "@/common/EnvUtil.js";
 
@@ -83,7 +84,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const { projInfo, projConf, insertContext, replaceContext } = useSelector(
     (state: AppState) => state.proj
   );
-  const { editorView, texEditorSocketIOWs } = useSelector(
+  const { editorView, texEditorSocketIOWs, wsConnState } = useSelector(
     (state: AppState) => state.projEditor
   );
   const [activeEditorView, setActiveEditorView] = useState<EditorView>();
@@ -102,10 +103,11 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     }
     let connected = texEditorSocketIOWs?.ws?.connected;
     if (connected) {
+      setWsConnState("connected");
       console.log("connected is ok");
     } else {
+      setWsConnState("disconnected");
       console.error("disconnected......");
-      window.location.href = "/doc/tab";
     }
   };
 
@@ -153,29 +155,28 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     if (!curRootYDoc || BaseMethods.isNull(curRootYDoc)) {
       return;
     }
-    if (curRootYDoc.getMap("texhubsubdoc").has(curSubYDoc.guid)) {
-      // 先获取旧的 subdoc，做内容迁移
-      const oldDoc: any = curRootYDoc
-        .getMap("texhubsubdoc")
-        .get(curSubYDoc.guid);
-      const update = Y.encodeStateAsUpdate(oldDoc);
-      const newDoc = new Y.Doc({ guid: curSubYDoc.guid });
-      Y.applyUpdate(newDoc, update);
-      const subDocText = newDoc.getText(curSubYDoc.guid);
-      subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-        console.log("doc(new) receive update,id:" + curSubYDoc.guid);
-        // updateEditor(tr, event, newDoc, editorView!);
-      });
-      rebindEditorToYDoc(
-        newDoc,
-        curSubYDoc.guid,
-        texEditorSocketIOWs,
-        edContainer,
-        activeEditorView,
-        setEditorInstance
-      );
-      curRootYDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, newDoc);
-    } else {
+if (curRootYDoc.getMap("texhubsubdoc").has(curSubYDoc.guid)) {
+  const oldDoc: any = curRootYDoc
+    .getMap("texhubsubdoc")
+    .get(curSubYDoc.guid);
+  const update = Y.encodeStateAsUpdate(oldDoc);
+  const newDoc = new Y.Doc({ guid: curSubYDoc.guid });
+  Y.applyUpdate(newDoc, update);
+  const subDocText = newDoc.getText(curSubYDoc.guid);
+  subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
+    console.log("doc(new) receive update,id:" + curSubYDoc.guid);
+    // updateEditor(tr, event, newDoc, editorView!);
+  });
+  rebindEditorToYDoc(
+    newDoc,
+    curSubYDoc.guid,
+    texEditorSocketIOWs,
+    edContainer,
+    activeEditorView,
+    setEditorInstance
+  );
+  curRootYDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, newDoc);
+} else {
       const subDocText = curSubYDoc.getText(curSubYDoc.guid);
       subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
         console.log("doc receive update,id:" + curSubYDoc.guid);
@@ -349,8 +350,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       console.warn("provider is null");
       return;
     }
-    let connected = texEditorSocketIOWs?.ws?.connected;
-    if (connected) {
+    if (wsConnState === "connected") {
       return <i className={`fa-solid fa-wifi ${styles.stateConnect}`}></i>;
     } else {
       return <i className={`fa-solid fa-wifi ${styles.stateDisconnect}`}></i>;
@@ -366,9 +366,8 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       console.warn("provider is null");
       return;
     }
-    let connected = texEditorSocketIOWs?.ws?.connected;
-    if (connected) {
-      console.log("connected is ok");
+    if (wsConnState === "connected") {
+      console.log("tryReconnect connected is ok");
     } else {
       // try reconnect
       console.log("try reconnect");
