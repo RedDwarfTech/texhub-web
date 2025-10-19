@@ -159,7 +159,7 @@ const TexHeader: React.FC = () => {
                 {renderLogin()}
                 <div className="dropdown">
                     <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                        语言
+                        Language
                     </button>
                     <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                         <li onClick={() => langChoose("zh")}>
