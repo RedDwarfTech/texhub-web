@@ -447,7 +447,6 @@ if (curRootYDoc.getMap("texhubsubdoc").has(curSubYDoc.guid)) {
         <button
           className={styles.menuButton}
           title={t("icon_conn_status")}
-          data-bs-toggle="modal"
           data-bs-target=""
           onClick={() => {
             tryReconnect();
