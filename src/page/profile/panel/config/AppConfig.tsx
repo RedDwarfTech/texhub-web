@@ -73,35 +73,6 @@ const AppConfig: React.FC = () => {
     }
   };
 
-  const renderChannelInput = () => {
-    if (legacyModel === "native" || !legacyModel) {
-      return (
-        <input
-          className="form-check-input"
-          type="checkbox"
-          id="flexSwitchCheckChecked"
-          onChange={() => {
-            setLegacyModel("socketio");
-            localStorage.setItem("legacyModel", "socketio");
-          }}
-        />
-      );
-    } else {
-      return (
-        <input
-          className="form-check-input"
-          type="checkbox"
-          id="flexSwitchCheckChecked"
-          onChange={() => {
-            setLegacyModel("native");
-            localStorage.setItem("legacyModel", "native");
-          }}
-          checked
-        />
-      );
-    }
-  };
-
   const renderShortFileIdInput = () => {
     if (
       localStorage.getItem("shortFileId") &&
@@ -168,14 +139,6 @@ const AppConfig: React.FC = () => {
             <div className="form-check form-switch">
               {renderInput()}
               <label className="form-check-label">{t("title_dev_model")}</label>
-            </div>
-          </div>
-          <div className="col mb-3">
-            <div className="form-check form-switch">
-              {renderChannelInput()}
-              <label className="form-check-label">
-                {t("title_socket_channel")}
-              </label>
             </div>
           </div>
           <div className="col mb-3">
