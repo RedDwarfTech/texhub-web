@@ -11,7 +11,6 @@ import {
   setCurRootYDoc,
   setCurSubDoc,
 } from "@/service/project/editor/EditorService";
-import { isEnableSubDoc } from "@/common/EnvUtil.js";
 import store from "@/redux/store/store.js";
 
 export function handleFileTreeUpdate(
@@ -64,9 +63,6 @@ export function handleFileSelected(
   chooseFile(newSelectedFile);
   if (newSelectedFile.file_type !== TeXFileType.FOLDER) {
     switchFile(newSelectedFile);
-    if (!isEnableSubDoc()) {
-      return;
-    }
     let subDocs: Y.Map<Y.Doc> = curRootYDoc.getMap("texhubsubdoc");
     if (oldSelectedFile && !BaseMethods.isNull(oldSelectedFile)) {
       // destroy the legacy select file

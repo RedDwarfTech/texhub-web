@@ -37,7 +37,6 @@ import {
   setEditorInstance,
   setWsConnState,
 } from "@/service/project/editor/EditorService";
-import { isEnableSubDoc } from "@/common/EnvUtil.js";
 
 // 重新绑定 codemirror 编辑器到新的 Y.Doc 文档
 const rebindEditorToYDoc = (
@@ -257,10 +256,6 @@ if (curRootYDoc.getMap("texhubsubdoc").has(curSubYDoc.guid)) {
     if (activeFile && activeFile.file_type !== TreeFileType.Folder) {
       localStorage.setItem(activeKey, JSON.stringify(activeFile));
     }
-    if (isEnableSubDoc()) {
-      return;
-    }
-    initByActiveFile(activeFile);
     return () => {
       destroy();
     };
@@ -287,12 +282,7 @@ if (curRootYDoc.getMap("texhubsubdoc").has(curSubYDoc.guid)) {
       theme: themeMap.get("Solarized Light")!,
       docShowName: loadFile.name,
     };
-
-    if (isEnableSubDoc()) {
-      initSubDocSocketIO(editorAttr, loadFile);
-    } else {
-      initSocketIOEditor(editorAttr, activeEditorView, edContainer);
-    }
+    initSubDocSocketIO(editorAttr, loadFile);
   };
 
   const destroy = () => {

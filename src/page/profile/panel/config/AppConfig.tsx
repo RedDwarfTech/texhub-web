@@ -1,4 +1,3 @@
-import { isEnableSubDoc } from "@/common/EnvUtil.js";
 import { saveGithubToken } from "@/service/profile/AppConfigService";
 import { ResponseHandler } from "rdjs-wheel";
 import React from "react";
@@ -103,33 +102,6 @@ const AppConfig: React.FC = () => {
     }
   };
 
-  const renderSubDocInput = () => {
-    if (isEnableSubDoc()) {
-      return (
-        <input
-          className="form-check-input"
-          type="checkbox"
-          id="flexSwitchCheckChecked"
-          onChange={() => {
-            localStorage.setItem("subdoc", "normal");
-          }}
-          checked
-        />
-      );
-    } else {
-      return (
-        <input
-          className="form-check-input"
-          type="checkbox"
-          id="flexSwitchCheckChecked"
-          onChange={() => {
-            localStorage.setItem("subdoc", "subdoc");
-          }}
-        />
-      );
-    }
-  };
-
   const renderShortFileIdInput = () => {
     if (
       localStorage.getItem("shortFileId") &&
@@ -204,12 +176,6 @@ const AppConfig: React.FC = () => {
               <label className="form-check-label">
                 {t("title_socket_channel")}
               </label>
-            </div>
-          </div>
-          <div className="col mb-3">
-            <div className="form-check form-switch">
-              {renderSubDocInput()}
-              <label className="form-check-label">subDocument</label>
             </div>
           </div>
           <div className="col mb-3">

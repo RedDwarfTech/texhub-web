@@ -8,9 +8,5 @@ export const isDevModel = (): boolean => {
 };
 
 export const isEnableSubDoc = (): boolean => {
-  let subDocFlag = localStorage.getItem("subdoc");
-  if (subDocFlag && subDocFlag === "subdoc") {
-    return true;
-  }
-  return false;
+  return true;
 };
