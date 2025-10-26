@@ -24,10 +24,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { BaseMethods } from "rdjs-wheel";
-import {
-  initSubDocSocketIO,
-  metadata,
-} from "@/service/editor/CollarEditorSocketIOService";
+import { metadata } from "@/service/editor/CollarEditorSocketIOService";
 import * as Y from "rdyjs";
 import { SingleClientProvider } from "texhub-broadcast";
 import { EditorState } from "@codemirror/state";
@@ -40,9 +37,9 @@ import {
   setEditorInstance,
   setWsConnState,
 } from "@/service/project/editor/EditorService";
-import { getCurActiveFile } from "../../collar/CollarEditor";
 
-// 重新绑定 codemirror 编辑器到新的 Y.Doc 文档
+// sometimes when we replaced the Y.Doc
+// we need to bind the events to the new doc
 const rebindEditorToYDoc = (
   newDoc: Y.Doc,
   guid: string,
@@ -209,7 +206,14 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     if (projInfo && Object.keys(projInfo).length > 0) {
       setCurProjInfo(projInfo);
       setMainFileModel(projInfo.main_file);
-      initEditor(props.projectId, projInfo);
+      if (
+        !texEditorSocketIOWs ||
+        Object.keys(texEditorSocketIOWs).length === 0
+      ) {
+        // only initial for the fisrt time 
+        // the project info change in the furture will not re-initialize the editor
+        initEditor(props.projectId, projInfo);
+      }
     }
     return () => {
       destroy();
