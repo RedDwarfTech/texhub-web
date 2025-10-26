@@ -4,11 +4,14 @@ import { EditorView } from "codemirror";
 import { BaseMethods } from "rdjs-wheel";
 import { EditorProps } from "./CollarCodeEditor";
 import { toast } from "react-toastify";
-import { getPdfPosition } from "@/service/project/ProjectService";
+import { getPdfPosition, projHasFile } from "@/service/project/ProjectService";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { ProjectTreeFolder } from "../../projtree/main/ProjectTreeFolder";
 import * as Y from "rdyjs";
-import { SocketIOClientProvider } from "texhub-broadcast";
+import { initSubDocSocketIO } from "@/service/editor/CollarEditorSocketIOService";
+import { EditorAttr } from "@/model/proj/config/EditorAttr";
+import { themeMap } from "@/component/common/editor/foundation/extensions/theme/theme";
+import { readConfig } from "@/config/app/config-reader";
 
 export const getCursorPos = (
   editor: EditorView
@@ -41,7 +44,10 @@ export const handleSrcTreeNav = (
   if (BaseMethods.isNull(curProjInfo)) {
     return;
   }
-  let name_paths = ProjectTreeFolder.getNamePaths(props.projectId, selectedFile.file_id);
+  let name_paths = ProjectTreeFolder.getNamePaths(
+    props.projectId,
+    selectedFile.file_id
+  );
   ProjectTreeFolder.handleExpandFolder(
     name_paths,
     props.projectId,
@@ -85,4 +91,66 @@ export const handlePdfLocate = (
     };
     getPdfPosition(req);
   }
+};
+
+/**
+ * for now, we get the active file from local storage
+ * the user want to resume the file when the next time open brower
+ * or the next peroid of time, we need to persistant the last edit file
+ *
+ * @param activeKey
+ * @param projInfo
+ * @returns
+ */
+export const getCurActiveFile = (activeKey: string, projInfo: ProjInfo) => {
+  const activeFileJson = localStorage.getItem(activeKey);
+  if (activeFileJson) {
+    const curActiveFile: TexFileModel = JSON.parse(activeFileJson);
+    if (!projInfo.main) {
+      console.error("main is null", JSON.stringify(projInfo));
+      return;
+    }
+    let contains = projHasFile(curActiveFile.file_id, projInfo.main.project_id);
+    if (contains) {
+      return curActiveFile;
+    }
+  }
+};
+
+export const initEditor = (projId: string, projInfo: ProjInfo) => {
+  if (!projInfo || Object.keys(projInfo).length === 0) {
+    console.warn("there is no valid project info");
+    return;
+  }
+  const activeKey = readConfig("projActiveFile") + projId;
+  const curActiveFile = getCurActiveFile(activeKey, projInfo);
+  if (!curActiveFile) {
+    // current has no active file
+    // when first time open the project
+    // we load the main file
+    preInitEditor(projInfo.main_file, projId);
+    return;
+  }
+  if (!projInfo.main) {
+    console.error("main is null", JSON.stringify(projInfo));
+    return;
+  }
+  let contains = projHasFile(curActiveFile.file_id, projInfo.main.project_id);
+  if (contains) {
+    preInitEditor(curActiveFile, projId);
+  } else {
+    preInitEditor(projInfo.main_file, projId);
+  }
+};
+
+const preInitEditor = (loadFile: TexFileModel, projectId: string) => {
+  const editorAttr: EditorAttr = {
+    projectId: projectId,
+    docIntId: loadFile.id.toString(),
+    docId: loadFile.file_id,
+    name: loadFile.name,
+    theme: themeMap.get("Solarized Light")!,
+    docShowName: loadFile.name,
+  };
+  initSubDocSocketIO(editorAttr, loadFile);
 };

@@ -16,12 +16,15 @@ import { TreeFileType } from "@/model/file/TreeFileType";
 import TableDesigner from "../table/TableDesigner";
 import Snippet from "../snippet/Snippet";
 import EquationDesigner from "../equation/EquationDesigner";
-import { handlePdfLocate, handleSrcTreeNav } from "./CollarCodeEditorHandler";
+import {
+  handlePdfLocate,
+  handleSrcTreeNav,
+  initEditor,
+} from "./CollarCodeEditorHandler";
 import { useTranslation } from "react-i18next";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { BaseMethods } from "rdjs-wheel";
 import {
-  initSocketIOEditor,
   initSubDocSocketIO,
   metadata,
 } from "@/service/editor/CollarEditorSocketIOService";
@@ -37,6 +40,7 @@ import {
   setEditorInstance,
   setWsConnState,
 } from "@/service/project/editor/EditorService";
+import { getCurActiveFile } from "../../collar/CollarEditor";
 
 // 重新绑定 codemirror 编辑器到新的 Y.Doc 文档
 const rebindEditorToYDoc = (
@@ -154,28 +158,28 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     if (!curRootYDoc || BaseMethods.isNull(curRootYDoc)) {
       return;
     }
-if (curRootYDoc.getMap("texhubsubdoc").has(curSubYDoc.guid)) {
-  const oldDoc: any = curRootYDoc
-    .getMap("texhubsubdoc")
-    .get(curSubYDoc.guid);
-  const update = Y.encodeStateAsUpdate(oldDoc);
-  const newDoc = new Y.Doc({ guid: curSubYDoc.guid });
-  Y.applyUpdate(newDoc, update);
-  const subDocText = newDoc.getText(curSubYDoc.guid);
-  subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-    console.log("doc(new) receive update,id:" + curSubYDoc.guid);
-    // updateEditor(tr, event, newDoc, editorView!);
-  });
-  rebindEditorToYDoc(
-    newDoc,
-    curSubYDoc.guid,
-    texEditorSocketIOWs,
-    edContainer,
-    activeEditorView,
-    setEditorInstance
-  );
-  curRootYDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, newDoc);
-} else {
+    if (curRootYDoc.getMap("texhubsubdoc").has(curSubYDoc.guid)) {
+      const oldDoc: any = curRootYDoc
+        .getMap("texhubsubdoc")
+        .get(curSubYDoc.guid);
+      const update = Y.encodeStateAsUpdate(oldDoc);
+      const newDoc = new Y.Doc({ guid: curSubYDoc.guid });
+      Y.applyUpdate(newDoc, update);
+      const subDocText = newDoc.getText(curSubYDoc.guid);
+      subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
+        console.log("doc(new) receive update,id:" + curSubYDoc.guid);
+        // updateEditor(tr, event, newDoc, editorView!);
+      });
+      rebindEditorToYDoc(
+        newDoc,
+        curSubYDoc.guid,
+        texEditorSocketIOWs,
+        edContainer,
+        activeEditorView,
+        setEditorInstance
+      );
+      curRootYDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, newDoc);
+    } else {
       const subDocText = curSubYDoc.getText(curSubYDoc.guid);
       subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
         console.log("doc receive update,id:" + curSubYDoc.guid);
@@ -205,25 +209,7 @@ if (curRootYDoc.getMap("texhubsubdoc").has(curSubYDoc.guid)) {
     if (projInfo && Object.keys(projInfo).length > 0) {
       setCurProjInfo(projInfo);
       setMainFileModel(projInfo.main_file);
-      const activeFileJson = localStorage.getItem(activeKey);
-      if (activeFileJson) {
-        const curActiveFile: TexFileModel = JSON.parse(activeFileJson);
-        if (!projInfo.main) {
-          console.error("main is null", JSON.stringify(projInfo));
-          return;
-        }
-        let contains = projHasFile(
-          curActiveFile.file_id,
-          projInfo.main.project_id
-        );
-        if (contains) {
-          preInitEditor(curActiveFile);
-        } else {
-          preInitEditor(projInfo.main_file);
-        }
-      } else {
-        preInitEditor(projInfo.main_file);
-      }
+      initEditor(props.projectId, projInfo);
     }
     return () => {
       destroy();
@@ -260,30 +246,6 @@ if (curRootYDoc.getMap("texhubsubdoc").has(curSubYDoc.guid)) {
       destroy();
     };
   }, [activeFile]);
-
-  const initByActiveFile = (activeFile: TexFileModel) => {
-    if (!activeFile || !activeFile.file_id) return;
-    if (activeFile && activeFile.file_type !== TreeFileType.Folder) {
-      let contains = projHasFile(activeFile.file_id, props.projectId);
-      if (!contains) {
-        return;
-      }
-      preInitEditor(activeFile);
-      localStorage.setItem(activeKey, JSON.stringify(activeFile));
-    }
-  };
-
-  const preInitEditor = (loadFile: TexFileModel) => {
-    const editorAttr: EditorAttr = {
-      projectId: props.projectId,
-      docIntId: loadFile.id.toString(),
-      docId: loadFile.file_id,
-      name: loadFile.name,
-      theme: themeMap.get("Solarized Light")!,
-      docShowName: loadFile.name,
-    };
-    initSubDocSocketIO(editorAttr, loadFile);
-  };
 
   const destroy = () => {
     if (activeEditorView) {
@@ -352,15 +314,11 @@ if (curRootYDoc.getMap("texhubsubdoc").has(curSubYDoc.guid)) {
    * Try to reconnect the editor websocket
    */
   const tryReconnect = () => {
-    if (!texEditorSocketIOWs) {
-      console.warn("provider is null");
-      return;
-    }
-    if (wsConnState === "connected") {
-      console.log("tryReconnect connected is ok");
+    if (wsConnState && wsConnState === "disconnected") {
+      setWsConnState("connecting");
+      initEditor(props.projectId, projInfo);
     } else {
-      // try reconnect
-      console.log("try reconnect");
+      console.log("did not need to reconnect");
     }
   };
 

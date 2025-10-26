@@ -185,67 +185,6 @@ export const metadata: Metadata = {
   },
 };
 
-export function initSocketIOEditor(
-  editorAttr: EditorAttr,
-  activeEditorView: EditorView | undefined,
-  edContainer: RefObject<HTMLDivElement>
-) {
-  if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
-    activeEditorView.destroy();
-  }
-  if (SingleClientProvider.getCurrentRoom() !== editorAttr.docId) {
-    // user siwtch docs
-    SingleClientProvider.destroy();
-  }
-  let docOpt: DocOpts = {
-    guid: editorAttr.docId,
-    collectionid: editorAttr.projectId,
-    // https://discuss.yjs.dev/t/error-garbage-collection-must-be-disabled-in-origindoc/2313
-    gc: false,
-  };
-  ydoc = new Y.Doc(docOpt);
-  setCurRootYDoc(ydoc);
-  const ytext: Y.Text = ydoc.getText(editorAttr.docId);
-  let wsProvider: SocketIOClientProvider = doSocketIOConn(
-    ydoc,
-    editorAttr,
-    false
-  );
-  ydoc.on("update", (update: any, origin: any) => {});
-
-  const undoManager = new Y.UndoManager(ytext);
-  if (!wsProvider) {
-    return;
-  }
-
-  const texEditorState: EditorState = EditorState.create({
-    doc: ytext.toString(),
-    extensions: createExtensions({
-      ytext: ytext,
-      wsProvider: wsProvider,
-      undoManager: undoManager,
-      docName: docOpt.guid,
-      metadata: metadata,
-    }),
-  });
-
-  if (
-    edContainer.current &&
-    edContainer.current.children &&
-    edContainer.current.children.length > 0
-  ) {
-    return;
-  }
-
-  const editorView: EditorView = new EditorView({
-    state: texEditorState,
-    parent: edContainer.current!,
-  });
-
-  setEditorInstance(editorView);
-  setSocketIOProvider(wsProvider);
-}
-
 export function initSubDocSocketIO(
   editorAttr: EditorAttr,
   loadFile: TexFileModel
