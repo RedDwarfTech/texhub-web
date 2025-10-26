@@ -56,7 +56,7 @@
     "query-string": "^9.3.0",
     "rc-table": "7.52.5",
     "rd-component": "^0.1.172",
-    "rdjs-wheel": "0.0.32",
+    "rdjs-wheel": "0.0.33",
     "rdlib0": "^0.2.106",
     "rdy-codemirror.next": "^0.3.6",
     "rdyjs": "^13.6.33",
