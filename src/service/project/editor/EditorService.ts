@@ -22,6 +22,12 @@ export function setSocketIOProvider(ws: any) {
   return XHRClient.dispathAction(ws, actionTypeString, store);
 }
 
+export function clearSocketIOProvider() {
+  const actionTypeString: string =
+    CollarEditorActionType[CollarEditorActionType.CLEAR_SOCKETIO_WS];
+  return XHRClient.dispathAction(null, actionTypeString, store);
+}
+
 export function clearCurRootYDoc() {
   const actionTypeString: string = CollarEditorActionType[CollarEditorActionType.SET_CUR_ROOT_YDOC];
   return XHRClient.dispathAction(null, actionTypeString, store);

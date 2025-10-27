@@ -13,6 +13,7 @@ export enum CollarEditorActionType {
   CLRAR_EDITOR,
   INITIAL_WS,
   INITIAL_SOCKETIO_WS,
+  CLEAR_SOCKETIO_WS,
   SET_CUR_ROOT_YDOC,
   SET_CUR_SUB_YDOC,
   SET_WS_CON_STATE,
@@ -26,6 +27,11 @@ export interface setCollarEditorAction {
 
 export interface clearCollarEditorAction {
   type: CollarEditorActionType.CLRAR_EDITOR;
+  data: EditorView;
+}
+
+export interface clearCollarEditorWsSocketIOAction {
+  type: CollarEditorActionType.CLEAR_SOCKETIO_WS;
   data: EditorView;
 }
 

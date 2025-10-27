@@ -34,6 +34,11 @@ const EditorReducer = (state = initState, action: any) => {
         ...state,
         texEditorSocketIOWs: action.data,
       };
+    case "CLEAR_SOCKETIO_WS":
+      return {
+        ...state,
+        texEditorSocketIOWs: action.data,
+      };
     case "SET_CUR_ROOT_YDOC":
       return {
         ...state,

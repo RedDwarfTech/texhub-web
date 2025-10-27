@@ -33,6 +33,7 @@ import {
   clearCurRootYDoc,
   clearCurSubDoc,
   clearEditorInstance,
+  clearSocketIOProvider,
   setCurRootYDoc,
   setEditorInstance,
   setWsConnState,
@@ -119,6 +120,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       clearCurRootYDoc();
       clearCurSubDoc();
       SingleClientProvider.destroy();
+      clearSocketIOProvider();
     };
   }, []);
 
