@@ -33,6 +33,8 @@ import { QueryHistoryDetail } from "@/model/request/proj/query/QueryHistoryDetai
 import { RemoteCompileResult } from "@/model/proj/RemoteCompileResult";
 import { CompileResultType } from "@/model/proj/compile/CompileResultType";
 import { PreviewActionType } from "@/redux/action/project/preview/PreviewAction";
+import { getSSEBatchProcessor } from "@/redux/store/middleware/SSEMiddleware";
+import { SSEMessage } from "rdjs-wheel";
 
 export function getProjectList(req: QueryProjReq) {
   const params = new URLSearchParams();
@@ -353,8 +355,12 @@ export function doCompile(params: CompileProjLog) {
     console.log("compile project error", error);
     eventNative.close();
   };
+  let batchProcessor = getSSEBatchProcessor()!;
   eventNative.onmessage = (event: any) => {
-    updateLogText(event.data);
+    let msg: SSEMessage = {
+      data: event.data,
+    };
+    batchProcessor.addMessage(msg);
   };
 
   eventNative.addEventListener("TEX_COMP_LOG", function (event: any) {
@@ -370,10 +376,10 @@ export function doCompile(params: CompileProjLog) {
   });
 }
 
-export function updateLogText(logContent: string) {
+export function updateLogText(msg: SSEMessage[]) {
   const actionTypeString: string =
     ProjectActionType[ProjectActionType.APPEND_LOG];
-  return XHRClient.dispathAction(logContent, actionTypeString, store);
+  return XHRClient.dispathAction(msg, actionTypeString, store);
 }
 
 export function changeProjConf(projConf: ProjConf) {

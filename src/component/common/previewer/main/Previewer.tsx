@@ -35,7 +35,6 @@ import {
 } from "./PreviewerHandler";
 import { VariableSizeList } from "react-window";
 import {
-  getCurPdfPage,
   setContextCompileResultType,
   setAndDispatchPdfPage,
 } from "@/service/project/preview/PreviewService";
@@ -175,13 +174,14 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
 
   React.useEffect(() => {
     if (streamLogText && streamLogText.length > 0) {
-      if (streamLogText === "====CLEAR====") {
+      let stringLog = streamLogText.map((log) => log.data).join("");
+      if (stringLog.indexOf("====CLEAR====") > 0) {
         setCurLogText("");
         return;
       }
       setCompStatus(CompileStatus.COMPILING);
       setCurLogText((prevState) => {
-        return getNewText(prevState, streamLogText);
+        return getNewText(prevState, stringLog);
       });
     }
   }, [streamLogText]);
@@ -285,7 +285,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
               className={styles.previewIconButton}
               data-bs-toggle="tooltip"
               title={t("btn_debug_app")}
-              onClick={() => { }}
+              onClick={() => {}}
             >
               <i className="fa-solid fa-check"></i>
             </button>

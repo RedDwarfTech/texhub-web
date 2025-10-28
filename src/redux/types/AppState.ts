@@ -9,7 +9,7 @@ import { ProjInfo } from "@/model/proj/ProjInfo";
 import { CompileStatus } from "@/model/proj/compile/CompileStatus";
 import { PreviewPdfAttribute } from "@/model/proj/config/PreviewPdfAttribute";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
-import { EntityList } from "rdjs-wheel";
+import { EntityList, SSEMessage } from "rdjs-wheel";
 import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 import { ProjConf } from "@/model/proj/config/ProjConf";
 import { SearchResult } from "@/model/proj/search/SearchResult";
@@ -41,7 +41,7 @@ export interface AppState {
         endSignal: string,
         queue: CompileQueue,
         tabName: string,
-        streamLogText: string,
+        streamLogText: SSEMessage[],
         projInfo: ProjInfo,
         compileStatus: CompileStatus,
         projAttr: PreviewPdfAttribute,
@@ -60,8 +60,7 @@ export interface AppState {
         curSubYDoc: Y.Doc,
         editorView: EditorView,
         texEditorSocketIOWs: SocketIOClientProvider,
-        wsConnState: string,
-        editorText: string
+        wsConnState: string
     },
     projTree: {
         hits: SearchResult[],

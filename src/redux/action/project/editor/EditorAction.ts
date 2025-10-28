@@ -16,8 +16,7 @@ export enum CollarEditorActionType {
   CLEAR_SOCKETIO_WS,
   SET_CUR_ROOT_YDOC,
   SET_CUR_SUB_YDOC,
-  SET_WS_CON_STATE,
-  SET_EDITOR_TEXT,
+  SET_WS_CON_STATE
 }
 
 export interface setCollarEditorAction {
@@ -52,10 +51,5 @@ export interface setSubYDocAction {
 
 export interface setWsConnStateAction {
   type: CollarEditorActionType.SET_WS_CON_STATE;
-  data: any;
-}
-
-export interface setEditorTextAction {
-  type: CollarEditorActionType.SET_EDITOR_TEXT;
   data: any;
 }

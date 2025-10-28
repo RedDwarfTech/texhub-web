@@ -54,11 +54,6 @@ const EditorReducer = (state = initState, action: any) => {
         ...state,
         wsConnState: action.data,
       };
-    case "SET_EDITOR_TEXT":
-      return {
-        ...state,
-        editorText: action.data,
-      };
     default:
       break;
   }
