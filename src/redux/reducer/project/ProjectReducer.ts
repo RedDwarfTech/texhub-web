@@ -20,7 +20,7 @@ const initState: AppState["proj"] = {
     latestComp: {} as LatestCompile,
     texPdfUrl: "",
     logText: "",
-    streamLogText: "",
+    streamLogText: [],
     endSignal: "",
     queue: {} as CompileQueue,
     tabName: "",
