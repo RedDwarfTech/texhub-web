@@ -8,8 +8,7 @@ const initState: AppState["projEditor"] = {
   texEditorSocketIOWs: {} as any,
   curRootYDoc: {} as Y.Doc,
   curSubYDoc: {} as Y.Doc,
-  wsConnState: "",
-  editorText: "",
+  wsConnState: ""
 };
 
 const EditorReducer = (state = initState, action: any) => {
