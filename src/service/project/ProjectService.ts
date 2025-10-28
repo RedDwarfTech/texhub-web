@@ -388,10 +388,10 @@ export function changeProjConf(projConf: ProjConf) {
   return XHRClient.dispathAction(projConf, actionTypeString, store);
 }
 
-export function clearCompLogText(logContent: string) {
+export function clearCompLogText(sse: SSEMessage[]) {
   const actionTypeString: string =
     ProjectActionType[ProjectActionType.CLEAR_COMP_LOG];
-  return XHRClient.dispathAction(logContent, actionTypeString, store);
+  return XHRClient.dispathAction(sse, actionTypeString, store);
 }
 
 export function showPreviewTab(tabName: string) {
