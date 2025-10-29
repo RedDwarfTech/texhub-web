@@ -364,7 +364,10 @@ export function doCompile(params: CompileProjLog) {
   };
 
   eventNative.addEventListener("TEX_COMP_LOG", function (event: any) {
-    updateLogText(event.data);
+    let msg: SSEMessage = {
+      data: event.data,
+    };
+    batchProcessor.addMessage(msg);
   });
 
   eventNative.addEventListener("TEX_COMP_END", function (event: any) {
