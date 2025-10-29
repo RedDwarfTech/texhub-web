@@ -175,7 +175,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   React.useEffect(() => {
     if (streamLogText && streamLogText.length > 0) {
       let stringLog = streamLogText.map((log) => log.data).join("");
-      if (stringLog.indexOf("====CLEAR====") > 0) {
+      if (stringLog.indexOf("====CLEAR====") >= 0) {
         setCurLogText("");
         return;
       }
