@@ -355,11 +355,12 @@ export function doCompile(params: CompileProjLog) {
     console.log("compile project error", error);
     eventNative.close();
   };
-  let batchProcessor = getSSEBatchProcessor()!;
+  
   eventNative.onmessage = (event: any) => {
     let msg: SSEMessage = {
       data: event.data,
     };
+    let batchProcessor = getSSEBatchProcessor()!;
     batchProcessor.addMessage(msg);
   };
 
@@ -367,6 +368,7 @@ export function doCompile(params: CompileProjLog) {
     let msg: SSEMessage = {
       data: event.data,
     };
+    let batchProcessor = getSSEBatchProcessor()!;
     batchProcessor.addMessage(msg);
   });
 
