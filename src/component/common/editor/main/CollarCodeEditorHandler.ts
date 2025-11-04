@@ -139,6 +139,9 @@ export const initEditor = (projId: string, projInfo: ProjInfo) => {
   if (contains) {
     preInitEditor(curActiveFile, projId);
   } else {
+    console.warn(
+      "当前文件不属于该项目，已为您打开主文件" + JSON.stringify(curActiveFile)
+    );
     preInitEditor(projInfo.main_file, projId);
   }
 };

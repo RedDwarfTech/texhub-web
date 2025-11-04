@@ -15,9 +15,6 @@ overrides:
   redux: ^5.0.1
 
 dependencies:
-  '@babel/plugin-transform-class-properties':
-    specifier: ^7.27.1
-    version: 7.27.1(@babel/core@7.28.5)
   '@codemirror/autocomplete':
     specifier: github:overleaf/codemirror-autocomplete#v6.12.0-overleaf-2
     version: github.com/overleaf/codemirror-autocomplete/2aff95fc5d6cda311537ed62066c9a0afbbbcad8(@codemirror/language@6.11.3)(@codemirror/state@6.5.2)(@codemirror/view@6.38.6)(@lezer/common@1.3.0)
@@ -14502,7 +14499,6 @@ packages:
     id: github.com/overleaf/codemirror-autocomplete/2aff95fc5d6cda311537ed62066c9a0afbbbcad8
     name: '@codemirror/autocomplete'
     version: 6.12.0
-    prepare: true
     requiresBuild: true
     peerDependencies:
       '@codemirror/language': ^6.0.0
