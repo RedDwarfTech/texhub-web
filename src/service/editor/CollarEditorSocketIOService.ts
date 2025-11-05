@@ -35,6 +35,7 @@ import { DocOpts } from "rdyjs/dist/src/utils/Doc.mjs";
 import store from "@/redux/store/store";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { TeXFileType } from "@/model/enum/TeXFileType";
+import localLog from "@/common/storage/log/LocalLog";
 
 export const usercolors = [
   { color: "#30bced", light: "#30bced33" },
@@ -98,7 +99,7 @@ export const doSocketIOConn = (
     path: "/sync",
     auth: {
       token: getAccessToken(),
-    }
+    },
   };
   let sid = localStorage.getItem("shortFileId");
   let enableShortFileId = sid && sid.toString() === "short";
@@ -241,10 +242,14 @@ const initialFisrtSubDoc = (file: TexFileModel) => {
     src: "initialFisrtSubDoc",
   };
   firstSubDoc.meta = docMetadata;
-  console.log("initial first doc:" + file.file_id);
+  localLog.add({
+    fun: "info",
+    url: "editor.init",
+    params: { msg: "initial first doc:", file: file },
+    date: new Date(),
+  });
   setCurSubDoc(firstSubDoc);
 };
-
 
 const handleSubDocChanged = (
   props: SubDocEventProps,
