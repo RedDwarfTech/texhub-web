@@ -129,6 +129,17 @@ export const initEditor = (projId: string, projInfo: ProjInfo) => {
     // current has no active file
     // when first time open the project
     // we load the main file
+    // record an info log that we will open the file that belongs to the project
+    localLog
+      .add({
+        fun: "info",
+        url: "editor.init",
+        params: { msg: "当前没有激活文件，默认初始化主文件", file: curActiveFile },
+        date: new Date(),
+      })
+      .catch(() => {
+        /* ignore logging errors */
+      });
     preInitEditor(projInfo.main_file, projId);
     return;
   }
@@ -138,17 +149,6 @@ export const initEditor = (projId: string, projInfo: ProjInfo) => {
   }
   let contains = projHasFile(curActiveFile.file_id, projInfo.main.project_id);
   if (contains) {
-    // record an info log that we will open the file that belongs to the project
-    localLog
-      .add({
-        fun: "info",
-        url: "editor.init",
-        params: { msg: "打开文件属于该项目", file: curActiveFile },
-        date: new Date(),
-      })
-      .catch(() => {
-        /* ignore logging errors */
-      });
     preInitEditor(curActiveFile, projId);
   } else {
     const warnMsg =
