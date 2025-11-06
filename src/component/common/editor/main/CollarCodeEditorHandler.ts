@@ -12,7 +12,7 @@ import { initSubDocSocketIO } from "@/service/editor/CollarEditorSocketIOService
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { themeMap } from "@/component/common/editor/foundation/extensions/theme/theme";
 import { readConfig } from "@/config/app/config-reader";
-import localLog from "@/common/storage/log/LocalLog";
+import logger from "@/common/storage/log/Logger";
 
 export const getCursorPos = (
   editor: EditorView
@@ -129,17 +129,8 @@ export const initEditor = (projId: string, projInfo: ProjInfo) => {
     // current has no active file
     // when first time open the project
     // we load the main file
-    // record an info log that we will open the file that belongs to the project
-    localLog
-      .add({
-        fun: "info",
-        url: "editor.init",
-        params: { msg: "当前没有激活文件，默认初始化主文件", file: curActiveFile },
-        date: new Date(),
-      })
-      .catch(() => {
-        /* ignore logging errors */
-      });
+    // record an info log that we will open the main file
+    logger.info("当前没有激活文件，默认初始化主文件", { file: curActiveFile });
     preInitEditor(projInfo.main_file, projId);
     return;
   }
@@ -155,16 +146,7 @@ export const initEditor = (projId: string, projInfo: ProjInfo) => {
       "当前文件不属于该项目，已为您打开主文件" + JSON.stringify(curActiveFile);
     console.warn(warnMsg);
     // record a warn log to indexeddb
-    localLog
-      .add({
-        fun: "warn",
-        url: "editor.init",
-        params: { msg: warnMsg, file: curActiveFile },
-        date: new Date(),
-      })
-      .catch(() => {
-        /* ignore logging errors */
-      });
+    logger.warn(warnMsg, { file: curActiveFile });
     preInitEditor(projInfo.main_file, projId);
   }
 };

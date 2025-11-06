@@ -11,6 +11,7 @@ export interface LogRecord {
   params?: any;
   funReturn?: any;
   fun?: string;
+  level?: 'info' | 'warn' | 'error' | 'debug' | 'log';
   order?: number;
   date?: string | Date;
   [key: string]: any;

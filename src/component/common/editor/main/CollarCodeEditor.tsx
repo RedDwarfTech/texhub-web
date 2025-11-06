@@ -38,7 +38,7 @@ import {
   setEditorInstance,
   setWsConnState,
 } from "@/service/project/editor/EditorService";
-import localLog from "@/common/storage/log/LocalLog";
+import logger from "@/common/storage/log/Logger";
 
 // sometimes when we replaced the Y.Doc
 // we need to bind the events to the new doc
@@ -131,12 +131,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     }
     console.log("curSubYDoc", curSubYDoc);
     console.log("curEditorRootDoc", curRootYDoc);
-    localLog.add({
-      fun: "info",
-      url: "editor.init",
-      params: { msg: "curSubYDoc changed:", file: curRootYDoc },
-      date: new Date(),
-    });
+    logger.info("curSubYDoc changed", { file: curRootYDoc });
     let ytext = curSubYDoc.getText(curSubYDoc.guid);
     const undoManager = new Y.UndoManager(ytext);
     if (!texEditorSocketIOWs) {

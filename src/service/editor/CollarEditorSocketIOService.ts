@@ -35,7 +35,7 @@ import { DocOpts } from "rdyjs/dist/src/utils/Doc.mjs";
 import store from "@/redux/store/store";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { TeXFileType } from "@/model/enum/TeXFileType";
-import localLog from "@/common/storage/log/LocalLog";
+import logger from "@/common/storage/log/Logger";
 
 export const usercolors = [
   { color: "#30bced", light: "#30bced33" },
@@ -242,12 +242,8 @@ const initialFisrtSubDoc = (file: TexFileModel) => {
     src: "initialFisrtSubDoc",
   };
   firstSubDoc.meta = docMetadata;
-  localLog.add({
-    fun: "info",
-    url: "editor.init",
-    params: { msg: "initial first doc:", file: file },
-    date: new Date(),
-  });
+  // record initial first doc via logger wrapper (console + indexeddb)
+  logger.info("initial first doc", { file });
   setCurSubDoc(firstSubDoc);
 };
 
