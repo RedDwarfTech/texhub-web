@@ -196,7 +196,6 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
   );
 
   const renderList = (width: number, height: number) => {
-    console.log(historyList.length);
     return (
       <InfiniteLoader
         isItemLoaded={isItemLoaded}
