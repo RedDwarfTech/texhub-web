@@ -13,7 +13,7 @@ import {
 import {
   ListOnItemsRenderedProps,
   ListOnScrollProps,
-  VariableSizeList,
+  VariableSizeList
 } from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
 import AutoSizer, { Size } from "react-virtualized-auto-sizer";
