@@ -69,20 +69,103 @@ export class LocalLogClass {
    */
   async add(record: LogRecord): Promise<number> {
     const db = await this.createDB();
+    const sanitize = (value: any, seen = new WeakSet()): any => {
+      // primitives
+      if (value === null || value === undefined) return value;
+      const t = typeof value;
+      if (t === "string" || t === "number" || t === "boolean") return value;
+      if (t === "bigint") return value.toString();
+      if (t === "symbol") return value.toString();
+      if (t === "function") return "[Function]";
+      // Dates
+      if (value instanceof Date) return value.toISOString();
+      // Avoid cloning DOM nodes, Yjs docs, EditorViews, etc.
+      // Detect common non-plain objects by presence of constructor not Object/Array
+      if (typeof value === "object") {
+        if (seen.has(value)) return "[Circular]";
+        seen.add(value);
+        if (Array.isArray(value)) {
+          return value.map((v) => sanitize(v, seen));
+        }
+        // For plain objects, copy enumerable properties
+        const out: any = {};
+        try {
+          for (const key of Object.keys(value)) {
+            try {
+              out[key] = sanitize((value as any)[key], seen);
+            } catch (e) {
+              out[key] = "[Unserializable]";
+            }
+          }
+        } catch (e) {
+          // fallback to string
+          return Object.prototype.toString.call(value);
+        }
+        return out;
+      }
+      return String(value);
+    };
+
+    const sanitizeRecord = (r: LogRecord): LogRecord => {
+      const copy: LogRecord = { ...r };
+      try {
+        copy.params = sanitize(r.params);
+      } catch (e) {
+        copy.params = { _error: "params sanitize failed" };
+      }
+      // ensure date is serializable
+      if (copy.date instanceof Date) copy.date = copy.date.toISOString();
+      return copy;
+    };
+
+    const safeRecord = sanitizeRecord(record);
+
     return new Promise<number>((resolve, reject) => {
       try {
-        const tx = db.transaction(this.dbName, 'readwrite');
+        const tx = db.transaction(this.dbName, "readwrite");
         const store = tx.objectStore(this.dbName);
-        const req = store.add(record);
-        req.onsuccess = (ev) => {
+        const req = store.add(safeRecord);
+        req.onsuccess = () => {
           resolve((req.result as number) || 0);
         };
-        req.onerror = (ev) => {
-          console.error('添加日志失败', ev);
-          reject(ev);
+        req.onerror = async (ev: any) => {
+          console.error("添加日志失败", ev);
+          // fallback: try to store a minimal record
+          try {
+            const minimal: LogRecord = {
+              level: (safeRecord as any).level,
+              fun: safeRecord.fun,
+              url: safeRecord.url,
+              params: { message: String((safeRecord as any).params) },
+              date: new Date().toISOString(),
+            };
+            const tx2 = db.transaction(this.dbName, "readwrite");
+            const store2 = tx2.objectStore(this.dbName);
+            const req2 = store2.add(minimal);
+            req2.onsuccess = () => resolve((req2.result as number) || 0);
+            req2.onerror = (e2: any) => reject(e2);
+          } catch (e2) {
+            reject(e2);
+          }
         };
       } catch (err) {
-        reject(err);
+        // If add throws synchronously (DataCloneError), try a minimal write
+        try {
+          const minimal: LogRecord = {
+            level: (safeRecord as any).level,
+            fun: safeRecord.fun,
+            url: safeRecord.url,
+            params: { message: String((safeRecord as any).params) },
+            date: new Date().toISOString(),
+          };
+          const tx2 = db.transaction(this.dbName, "readwrite");
+          const store2 = tx2.objectStore(this.dbName);
+          const req2 = store2.add(minimal);
+          req2.onsuccess = () => resolve((req2.result as number) || 0);
+          req2.onerror = (e2: any) => reject(e2);
+        } catch (e3) {
+          reject(e3);
+        }
       }
     });
   }
