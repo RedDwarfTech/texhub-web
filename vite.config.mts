@@ -40,7 +40,7 @@ export default defineConfig({
     outDir: "build",
     sourcemap: true,
     rollupOptions: {
-      external: [],
+      external: ["react/jsx-runtime"],
       output: {
         manualChunks: {
           react: ["react-router-dom"],
