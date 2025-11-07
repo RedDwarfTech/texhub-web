@@ -242,8 +242,9 @@ const initialFisrtSubDoc = (file: TexFileModel) => {
     src: "initialFisrtSubDoc",
   };
   firstSubDoc.meta = docMetadata;
-  // record initial first doc via logger wrapper (console + indexeddb)
-  logger.info("initial first doc", { file });
+  if (file.main_flag === 1) {
+    logger.warn("initial main doc", { file });
+  }
   setCurSubDoc(firstSubDoc);
 };
 
