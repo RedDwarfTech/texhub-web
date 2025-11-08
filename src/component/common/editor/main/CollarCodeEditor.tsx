@@ -8,8 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { themeConfig } from "@/config/app/global-conf";
 import { themeMap } from "@/component/common/editor/foundation/extensions/theme/theme";
 import { TexFileModel } from "@/model/file/TexFileModel";
-import { delProjInfo, projHasFile } from "@/service/project/ProjectService";
-import { EditorAttr } from "@/model/proj/config/EditorAttr";
+import { delProjInfo } from "@/service/project/ProjectService";
 import { ProjConfType } from "@/model/proj/config/ProjConfType";
 import { readConfig } from "@/config/app/config-reader";
 import { TreeFileType } from "@/model/file/TreeFileType";
@@ -214,7 +213,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         !texEditorSocketIOWs ||
         Object.keys(texEditorSocketIOWs).length === 0
       ) {
-        // only initial for the fisrt time 
+        // only initial for the fisrt time
         // the project info change in the furture will not re-initialize the editor
         initEditor(props.projectId, projInfo);
       }
@@ -248,6 +247,9 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   React.useEffect(() => {
     if (activeFile && activeFile.file_type !== TreeFileType.Folder) {
+      if (Object.keys(activeFile).length === 0) {
+        logger.error("the active file is null", JSON.stringify(activeFile));
+      }
       localStorage.setItem(activeKey, JSON.stringify(activeFile));
     }
     return () => {

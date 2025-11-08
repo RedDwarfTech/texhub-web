@@ -144,9 +144,9 @@ export const initEditor = (projId: string, projInfo: ProjInfo) => {
   } else {
     const warnMsg =
       "当前文件不属于该项目，已为您打开主文件" + JSON.stringify(curActiveFile);
-    console.warn(warnMsg);
+    console.error(warnMsg);
     // record a warn log to indexeddb
-    logger.warn(warnMsg, { file: curActiveFile });
+    logger.error(warnMsg, { file: curActiveFile });
     preInitEditor(projInfo.main_file, projId);
   }
 };
