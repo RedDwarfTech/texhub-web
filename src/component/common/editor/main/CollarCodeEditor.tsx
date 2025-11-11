@@ -128,13 +128,10 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     if (BaseMethods.isNull(curSubYDoc)) {
       return;
     }
-    console.log("curSubYDoc", curSubYDoc);
-    console.log("curEditorRootDoc", curRootYDoc);
-    logger.info("curSubYDoc changed", { file: curRootYDoc });
     let ytext = curSubYDoc.getText(curSubYDoc.guid);
     const undoManager = new Y.UndoManager(ytext);
     if (!texEditorSocketIOWs) {
-      console.error("texEditorSocketIOWs is null");
+      logger.error("texEditorSocketIOWs is null");
       return;
     }
     const texEditorState: EditorState = EditorState.create({
@@ -164,12 +161,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         .get(curSubYDoc.guid);
       const update = Y.encodeStateAsUpdate(oldDoc);
       const newDoc = new Y.Doc({ guid: curSubYDoc.guid });
-      Y.applyUpdate(newDoc, update);
-      const subDocText = newDoc.getText(curSubYDoc.guid);
-      subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-        console.log("doc(new) receive update,id:" + curSubYDoc.guid);
-        // updateEditor(tr, event, newDoc, editorView!);
-      });
+      Y.applyUpdate(newDoc, update);      
       rebindEditorToYDoc(
         newDoc,
         curSubYDoc.guid,
@@ -180,11 +172,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       );
       curRootYDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, newDoc);
     } else {
-      const subDocText = curSubYDoc.getText(curSubYDoc.guid);
-      subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-        console.log("doc receive update,id:" + curSubYDoc.guid);
-        // updateEditor(tr, event, curSubYDoc, editorView!);
-      });
       curRootYDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, curSubYDoc);
     }
     setCurRootYDoc(curRootYDoc);
@@ -248,7 +235,8 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   React.useEffect(() => {
     if (activeFile && activeFile.file_type !== TreeFileType.Folder) {
       if (Object.keys(activeFile).length === 0) {
-        logger.error("the active file is null", JSON.stringify(activeFile));
+        logger.warn("the active file is null", JSON.stringify(activeFile));
+        return;
       }
       localStorage.setItem(activeKey, JSON.stringify(activeFile));
     }
