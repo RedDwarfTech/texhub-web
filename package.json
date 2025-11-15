@@ -55,9 +55,9 @@
     "rdlib0": "^0.2.106",
     "rdy-codemirror.next": "^0.3.6",
     "rdyjs": "^13.6.33",
-    "react": "19.2.0",
+    "react": "18.2.0",
     "react-copy-to-clipboard": "^5.1.0",
-    "react-dom": "19.2.0",
+    "react-dom": "18.2.0",
     "react-error-boundary": "^4.1.2",
     "react-i18next": "^13.5.0",
     "react-pdf": "^10.2.0",
@@ -139,8 +139,8 @@
       "rdlib0": "^0.2.106",
       "rdy-protocols": "^1.0.14",
       "rdyjs": "^13.6.33",
-      "react": "19.2.0",
-      "react-dom": "19.2.0",
+      "react": "18.2.0",
+      "react-dom": "18.2.0",
       "react-redux": "9.2.0",
       "redux": "^5.0.1"
     }
@@ -149,8 +149,8 @@
     "react-pdf": {
       "pdfjs-dist": "4.9.155"
     },
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "rdlib0": "^0.2.106",
     "rdy-protocols": "^1.0.14",
     "rdyjs": "^13.6.33",
