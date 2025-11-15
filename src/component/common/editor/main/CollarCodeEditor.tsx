@@ -144,6 +144,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         metadata: metadata,
       }),
     });
+    edContainer.current!.id = curSubYDoc.guid + "-curSubYDoc-update";;
     const editorView: EditorView = new EditorView({
       state: texEditorState,
       parent: edContainer.current!,
@@ -161,7 +162,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         .get(curSubYDoc.guid);
       const update = Y.encodeStateAsUpdate(oldDoc);
       const newDoc = new Y.Doc({ guid: curSubYDoc.guid });
-      Y.applyUpdate(newDoc, update);      
+      Y.applyUpdate(newDoc, update);
       rebindEditorToYDoc(
         newDoc,
         curSubYDoc.guid,
