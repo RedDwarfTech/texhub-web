@@ -2,8 +2,6 @@ import React, { ChangeEvent, useMemo, useState } from "react";
 import styles from "./Previewer.module.css";
 import { ToastContainer } from "react-toastify";
 import { pdfjs } from "react-pdf";
-import "react-pdf/dist/Page/TextLayer.css";
-import "react-pdf/dist/Page/AnnotationLayer.css";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import MemoizedPDFPreview from "../doc/MemoizedPDFPreview";

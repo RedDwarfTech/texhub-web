@@ -11,6 +11,8 @@ import {
 import { PageViewport } from "pdfjs-dist";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import TeXPDFHighlight from "../feat/highlight/TeXPDFHighlight";
+import "react-pdf/dist/Page/TextLayer.css";
+import "react-pdf/dist/Page/AnnotationLayer.css";
 
 interface PDFPageProps {
   index: number;
@@ -88,6 +90,8 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
         pageNumber={index}
         width={width}
         height={height}
+        renderAnnotationLayer={true}
+        renderTextLayer={true}
       >
         {curPdfPosition && viewPort ? (
           <TeXPDFHighlight
