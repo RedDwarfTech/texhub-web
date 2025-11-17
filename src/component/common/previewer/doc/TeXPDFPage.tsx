@@ -63,7 +63,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     const textLayers = document.querySelectorAll(
       ".react-pdf__Page__textContent"
     );
-    textLayers.forEach((layer) => {
+    textLayers.forEach((layer: any) => {
       const { style } = layer;
       style.top = "0";
       style.left = "0";
