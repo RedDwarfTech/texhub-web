@@ -5,9 +5,7 @@ import { PageCallback } from "react-pdf/dist/shared/types";
 import { PreviewPdfAttribute } from "@/model/proj/config/PreviewPdfAttribute";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
-import {
-  getCurPdfScale,
-} from "@/service/project/preview/PreviewService";
+import { getCurPdfScale } from "@/service/project/preview/PreviewService";
 import { PageViewport } from "pdfjs-dist";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import TeXPDFHighlight from "../feat/highlight/TeXPDFHighlight";
@@ -57,11 +55,21 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     setProjAttribute(projAttr);
   }, [projAttr, cachedScale]);
 
-  const handlePageRenderSuccess = (page: PageCallback) => {
-       
-  };
+  const handlePageRenderSuccess = (page: PageCallback) => {};
 
   const handlePageChange = (page: any) => {};
+
+  const removeTextLayerOffset = () => {
+    const textLayers = document.querySelectorAll(
+      ".react-pdf__Page__textContent"
+    );
+    textLayers.forEach((layer) => {
+      const { style } = layer;
+      style.top = "0";
+      style.left = "0";
+      style.transform = "";
+    });
+  };
 
   return (
     <div
@@ -92,6 +100,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
         height={height}
         renderAnnotationLayer={true}
         renderTextLayer={true}
+        onLoadSuccess={removeTextLayerOffset}
       >
         {curPdfPosition && viewPort ? (
           <TeXPDFHighlight
