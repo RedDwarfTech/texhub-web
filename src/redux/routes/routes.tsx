@@ -11,12 +11,13 @@ import Price from "@/component/common/price/Price";
 import App from "@/page/main/app/App";
 import TeXShareRecieved from "@/page/profile/project/share/TexShareRecieved";
 import Settings from "@/page/profile/panel/Settings";
-import FullScreen from "@/component/common/previewer/feat/fullscreen/FullScreen";
+import FullScreen from "@/component/common/previewer/feat/fullscreen/FullScreenIndependent";
 import DocCenter from "@/page/document/DocCenter";
 import VerifyPwd from "@/page/pwd/verify/VerifyPwd";
 import ResetPwd from "@/page/pwd/reset/ResetPwd";
 import RdTeXHubLogin from "@/page/profile/user/login/RdTeXHubLogin";
 import RdTeXHubReg from "@/page/profile/user/reg/RdTeXHubReg";
+import FullScreenIndepenent from "@/component/common/previewer/feat/fullscreen/FullScreen";
 
 const routeDefine = [
   {
@@ -50,6 +51,10 @@ const routeDefine = [
   {
     path: "/preview/fullscreen",
     element: <FullScreen />,
+  },
+  {
+    path: "/preview/fullscreen/independent",
+    element: <FullScreenIndepenent />,
   },
   {
     path: "/user/login",

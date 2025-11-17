@@ -283,7 +283,14 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
               className={styles.previewIconButton}
               data-bs-toggle="tooltip"
               title={t("btn_debug_app")}
-              onClick={() => {}}
+              onClick={() => {
+                let url =
+                  "/preview/fullscreen/independent?projId=" +
+                  props.projectId +
+                  "&curPage=" +
+                  curPage;
+                window.open(url, "_blank", "noopener,noreferrer");
+              }}
             >
               <i className="fa-solid fa-check"></i>
             </button>
