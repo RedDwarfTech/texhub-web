@@ -105,7 +105,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     let connected = texEditorSocketIOWs?.ws?.connected;
     if (connected) {
       setWsConnState("connected");
-      console.log("connected is ok");
     } else {
       setWsConnState("disconnected");
       console.error("disconnected......");

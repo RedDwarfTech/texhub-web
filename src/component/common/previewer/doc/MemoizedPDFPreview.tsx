@@ -31,6 +31,8 @@ import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { getAccessToken } from "../../cache/Cache";
 import { authTokenEquals, getAuthorization } from "@/config/pdf/PdfJsConfig";
 import { getNewScaleOffsetPosition } from "../calc/ScrollUtil";
+import "react-pdf/dist/Page/TextLayer.css";
+import "react-pdf/dist/Page/AnnotationLayer.css";
 
 const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
   ({
