@@ -33,6 +33,7 @@
     "@uiw/react-split": "^5.9.3",
     "@vitejs/plugin-react": "^4.7.0",
     "@wojtekmaj/async-array-utils": "^1.8.1",
+    "@wojtekmaj/react-hooks": "^2.0.4",
     "antd": "^5.28.0",
     "axios": "^1.13.2",
     "bootstrap": "5.3.5",

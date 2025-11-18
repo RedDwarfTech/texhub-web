@@ -105,6 +105,9 @@ importers:
       '@wojtekmaj/async-array-utils':
         specifier: ^1.8.1
         version: 1.8.1
+      '@wojtekmaj/react-hooks':
+        specifier: ^2.0.4
+        version: 2.0.4(@types/react@18.3.26)(react@18.2.0)
       antd:
         specifier: ^5.28.0
         version: 5.28.0(moment@2.30.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -2703,6 +2706,15 @@ packages:
 
   '@wojtekmaj/async-array-utils@1.8.1':
     resolution: {integrity: sha512-SpX9q/fkna6RJL7WoxatbWe72YUVB7uAoL0bxNMnSJuY+8xHDSe6aEnosand+1cpnEmZnHrtdyjOmptvrbkjig==}
+
+  '@wojtekmaj/react-hooks@2.0.4':
+    resolution: {integrity: sha512-s08FX/mKkFfYyBT4X4JN63gwfZ4D2lQJ77fAgrZVZUYkCs2WTA4/B9cBail5X+a0tNQbFbsVzrovNU4KOSYE9g==}
+    peerDependencies:
+      '@types/react': ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react: 18.2.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
 
   '@xtuc/ieee754@1.2.0':
     resolution: {integrity: sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA==}
@@ -10398,6 +10410,12 @@ snapshots:
       '@xtuc/long': 4.2.2
 
   '@wojtekmaj/async-array-utils@1.8.1': {}
+
+  '@wojtekmaj/react-hooks@2.0.4(@types/react@18.3.26)(react@18.2.0)':
+    dependencies:
+      react: 18.2.0
+    optionalDependencies:
+      '@types/react': 18.3.26
 
   '@xtuc/ieee754@1.2.0': {}
 
