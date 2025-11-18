@@ -4,6 +4,7 @@ import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import { useResizeObserver } from "@wojtekmaj/react-hooks";
 import { PDFDocumentProxy } from "pdfjs-dist";
+import { DocumentCallback } from "react-pdf/dist/shared/types";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
 const FullScreenIndependent: React.FC = () => {
   const [numPages, setNumPages] = useState<number>();
@@ -40,7 +41,7 @@ const FullScreenIndependent: React.FC = () => {
     wasmUrl: "/wasm/",
   };
 
-  const onDocumentLoadSuccess = (pdf: PDFDocumentProxy) => {
+  const onDocumentLoadSuccess = (pdf: DocumentCallback) => {
     setNumPages(pdf.numPages);
   };
 
