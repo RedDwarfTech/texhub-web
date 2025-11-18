@@ -17,7 +17,7 @@ import VerifyPwd from "@/page/pwd/verify/VerifyPwd";
 import ResetPwd from "@/page/pwd/reset/ResetPwd";
 import RdTeXHubLogin from "@/page/profile/user/login/RdTeXHubLogin";
 import RdTeXHubReg from "@/page/profile/user/reg/RdTeXHubReg";
-import FullScreenIndepenent from "@/component/common/previewer/feat/fullscreen/FullScreen";
+import FullScreenIndepenent from "@/component/common/previewer/feat/fullscreen/FullScreenIndependent";
 
 const routeDefine = [
   {
