@@ -285,9 +285,9 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
               data-bs-toggle="tooltip"
               title={t("btn_debug_app")}
               onClick={() => {
-                getPreviewUrl(props.projectId).then((res) => {
+                getPreviewUrl(props.projectId).then((res:any) => {
                   if (ResponseHandler.responseSuccess(res)) {
-                    let url = "/preview/fullscreen?projId=" + props.projectId + "&curPage=" + curPage + "&pdfUrl=" + encodeURIComponent(res.result);
+                    let url = "/preview/fullscreen/independent?projId=" + props.projectId + "&curPage=" + curPage + "&pdfUrl=" + encodeURIComponent(res.result);
                     window.open(url, "_blank", "noopener,noreferrer");
                   }
                 });

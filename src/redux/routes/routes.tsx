@@ -11,7 +11,7 @@ import Price from "@/component/common/price/Price";
 import App from "@/page/main/app/App";
 import TeXShareRecieved from "@/page/profile/project/share/TexShareRecieved";
 import Settings from "@/page/profile/panel/Settings";
-import FullScreen from "@/component/common/previewer/feat/fullscreen/FullScreenIndependent";
+import FullScreen from "@/component/common/previewer/feat/fullscreen/FullScreen";
 import DocCenter from "@/page/document/DocCenter";
 import VerifyPwd from "@/page/pwd/verify/VerifyPwd";
 import ResetPwd from "@/page/pwd/reset/ResetPwd";
