@@ -287,7 +287,8 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
               onClick={() => {
                 getPreviewUrl(props.projectId).then((res) => {
                   if (ResponseHandler.responseSuccess(res)) {
-                    window.open(res.result, "_blank", "noopener,noreferrer");
+                    let url = "/preview/fullscreen?projId=" + props.projectId + "&curPage=" + curPage + "&pdfUrl=" + encodeURIComponent(res.result);
+                    window.open(url, "_blank", "noopener,noreferrer");
                   }
                 });
               }}

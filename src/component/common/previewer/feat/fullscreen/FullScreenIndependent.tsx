@@ -12,7 +12,7 @@ const FullScreenIndependent: React.FC = () => {
   const params = new URLSearchParams(window.location.search);
   const projId = params.get("projId");
   const curPage = params.get("curPage");
-  let pdfUrl = "/tex/file/pdf/partial?proj_id=" + projId;
+  const pdfUrl = params.get("pdfUrl");
   const maxWidth = 800;
   const resizeObserverOptions = {};
 
