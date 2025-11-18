@@ -15,7 +15,7 @@ import {
   updatePdfUrl,
 } from "@/service/project/ProjectService";
 import { CompileResultType } from "@/model/proj/compile/CompileResultType";
-import { BaseMethods } from "rdjs-wheel";
+import { BaseMethods, ResponseHandler } from "rdjs-wheel";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import {
   enterFullScreen,
@@ -37,6 +37,7 @@ import {
   setAndDispatchPdfPage,
 } from "@/service/project/preview/PreviewService";
 import { usePreviewHandler } from "./usePreviewHandler";
+import { getPreviewUrl } from "@/service/file/FileService";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
 
 export type PreviwerProps = {
@@ -284,12 +285,11 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
               data-bs-toggle="tooltip"
               title={t("btn_debug_app")}
               onClick={() => {
-                let url =
-                  "/preview/fullscreen/independent?projId=" +
-                  props.projectId +
-                  "&curPage=" +
-                  curPage;
-                window.open(url, "_blank", "noopener,noreferrer");
+                getPreviewUrl(props.projectId).then((res) => {
+                  if (ResponseHandler.responseSuccess(res)) {
+                    window.open(res.result, "_blank", "noopener,noreferrer");
+                  }
+                });
               }}
             >
               <i className="fa-solid fa-check"></i>
