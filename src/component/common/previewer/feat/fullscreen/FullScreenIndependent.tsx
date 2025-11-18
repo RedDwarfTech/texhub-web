@@ -40,10 +40,8 @@ const FullScreenIndependent: React.FC = () => {
     wasmUrl: "/wasm/",
   };
 
-  const onDocumentLoadSuccess = ({
-    numPages: nextNumPages,
-  }: PDFDocumentProxy) => {
-    setNumPages(nextNumPages);
+  const onDocumentLoadSuccess = (pdf: PDFDocumentProxy) => {
+    setNumPages(pdf.numPages);
   };
 
   return (
