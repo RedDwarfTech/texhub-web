@@ -3,6 +3,7 @@ import { pdfjs, Document, Page } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import { useResizeObserver } from '@wojtekmaj/react-hooks';
+import { PDFDocumentProxy } from "pdfjs-dist";
 
 const FullScreenIndependent: React.FC = () => {
 
@@ -42,9 +43,13 @@ const FullScreenIndependent: React.FC = () => {
     wasmUrl: '/wasm/',
   };
 
+  function onDocumentLoadSuccess({ numPages: nextNumPages }: PDFDocumentProxy): void {
+    setNumPages(nextNumPages);
+  }
+  
   return (
     <div ref={setContainerRef}>
-      <Document file={pdfUrl} options={options}>
+      <Document file={pdfUrl} onLoadSuccess={onDocumentLoadSuccess} options={options}>
         {Array.from(new Array(numPages), (_el, index) => (
           <Page
             key={`page_${index + 1}`}
