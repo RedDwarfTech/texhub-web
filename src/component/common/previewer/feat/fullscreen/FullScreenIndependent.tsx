@@ -1,12 +1,11 @@
 import React, { useCallback, useState } from "react";
-import { pdfjs, Document, Page } from 'react-pdf';
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
-import { useResizeObserver } from '@wojtekmaj/react-hooks';
+import { pdfjs, Document, Page } from "react-pdf";
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
+import { useResizeObserver } from "@wojtekmaj/react-hooks";
 import { PDFDocumentProxy } from "pdfjs-dist";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
 const FullScreenIndependent: React.FC = () => {
-
   const [numPages, setNumPages] = useState<number>();
   const [containerWidth, setContainerWidth] = useState<number>();
   const [containerRef, setContainerRef] = useState<HTMLElement | null>(null);
@@ -17,10 +16,8 @@ const FullScreenIndependent: React.FC = () => {
   const maxWidth = 800;
   const resizeObserverOptions = {};
 
-
-
   React.useEffect(() => {
-    return () => { };
+    return () => {};
   }, []);
 
   const onResize = useCallback<ResizeObserverCallback>((entries) => {
@@ -38,23 +35,31 @@ const FullScreenIndependent: React.FC = () => {
   }
 
   const options = {
-    cMapUrl: '/cmaps/',
-    standardFontDataUrl: '/standard_fonts/',
-    wasmUrl: '/wasm/',
+    cMapUrl: "/cmaps/",
+    standardFontDataUrl: "/standard_fonts/",
+    wasmUrl: "/wasm/",
   };
 
-  function onDocumentLoadSuccess({ numPages: nextNumPages }: PDFDocumentProxy): void {
+  const onDocumentLoadSuccess = ({
+    numPages: nextNumPages,
+  }: PDFDocumentProxy) => {
     setNumPages(nextNumPages);
-  }
-  
+  };
+
   return (
     <div ref={setContainerRef}>
-      <Document file={pdfUrl} onLoadSuccess={onDocumentLoadSuccess} options={options}>
+      <Document
+        file={pdfUrl}
+        onLoadSuccess={onDocumentLoadSuccess}
+        options={options}
+      >
         {Array.from(new Array(numPages), (_el, index) => (
           <Page
             key={`page_${index + 1}`}
             pageNumber={index + 1}
-            width={containerWidth ? Math.min(containerWidth, maxWidth) : maxWidth}
+            width={
+              containerWidth ? Math.min(containerWidth, maxWidth) : maxWidth
+            }
           />
         ))}
       </Document>
