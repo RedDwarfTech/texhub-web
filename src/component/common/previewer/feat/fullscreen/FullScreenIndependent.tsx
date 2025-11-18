@@ -4,7 +4,7 @@ import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import { useResizeObserver } from '@wojtekmaj/react-hooks';
 import { PDFDocumentProxy } from "pdfjs-dist";
-
+pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
 const FullScreenIndependent: React.FC = () => {
 
   const [numPages, setNumPages] = useState<number>();
