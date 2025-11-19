@@ -4,8 +4,14 @@ import path from "node:path";
 import { visualizer } from "rollup-plugin-visualizer";
 import svgr from "vite-plugin-svgr";
 import wasm from "vite-plugin-wasm";
-import topLevelAwait from "vite-plugin-top-level-await";
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 import commonjs from "@rollup/plugin-commonjs";
+import { normalizePath } from 'vite';
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
+const pdfjsDistPath = path.dirname(require.resolve('pdfjs-dist/package.json'));
+const cMapsDir = normalizePath(path.join(pdfjsDistPath, 'cmaps'));
 
 export default defineConfig({
   define: {
@@ -14,6 +20,14 @@ export default defineConfig({
     }),
   },
   plugins: [
+    viteStaticCopy({
+      targets: [
+        {
+          src: cMapsDir,
+          dest: "",
+        },
+      ],
+    }),
     commonjs(),
     react(),
     svgr({
@@ -32,8 +46,8 @@ export default defineConfig({
     }) as PluginOption,
   ],
   css: {},
-  optimizeDeps:{
-    exclude: []
+  optimizeDeps: {
+    exclude: [],
   },
   build: {
     commonjsOptions: { include: [] },
@@ -52,7 +66,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
-      "~bootstrap": path.resolve(__dirname, "node_modules/bootstrap")
+      "~bootstrap": path.resolve(__dirname, "node_modules/bootstrap"),
     },
   },
   server: {
