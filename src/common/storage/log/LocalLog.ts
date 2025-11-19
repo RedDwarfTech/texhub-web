@@ -43,7 +43,6 @@ export class LocalLogClass {
           this.db?.close();
           this.db = undefined;
         };
-        console.log('打开数据库成功');
         resolve(this.db);
       };
 

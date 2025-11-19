@@ -56,7 +56,7 @@ export const getPdfjsOptions = (): Options => {
 
   // 生成新的 pdfjsOptions
   cachedOptions = {
-    cMapUrl: `/pdfjs-dist/${pdfjs.version}/cmaps/`,
+    cMapUrl: `/pdfjs-dist/${pdfjs.version}/web/cmaps/`,
     standardFontDataUrl: "/standard_fonts/",
     httpHeaders: {
       Authorization: "Bearer " + getAccessToken(),
