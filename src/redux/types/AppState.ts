@@ -39,7 +39,7 @@ export interface AppState {
         texPdfUrl: string,
         logText: string,
         endSignal: string,
-        queue: CompileQueue,
+        texQueue: CompileQueue,
         tabName: string,
         streamLogText: SSEMessage[],
         projInfo: ProjInfo,

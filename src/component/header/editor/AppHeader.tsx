@@ -31,7 +31,7 @@ import { defaultHistoryPageSize } from "@/config/app/global-conf.js";
 
 const EHeader: React.FC = () => {
   const { fileTree } = useSelector((state: AppState) => state.file);
-  const { queue, projInfo } = useSelector((state: AppState) => state.proj);
+  const { texQueue, projInfo } = useSelector((state: AppState) => state.proj);
   const [mainFile, setMainFile] = useState<TexFileModel>();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -56,28 +56,28 @@ const EHeader: React.FC = () => {
       return;
     }
     let interval: NodeJS.Timeout | null = null;
-    if (queue && Object.keys(queue).length > 0) {
-      if (queue.comp_status !== 0 && interval) {
+    if (texQueue && Object.keys(texQueue).length > 0) {
+      if (texQueue.comp_status !== 0 && interval) {
         clearInterval(interval);
         return;
       }
       let req: CompileProjLog = {
         project_id: mainFile.project_id,
         file_name: mainFile.name,
-        version_no: queue.version_no,
-        qid: queue.id,
+        version_no: texQueue.version_no,
+        qid: texQueue.id,
         access_token: getAccessToken(),
       };
-      if (queue.comp_status === CompileStatus.WAITING) {
+      if (texQueue.comp_status === CompileStatus.WAITING) {
         if (interval === null) {
           interval = setInterval(() => {
-            getCompQueueStatus(queue.id);
+            getCompQueueStatus(texQueue.id);
           }, 5000);
         }
-      } else if (queue.comp_status === CompileStatus.COMPILING) {
+      } else if (texQueue.comp_status === CompileStatus.COMPILING) {
         clearCompileCheck(interval);
         getStreamLog(req);
-      } else if (queue.comp_status === CompileStatus.COMPLETE) {
+      } else if (texQueue.comp_status === CompileStatus.COMPLETE) {
         clearCompileCheck(interval);
         compileProjectLog(req);
       } else {
@@ -87,7 +87,7 @@ const EHeader: React.FC = () => {
         clearCompileCheck(interval);
       };
     }
-  }, [queue]);
+  }, [texQueue]);
 
   const clearCompileCheck = (interval: NodeJS.Timeout | null) => {
     if (interval) {

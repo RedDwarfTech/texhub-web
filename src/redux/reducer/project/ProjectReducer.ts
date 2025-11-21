@@ -22,7 +22,7 @@ const initState: AppState["proj"] = {
     logText: "",
     streamLogText: [],
     endSignal: "",
-    queue: {} as CompileQueue,
+    texQueue: {} as CompileQueue,
     tabName: "",
     projInfo: {} as ProjInfo,
     compileStatus: {} as CompileStatus,
@@ -92,12 +92,12 @@ const ProjectReducer = (state = initState, action: any) => {
         case "ADD_QUEUE_COMPILE":
             return {
                 ...state,
-                queue: action.data
+                texQueue: action.data
             };
         case "GET_COMP_QUEUE_STATUS":
             return {
                 ...state,
-                queue: action.data
+                texQueue: action.data
             };
         case "SHOW_PREVIEW_TAB":
             return {

@@ -71,7 +71,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     logText,
     tabName,
     compileStatus,
-    queue,
+    texQueue,
     latestComp,
     projInfo,
     endSignal,
@@ -147,8 +147,8 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   }, [texPdfUrl]);
 
   React.useEffect(() => {
-    setCurCompileQueue(queue);
-  }, [queue]);
+    setCurCompileQueue(texQueue);
+  }, [texQueue]);
 
   React.useEffect(() => {
     setCompStatus(compileStatus);
