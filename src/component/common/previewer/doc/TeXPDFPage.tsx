@@ -11,6 +11,7 @@ import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import TeXPDFHighlight from "../feat/highlight/TeXPDFHighlight";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
+import { extractTextItems } from "../feat/highlight/HighlightUtil";
 
 interface PDFPageProps {
   index: number;
@@ -20,6 +21,7 @@ interface PDFPageProps {
   height: number;
   viewPort: PageViewport;
   curPdfPosition: PdfPosition[] | undefined;
+  setHighlightAreas: any
   viewModel: string;
 }
 
@@ -31,6 +33,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   height,
   viewPort,
   curPdfPosition,
+  setHighlightAreas,
   viewModel,
 }) => {
   let cachedScale = getCurPdfScale(projId, viewModel);
@@ -58,18 +61,6 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   const handlePageRenderSuccess = (page: PageCallback) => {};
 
   const handlePageChange = (page: any) => {};
-
-  const removeTextLayerOffset = () => {
-    const textLayers = document.querySelectorAll(
-      ".react-pdf__Page__textContent"
-    );
-    textLayers.forEach((layer: any) => {
-      const { style } = layer;
-      style.top = "0";
-      style.left = "0";
-      style.transform = "";
-    });
-  };
 
   return (
     <div
@@ -100,18 +91,10 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
         height={height}
         renderAnnotationLayer={true}
         renderTextLayer={true}
-        onLoadSuccess={removeTextLayerOffset}
-      >
-        {curPdfPosition && viewPort ? (
-          <TeXPDFHighlight
-            position={curPdfPosition}
-            pageNumber={index}
-            viewport={viewPort}
-          ></TeXPDFHighlight>
-        ) : (
-          <div></div>
-        )}
-      </Page>
+        onLoadSuccess={(page) =>
+          extractTextItems(page, setHighlightAreas, "stackoverflow.com", height)
+        }
+      ></Page>
     </div>
   );
 };
