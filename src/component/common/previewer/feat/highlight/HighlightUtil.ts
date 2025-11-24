@@ -8,18 +8,6 @@ export const extractTextItems = async (
   searchText: string,
   height?: number
 ) => {
-  // Get text content with position information
-  const textContent = await page.getTextContent();
-
-  // Filter to get only valid text items
-  const textItems = textContent.items
-    .filter((item): item is TextItem => "str" in item)
-    .filter((item) => item.str.trim() !== "");
-
-  console.log("Text items:", textItems);
-  // Each item contains: { str, transform, width, height, ... }
-  debugger;
-
   if (searchText) {
     const textContent = await page.getTextContent();
     const textItems = textContent.items.filter((item) => "str" in item);
@@ -53,7 +41,7 @@ export const findTextItemRanges = (
   const results: any = [];
 
   // Join all text with spaces
-  const joinedText = textItems.map((item) => item.str).join(" ");
+  const joinedText = textItems.map((item) => item.str).join("");
 
   // Find the match in joined text
   const matchIndex = joinedText.toLowerCase().indexOf(searchText.toLowerCase());

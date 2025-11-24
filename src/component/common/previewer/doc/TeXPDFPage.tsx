@@ -11,7 +11,9 @@ import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import TeXPDFHighlight from "../feat/highlight/TeXPDFHighlight";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
-import { extractTextItems } from "../feat/highlight/HighlightUtil";
+// Note: we intentionally do not extract highlights on page load to avoid
+// repeated state updates that can cause re-render loops. Instead we attach
+// mouse handlers to compute highlights on hover.
 
 interface PDFPageProps {
   index: number;
@@ -50,6 +52,122 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
       canvasArray.current[index] = { current: element };
     }
   };
+
+  // Refs for hover-based highlight computation
+  const pageRef = useRef<any | null>(null);
+  const pageTextItemsRef = useRef<any[]>([]);
+  const listenersAttachedRef = useRef(false);
+  const hoverTimeoutRef = useRef<number | null>(null);
+
+  // Find URL-like matches across an array of text items and map them to per-item ranges.
+  const findUrlMatchesInItems = (items: any[]) => {
+    if (!items || items.length === 0) return [];
+    const parts = items.map((it) => it.str || "");
+    const full = parts.join("");
+    const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g;
+    const matches: Array<any> = [];
+
+    // Build index map of each item's start/end in the concatenated string
+    const map: Array<{ start: number; end: number; len: number }> = [];
+    let cursor = 0;
+    for (let i = 0; i < parts.length; i++) {
+      const len = parts[i].length;
+      map.push({ start: cursor, end: cursor + len, len });
+      cursor += len;
+    }
+
+    let m: RegExpExecArray | null;
+    while ((m = urlRegex.exec(full)) !== null) {
+      const start = m.index;
+      const end = start + m[0].length;
+      const group: any[] = [];
+      // find overlapping items
+      for (let i = 0; i < map.length; i++) {
+        const entry = map[i];
+        if (entry.end <= start) continue;
+        if (entry.start >= end) break;
+        const matchStartInItem = Math.max(0, start - entry.start);
+        const matchEndInItem = Math.min(entry.len, end - entry.start);
+        group.push({ itemIndex: i, item: items[i], matchStartInItem, matchEndInItem });
+      }
+      if (group.length > 0) matches.push({ text: m[0], start, end, parts: group });
+    }
+    return matches;
+  };
+
+  // Attach mouse handlers to the page's text layer. When hovering a span, compute the
+  // URL match that includes that span and set highlight areas accordingly. Clear on mouseout.
+  const attachTextLayerListeners = () => {
+    if (listenersAttachedRef.current) return;
+    const container = document.getElementById("page-" + index);
+    if (!container) return;
+    const textLayer = container.querySelector(".react-pdf__Page__textContent");
+    if (!textLayer) return;
+
+    const onMouseOver = (ev: Event) => {
+      const e = ev as MouseEvent;
+      const target = e.target as HTMLElement | null;
+      if (!target || target.tagName.toLowerCase() !== "span") return;
+      // debounce rapid mouse moves
+      if (hoverTimeoutRef.current) {
+        window.clearTimeout(hoverTimeoutRef.current);
+      }
+      hoverTimeoutRef.current = window.setTimeout(() => {
+        const spans = Array.from(textLayer.querySelectorAll("span"));
+        const idx = spans.indexOf(target);
+        if (idx === -1) return;
+        const items = pageTextItemsRef.current || [];
+        const matches = findUrlMatchesInItems(items);
+        // find a match that contains this item index
+        const matched = matches.find((m) => m.parts.some((p: any) => p.itemIndex === idx));
+        if (matched) {
+          // build highlight area structure expected by CustomHighlightLayer
+          const highlightArea = {
+            pageIndex: (pageRef.current && pageRef.current.pageNumber)
+              ? pageRef.current.pageNumber - 1
+              : index,
+            pageHeight: height,
+            textItems: matched.parts,
+          };
+          setHighlightAreas([highlightArea]);
+        } else {
+          setHighlightAreas([]);
+        }
+      }, 120);
+    };
+
+    const onMouseOut = (_ev: Event) => {
+      if (hoverTimeoutRef.current) {
+        window.clearTimeout(hoverTimeoutRef.current);
+        hoverTimeoutRef.current = null;
+      }
+      setHighlightAreas([]);
+    };
+
+    textLayer.addEventListener("mouseover", onMouseOver);
+    textLayer.addEventListener("mousemove", onMouseOver);
+    textLayer.addEventListener("mouseout", onMouseOut);
+    listenersAttachedRef.current = true;
+
+    // store listeners so we can remove them on cleanup
+    (textLayer as any).__texhub_listeners = { onMouseOver, onMouseOut };
+  };
+
+  // cleanup on unmount
+  React.useEffect(() => {
+    return () => {
+      const container = document.getElementById("page-" + index);
+      if (!container) return;
+      const textLayer = container.querySelector(".react-pdf__Page__textContent");
+      if (!textLayer) return;
+      const listeners = (textLayer as any).__texhub_listeners;
+      if (listeners) {
+        textLayer.removeEventListener("mouseover", listeners.onMouseOver);
+        textLayer.removeEventListener("mousemove", listeners.onMouseOver);
+        textLayer.removeEventListener("mouseout", listeners.onMouseOut);
+      }
+    };
+  }, []);
 
   React.useEffect(() => {
     if (projAttr.pdfScale === 1 && cachedScale) {
@@ -91,9 +209,15 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
         height={height}
         renderAnnotationLayer={true}
         renderTextLayer={true}
-        onLoadSuccess={(page) =>
-          extractTextItems(page, setHighlightAreas, "stackoverflow.com", height)
-        }
+        onLoadSuccess={(page) => {
+          // Cache page proxy and its text items; do NOT call extractTextItems here.
+          pageRef.current = page
+          page.getTextContent().then((textContent: any) => {
+            pageTextItemsRef.current = textContent.items || [];
+            // Attach listeners to text layer so highlights are computed on hover only.
+            // setTimeout(() => attachTextLayerListeners(), 50);
+          })
+        }}
       ></Page>
     </div>
   );

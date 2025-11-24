@@ -59,7 +59,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
 
     const setAreas = (areas: HighlightArea[]) => {
-      debugger;
       setHighlightAreas(areas);
     }
 
