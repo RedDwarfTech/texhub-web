@@ -11,41 +11,41 @@ const DocCenter: React.FC = () => {
     const docCategories = [
         { 
             id: 'getting-started', 
-            name: '快速开始',
+            name: t('doc_category_getting_started'),
             show: true,
             subCategories: [
-                { id: 'basics', name: '基础知识', show: true },
-                { id: 'first-doc', name: '第一个文档', show: false }
+                { id: 'basics', name: t('doc_subcategory_basics'), show: true },
+                { id: 'first-doc', name: t('doc_subcategory_first_doc'), show: false }
             ]
         },
         { 
             id: 'tutorials', 
-            name: '教程指南',
+            name: t('doc_category_tutorials'),
             show: false,
             subCategories: [
-                { id: 'video-tutorials', name: '视频教程', show: true },
-                { id: 'text-tutorials', name: '文字教程', show: true },
-                { id: 'examples', name: '实战案例', show: true }
+                { id: 'video-tutorials', name: t('doc_subcategory_video_tutorials'), show: true },
+                { id: 'text-tutorials', name: t('doc_subcategory_text_tutorials'), show: true },
+                { id: 'examples', name: t('doc_subcategory_examples'), show: true }
             ]
         },
         { 
             id: 'tools', 
-            name: '工具资源',
+            name: t('doc_category_tools'),
             show: false,
             subCategories: [
-                { id: 'online-editors', name: '在线编辑器', show: true },
-                { id: 'formula-tools', name: '公式工具', show: true },
-                { id: 'table-tools', name: '表格工具', show: true }
+                { id: 'online-editors', name: t('doc_subcategory_online_editors'), show: true },
+                { id: 'formula-tools', name: t('doc_subcategory_formula_tools'), show: true },
+                { id: 'table-tools', name: t('doc_subcategory_table_tools'), show: true }
             ]
         },
         { 
             id: 'advanced', 
-            name: '高级主题',
+            name: t('doc_category_advanced'),
             show: false,
             subCategories: [
-                { id: 'packages', name: '包管理', show: true },
-                { id: 'customization', name: '自定义', show: true },
-                { id: 'troubleshooting', name: '问题解决', show: true }
+                { id: 'packages', name: t('doc_subcategory_packages'), show: true },
+                { id: 'customization', name: t('doc_subcategory_customization'), show: true },
+                { id: 'troubleshooting', name: t('doc_subcategory_troubleshooting'), show: true }
             ]
         }
     ];
@@ -53,155 +53,155 @@ const DocCenter: React.FC = () => {
     const docLinks = {
         'basics': [
             {
-                title: "一份不太简短的LaTeX介绍",
+                title: t('doc_link_lshort'),
                 url: "https://texdoc.org/serve/lshort-zh-cn.pdf/0",
-                description: "LaTeX入门必读文档，从基础语法到高级技巧的完整指南",
+                description: t('doc_link_lshort_desc'),
                 show: true
             },
             {
-                title: "LaTeX基础教程",
+                title: t('doc_link_latex_tutorial'),
                 url: "https://www.latex-tutorial.com/",
-                description: "系统性的LaTeX学习教程，适合初学者",
+                description: t('doc_link_latex_tutorial_desc'),
                 show: true
             }
         ],
         'first-doc': [
             {
-                title: "创建第一个LaTeX文档",
+                title: t('doc_link_first_doc'),
                 url: "https://www.overleaf.com/learn/latex/Learn_LaTeX_in_30_minutes",
-                description: "30分钟学会创建第一个LaTeX文档",
+                description: t('doc_link_first_doc_desc'),
                 show: true
             },
             {
-                title: "LaTeX文档结构",
+                title: t('doc_link_doc_structure'),
                 url: "https://www.latex-tutorial.com/tutorials/first-document/",
-                description: "了解LaTeX文档的基本结构和组成部分",
+                description: t('doc_link_doc_structure_desc'),
                 show: true
             }
         ],
         'video-tutorials': [
             {
-                title: "LaTeX视频教程",
+                title: t('doc_link_bilibili_tutorials'),
                 url: "https://search.bilibili.com/all?vt=70768055&keyword=LaTeX%E6%95%99%E7%A8%8B&from_source=webtop_search&spm_id_from=&search_source=5",
-                description: "B站精选LaTeX视频教程，从入门到精通",
+                description: t('doc_link_bilibili_tutorials_desc'),
                 show: true
             },
             {
-                title: "LaTeX实战视频",
+                title: t('doc_link_youtube_tutorials'),
                 url: "https://www.youtube.com/results?search_query=latex+tutorial",
-                description: "YouTube上的优质LaTeX视频教程",
+                description: t('doc_link_youtube_tutorials_desc'),
                 show: true
             }
         ],
         'text-tutorials': [
             {
-                title: "LaTeX文字教程",
+                title: t('doc_link_text_tutorial'),
                 url: "https://www.latex-tutorial.com/",
-                description: "系统性的LaTeX文字教程，适合自学",
+                description: t('doc_link_text_tutorial_desc'),
                 show: true
             },
             {
-                title: "LaTeX参考手册",
+                title: t('doc_link_reference_manual'),
                 url: "https://ctan.org/pkg/lshort",
-                description: "LaTeX官方参考手册中文版",
+                description: t('doc_link_reference_manual_desc'),
                 show: true
             }
         ],
         'examples': [
             {
-                title: "LaTeX实战案例",
+                title: t('doc_link_overleaf_learn'),
                 url: "https://www.overleaf.com/learn",
-                description: "Overleaf官方教程，包含大量实用案例",
+                description: t('doc_link_overleaf_learn_desc'),
                 show: true
             },
             {
-                title: "LaTeX模板库",
+                title: t('doc_link_overleaf_gallery'),
                 url: "https://www.overleaf.com/gallery",
-                description: "丰富的LaTeX模板和示例",
+                description: t('doc_link_overleaf_gallery_desc'),
                 show: true
             }
         ],
         'online-editors': [
             {
-                title: "Overleaf 在线编辑器",
+                title: t('doc_link_overleaf'),
                 url: "https://www.overleaf.com/",
-                description: "最受欢迎的在线LaTeX编辑器，支持实时协作",
+                description: t('doc_link_overleaf_desc'),
                 show: true
             },
             {
-                title: "TeXstudio 在线版",
+                title: t('doc_link_texstudio'),
                 url: "https://www.texstudio.org/",
-                description: "功能强大的LaTeX编辑器在线版本",
+                description: t('doc_link_texstudio_desc'),
                 show: true
             }
         ],
         'formula-tools': [
             {
-                title: "LaTeX公式设计器",
+                title: t('doc_link_latexlive'),
                 url: "https://www.latexlive.com/home",
-                description: "在线LaTeX公式编辑器，可视化编辑数学公式",
+                description: t('doc_link_latexlive_desc'),
                 show: true
             },
             {
-                title: "MathJax 公式预览",
+                title: t('doc_link_mathjax'),
                 url: "https://www.mathjax.org/",
-                description: "实时预览LaTeX数学公式",
+                description: t('doc_link_mathjax_desc'),
                 show: true
             }
         ],
         'table-tools': [
             {
-                title: "LaTeX表格生成器",
+                title: t('doc_link_tablesgenerator'),
                 url: "https://www.tablesgenerator.com/",
-                description: "在线表格生成工具，快速创建LaTeX表格代码",
+                description: t('doc_link_tablesgenerator_desc'),
                 show: true
             },
             {
-                title: "Excel2LaTeX",
+                title: t('doc_link_excel2latex'),
                 url: "https://ctan.org/pkg/excel2latex",
-                description: "Excel表格转换为LaTeX代码的工具",
+                description: t('doc_link_excel2latex_desc'),
                 show: true
             }
         ],
         'packages': [
             {
-                title: "LaTeX包文档",
+                title: t('doc_link_ctan'),
                 url: "https://ctan.org/",
-                description: "CTAN官方包文档，查找各种LaTeX包的使用方法",
+                description: t('doc_link_ctan_desc'),
                 show: true
             },
             {
-                title: "常用LaTeX包指南",
+                title: t('doc_link_packages_guide'),
                 url: "https://www.latex-tutorial.com/packages/",
-                description: "介绍最常用的LaTeX包及其使用方法",
+                description: t('doc_link_packages_guide_desc'),
                 show: true
             }
         ],
         'customization': [
             {
-                title: "LaTeX自定义指南",
+                title: t('doc_link_customization'),
                 url: "https://www.latex-tutorial.com/customization/",
-                description: "如何自定义LaTeX文档的样式和格式",
+                description: t('doc_link_customization_desc'),
                 show: true
             },
             {
-                title: "LaTeX样式文件",
+                title: t('doc_link_style_files'),
                 url: "https://ctan.org/topic/style",
-                description: "各种LaTeX样式文件和模板",
+                description: t('doc_link_style_files_desc'),
                 show: true
             }
         ],
         'troubleshooting': [
             {
-                title: "LaTeX高级技巧",
+                title: t('doc_link_tex_stackexchange'),
                 url: "https://tex.stackexchange.com/",
-                description: "TeX Stack Exchange社区，解决LaTeX疑难问题",
+                description: t('doc_link_tex_stackexchange_desc'),
                 show: true
             },
             {
-                title: "常见LaTeX错误",
+                title: t('doc_link_troubleshooting'),
                 url: "https://www.latex-tutorial.com/troubleshooting/",
-                description: "LaTeX常见错误及解决方案",
+                description: t('doc_link_troubleshooting_desc'),
                 show: true
             }
         ]
@@ -236,8 +236,8 @@ const DocCenter: React.FC = () => {
                     <div className={styles.docMain}>
                         <div className={styles.docContainer}>
                             <div className={styles.docItem}>
-                                <h6>TeXHub 文档中心</h6>
-                                <p>暂无可用文档，请联系管理员。</p>
+                                <h6>{t('doc_center_title')}</h6>
+                                <p>{t('doc_center_no_docs')}</p>
                             </div>
                         </div>
                     </div>
@@ -251,7 +251,7 @@ const DocCenter: React.FC = () => {
             <TexHeader></TexHeader>
             <div className={styles.docBody}>
                 <div className={styles.docSidebar}>
-                    <div className={styles.sidebarTitle}>目录</div>
+                    <div className={styles.sidebarTitle}>{t('doc_center_sidebar_title')}</div>
                     <ul className={styles.sidebarNav}>
                         {visibleCategories.map((category) => {
                             const visibleSubCategories = category.subCategories.filter(sub => sub.show);
@@ -286,8 +286,8 @@ const DocCenter: React.FC = () => {
                 <div className={styles.docMain}>
                     <div className={styles.docContainer}>
                         <div className={styles.docItem}>
-                            <h6>TeXHub 文档中心</h6>
-                            <p>在这里找到LaTeX学习和使用的优质资源，从入门到精通的全方位指南。</p>
+                            <h6>{t('doc_center_title')}</h6>
+                            <p>{t('doc_center_intro')}</p>
                         </div>
                         
                         {visibleLinks.length > 0 ? (
@@ -307,7 +307,7 @@ const DocCenter: React.FC = () => {
                             </div>
                         ) : (
                             <div className={styles.noContent}>
-                                <p>该分类暂无可用内容。</p>
+                                <p>{t('doc_center_no_content')}</p>
                             </div>
                         )}
                     </div>
