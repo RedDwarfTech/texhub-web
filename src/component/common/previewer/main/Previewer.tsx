@@ -475,7 +475,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
           }}
         ></input>
         <div>/</div>
-        <div>{numPages || 1}</div>
+        <div>{numPages || 0}</div>
       </div>
     );
   };

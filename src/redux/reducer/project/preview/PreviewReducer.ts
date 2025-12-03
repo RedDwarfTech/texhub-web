@@ -2,7 +2,7 @@ import { CompileResultType } from "@/model/proj/compile/CompileResultType";
 import { AppState } from "@/redux/types/AppState";
 
 const initState: AppState["preview"] = {
-  curPage: -1,
+  curPage: 0,
   fullscreenFlag: false,
   compileResultType: CompileResultType.SUCCESS
 };
