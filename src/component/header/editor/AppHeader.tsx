@@ -100,13 +100,6 @@ const EHeader: React.FC = () => {
     };
   }, [texQueue, mainFile]);
 
-  const clearCompileCheck = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-  };
-
   const handleQueueCompile = (mainFile: TexFileModel) => {
     if (!mainFile) {
       toast.error("file is null");
