@@ -35,6 +35,8 @@ const EHeader: React.FC = () => {
   const [mainFile, setMainFile] = useState<TexFileModel>();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const intervalRef = React.useRef<NodeJS.Timeout | null>(null);
+  const prevCompStatusRef = React.useRef<number | undefined>(undefined);
 
   React.useEffect(() => {
     if (fileTree && fileTree.length > 0) {
@@ -52,46 +54,56 @@ const EHeader: React.FC = () => {
   }, [projInfo]);
 
   React.useEffect(() => {
-    if (!mainFile) {
-      return;
-    }
-    let interval: NodeJS.Timeout | null = null;
-    if (texQueue && Object.keys(texQueue).length > 0) {
-      if (texQueue.comp_status !== 0 && interval) {
-        clearInterval(interval);
-        return;
-      }
-      let req: CompileProjLog = {
-        project_id: mainFile.project_id,
-        file_name: mainFile.name,
-        version_no: texQueue.version_no,
-        qid: texQueue.id,
-        access_token: getAccessToken(),
-      };
-      if (texQueue.comp_status === CompileStatus.WAITING) {
-        if (interval === null) {
-          interval = setInterval(() => {
-            getCompQueueStatus(texQueue.id);
-          }, 5000);
-        }
-      } else if (texQueue.comp_status === CompileStatus.COMPILING) {
-        clearCompileCheck(interval);
-        getStreamLog(req);
-      } else if (texQueue.comp_status === CompileStatus.COMPLETE) {
-        clearCompileCheck(interval);
-        compileProjectLog(req);
-      } else {
-        clearCompileCheck(interval);
-      }
-      return () => {
-        clearCompileCheck(interval);
-      };
-    }
-  }, [texQueue]);
+    if (!mainFile) return;
 
-  const clearCompileCheck = (interval: NodeJS.Timeout | null) => {
-    if (interval) {
-      clearInterval(interval);
+    if (!texQueue || Object.keys(texQueue).length === 0) return;
+
+    const req: CompileProjLog = {
+      project_id: mainFile.project_id,
+      file_name: mainFile.name,
+      version_no: texQueue.version_no,
+      qid: texQueue.id,
+      access_token: getAccessToken(),
+    };
+
+    // WAITING: start polling status every 5s (only once)
+    if (texQueue.comp_status === CompileStatus.WAITING) {
+      if (intervalRef.current === null) {
+        intervalRef.current = setInterval(() => {
+          getCompQueueStatus(texQueue.id);
+        }, 5000);
+      }
+    } else {
+      // clear polling if it's running
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    }
+
+    // Start streaming only when status transitions into COMPILING
+    if (texQueue.comp_status === CompileStatus.COMPILING) {
+      if (prevCompStatusRef.current !== CompileStatus.COMPILING) {
+        getStreamLog(req);
+      }
+    } else if (texQueue.comp_status === CompileStatus.COMPLETE) {
+      compileProjectLog(req);
+    }
+
+    prevCompStatusRef.current = texQueue.comp_status;
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [texQueue, mainFile]);
+
+  const clearCompileCheck = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
   };
 
