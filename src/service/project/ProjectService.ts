@@ -366,7 +366,7 @@ export function doCompile(params: CompileProjLog) {
 
   eventNative.addEventListener("TEX_COMP_LOG", function (event: any) {
     let msg: SSEMessage = {
-      data: event.data,
+      data: event.data + "\n",
     };
     let batchProcessor = getSSEBatchProcessor()!;
     batchProcessor.addMessage(msg);
