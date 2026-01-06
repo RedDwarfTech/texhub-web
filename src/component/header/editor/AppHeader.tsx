@@ -87,7 +87,11 @@ const EHeader: React.FC = () => {
         getStreamLog(req);
       }
     } else if (texQueue.comp_status === CompileStatus.COMPLETE) {
-      compileProjectLog(req);
+      compileProjectLog(req).then((resp)=>{
+        if (ResponseHandler.responseSuccess(resp)) {
+          showPreviewTab("pdfview");
+        }
+      });
     }
 
     prevCompStatusRef.current = texQueue.comp_status;
