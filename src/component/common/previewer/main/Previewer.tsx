@@ -86,7 +86,26 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     } else {
       setDevModel(false);
     }
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
+
+  const handleVisibilityChange = () => {
+    let showPreview = localStorage.getItem(
+      props.projectId + ":needShowPreviewTab"
+    );
+    if (
+      showPreview &&
+      showPreview === "true" &&
+      document.visibilityState === "visible"
+    ) {
+      showPreviewTab("pdfview");
+      localStorage.removeItem(props.projectId + ":needShowPreviewTab");
+    }
+  };
 
   React.useEffect(() => {
     setTexCompileResult(compileResultType);
@@ -135,7 +154,14 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
         result.queue &&
         result.queue.comp_result === CompileResultType.SUCCESS
       ) {
-        showPreviewTab("pdfview");
+        if (document.visibilityState === "visible") {
+          showPreviewTab("pdfview");
+        } else {
+          localStorage.setItem(
+            result.comp.project_id + ":needShowPreviewTab",
+            "true"
+          );
+        }
       }
     }
   }, [endSignal]);
@@ -285,9 +311,15 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
               data-bs-toggle="tooltip"
               title={t("btn_debug_app")}
               onClick={() => {
-                getPreviewUrl(props.projectId).then((res:any) => {
+                getPreviewUrl(props.projectId).then((res: any) => {
                   if (ResponseHandler.responseSuccess(res)) {
-                    let url = "/preview/fullscreen/independent?projId=" + props.projectId + "&curPage=" + curPage + "&pdfUrl=" + encodeURIComponent(res.result);
+                    let url =
+                      "/preview/fullscreen/independent?projId=" +
+                      props.projectId +
+                      "&curPage=" +
+                      curPage +
+                      "&pdfUrl=" +
+                      encodeURIComponent(res.result);
                     window.open(url, "_blank", "noopener,noreferrer");
                   }
                 });
