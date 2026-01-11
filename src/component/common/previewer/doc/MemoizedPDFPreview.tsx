@@ -256,7 +256,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     return (
       <AutoSizer onResize={onResize}>
         {({ width, height }: { width: number; height: number }) => (
-          <div>
+          <div id="autoSizerContainer">
             <Document
               options={pdfOptions}
               file={curPdfUrl!}
