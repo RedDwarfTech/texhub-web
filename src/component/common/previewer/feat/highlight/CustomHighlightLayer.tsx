@@ -22,7 +22,7 @@ export type CustomHighlightLayerProps = {
 export const CustomHighlightLayer = forwardRef<HTMLDivElement, CustomHighlightLayerProps>(
   ({ highlightAreas, totalPages, scale }, ref) => {
     return (
-      <div ref={ref} style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }}>
+      <div id="customHighlightLayer" ref={ref} style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }}>
         {Array.from({ length: totalPages }).map((_, pageIndex) => {
           const pageHighlights = highlightAreas.filter(h => h.pageIndex === pageIndex);
           

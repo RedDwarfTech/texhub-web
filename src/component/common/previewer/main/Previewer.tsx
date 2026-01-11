@@ -79,19 +79,19 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   } = useSelector((state: AppState) => state.proj);
   const { t } = useTranslation();
 
-  React.useEffect(() => {
-    let devModelFlag = localStorage.getItem("devModel");
-    if (devModelFlag && Boolean(devModelFlag) === true) {
-      setDevModel(true);
-    } else {
-      setDevModel(false);
-    }
+React.useEffect(() => {
+  let devModelFlag = localStorage.getItem("devModel");
+  if (devModelFlag && Boolean(devModelFlag) === true) {
+    setDevModel(true);
+  } else {
+    setDevModel(false);
+  }
 
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, []);
+  document.addEventListener("visibilitychange", handleVisibilityChange);
+  return () => {
+    document.removeEventListener("visibilitychange", handleVisibilityChange);
+  };
+}, []);
 
   const handleVisibilityChange = () => {
     let showPreview = localStorage.getItem(
@@ -552,7 +552,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
 
   return (
     <div id="preview" className={styles.preview}>
-      <div className={styles.previewHader}>
+      <div id="previewHeader" className={styles.previewHader}>
         {renderLeftTab()}
         {renderPageNaviation()}
         {renderPreviewHeaderAction()}
