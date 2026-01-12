@@ -1,6 +1,5 @@
 import { AppState } from "@/redux/types/AppState";
 import { EditorView } from "@codemirror/view";
-//import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider";
 import * as Y from "rdyjs";
 
 const initState: AppState["projEditor"] = {

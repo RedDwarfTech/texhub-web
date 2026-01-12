@@ -5,8 +5,6 @@ import { handleFileSelected } from "./ProjectTreeHandler";
 import { BaseMethods } from "rdjs-wheel";
 import { setCurFileTree } from "@/service/file/FileService";
 import * as Y from "rdyjs";
-import { EditorView } from "@codemirror/view";
-//import { SocketIOClientProvider } from "texhub-broadcast/dist/websocket/conn/socket_io_client_provider.js";
 
 export const ProjectTreeFolder = {
   getExpandStatus: (item: TexFileModel): boolean => {

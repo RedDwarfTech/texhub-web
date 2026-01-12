@@ -95,7 +95,6 @@ export function handleFileSelected(
       chooseSubDoc.on("connectionStatus", (status: any) => {
         console.log("SubDoc connection status:", status);
       });
-      const { editorView } = store.getState().projEditor;
       subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
         console.log("doc receive update,id:" + chooseSubDoc!.guid);
         // updateEditor(tr, event, chooseSubDoc, editorView!);
@@ -106,7 +105,6 @@ export function handleFileSelected(
     let subDocEden = new Y.Doc();
     subDocEden.guid = newSelectedFile.file_id;
     const subDocText = subDocEden.getText(subDocEden.guid);
-    const { editorView } = store.getState().projEditor;
     subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
       console.log("doc(new) receive update,id:" + subDocEden.guid);
       //updateEditor(tr, event, subDocEden, editorView!);

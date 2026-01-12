@@ -10,20 +10,17 @@ import { Compartment, EditorState } from "@codemirror/state";
 import { readConfig } from "@/config/app/config-reader";
 import {
   AuthHandler,
-  BaseMethods,
   RequestHandler,
   ResponseHandler,
   UserModel,
   WheelGlobal,
 } from "rdjs-wheel";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
-import { RefObject } from "react";
 import { projHasFile } from "../project/ProjectService";
 import { Metadata } from "@/component/common/editor/foundation/extensions/language";
 import {
   setCurRootYDoc,
   setCurSubDoc,
-  setEditorInstance,
   setSocketIOProvider,
   setWsConnState,
 } from "../project/editor/EditorService";
@@ -264,30 +261,6 @@ const handleSubDocChanged = (
     // use loaded to fill document content
     // handleLoadedSubDoc(props.loaded);
   }
-};
-
-const handleLoadedSubDoc = (subdocs: Set<Y.Doc>) => {
-  subdocs.forEach((subdoc: Y.Doc) => {
-    let subDocText = subdoc.getText(subdoc.guid);
-    let subDocTextString = subDocText.toString();
-    if (!subDocTextString || subDocTextString.length === 0) {
-      console.error("subdoc text is null:" + subdoc.guid);
-      return;
-    }
-    console.log("trigger subdoc loaded to fill content:" + subdoc.guid);
-    // Get the current editor view from Redux store
-    const { editorView } = store.getState().projEditor;
-    if (editorView) {
-      // Update CodeMirror content
-      editorView.dispatch({
-        changes: {
-          from: 0,
-          to: editorView.state.doc.length,
-          insert: subDocTextString,
-        },
-      });
-    }
-  });
 };
 
 const handleSubDocAdd = (
