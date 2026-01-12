@@ -222,7 +222,6 @@ export function initSubDocSocketIO(
       initialFisrtSubDoc(loadFile);
     }
   });
-  // Add connection status listener
   // @ts-ignore
   wsProvider.on("connectionStatus", (status: any) => {
     console.log("WebSocket provider connection status:", status);

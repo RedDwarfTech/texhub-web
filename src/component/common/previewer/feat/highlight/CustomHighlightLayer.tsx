@@ -41,7 +41,7 @@ export const CustomHighlightLayer = forwardRef<HTMLDivElement, CustomHighlightLa
                 top: pageElement.offsetTop,
                 left: pageElement.offsetLeft,
                 width: pageElement.clientWidth,
-                height: pageElement.clientHeight,
+                //height: pageElement.clientHeight,
               }}
             >
               {pageHighlights.map((highlight, idx) =>
