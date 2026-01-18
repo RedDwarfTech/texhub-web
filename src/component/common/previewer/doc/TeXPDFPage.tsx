@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Page } from "react-pdf";
 import styles from "./TeXPDFPage.module.css";
 import { PageCallback } from "react-pdf/dist/shared/types";
@@ -53,11 +53,83 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     }
   };
 
-  // Refs for hover-based highlight computation
   const pageRef = useRef<any | null>(null);
   const pageTextItemsRef = useRef<any[]>([]);
   const listenersAttachedRef = useRef(false);
   const hoverTimeoutRef = useRef<number | null>(null);
+  const [pageViewport, setPageViewport] = useState<PageViewport | null>(null);
+
+  // Effect to handle curPdfPosition changes and highlight rendering
+  useEffect(() => {
+    if (!pageViewport || !curPdfPosition || curPdfPosition.length === 0) {
+      return;
+    }
+    
+    // Filter positions for current page
+    const currentPagePositions = curPdfPosition.filter(pos => pos.page === index);
+    
+    if (currentPagePositions.length > 0) {
+      // Render highlights on canvas overlay
+      renderHighlightsOnPage(currentPagePositions);
+    }
+  }, [curPdfPosition, index, pageViewport]);
+
+  // Render highlights for PDF positions on the page
+  const renderHighlightsOnPage = (positions: PdfPosition[]) => {
+    if (!pageViewport) return;
+    
+    const container = document.getElementById("page-" + index);
+    if (!container) return;
+    
+    // Remove existing highlight overlay if present
+    let existingOverlay = container.querySelector('.pdf-highlight-overlay');
+    if (existingOverlay) {
+      existingOverlay.remove();
+    }
+    
+    // Create overlay canvas for highlights
+    const overlay = document.createElement('div');
+    overlay.className = 'pdf-highlight-overlay';
+    overlay.style.position = 'absolute';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.pointerEvents = 'none';
+    overlay.style.zIndex = '10';
+    
+    // Render each highlight rectangle
+    positions.forEach((pos) => {
+      const highlightDiv = document.createElement('div');
+      
+      // Convert PDF coordinates to viewport coordinates
+      const [x1, y1, x2, y2] = pageViewport.convertToViewportRectangle([
+        pos.h,
+        pos.v,
+        pos.x,
+        pos.y,
+      ]);
+      
+      const left = Math.min(x1, x2);
+      const top = Math.min(y1, y2);
+      const width = Math.abs(x2 - x1);
+      const height = Math.abs(y1 - y2);
+      
+      highlightDiv.style.position = 'absolute';
+      highlightDiv.style.left = left + 'px';
+      // Note: PDF coordinates are from bottom, viewport from top
+      highlightDiv.style.top = (pageViewport.height - top - height) + 'px';
+      highlightDiv.style.width = width + 'px';
+      highlightDiv.style.height = height + 'px';
+      highlightDiv.style.backgroundColor = 'rgba(255, 226, 143, 0.6)';
+      highlightDiv.style.border = '1px solid rgba(255, 200, 0, 0.8)';
+      highlightDiv.style.transition = 'background-color 0.3s ease';
+      
+      overlay.appendChild(highlightDiv);
+    });
+    
+    container.appendChild(overlay);
+  };
 
   // Find URL-like matches across an array of text items and map them to per-item ranges.
   const findUrlMatchesInItems = (items: any[]) => {
@@ -174,11 +246,22 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
       return;
     }
     setProjAttribute(projAttr);
+    // Update viewport when scale changes
+    if (pageRef.current && pageRef.current.getViewport) {
+      const newViewport = pageRef.current.getViewport({ scale: projAttr.pdfScale || 1 });
+      setPageViewport(newViewport);
+    }
   }, [projAttr, cachedScale]);
 
   const handlePageRenderSuccess = (page: PageCallback) => {};
 
-  const handlePageChange = (page: any) => {};
+  const handlePageChange = (page: any) => {
+    // Update viewport when page changes
+    if (page && page.getViewport) {
+      const viewport = page.getViewport({ scale: projAttribute.pdfScale || 1 });
+      setPageViewport(viewport);
+    }
+  };
 
   return (
     <div
@@ -212,6 +295,10 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
         onLoadSuccess={(page) => {
           // Cache page proxy and its text items; do NOT call extractTextItems here.
           pageRef.current = page
+          // Get viewport for coordinate conversion
+          const viewport = page.getViewport({ scale: projAttribute.pdfScale || 1 });
+          setPageViewport(viewport);
+          
           page.getTextContent().then((textContent: any) => {
             pageTextItemsRef.current = textContent.items || [];
             // Attach listeners to text layer so highlights are computed on hover only.
