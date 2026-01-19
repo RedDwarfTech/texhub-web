@@ -90,13 +90,9 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     // Create overlay canvas for highlights
     const overlay = document.createElement('div');
     overlay.className = 'pdf-highlight-overlay';
-    overlay.style.position = 'absolute';
-    overlay.style.top = '0';
-    overlay.style.left = '0';
-    overlay.style.width = '100%';
-    overlay.style.height = '100%';
+    overlay.style.position = 'relative';
     overlay.style.pointerEvents = 'none';
-    overlay.style.zIndex = '10';
+    overlay.style.zIndex = '5';
     
     // Render each highlight rectangle
     positions.forEach((pos) => {
@@ -112,15 +108,17 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
       
       const left = Math.min(x1, x2);
       const top = Math.min(y1, y2);
-      const width = Math.abs(x2 - x1);
-      const height = Math.abs(y1 - y2);
+      
+      // Use the original PDF dimensions scaled by viewport scale
+      const scaledWidth = pos.width * pageViewport.scale;
+      const scaledHeight = pos.height * pageViewport.scale;
       
       highlightDiv.style.position = 'absolute';
       highlightDiv.style.left = left + 'px';
       // Note: PDF coordinates are from bottom, viewport from top
-      highlightDiv.style.top = (pageViewport.height - top - height) + 'px';
-      highlightDiv.style.width = width + 'px';
-      highlightDiv.style.height = height + 'px';
+      highlightDiv.style.top = (pageViewport.height - top - scaledHeight) + 'px';
+      highlightDiv.style.width = scaledWidth + 'px';
+      highlightDiv.style.height = scaledHeight + 'px';
       highlightDiv.style.backgroundColor = 'rgba(255, 226, 143, 0.6)';
       highlightDiv.style.border = '1px solid rgba(255, 200, 0, 0.8)';
       highlightDiv.style.transition = 'background-color 0.3s ease';
