@@ -119,19 +119,33 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
       const left = Math.min(x1, x2);
       const top = Math.min(y1, y2);
       
-      // Use the original PDF dimensions scaled by viewport scale
-      const scaledWidth = pos.width * pageViewport.scale;
-      const scaledHeight = pos.height * pageViewport.scale;
+      // Use the viewport-converted width and height
+      const convertedWidth = Math.abs(x2 - x1);
+      const convertedHeight = Math.abs(y1 - y2);
       
       highlightDiv.style.position = 'absolute';
       highlightDiv.style.left = left + 'px';
       // Note: PDF coordinates are from bottom, viewport from top
-      highlightDiv.style.top = (pageViewport.height - top - scaledHeight) + 'px';
-      highlightDiv.style.width = scaledWidth + 'px';
-      highlightDiv.style.height = scaledHeight + 'px';
+      highlightDiv.style.top = (pageViewport.height - top - convertedHeight) + 'px';
+      highlightDiv.style.width = convertedWidth + 'px';
+      highlightDiv.style.height = convertedHeight + 'px';
       highlightDiv.style.backgroundColor = 'rgba(255, 226, 143, 0.6)';
       highlightDiv.style.border = '1px solid rgba(255, 200, 0, 0.8)';
       highlightDiv.style.transition = 'background-color 0.3s ease';
+      
+      // Debug logging
+      console.log('Highlight position:', {
+        pdfPos: { h: pos.h, v: pos.v, x: pos.x, y: pos.y },
+        viewportCoords: { x1, y1, x2, y2 },
+        final: { 
+          left, 
+          top: (pageViewport.height - top - convertedHeight),
+          width: convertedWidth,
+          height: convertedHeight
+        },
+        viewportScale: pageViewport.scale,
+        viewportHeight: pageViewport.height
+      });
       
       overlay.appendChild(highlightDiv);
     });
