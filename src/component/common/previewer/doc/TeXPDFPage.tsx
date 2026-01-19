@@ -81,6 +81,12 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     const container = document.getElementById("page-" + index);
     if (!container) return;
     
+    // Ensure container has position context for absolute children
+    const originalPosition = container.style.position;
+    if (!originalPosition || originalPosition === 'static') {
+      container.style.position = 'relative';
+    }
+    
     // Remove existing highlight overlay if present
     let existingOverlay = container.querySelector('.pdf-highlight-overlay');
     if (existingOverlay) {
@@ -90,7 +96,11 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     // Create overlay canvas for highlights
     const overlay = document.createElement('div');
     overlay.className = 'pdf-highlight-overlay';
-    overlay.style.position = 'relative';
+    overlay.style.position = 'absolute';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
     overlay.style.pointerEvents = 'none';
     overlay.style.zIndex = '5';
     
