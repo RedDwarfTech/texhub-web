@@ -55,7 +55,6 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   const [curLogText, setCurLogText] = useState<string>("");
   const [curPreviewTab, setCurPreviewTab] = useState<string>("pdfview");
   const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
-  const [curCompileQueue, setCurCompileQueue] = useState<CompileQueue>();
   const [texCompileResult, setTexCompileResult] = useState<CompileResultType>(
     CompileResultType.SUCCESS
   );
@@ -171,10 +170,6 @@ React.useEffect(() => {
       setCurPdfUrl(texPdfUrl);
     }
   }, [texPdfUrl]);
-
-  React.useEffect(() => {
-    setCurCompileQueue(texQueue);
-  }, [texQueue]);
 
   React.useEffect(() => {
     setCompStatus(compileStatus);
@@ -471,7 +466,7 @@ React.useEffect(() => {
   };
 
   const renderCompiled = (texCompileResult: CompileResultType) => {
-    if (curCompileQueue && Object.keys(curCompileQueue).length > 0) {
+    if (texQueue && Object.keys(texQueue).length > 0) {
       if (texCompileResult === CompileResultType.FAILED) {
         return <i className="fa-solid fa-bug text-danger"></i>;
       } else if (texCompileResult === CompileResultType.SUCCESS) {
