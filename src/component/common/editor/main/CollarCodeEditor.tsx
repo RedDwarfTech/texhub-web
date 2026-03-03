@@ -27,6 +27,7 @@ import { metadata } from "@/service/editor/CollarEditorSocketIOService";
 import * as Y from "rdyjs";
 import { SingleClientProvider } from "texhub-broadcast";
 import { EditorState } from "@codemirror/state";
+import logger from "@/common/storage/log/Logger";
 import { createExtensions } from "../foundation/extensions/extensions";
 import {
   clearCurRootYDoc,
@@ -37,7 +38,7 @@ import {
   setEditorInstance,
   setWsConnState,
 } from "@/service/project/editor/EditorService";
-import logger from "@/common/storage/log/Logger";
+import { recordEditorViewUpdate } from "@/service/editor/EditorUpdateHistory";
 
 // sometimes when we replaced the Y.Doc
 // we need to bind the events to the new doc
@@ -49,6 +50,7 @@ const rebindEditorToYDoc = (
   activeEditorView: EditorView | undefined,
   setEditorInstance: (view: EditorView) => void
 ) => {
+  recordEditorViewUpdate("rebindEditorToYDoc", `Creating new view for guid: ${guid}`);
   const newYText = newDoc.getText(guid);
   const newUndoManager = new Y.UndoManager(newYText);
   const newEditorState: EditorState = EditorState.create({
@@ -72,6 +74,7 @@ const rebindEditorToYDoc = (
   if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
     activeEditorView?.destroy();
   }
+  recordEditorViewUpdate("rebindEditorToYDoc", `Set new editor instance for guid: ${guid}`);
   setEditorInstance(newEditorView);
 };
 
@@ -127,6 +130,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     if (BaseMethods.isNull(curSubYDoc)) {
       return;
     }
+    recordEditorViewUpdate("useEffect[curSubYDoc]", `curSubYDoc changed, guid: ${curSubYDoc.guid}`);
     let ytext = curSubYDoc.getText(curSubYDoc.guid);
     const undoManager = new Y.UndoManager(ytext);
     if (!texEditorSocketIOWs) {
@@ -151,6 +155,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
       activeEditorView?.destroy();
     }
+    recordEditorViewUpdate("useEffect[curSubYDoc]", `Setting editor instance for guid: ${curSubYDoc.guid}`);
     setEditorInstance(editorView);
     if (!curRootYDoc || BaseMethods.isNull(curRootYDoc)) {
       return;
@@ -179,6 +184,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   React.useEffect(() => {
     if (editorView) {
+      recordEditorViewUpdate("useEffect[editorView]", "Redux editorView state changed");
       setActiveEditorView(editorView);
     }
   }, [editorView]);
