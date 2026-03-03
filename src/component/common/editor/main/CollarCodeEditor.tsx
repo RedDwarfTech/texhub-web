@@ -88,7 +88,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const { editorView, texEditorSocketIOWs, wsConnState } = useSelector(
     (state: AppState) => state.projEditor
   );
-  const [activeEditorView, setActiveEditorView] = useState<EditorView>();
   const [mainFileModel, setMainFileModel] = useState<TexFileModel>();
   const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
   const activeKey = readConfig("projActiveFile") + props.projectId;
@@ -148,8 +147,8 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       state: texEditorState,
       parent: edContainer.current!,
     });
-    if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
-      activeEditorView?.destroy();
+    if (editorView && !BaseMethods.isNull(editorView)) {
+      editorView?.destroy();
     }
     setEditorInstance(editorView);
     if (!curRootYDoc || BaseMethods.isNull(curRootYDoc)) {
@@ -167,7 +166,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         curSubYDoc.guid,
         texEditorSocketIOWs,
         edContainer,
-        activeEditorView,
+        editorView,
         setEditorInstance
       );
       curRootYDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, newDoc);
@@ -176,12 +175,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     }
     setCurRootYDoc(curRootYDoc);
   }, [curSubYDoc]);
-
-  React.useEffect(() => {
-    if (editorView) {
-      setActiveEditorView(editorView);
-    }
-  }, [editorView]);
 
   React.useEffect(() => {
     if (texEditorSocketIOWs) {
@@ -206,7 +199,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       }
     }
     return () => {
-      destroy();
+      
     };
   }, [projInfo]);
 
@@ -223,8 +216,8 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       if (projConf.confYype === ProjConfType.Theme) {
         const currentTheme = themeMap.get(projConf.confValue);
         if (currentTheme) {
-          if (!activeEditorView) return;
-          activeEditorView.dispatch({
+          if (!editorView) return;
+          editorView.dispatch({
             effects: themeConfig.reconfigure(currentTheme),
           });
         }
@@ -241,41 +234,36 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       localStorage.setItem(activeKey, JSON.stringify(activeFile));
     }
     return () => {
-      destroy();
+      
     };
   }, [activeFile]);
 
-  const destroy = () => {
-    if (activeEditorView) {
-      setActiveEditorView(undefined);
-    }
-  };
 
   const handleInsertText = (text: string) => {
-    if (text && activeEditorView) {
+    if (text && editorView) {
       var figureCodeArray: Array<string> = [text];
       const figureCode: string = figureCodeArray.join("\n");
-      const cursorPos = activeEditorView.state.selection.main.head;
-      const transaction = activeEditorView.state.update({
+      const cursorPos = editorView.state.selection.main.head;
+      const transaction = editorView.state.update({
         changes: { from: cursorPos, to: cursorPos, insert: figureCode },
       });
-      activeEditorView.dispatch(transaction);
+      editorView.dispatch(transaction);
     }
   };
 
   const handleReplaceText = (text: string) => {
-    if (text && activeEditorView) {
-      let doc = activeEditorView.state.doc;
+    if (text && editorView) {
+      let doc = editorView.state.doc;
       let size = doc.length;
-      const transaction = activeEditorView.state.update({
+      const transaction = editorView.state.update({
         changes: { from: 0, to: size, insert: text },
       });
-      activeEditorView.dispatch(transaction);
+      editorView.dispatch(transaction);
     }
   };
 
   const handleImageAdd = () => {
-    if (activeEditorView) {
+    if (editorView) {
       var figureCodeArray: Array<string> = [
         "\\begin{figure}",
         "\t\\centering",
@@ -285,11 +273,11 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         "\\end{figure}",
       ];
       const figureCode: string = figureCodeArray.join("\n");
-      const cursorPos = activeEditorView.state.selection.main.head;
-      const transaction = activeEditorView.state.update({
+      const cursorPos = editorView.state.selection.main.head;
+      const transaction = editorView.state.update({
         changes: { from: cursorPos, to: cursorPos, insert: figureCode },
       });
-      activeEditorView.dispatch(transaction);
+      editorView.dispatch(transaction);
     }
   };
 
@@ -343,7 +331,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
           className={styles.menuButton}
           title={t("btn_nav_pdf")}
           onClick={() => {
-            handlePdfLocate(mainFileModel, activeEditorView, props, activeKey);
+            handlePdfLocate(mainFileModel, editorView, props, activeKey);
           }}
         >
           <i className="fa-solid fa-arrow-right"></i>
