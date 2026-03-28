@@ -1,3 +1,4 @@
+import { isDevModel } from "@/common/EnvUtil";
 import localLog, { LogRecord } from "@/common/storage/log/LocalLog";
 
 export type LogLevel = "info" | "warn" | "error" | "debug" | "log";
@@ -18,6 +19,22 @@ const safeAdd = async (record: LogRecord) => {
   }
 };
 
+const enableDebug = (): boolean => {
+  return isDevModel();
+}
+
+const enableInfo = (): boolean => {
+  return isDevModel();
+}
+
+const enableError = (): boolean => {
+  return isDevModel();
+}
+
+const enableWarn = (): boolean => {
+  return isDevModel();
+}
+
 const Logger = {
   async add(level: LogLevel, message: string, meta?: any) {
     // write to indexeddb (non-blocking if caller doesn't await)
@@ -32,22 +49,34 @@ const Logger = {
   },
 
   info(message: string, meta?: any) {
+    if(enableInfo()){
+      return;
+    }
     // show in console and write to db
     console.info(message, meta);
     return this.add("info", message, meta);
   },
 
   warn(message: string, meta?: any) {
+    if(!enableWarn()){
+      return;
+    }
     console.warn(message, meta);
     return this.add("warn", message, meta);
   },
 
   error(message: string, meta?: any) {
+    if(!enableError()){
+      return;
+    }
     console.error(message, meta);
     return this.add("error", message, meta);
   },
 
   debug(message: string, meta?: any) {
+    if(!enableDebug()){
+      return;
+    }
     console.debug(message, meta);
     return this.add("debug", message, meta);
   },
