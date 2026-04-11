@@ -45,8 +45,8 @@ dependencies:
     specifier: ^6.7.2
     version: 6.7.2
   '@fortawesome/react-fontawesome':
-    specifier: ^0.2.6
-    version: 0.2.6(@fortawesome/fontawesome-svg-core@6.7.2)(react@18.2.0)
+    specifier: ^3.3.0
+    version: 3.3.0(@fortawesome/fontawesome-svg-core@6.7.2)(react@18.2.0)
   '@lezer/common':
     specifier: ^1.5.2
     version: 1.5.2
@@ -156,8 +156,8 @@ dependencies:
     specifier: 7.52.5
     version: 7.52.5(react-dom@18.2.0)(react@18.2.0)
   rd-component:
-    specifier: ^0.1.175
-    version: 0.1.175(@fingerprintjs/fingerprintjs@4.6.2)(@reduxjs/toolkit@2.11.2)(@types/node@22.19.17)(esbuild@0.18.20)(react-dom@18.2.0)(react-redux@9.2.0)(react-router-dom@7.14.0)(react@18.2.0)(redux@5.0.1)(ts-node@10.9.2)(typescript@5.9.3)(uuid@11.1.0)(vite@7.1.3)
+    specifier: ^0.1.177
+    version: 0.1.177(@fingerprintjs/fingerprintjs@4.6.2)(@reduxjs/toolkit@2.11.2)(@types/node@22.19.17)(esbuild@0.18.20)(react-dom@18.2.0)(react-redux@9.2.0)(react-router-dom@7.14.0)(react@18.2.0)(redux@5.0.1)(ts-node@10.9.2)(typescript@5.9.3)(uuid@11.1.0)(vite@7.1.3)
   rdjs-wheel:
     specifier: 0.0.33
     version: 0.0.33(@types/node@22.19.17)(rollup@4.60.1)(ts-node@10.9.2)(ts-toolbelt@9.6.0)(typescript@5.9.3)(vite@7.1.3)(webpack@5.106.1)
@@ -2219,15 +2219,14 @@ packages:
       '@fortawesome/fontawesome-common-types': 6.7.2
     dev: false
 
-  /@fortawesome/react-fontawesome@0.2.6(@fortawesome/fontawesome-svg-core@6.7.2)(react@18.2.0):
-    resolution: {integrity: sha512-mtBFIi1UsYQo7rYonYFkjgYKGoL8T+fEH6NGUpvuqtY3ytMsAoDaPo5rk25KuMtKDipY4bGYM/CkmCHA1N3FUg==}
-    deprecated: v0.2.x is no longer supported. Unless you are still using FontAwesome 5, please update to v3.1.1 or greater.
+  /@fortawesome/react-fontawesome@3.3.0(@fortawesome/fontawesome-svg-core@6.7.2)(react@18.2.0):
+    resolution: {integrity: sha512-EHmHeTf8WgO29sdY3iX/7ekE3gNUdlc2RW6mm/FzELlHFKfTrA9S4MlyquRR+RRCRCn8+jXfLFpLGB2l7wCWyw==}
+    engines: {node: '>=20'}
     peerDependencies:
-      '@fortawesome/fontawesome-svg-core': ~1 || ~6 || ~7
+      '@fortawesome/fontawesome-svg-core': ~6 || ~7
       react: 18.2.0
     dependencies:
       '@fortawesome/fontawesome-svg-core': 6.7.2
-      prop-types: 15.8.1
       react: 18.2.0
     dev: false
 
@@ -2444,7 +2443,7 @@ packages:
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
     dependencies:
       '@jest/types': 30.3.0
-      '@sinonjs/fake-timers': 15.3.0
+      '@sinonjs/fake-timers': 15.3.1
       '@types/node': 22.19.17
       jest-message-util: 30.3.0
       jest-mock: 30.3.0
@@ -3670,8 +3669,8 @@ packages:
       '@sinonjs/commons': 3.0.1
     dev: false
 
-  /@sinonjs/fake-timers@15.3.0:
-    resolution: {integrity: sha512-m2xozxSfCIxjDdvbhIWazlP2i2aha/iUmbl94alpsIbd3iLTfeXgfBVbwyWogB6l++istyGZqamgA/EcqYf+Bg==}
+  /@sinonjs/fake-timers@15.3.1:
+    resolution: {integrity: sha512-oDDGPn/4jD3viZLphixgu1jwT0bqIqP25FNXC5OkWrUqHZOF4wATtSyVzluOt4DqcMqSoKMClyhUllKSxpQCng==}
     dependencies:
       '@sinonjs/commons': 3.0.1
     dev: true
@@ -5726,7 +5725,7 @@ packages:
     dependencies:
       baseline-browser-mapping: 2.10.17
       caniuse-lite: 1.0.30001787
-      electron-to-chromium: 1.5.334
+      electron-to-chromium: 1.5.335
       node-releases: 2.0.37
       update-browserslist-db: 1.2.3(browserslist@4.28.2)
 
@@ -6812,8 +6811,8 @@ packages:
       jake: 10.9.4
     dev: false
 
-  /electron-to-chromium@1.5.334:
-    resolution: {integrity: sha512-mgjZAz7Jyx1SRCwEpy9wefDS7GvNPazLthHg8eQMJ76wBdGQQDW33TCrUTvQ4wzpmOrv2zrFoD3oNufMdyMpog==}
+  /electron-to-chromium@1.5.335:
+    resolution: {integrity: sha512-q9n5T4BR4Xwa2cwbrwcsDJtHD/enpQ5S1xF1IAtdqf5AAgqDFmR/aakqH3ChFdqd/QXJhS3rnnXFtexU7rax6Q==}
 
   /elliptic@6.6.1:
     resolution: {integrity: sha512-RaddvvMatK2LJHqFJ+YA4WysVN5Ita9E35botqIYspQ4TkRAlCicdzKOjlyv/1Za5RyTNn7di//eEV0uTAfe3g==}
@@ -11650,8 +11649,8 @@ packages:
       strip-json-comments: 2.0.1
     dev: false
 
-  /rd-component@0.1.175(@fingerprintjs/fingerprintjs@4.6.2)(@reduxjs/toolkit@2.11.2)(@types/node@22.19.17)(esbuild@0.18.20)(react-dom@18.2.0)(react-redux@9.2.0)(react-router-dom@7.14.0)(react@18.2.0)(redux@5.0.1)(ts-node@10.9.2)(typescript@5.9.3)(uuid@11.1.0)(vite@7.1.3):
-    resolution: {integrity: sha512-MGk6jZvG7kHYilfYXUgmtrwNBv/iQr5zE3NBeferivd9Ghb+BZy1W5CRhDeprf45LrhAtg3B4aU3Bw8yNyz+Nw==}
+  /rd-component@0.1.177(@fingerprintjs/fingerprintjs@4.6.2)(@reduxjs/toolkit@2.11.2)(@types/node@22.19.17)(esbuild@0.18.20)(react-dom@18.2.0)(react-redux@9.2.0)(react-router-dom@7.14.0)(react@18.2.0)(redux@5.0.1)(ts-node@10.9.2)(typescript@5.9.3)(uuid@11.1.0)(vite@7.1.3):
+    resolution: {integrity: sha512-Cn2ozLLaCtZRPB5Q4FZqAMZArhU/InYy2mEXOt+Ylbmm7LyKRWktwWSem067hS6HSek+m6Uif7JBBFy0Wcokow==}
     peerDependencies:
       '@fingerprintjs/fingerprintjs': ^4.0.0
       '@reduxjs/toolkit': ^2.2.1
