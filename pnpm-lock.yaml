@@ -156,8 +156,8 @@ dependencies:
     specifier: 7.52.5
     version: 7.52.5(react-dom@18.2.0)(react@18.2.0)
   rd-component:
-    specifier: ^0.1.177
-    version: 0.1.177(@fingerprintjs/fingerprintjs@4.6.2)(@reduxjs/toolkit@2.11.2)(@types/node@22.19.17)(esbuild@0.18.20)(react-dom@18.2.0)(react-redux@9.2.0)(react-router-dom@7.14.0)(react@18.2.0)(redux@5.0.1)(ts-node@10.9.2)(typescript@5.9.3)(uuid@11.1.0)(vite@7.1.3)
+    specifier: ^0.1.179
+    version: 0.1.179(@fingerprintjs/fingerprintjs@4.6.2)(@reduxjs/toolkit@2.11.2)(@types/node@22.19.17)(esbuild@0.18.20)(react-dom@18.2.0)(react-redux@9.2.0)(react-router-dom@7.14.0)(react@18.2.0)(redux@5.0.1)(ts-node@10.9.2)(typescript@5.9.3)(uuid@11.1.0)(vite@7.1.3)
   rdjs-wheel:
     specifier: 0.0.33
     version: 0.0.33(@types/node@22.19.17)(rollup@4.60.1)(ts-node@10.9.2)(ts-toolbelt@9.6.0)(typescript@5.9.3)(vite@7.1.3)(webpack@5.106.1)
@@ -11649,8 +11649,8 @@ packages:
       strip-json-comments: 2.0.1
     dev: false
 
-  /rd-component@0.1.177(@fingerprintjs/fingerprintjs@4.6.2)(@reduxjs/toolkit@2.11.2)(@types/node@22.19.17)(esbuild@0.18.20)(react-dom@18.2.0)(react-redux@9.2.0)(react-router-dom@7.14.0)(react@18.2.0)(redux@5.0.1)(ts-node@10.9.2)(typescript@5.9.3)(uuid@11.1.0)(vite@7.1.3):
-    resolution: {integrity: sha512-Cn2ozLLaCtZRPB5Q4FZqAMZArhU/InYy2mEXOt+Ylbmm7LyKRWktwWSem067hS6HSek+m6Uif7JBBFy0Wcokow==}
+  /rd-component@0.1.179(@fingerprintjs/fingerprintjs@4.6.2)(@reduxjs/toolkit@2.11.2)(@types/node@22.19.17)(esbuild@0.18.20)(react-dom@18.2.0)(react-redux@9.2.0)(react-router-dom@7.14.0)(react@18.2.0)(redux@5.0.1)(ts-node@10.9.2)(typescript@5.9.3)(uuid@11.1.0)(vite@7.1.3):
+    resolution: {integrity: sha512-IbAi8Z9ZswgarsMFwN+PoH6WFocX8sFDjz3h97dR7cvX1Lkk2tNFHWkTOyQfPEsjw9vF3wHI+w9/KKt5tI/Qrg==}
     peerDependencies:
       '@fingerprintjs/fingerprintjs': ^4.0.0
       '@reduxjs/toolkit': ^2.2.1
