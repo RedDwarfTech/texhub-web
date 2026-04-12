@@ -40,7 +40,7 @@ const AppBody: React.FC<AppBodyProps> = (props: AppBodyProps) => {
 
   return (
     <div className={styles.editorBody}>
-      <Split
+      <Split visiable={[2, 3]}
         style={{ width: "100%", border: "0px solid #d5d5d5", borderRadius: 3 }}
       >
         <div style={{ width: "20%", minWidth: 30 }}>
