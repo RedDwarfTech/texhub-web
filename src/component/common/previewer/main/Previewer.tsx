@@ -271,6 +271,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   };
 
   const handleOutlineClick = (dest: any) => {
+    console.log("handleOutlineClick dest:", dest);
     let pageNum: number | null = null;
     if (typeof dest === 'number') {
       pageNum = dest + 1; // PDF pages are 0-indexed
