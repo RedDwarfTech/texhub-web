@@ -121,6 +121,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@react-pdf/types": "^2.10.0",
     "@types/bootstrap": "^5.2.10",
     "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.24",
