@@ -9,4 +9,5 @@ export interface PDFPreviewProps {
   virtualListRef: React.RefObject<VariableSizeList>;
   pdfOptions: Options,
   curPdfPage?: number,
+  onOutlineLoaded?: (outline: any[]) => void;
 }

@@ -37,6 +37,7 @@ import {
   setAndDispatchPdfPage,
 } from "@/service/project/preview/PreviewService";
 import { usePreviewHandler } from "./usePreviewHandler";
+import OutlineTree from './OutlineTree';
 import { getPreviewUrl } from "@/service/file/FileService";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
 
@@ -49,17 +50,18 @@ export type PreviwerProps = {
 const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   const [curPdfUrl, setCurPdfUrl] = useState<string>("");
   const [compStatus, setCompStatus] = useState<CompileStatus>(
-    CompileStatus.COMPLETE
+    CompileStatus.COMPLETE,
   );
   const { compileResultType } = useSelector((state: AppState) => state.preview);
   const [curLogText, setCurLogText] = useState<string>("");
   const [curPreviewTab, setCurPreviewTab] = useState<string>("pdfview");
   const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
   const [texCompileResult, setTexCompileResult] = useState<CompileResultType>(
-    CompileResultType.SUCCESS
+    CompileResultType.SUCCESS,
   );
   const [numPages, setNumPages] = useState<number>();
   const [devModel, setDevModel] = useState<boolean>();
+  const [outline, setOutline] = useState<any[]>([]);
   const virtualListRef = React.useRef<VariableSizeList>(null);
   const { handleScrollTop, handleZoomIn, handleFullScreen, handleZoomOut } =
     usePreviewHandler(props.projectId, props.viewModel);
@@ -78,23 +80,23 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   } = useSelector((state: AppState) => state.proj);
   const { t } = useTranslation();
 
-React.useEffect(() => {
-  let devModelFlag = localStorage.getItem("devModel");
-  if (devModelFlag && Boolean(devModelFlag) === true) {
-    setDevModel(true);
-  } else {
-    setDevModel(false);
-  }
+  React.useEffect(() => {
+    let devModelFlag = localStorage.getItem("devModel");
+    if (devModelFlag && Boolean(devModelFlag) === true) {
+      setDevModel(true);
+    } else {
+      setDevModel(false);
+    }
 
-  document.addEventListener("visibilitychange", handleVisibilityChange);
-  return () => {
-    document.removeEventListener("visibilitychange", handleVisibilityChange);
-  };
-}, []);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
 
   const handleVisibilityChange = () => {
     let showPreview = localStorage.getItem(
-      props.projectId + ":needShowPreviewTab"
+      props.projectId + ":needShowPreviewTab",
     );
     if (
       showPreview &&
@@ -158,7 +160,7 @@ React.useEffect(() => {
         } else {
           localStorage.setItem(
             result.comp.project_id + ":needShowPreviewTab",
-            "true"
+            "true",
           );
         }
       }
@@ -268,6 +270,23 @@ React.useEffect(() => {
     );
   };
 
+  const handleOutlineClick = (dest: any) => {
+    let pageNum: number | null = null;
+    if (typeof dest === 'number') {
+      pageNum = dest + 1; // PDF pages are 0-indexed
+    } else if (Array.isArray(dest) && dest.length > 0) {
+      const first = dest[0];
+      if (typeof first === 'number') {
+        pageNum = first + 1;
+      } else if (first && typeof first === 'object' && 'num' in first) {
+        pageNum = first.num + 1;
+      }
+    }
+    if (pageNum && pageNum > 0) {
+      scrollToPage(pageNum, virtualListRef);
+    }
+  };
+
   const setPageNum = (pageNum: number) => {
     setNumPages(pageNum);
   };
@@ -281,16 +300,42 @@ React.useEffect(() => {
     if (!curPdfUrl || !props.projectId) {
       return <div>Loading...</div>;
     }
+    if (props.viewModel === "fullscreen") {
+      return (
+        <div id="pdf-preview-container" style={{ display: 'flex', height: '100vh' }}>
+          <div style={{ width: '300px', borderRight: '1px solid #ccc', overflowY: 'auto' }}>
+            <h4>Outline</h4>
+            <OutlineTree outline={outline} onItemClick={(dest) => handleOutlineClick(dest)} />
+          </div>
+          <div style={{ flex: 1 }}>
+            <MemoizedPDFPreview
+              curPdfUrl={curPdfUrl}
+              projId={props.projectId}
+              viewModel={props.viewModel}
+              setPageNum={setPageNum}
+              virtualListRef={virtualListRef}
+              pdfOptions={opt}
+              curPdfPage={props.curPage}
+              onOutlineLoaded={setOutline}
+            />
+          </div>
+        </div>
+      );
+    }
     return (
-      <MemoizedPDFPreview
-        curPdfUrl={curPdfUrl}
-        projId={props.projectId}
-        viewModel={props.viewModel}
-        setPageNum={setPageNum}
-        virtualListRef={virtualListRef}
-        pdfOptions={opt}
-        curPdfPage={props.curPage}
-      ></MemoizedPDFPreview>
+      <div id="pdf-preview-container">
+        <div id="pdf-outline"></div>
+        <MemoizedPDFPreview
+          curPdfUrl={curPdfUrl}
+          projId={props.projectId}
+          viewModel={props.viewModel}
+          setPageNum={setPageNum}
+          virtualListRef={virtualListRef}
+          pdfOptions={opt}
+          curPdfPage={props.curPage}
+          onOutlineLoaded={setOutline}
+        />
+      </div>
     );
   };
 
@@ -346,7 +391,7 @@ React.useEffect(() => {
                 restorePdfOffset(
                   props.projectId,
                   props.viewModel,
-                  virtualListRef
+                  virtualListRef,
                 );
               }
             }}
@@ -406,7 +451,7 @@ React.useEffect(() => {
                 handleSrcLocate(
                   props.projectId,
                   curProjInfo!,
-                  t("msg_empty_proj_info")
+                  t("msg_empty_proj_info"),
                 );
               }
             }}

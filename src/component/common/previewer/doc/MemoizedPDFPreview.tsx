@@ -44,6 +44,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     virtualListRef,
     pdfOptions,
     curPdfPage,
+    onOutlineLoaded,
   }) => {
     let cachedScale = getCurPdfScale(projId, viewModel);
     const { pdfFocus, projAttr } = useSelector((state: AppState) => state.proj);
@@ -132,6 +133,17 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
         console.log("current list is not null");
       }
       setDocLoadTime();
+      // Get outline
+      pdf.getOutline().then((outline) => {
+        if (onOutlineLoaded) {
+          onOutlineLoaded(outline || []);
+        }
+      }).catch((error) => {
+        console.error("Failed to get outline:", error);
+        if (onOutlineLoaded) {
+          onOutlineLoaded([]);
+        }
+      });
     };
 
     const getDynStyles = (viewModel: string) => {
