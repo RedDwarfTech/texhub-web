@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import styles from './OutlineTree.module.css';
 
 interface OutlineItem {
   title: string;
@@ -30,40 +31,26 @@ const OutlineTree: React.FC<OutlineTreeProps> = ({ outline, onItemClick }) => {
     const isExpanded = expanded.has(key);
 
     return (
-      <li key={key} style={{ marginLeft: level * 20, listStyle: 'none' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+      <li key={key} className={styles.outlineItem} style={{ marginLeft: level * 20 }}>
+        <div className={styles.outlineItemContainer}>
           {hasChildren && (
             <button
               onClick={() => toggleExpanded(key)}
-              style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                marginRight: '5px',
-                fontSize: '12px'
-              }}
+              className={styles.expandButton}
             >
               {isExpanded ? '▼' : '▶'}
             </button>
           )}
-          {!hasChildren && <span style={{ width: '17px' }}></span>}
+          {!hasChildren && <span className={styles.placeholder}></span>}
           <button
             onClick={() => onItemClick(item.dest)}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'blue',
-              cursor: 'pointer',
-              textAlign: 'left',
-              padding: '2px 0',
-              textDecoration: 'underline'
-            }}
+            className={styles.titleButton}
           >
             {item.title}
           </button>
         </div>
         {hasChildren && isExpanded && (
-          <ul style={{ padding: 0, margin: 0 }}>
+          <ul className={styles.nestedList}>
             {item.items!.map((subItem, index) => renderItem(subItem, level + 1, key + index))}
           </ul>
         )}
@@ -72,7 +59,7 @@ const OutlineTree: React.FC<OutlineTreeProps> = ({ outline, onItemClick }) => {
   };
 
   return (
-    <ul style={{ listStyle: 'none', padding: '10px', margin: 0 }}>
+    <ul className={styles.outlineTree}>
       {outline.map((item, index) => renderItem(item, 0, 'root' + index))}
     </ul>
   );

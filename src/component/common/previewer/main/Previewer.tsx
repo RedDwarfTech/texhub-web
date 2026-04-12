@@ -38,7 +38,7 @@ import {
   setAndDispatchPdfPage,
 } from "@/service/project/preview/PreviewService";
 import { usePreviewHandler } from "./usePreviewHandler";
-import OutlineTree from './OutlineTree';
+import OutlineTree from '../feat/outline/OutlineTree';
 import { getPreviewUrl } from "@/service/file/FileService";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
 

@@ -1,0 +1,41 @@
+.outlineTree {
+  list-style: none;
+  padding: 10px;
+  margin: 0;
+}
+
+.outlineItem {
+  list-style: none;
+}
+
+.outlineItemContainer {
+  display: flex;
+  align-items: center;
+}
+
+.expandButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 5px;
+  font-size: 12px;
+}
+
+.placeholder {
+  width: 17px;
+}
+
+.titleButton {
+  background: none;
+  border: none;
+  color: blue;
+  cursor: pointer;
+  text-align: left;
+  padding: 2px 0;
+  text-decoration: underline;
+}
+
+.nestedList {
+  padding: 0;
+  margin: 0;
+}
