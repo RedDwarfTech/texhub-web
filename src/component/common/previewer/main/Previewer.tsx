@@ -2,6 +2,7 @@ import React, { ChangeEvent, useMemo, useState } from "react";
 import styles from "./Previewer.module.css";
 import { ToastContainer } from "react-toastify";
 import { pdfjs } from "react-pdf";
+import { DocumentCallback } from "react-pdf/dist/shared/types";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import MemoizedPDFPreview from "../doc/MemoizedPDFPreview";
@@ -62,6 +63,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   const [numPages, setNumPages] = useState<number>();
   const [devModel, setDevModel] = useState<boolean>();
   const [outline, setOutline] = useState<any[]>([]);
+  const [pdfProxy, setPdfProxy] = useState<DocumentCallback | null>(null);
   const virtualListRef = React.useRef<VariableSizeList>(null);
   const { handleScrollTop, handleZoomIn, handleFullScreen, handleZoomOut } =
     usePreviewHandler(props.projectId, props.viewModel);
@@ -270,21 +272,52 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     );
   };
 
-  const handleOutlineClick = (dest: any) => {
-    console.log("handleOutlineClick dest:", dest);
-    let pageNum: number | null = null;
-    if (typeof dest === 'number') {
-      pageNum = dest + 1; // PDF pages are 0-indexed
-    } else if (Array.isArray(dest) && dest.length > 0) {
-      const first = dest[0];
-      if (typeof first === 'number') {
-        pageNum = first + 1;
-      } else if (first && typeof first === 'object' && 'num' in first) {
-        pageNum = first.num + 1;
-      }
+  const handleOutlineClick = async (dest: any) => {
+    if (!pdfProxy) {
+      console.warn("PDF not loaded yet, cannot navigate outline");
+      return;
     }
+
+    const resolvePageNumber = async (destination: any): Promise<number | null> => {
+      try {
+        if (!destination) {
+          return null;
+        }
+
+        let resolvedDest = destination;
+        if (typeof destination === "string") {
+          resolvedDest = await pdfProxy.getDestination(destination);
+        }
+
+        if (Array.isArray(resolvedDest) && resolvedDest.length > 0) {
+          const pageRef = resolvedDest[0];
+          if (typeof pageRef === "number") {
+            return pageRef + 1;
+          }
+          if (pageRef && typeof pageRef === "object") {
+            const pageIndex = await pdfProxy.getPageIndex(pageRef);
+            return pageIndex + 1;
+          }
+        }
+
+        if (resolvedDest && typeof resolvedDest === "object") {
+          if ("num" in resolvedDest && typeof resolvedDest.num === "number") {
+            return resolvedDest.num + 1;
+          }
+          const pageIndex = await pdfProxy.getPageIndex(resolvedDest);
+          return pageIndex + 1;
+        }
+      } catch (error) {
+        console.error("Failed to resolve outline destination:", error, destination);
+      }
+      return null;
+    };
+
+    const pageNum = await resolvePageNumber(dest);
     if (pageNum && pageNum > 0) {
       scrollToPage(pageNum, virtualListRef);
+    } else {
+      console.warn("Unable to resolve outline destination to page", dest);
     }
   };
 
@@ -318,6 +351,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
               pdfOptions={opt}
               curPdfPage={props.curPage}
               onOutlineLoaded={setOutline}
+              onPdfLoaded={setPdfProxy}
             />
           </div>
         </div>

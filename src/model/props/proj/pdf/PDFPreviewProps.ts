@@ -1,4 +1,4 @@
-import { Options } from "react-pdf/dist/shared/types";
+import { DocumentCallback, Options } from "react-pdf/dist/shared/types";
 import { VariableSizeList } from "react-window";
 
 export interface PDFPreviewProps {
@@ -7,7 +7,8 @@ export interface PDFPreviewProps {
   viewModel: string;
   setPageNum: (page: number) => void;
   virtualListRef: React.RefObject<VariableSizeList>;
-  pdfOptions: Options,
-  curPdfPage?: number,
+  pdfOptions: Options;
+  curPdfPage?: number;
   onOutlineLoaded?: (outline: any[]) => void;
+  onPdfLoaded?: (pdf: DocumentCallback) => void;
 }
