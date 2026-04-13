@@ -358,7 +358,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
             <div
               style={{
                 width: "300px",
-                borderRight: "1px solid #ccc",
+                borderRight: "0px solid #ccc",
                 overflowY: "auto",
               }}
             >
