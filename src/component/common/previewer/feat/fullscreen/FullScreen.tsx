@@ -1,5 +1,7 @@
 import React from "react";
 import Previewer from "@/component/common/previewer/main/Previewer";
+import styles from "./FullScreen.module.css";
+import style from "react-syntax-highlighter/dist/esm/styles/hljs/a11y-dark";
 
 const FullScreen: React.FC = () => {
   const params = new URLSearchParams(window.location.search);
@@ -15,7 +17,7 @@ const FullScreen: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className={styles.fscontainer}>
       <Previewer
         projectId={projId}
         viewModel={"fullscreen"}
