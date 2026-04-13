@@ -654,7 +654,10 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   };
 
   return (
-    <div id="preview" className={styles.preview}>
+    <div
+      id="preview"
+      className={props.viewModel ? styles.fspreview : styles.preview}
+    >
       <div id="previewHeader" className={styles.previewHader}>
         {renderLeftTab()}
         {renderPageNaviation()}
