@@ -38,8 +38,9 @@ import {
   setAndDispatchPdfPage,
 } from "@/service/project/preview/PreviewService";
 import { usePreviewHandler } from "./usePreviewHandler";
-import OutlineTree from '../feat/outline/OutlineTree';
+import OutlineTree from "../feat/outline/OutlineTree";
 import { getPreviewUrl } from "@/service/file/FileService";
+import Split from "@uiw/react-split";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
 
 export type PreviwerProps = {
@@ -278,7 +279,9 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
       return;
     }
 
-    const resolvePageNumber = async (destination: any): Promise<number | null> => {
+    const resolvePageNumber = async (
+      destination: any,
+    ): Promise<number | null> => {
       try {
         if (!destination) {
           return null;
@@ -308,7 +311,11 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
           return pageIndex + 1;
         }
       } catch (error) {
-        console.error("Failed to resolve outline destination:", error, destination);
+        console.error(
+          "Failed to resolve outline destination:",
+          error,
+          destination,
+        );
       }
       return null;
     };
@@ -336,24 +343,45 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     }
     if (props.viewModel === "fullscreen") {
       return (
-        <div id="pdf-preview-container" style={{ display: 'flex', height: '100vh' }}>
-          <div style={{ width: '300px', borderRight: '1px solid #ccc', overflowY: 'auto' }}>
-            <h4>Outline</h4>
-            <OutlineTree outline={outline} onItemClick={(dest) => handleOutlineClick(dest)} />
-          </div>
-          <div style={{ flex: 1 }}>
-            <MemoizedPDFPreview
-              curPdfUrl={curPdfUrl}
-              projId={props.projectId}
-              viewModel={props.viewModel}
-              setPageNum={setPageNum}
-              virtualListRef={virtualListRef}
-              pdfOptions={opt}
-              curPdfPage={props.curPage}
-              onOutlineLoaded={setOutline}
-              onPdfLoaded={setPdfProxy}
-            />
-          </div>
+        <div
+          id="pdf-preview-container"
+          style={{ display: "flex", height: "100vh" }}
+        >
+          <Split
+            visible={[2, 3]}
+            style={{
+              width: "100%",
+              border: "0px solid #d5d5d5",
+              borderRadius: 3,
+            }}
+          >
+            <div
+              style={{
+                width: "300px",
+                borderRight: "1px solid #ccc",
+                overflowY: "auto",
+              }}
+            >
+              <h4>Outline</h4>
+              <OutlineTree
+                outline={outline}
+                onItemClick={(dest) => handleOutlineClick(dest)}
+              />
+            </div>
+            <div style={{ flex: 1 }}>
+              <MemoizedPDFPreview
+                curPdfUrl={curPdfUrl}
+                projId={props.projectId}
+                viewModel={props.viewModel}
+                setPageNum={setPageNum}
+                virtualListRef={virtualListRef}
+                pdfOptions={opt}
+                curPdfPage={props.curPage}
+                onOutlineLoaded={setOutline}
+                onPdfLoaded={setPdfProxy}
+              />
+            </div>
+          </Split>
         </div>
       );
     }
