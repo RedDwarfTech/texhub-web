@@ -10,6 +10,11 @@ export function setCurPdfScale(
   projId: string,
   viewModel: string
 ) {
+  // Ensure scale is valid (not NaN, not infinite, and positive)
+  if (isNaN(scale) || !isFinite(scale) || scale <= 0) {
+    console.warn(`Invalid PDF scale ${scale}, setting to default 1`);
+    scale = 1;
+  }
   let pdfScaleKey = viewModel + ":pdf:scale:" + projId;
   localStorage.setItem(pdfScaleKey, scale.toString());
 }
@@ -18,7 +23,9 @@ export function getCurPdfScale(projId: string, viewModel: string) {
   let pdfScaleKey = viewModel + ":pdf:scale:" + projId;
   let curScale = localStorage.getItem(pdfScaleKey);
   if (curScale) {
-    return Number(curScale);
+    const scale = Number(curScale);
+    // Ensure scale is valid and not too small
+    return Math.max(scale, 0.1);
   } else {
     return 1;
   }
