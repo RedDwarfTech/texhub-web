@@ -313,8 +313,9 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
   (prevProps, nextProps) => {
     let arePropsEqual = prevProps.curPdfUrl === nextProps.curPdfUrl;
     let areAuthEqual = authTokenEquals(nextProps.pdfOptions);
+    let binded = prevProps.virtualListRef.current !== null;
     // if the final value is true, means did not need to rerender
-    return arePropsEqual && areAuthEqual;
+    return arePropsEqual && areAuthEqual && binded;
   }
 );
 
