@@ -7,6 +7,10 @@
     overflow: hidden;
 }
 
+.pdfPreviewContainer{
+    height: 100vh;
+}
+
 .fcpreview {
     flex-grow: 1;
     height: 100%;

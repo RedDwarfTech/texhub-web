@@ -386,7 +386,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
       );
     }
     return (
-      <div id="pdf-preview-container">
+      <div id="pdf-preview-container" className={styles.pdfPreviewContainer}>
         <MemoizedPDFPreview
           curPdfUrl={curPdfUrl}
           projId={props.projectId}
