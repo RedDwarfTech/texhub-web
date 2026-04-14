@@ -344,7 +344,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     if (props.viewModel === "fullscreen") {
       return (
         <div
-          id="pdf-preview-container"
+          id="pdf-fullscreen-preview-container"
           style={{ display: "flex", height: "100vh" }}
         >
           <Split
