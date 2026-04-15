@@ -1,128 +1,132 @@
 .preview {
-    flex-grow: 1;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    height: 96vh;
-    overflow: hidden;
+  flex-grow: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 96vh;
+  overflow: hidden;
 }
 
-.pdfPreviewContainer{
+.pdfPreviewContainer {
+  height: 100vh;
+}
+
+.fcPdfPreviewContainer {
     height: 100vh;
-}
-
-.fcpreview {
-    flex-grow: 1;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
-}
-
-.previewHader {
-    font-size: 16px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 10px;
-    border: none;
-    background-color: rgb(33,41,53);
-}
-
-.previewButton {
-    border: none;
-    background-color: blanchedalmond;
-    padding: 4px;
-    border-radius: 3px 3px 0 0;
-}
-
-.previewPageNav {
-    border: none;
-    background-color: rgb(33,41,53);;
-    color: white;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 2px;
-}
-
-.previewPageNav input {
-    width: 45px;
-}
-
-.previewIconButton {
-    border: none;
-    background-color: rgb(33,41,53);;
-    color: white;
-}
-
-.leftAction {
-    display: flex;
-    flex-direction: row;
-    gap: 5px;
-    padding-left: 3px;
-}
-
-.rightAction {
-    display: flex;
-    flex-direction: row;
-    gap: 15px;
-    padding-right: 10px;
-}
-
-.pdfPage {
-    margin-top: 10px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-}
-
-.previewFooter {
-    height: 40px;
-}
-
-.cavasLayer {
-    border: 1px solid black;
-    overflow-x: scroll;
-    overflow-y: scroll;
-    height: 100%;
-    background-color: lightgray;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-grow: 1;
-}
-
-.cavasLayer canvas {
-    height: 100%;
-    max-width: 100%;
-}
-
-.textLayer {
-    position: relative;
-    height: 100%;
     width: 100%;
 }
 
+.fcpreview {
+  flex-grow: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.previewHader {
+  font-size: 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+  border: none;
+  background-color: rgb(33, 41, 53);
+}
+
+.previewButton {
+  border: none;
+  background-color: blanchedalmond;
+  padding: 4px;
+  border-radius: 3px 3px 0 0;
+}
+
+.previewPageNav {
+  border: none;
+  background-color: rgb(33, 41, 53);
+  color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+}
+
+.previewPageNav input {
+  width: 45px;
+}
+
+.previewIconButton {
+  border: none;
+  background-color: rgb(33, 41, 53);
+  color: white;
+}
+
+.leftAction {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  padding-left: 3px;
+}
+
+.rightAction {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  padding-right: 10px;
+}
+
+.pdfPage {
+  margin-top: 10px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.previewFooter {
+  height: 40px;
+}
+
+.cavasLayer {
+  border: 1px solid black;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  height: 100%;
+  background-color: lightgray;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.cavasLayer canvas {
+  height: 100%;
+  max-width: 100%;
+}
+
+.textLayer {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
 .logContainer {
-    overflow: scroll;
+  overflow: scroll;
 }
 
 .logContent {
-    padding-left: 10px;
-    padding-top: 20px;
-    padding-right: 10px;
-    word-wrap: break-word;
-    font-size: 15px;
-    background-color: #DCDCDC;
-    border-radius: 5px;
-    margin-top: 15px;
-    margin-left: 10px;
-    margin-right: 10px;
+  padding-left: 10px;
+  padding-top: 20px;
+  padding-right: 10px;
+  word-wrap: break-word;
+  font-size: 15px;
+  background-color: #dcdcdc;
+  border-radius: 5px;
+  margin-top: 15px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .logLoadingContainer {
-    height: 100%;
-    margin-top: 200px;
+  height: 100%;
+  margin-top: 200px;
 }
-
