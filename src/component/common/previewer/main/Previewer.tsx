@@ -368,7 +368,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
                 onItemClick={(dest) => handleOutlineClick(dest)}
               />
             </div>
-            <div style={{ flex: 1 }}>
+            <div style={{ flex: 1, height: "100vh", width: "100%" }}>
               <MemoizedPDFPreview
                 curPdfUrl={curPdfUrl}
                 projId={props.projectId}
