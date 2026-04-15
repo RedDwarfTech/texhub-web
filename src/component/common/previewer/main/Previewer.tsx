@@ -370,7 +370,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
             </div>
             <div
               id="fc-preview-container"
-              style={{ flex: 1, height: "100vh", width: "100%" }}
+              style={{ flex: 1, overflow: "hidden" }}
             >
               <MemoizedPDFPreview
                 curPdfUrl={curPdfUrl}

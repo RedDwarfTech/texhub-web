@@ -275,7 +275,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     return (
       <AutoSizer onResize={onResize}>
         {({ width, height }: { width: number; height: number }) => (
-          <div id="autoSizerContainer">
+          <div id="autoSizerContainer" style={{ flex: 1, display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
             <Document
               options={pdfOptions}
               file={curPdfUrl!}
@@ -286,7 +286,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
                 ref={divRef}
                 className={getDynStyles(viewModel)}
                 style={{
-                  height: "100vh",
+                  height: viewModel === "fullscreen" ? "100%" : "100vh",
                   // do not setting the width to make it auto fit
                   width: viewModel === "fullscreen" ? "100%" : "100vw",
                   display: "flex",
