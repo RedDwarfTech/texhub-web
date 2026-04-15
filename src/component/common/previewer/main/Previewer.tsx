@@ -355,7 +355,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
               borderRadius: 3,
             }}
           >
-            <div
+            <div id="pdf-outline"
               style={{
                 width: "300px",
                 borderRight: "0px solid #ccc",
@@ -368,7 +368,10 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
                 onItemClick={(dest) => handleOutlineClick(dest)}
               />
             </div>
-            <div style={{ flex: 1, height: "100vh", width: "100%" }}>
+            <div
+              id="fc-preview-container"
+              style={{ flex: 1, height: "100vh", width: "100%" }}
+            >
               <MemoizedPDFPreview
                 curPdfUrl={curPdfUrl}
                 projId={props.projectId}
