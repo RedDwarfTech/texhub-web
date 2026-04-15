@@ -273,7 +273,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     }
 
     return (
-      <AutoSizer onResize={onResize}>
+      <AutoSizer onResize={onResize} style={{ width: "100%", height: "100%" }}>
         {({ width, height }: { width: number; height: number }) => (
           <div id="autoSizerContainer" style={{ flex: 1, display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
             <Document
