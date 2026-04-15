@@ -288,7 +288,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
                 style={{
                   height: "100vh",
                   // do not setting the width to make it auto fit
-                  width: "100vw",
+                  width: viewModel === "fullscreen" ? "100%" : "100vw",
                   display: "flex",
                   flexDirection: "column",
                   overflow: "hidden",
