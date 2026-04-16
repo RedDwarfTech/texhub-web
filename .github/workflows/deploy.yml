@@ -10,6 +10,6 @@ jobs:
     secrets: inherit
     with:
       target: stage
-      node-version: 20
+      node-version: 22
       app-namespace: reddwarf-pro
       app-name: texhub-web
