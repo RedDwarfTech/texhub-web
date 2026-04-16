@@ -345,7 +345,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
       return (
         <div
           id="pdf-fullscreen-preview-container"
-          style={{ display: "flex", height: "100vh" }}
+          style={{ display: "flex", height: "100%" }}
         >
           <Split
             visible={[2, 3]}
