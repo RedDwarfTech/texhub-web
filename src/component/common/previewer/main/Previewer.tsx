@@ -357,7 +357,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
           >
             <div id="pdf-outline"
               style={{
-                width: "300px",
+                width: "200px",
                 borderRight: "0px solid #ccc",
                 overflowY: "auto",
               }}
