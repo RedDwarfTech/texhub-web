@@ -25,13 +25,13 @@ const OutlineTree: React.FC<OutlineTreeProps> = ({ outline, onItemClick }) => {
     setExpanded(newExpanded);
   };
 
-  const renderItem = (item: OutlineItem, level: number = 0, parentKey: string = '') => {
+  const renderOutlineItem = (item: OutlineItem, level: number = 0, parentKey: string = '') => {
     const key = parentKey + item.title + level;
     const hasChildren = item.items && item.items.length > 0;
     const isExpanded = expanded.has(key);
 
     return (
-      <li key={key} className={styles.outlineItem} style={{ marginLeft: level * 20 }}>
+      <li key={key} className={styles.outlineItem} style={{ marginLeft: 20 }}>
         <div className={styles.outlineItemContainer}>
           {hasChildren && (
             <button
@@ -51,7 +51,7 @@ const OutlineTree: React.FC<OutlineTreeProps> = ({ outline, onItemClick }) => {
         </div>
         {hasChildren && isExpanded && (
           <ul className={styles.nestedList}>
-            {item.items!.map((subItem, index) => renderItem(subItem, level + 1, key + index))}
+            {item.items!.map((subItem, index) => renderOutlineItem(subItem, level + 1, key + index))}
           </ul>
         )}
       </li>
@@ -60,7 +60,7 @@ const OutlineTree: React.FC<OutlineTreeProps> = ({ outline, onItemClick }) => {
 
   return (
     <ul className={styles.outlineTree}>
-      {outline.map((item, index) => renderItem(item, 0, 'root' + index))}
+      {outline.map((item, index) => renderOutlineItem(item, 0, 'root' + index))}
     </ul>
   );
 };
