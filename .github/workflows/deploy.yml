@@ -13,3 +13,4 @@ jobs:
       node-version: 24
       app-namespace: reddwarf-pro
       app-name: texhub-web
+      image-name: texhub-web
