@@ -29,9 +29,10 @@ const OutlineTree: React.FC<OutlineTreeProps> = ({ outline, onItemClick }) => {
     const key = parentKey + item.title + level;
     const hasChildren = item.items && item.items.length > 0;
     const isExpanded = expanded.has(key);
+    const marginLeft = level == 0 ? 5 : 20;
 
     return (
-      <li key={key} className={styles.outlineItem} style={{ marginLeft: 20 }}>
+      <li key={key} className={styles.outlineItem} style={{ marginLeft: marginLeft }}>
         <div className={styles.outlineItemContainer}>
           {hasChildren && (
             <button
