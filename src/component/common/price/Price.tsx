@@ -4,12 +4,18 @@ import store from "@/redux/store/store";
 import { Goods } from "rd-component";
 
 const Price: React.FC = () => {
-    return (
-        <div>
-            <TexHeader></TexHeader>
-            <Goods refreshUrl={readConfig("refreshUserUrl")} appId={readConfig("appId")} store={store}></Goods>
-        </div>
-    );
-}
+  let lang = localStorage.getItem("userLanguage");
+  return (
+    <div>
+      <TexHeader></TexHeader>
+      <Goods
+        refreshUrl={readConfig("refreshUserUrl")}
+        appId={readConfig("appId")}
+        store={store}
+        lang={lang || "zh-CN"}
+      ></Goods>
+    </div>
+  );
+};
 
 export default Price;

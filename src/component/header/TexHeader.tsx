@@ -117,7 +117,8 @@ const TexHeader: React.FC = () => {
     }
 
     const handleMenuClick = () => {
-        window.open("/goods");
+       let lang = localStorage.getItem("userLanguage") || langChoose("zh");
+        window.open("/goods?lang=" + lang, "_blank");
         menuClose();
     };
 
