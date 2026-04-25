@@ -117,8 +117,7 @@ const TexHeader: React.FC = () => {
     }
 
     const handleMenuClick = () => {
-       let lang = localStorage.getItem("userLanguage") || langChoose("zh");
-        window.open("/goods?lang=" + lang, "_blank");
+        window.open("/goods");
         menuClose();
     };
 
@@ -163,10 +162,10 @@ const TexHeader: React.FC = () => {
                         Language
                     </button>
                     <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li onClick={() => langChoose("zh")}>
+                        <li onClick={() => langChoose("zh-CN")}>
                             <a className="dropdown-item" href="#/">简体中文</a>
                         </li>
-                        <li onClick={() => langChoose("en")}>
+                        <li onClick={() => langChoose("en-US")}>
                             <a className="dropdown-item" href="#/">English</a>
                         </li>
                     </ul>
