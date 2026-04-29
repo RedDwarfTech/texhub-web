@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import styles from "./ProjHistory.module.css";
 import { AppState } from "@/redux/types/AppState";
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ProjHistoryDetail from "./detail/ProjHistoryDetail";
 import {
@@ -63,17 +63,22 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
   }, []);
 
   React.useEffect(() => {
-    if (projHisPage?.data && projHisPage?.data?.length) {
-      if (projHisPage.data.length === 0) {
-        setHasMore(false);
-        return;
-      }
-      setHistoryList((prev) => {
-        const ids = new Set(prev.map((item) => item.id));
-        const newItems = projHisPage!.data!.filter((item) => !ids.has(item.id));
-        return [...prev, ...newItems];
-      });
+    const pageData = projHisPage?.data;
+    if (!pageData) {
+      return;
     }
+
+    if (pageData.length === 0) {
+      setHasMore(false);
+      return;
+    }
+
+    setHasMore(true);
+    setHistoryList((prev) => {
+      const ids = new Set(prev.map((item) => item.id));
+      const newItems = pageData.filter((item) => !ids.has(item.id));
+      return [...prev, ...newItems];
+    });
   }, [projHisPage]);
 
   const handleWindowPdfScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -130,7 +135,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     }
   };
 
-  const Row = ({
+  const Row = React.useCallback(({
     index,
     style,
     historyList,
@@ -151,7 +156,16 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         />
       </div>
     );
-  };
+  }, []);
+
+  const rowProps = useMemo(
+    () => ({
+      historyList,
+      projectId: props.projectId,
+      onSizeMeasured,
+    }),
+    [historyList, props.projectId]
+  );
 
   const onRowsRendered = useInfiniteLoader({
     isRowLoaded: isItemLoaded,
@@ -167,11 +181,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         rowCount={hasMore ? historyList.length + 1 : historyList.length}
         rowHeight={dynamicRowHeight}
         rowComponent={Row}
-        rowProps={{
-          historyList,
-          projectId: props.projectId,
-          onSizeMeasured,
-        }}
+        rowProps={rowProps}
         overscanCount={3}
         onScroll={handleWindowPdfScroll}
         onRowsRendered={onRowsRendered}
@@ -187,7 +197,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
         <div
           style={{
             height: "100vh",
-            width: (width || 0) + 10,
+            width: width || 0,
             display: "flex",
             flexDirection: "column",
             overflow: "hidden",
