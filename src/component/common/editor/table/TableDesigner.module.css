@@ -32,3 +32,8 @@ tr:nth-child(even) {
 .jspredsheet {
     margin-top: 20px;
 }
+
+.tableDesignerDialog {
+    max-width: 1200px; /* 按需调整 */
+    width: 80vw;       /* 响应式 */
+  }
