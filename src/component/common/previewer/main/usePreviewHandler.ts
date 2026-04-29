@@ -6,13 +6,13 @@ import { setProjAttr } from "@/service/project/ProjectService";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { scrollToOffset } from "../doc/PDFPreviewHandle";
-import { VariableSizeList } from "react-window";
+import { ListImperativeAPI } from "react-window";
 
 export const usePreviewHandler = (projectId: string, viewModel: string) => {
   const { t } = useTranslation();
 
   const handleScrollTop = (
-    virtualListRef: React.RefObject<VariableSizeList>,
+    virtualListRef: React.RefObject<ListImperativeAPI>,
     projId: string,
     viewModel: string
   ) => {

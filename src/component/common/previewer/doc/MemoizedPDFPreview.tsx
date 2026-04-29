@@ -11,12 +11,12 @@ import {
   scrollToPage,
 } from "./PDFPreviewHandle";
 import {
-  ListOnItemsRenderedProps,
-  ListOnScrollProps,
-  VariableSizeList,
+  List,
+  ListImperativeAPI,
+  RowComponentProps,
 } from "react-window";
 import { asyncMap } from "@wojtekmaj/async-array-utils";
-import AutoSizer, { Size } from "react-virtualized-auto-sizer";
+import { AutoSizer, Size } from "react-virtualized-auto-sizer";
 import { PDFPreviewProps } from "@/model/props/proj/pdf/PDFPreviewProps";
 import {
   getCurPdfScale,
@@ -47,6 +47,16 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     onOutlineLoaded,
     onPdfLoaded,
   }) => {
+    type PdfRowProps = {
+      width: number;
+      height: number;
+      pageViewports: any;
+      projId: string;
+      curPdfPosition?: PdfPosition[];
+      setAreas: (areas: HighlightArea[]) => void;
+      viewModel: string;
+    };
+
     let cachedScale = getCurPdfScale(projId, viewModel);
     const { pdfFocus, projAttr } = useSelector((state: AppState) => state.proj);
     const [pageLocalNum, setPageLocalNum] = useState<number>();
@@ -70,7 +80,6 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
       setProjAttribute(projAttr);
       if (virtualListRef.current) {
-        virtualListRef.current.resetAfterIndex(0, true);
         let curOffset = getCurPdfScrollOffset(projId);
         let fullScreenOffset = getNewScaleOffsetPosition(
           projAttr.legacyPdfScale,
@@ -164,8 +173,8 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
     };
 
-    const handleWindowPdfScroll = (e: ListOnScrollProps) => {
-      const scrollOffset = e.scrollOffset;
+    const handleWindowPdfScroll = (e: React.UIEvent<HTMLDivElement>) => {
+      const scrollOffset = e.currentTarget.scrollTop;
       let docLoadTime = localStorage.getItem("docLoadTime");
       if (docLoadTime && isMoreThanFiveSeconds(docLoadTime)) {
         setCurPdfScrollOffset(scrollOffset, projId, "handleWindowPdfScroll");
@@ -203,19 +212,51 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
      */
     const renderPdfList = (width: number, height: number) => {
       if (pdf && pageViewports) {
+        const PdfRow = ({
+          index,
+          style,
+          width,
+          height,
+          pageViewports,
+          projId,
+          curPdfPosition,
+          setAreas,
+          viewModel,
+        }: RowComponentProps<PdfRowProps>) => {
+          return (
+            <TeXPDFPage
+              index={index + 1}
+              width={width}
+              height={height}
+              style={style}
+              projId={projId}
+              viewPort={pageViewports[index]}
+              curPdfPosition={curPdfPosition}
+              setHighlightAreas={setAreas}
+              viewModel={viewModel}
+            />
+          );
+        };
+
         return (
-          <VariableSizeList
+          <List
             key={"pdfScrollList"}
-            ref={virtualListRef}
-            width={width}
-            height={height}
-            estimatedItemSize={500}
-            initialScrollOffset={getInitialOffset()}
-            itemCount={pdf.numPages}
+            listRef={virtualListRef as React.RefObject<ListImperativeAPI>}
+            rowCount={pdf.numPages}
+            rowHeight={(pageIndex: number) => getPageHeight(pageIndex, width)}
+            rowComponent={PdfRow}
+            rowProps={{
+              width,
+              height,
+              pageViewports,
+              projId,
+              curPdfPosition,
+              setAreas,
+              viewModel,
+            }}
             overscanCount={0}
-            onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
-            itemSize={(pageIndex) => getPageHeight(pageIndex, width)}
-            onItemsRendered={(props: ListOnItemsRenderedProps) => {
+            onScroll={handleWindowPdfScroll}
+            onRowsRendered={(visibleRows) => {
               if (curPdfPage && curPdfPage > 0) {
                 setAndDispatchPdfPage(curPdfPage, projId, "fullscreennav");
                 let cp = curPdfPage;
@@ -226,35 +267,14 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
                 curPdfPage = undefined;
               } else {
                 setAndDispatchPdfPage(
-                  props.overscanStopIndex,
+                  visibleRows.stopIndex,
                   projId,
                   "IntersectionObserver"
                 );
               }
             }}
-          >
-            {({
-              index,
-              style,
-            }: {
-              index: number;
-              style: React.CSSProperties;
-            }) => {
-              return (
-                <TeXPDFPage
-                  index={index + 1}
-                  width={width}
-                  height={height}
-                  style={style}
-                  projId={projId}
-                  viewPort={pageViewports[index]}
-                  curPdfPosition={curPdfPosition}
-                  setHighlightAreas={setAreas}
-                  viewModel={viewModel}
-                />
-              );
-            }}
-          </VariableSizeList>
+            style={{ width, height }}
+          />
         );
       }
     };
@@ -273,8 +293,10 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     }
 
     return (
-      <AutoSizer onResize={onResize} style={{ width: "100%", height: "100%" }}>
-        {({ width, height }: { width: number; height: number }) => (
+      <AutoSizer
+        onResize={onResize}
+        style={{ width: "100%", height: "100%" }}
+        renderProp={({ width, height }: { width: number | undefined; height: number | undefined }) => (
           <div id="autoSizerContainer" style={{ flex: 1, display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
             <Document
               options={pdfOptions}
@@ -297,7 +319,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
                 }}
                 onClick={openPdfUrlLink}
               >
-                {renderPdfList(width, height)}
+                {renderPdfList(width || 0, height || 0)}
               </div>
             </Document>
             <CustomHighlightLayer
@@ -307,7 +329,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             />
           </div>
         )}
-      </AutoSizer>
+      />
     );
   },
   (prevProps, nextProps) => {

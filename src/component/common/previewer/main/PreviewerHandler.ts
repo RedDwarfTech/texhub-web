@@ -11,7 +11,7 @@ import { getAccessToken } from "../../cache/Cache";
 import { getPreviewUrl } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
 import { scrollToOffset } from "../doc/PDFPreviewHandle";
-import { VariableSizeList } from "react-window";
+import { ListImperativeAPI } from "react-window";
 import { readConfig } from "@/config/app/config-reader";
 import { SocketIOClientProvider } from "texhub-broadcast";
 
@@ -51,7 +51,7 @@ export const handleOpenInBrowserDirect = (projectId: string) => {
 };
 
 export const debugApp = (
-  virtualListRef: React.RefObject<VariableSizeList>,
+  virtualListRef: React.RefObject<ListImperativeAPI>,
   projectId: string
 ) => {
   let offset = localStorage.getItem("pdfScrollOffset");

@@ -111,7 +111,7 @@ const TableDesigner: React.FC<TableDesignerProps> = (
       aria-labelledby="tableDesignerLabel"
       aria-hidden="true"
     >
-      <div className={`modal-dialog ${styles.tableDesignerDialog}`}></div>
+      <div className={`modal-dialog ${styles.tableDesignerDialog}`}>
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title" id="tableDesignerLabel">

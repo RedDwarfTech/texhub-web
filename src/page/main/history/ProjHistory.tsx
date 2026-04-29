@@ -5,13 +5,14 @@ import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ProjHistoryDetail from "./detail/ProjHistoryDetail";
 import {
-  ListOnItemsRenderedProps,
-  ListOnScrollProps,
-  VariableSizeList,
+  List,
+  ListImperativeAPI,
+  RowComponentProps,
+  useDynamicRowHeight,
 } from "react-window";
 import HistoryItem from "./item/HistoryItem";
-import AutoSizer, { Size } from "react-virtualized-auto-sizer";
-import InfiniteLoader from "react-window-infinite-loader";
+import { AutoSizer, Size } from "react-virtualized-auto-sizer";
+import { useInfiniteLoader } from "react-window-infinite-loader";
 import { ProjHisotry } from "@/model/proj/history/ProjHistory";
 import { QueryHistory } from "@/model/request/proj/query/QueryHistory";
 import {
@@ -29,24 +30,23 @@ export type HistoryProps = {
   projectId: string;
 };
 
+type HistoryRowProps = {
+  historyList: ProjHisotry[];
+  projectId: string;
+  onSizeMeasured: (index: number, height: number) => void;
+};
+
 const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
   const { projHisPage } = useSelector((state: AppState) => state.proj);
   const { curHistoryFile } = useSelector((state: AppState) => state.projTree);
   const { t } = useTranslation();
-  const virtualListRef = React.useRef<VariableSizeList>(null);
+  const virtualListRef = useRef<ListImperativeAPI | null>(null);
   const [historyList, setHistoryList] = useState<ProjHisotry[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const loadingRef = useRef(false);
-  const sizeMap = useRef(new Map<string, number>());
-  const getItemSize = (index: number) => {
-    if (index >= historyList.length) return defaultHistoryItemHeight;
-    const item = historyList[index];
-    if (!item) return defaultHistoryItemHeight;
-    const heightNew = sizeMap.current.get(item.id);
-    return heightNew || defaultHistoryItemHeight;
-  };
-  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const pendingResetIndex = useRef<number | null>(null);
+  const dynamicRowHeight = useDynamicRowHeight({
+    defaultRowHeight: defaultHistoryItemHeight,
+  });
 
   React.useEffect(() => {
     var myOffcanvas = document.getElementById("projHistory");
@@ -54,13 +54,11 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
       myOffcanvas.addEventListener("hidden.bs.offcanvas", function () {
         dispathAction("PROJ_HISTORY_PAGE", []);
         setHistoryList([]);
-        sizeMap.current.clear();
       });
     }
     return () => {
       dispathAction("PROJ_HISTORY_PAGE", []);
       setHistoryList([]);
-      sizeMap.current.clear();
     };
   }, []);
 
@@ -78,8 +76,8 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     }
   }, [projHisPage]);
 
-  const handleWindowPdfScroll = (e: ListOnScrollProps) => {
-    const scrollOffset = e.scrollOffset;
+  const handleWindowPdfScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const scrollOffset = e.currentTarget.scrollTop;
   };
 
   const onResize = (size: Size) => {};
@@ -119,19 +117,6 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     return index < historyList.length;
   };
 
-  function mergeRefs(...refs: any[]) {
-    return (instance: any) => {
-      refs.forEach((ref) => {
-        if (!ref) return;
-        if (typeof ref === "function") {
-          ref(instance);
-        } else {
-          ref.current = instance;
-        }
-      });
-    };
-  }
-
   const onSizeMeasured = (index: number, height: number) => {
     const offcanvas = document.getElementById("projHistory");
     if (!offcanvas || !offcanvas.classList.contains("show")) {
@@ -139,108 +124,70 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     }
 
     if (index >= historyList.length) return;
-    const item = historyList[index];
-    if (!item) return;
-
-    const prevHeight = sizeMap.current.get(item.id);
-
+    const prevHeight = dynamicRowHeight.getRowHeight(index);
     if (prevHeight !== height) {
-      sizeMap.current.set(item.id, height);
-
-      if (pendingResetIndex.current === null) {
-        pendingResetIndex.current = index;
-      } else {
-        pendingResetIndex.current = Math.min(pendingResetIndex.current, index);
-      }
-
-      if (debounceTimer.current) {
-        clearTimeout(debounceTimer.current);
-      }
-
-      debounceTimer.current = setTimeout(() => {
-        if (pendingResetIndex.current !== null) {
-          virtualListRef.current?.resetAfterIndex(
-            pendingResetIndex.current,
-            true
-          );
-          pendingResetIndex.current = null;
-        }
-      }, 500);
+      dynamicRowHeight.setRowHeight(index, height);
     }
   };
 
-  const MemorizedRow = React.memo(
-    ({ index, style }: { index: number; style: React.CSSProperties }) => {
-      if (index >= historyList.length || !historyList[index]) {
-        return <div style={style} />;
-      }
-
-      return (
-        <div style={style}>
-          <HistoryItem
-            item={historyList[index]}
-            projectId={props.projectId}
-            idx={index}
-            onSizeMeasured={onSizeMeasured}
-          />
-        </div>
-      );
-    },
-    (prevProps, nextProps) => {
-      return (
-        prevProps.index === nextProps.index &&
-        prevProps.style.height === nextProps.style.height &&
-        prevProps.style.top === nextProps.style.top
-      );
+  const Row = ({
+    index,
+    style,
+    historyList,
+    projectId,
+    onSizeMeasured,
+  }: RowComponentProps<HistoryRowProps>) => {
+    if (index >= historyList.length || !historyList[index]) {
+      return <div style={style} />;
     }
-  );
+
+    return (
+      <div style={style}>
+        <HistoryItem
+          item={historyList[index]}
+          projectId={projectId}
+          idx={index}
+          onSizeMeasured={onSizeMeasured}
+        />
+      </div>
+    );
+  };
+
+  const onRowsRendered = useInfiniteLoader({
+    isRowLoaded: isItemLoaded,
+    loadMoreRows: loadMoreItems,
+    rowCount: hasMore ? historyList.length + 1 : historyList.length,
+  });
 
   const renderList = (width: number, height: number) => {
     return (
-      <InfiniteLoader
-        isItemLoaded={isItemLoaded}
-        itemCount={hasMore ? historyList.length + 1 : historyList.length}
-        loadMoreItems={loadMoreItems}
-      >
-        {({ onItemsRendered, ref }) => (
-          <VariableSizeList
-            key={"projHistoryScrollList"}
-            ref={mergeRefs(ref, virtualListRef)}
-            width={width}
-            height={height}
-            estimatedItemSize={defaultHistoryItemHeight}
-            itemCount={historyList.length}
-            overscanCount={3}
-            onScroll={(e: ListOnScrollProps) => handleWindowPdfScroll(e)}
-            itemSize={(pageIndex) => {
-              return getItemSize(pageIndex);
-            }}
-            onItemsRendered={(props: ListOnItemsRenderedProps) => {
-              onItemsRendered(props);
-            }}
-          >
-            {({
-              index,
-              style,
-            }: {
-              index: number;
-              style: React.CSSProperties;
-            }) => {
-              return <MemorizedRow index={index} style={style} />;
-            }}
-          </VariableSizeList>
-        )}
-      </InfiniteLoader>
+      <List
+        key={"projHistoryScrollList"}
+        listRef={virtualListRef}
+        rowCount={hasMore ? historyList.length + 1 : historyList.length}
+        rowHeight={dynamicRowHeight}
+        rowComponent={Row}
+        rowProps={{
+          historyList,
+          projectId: props.projectId,
+          onSizeMeasured,
+        }}
+        overscanCount={3}
+        onScroll={handleWindowPdfScroll}
+        onRowsRendered={onRowsRendered}
+        style={{ width, height }}
+      />
     );
   };
 
   const historyListComponent = () => (
-    <AutoSizer onResize={onResize}>
-      {({ width, height }: { width: number; height: number }) => (
+    <AutoSizer
+      onResize={onResize}
+      renderProp={({ width, height }: { width: number | undefined; height: number | undefined }) => (
         <div
           style={{
             height: "100vh",
-            width: width + 10,
+            width: (width || 0) + 10,
             display: "flex",
             flexDirection: "column",
             overflow: "hidden",
@@ -248,10 +195,10 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
             flex: 1,
           }}
         >
-          {renderList(width, height)}
+          {renderList(width || 0, height || 0)}
         </div>
       )}
-    </AutoSizer>
+    />
   );
 
   const backToDefaultHistory = () => {

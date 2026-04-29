@@ -1,4 +1,4 @@
-import { VariableSizeList } from "react-window";
+import { ListImperativeAPI } from "react-window";
 import styles from "./MemoizedPDFPreview.module.css";
 import { getCurPdfScrollOffset, setCurPdfScrollOffset } from "@/service/project/preview/PreviewService";
 
@@ -11,23 +11,25 @@ export const goPage = (i: number) => {
 
 export const scrollToPage = (
   pageIndex: number,
-  virtualListRef: React.RefObject<VariableSizeList>
+  virtualListRef: React.RefObject<ListImperativeAPI>
 ) => {
   if (virtualListRef.current) {
-    // the VariableSizeList index was started by 0
+    // list index starts from 0 while page starts from 1
     // the page size start by 1
-    virtualListRef.current.scrollToItem(pageIndex - 1, "center");
+    virtualListRef.current.scrollToRow({ index: pageIndex - 1, align: "center" });
   }
 };
 
 export const scrollToOffset = (
   offset: number,
-  virtualListRef: React.RefObject<VariableSizeList>,
+  virtualListRef: React.RefObject<ListImperativeAPI>,
   projId: string
 ) => {
   if (virtualListRef.current) {
     console.warn("trigger scrolltooffset:" + offset);
-    virtualListRef.current.scrollTo(offset);
+    if (virtualListRef.current.element) {
+      virtualListRef.current.element.scrollTop = offset;
+    }
     setCurPdfScrollOffset(
       offset,
       projId,
@@ -51,7 +53,7 @@ export const openPdfUrlLink = (e: React.MouseEvent<HTMLDivElement>) => {
 export const restorePdfOffset = (
   projId: string,
   viewModel: string,
-  virtualListRef: React.RefObject<VariableSizeList>
+  virtualListRef: React.RefObject<ListImperativeAPI>
 ) => {
   if (virtualListRef.current) {
     let fullScreenOffset = getCurPdfScrollOffset(projId);
