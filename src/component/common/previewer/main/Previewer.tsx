@@ -32,7 +32,7 @@ import {
   handleOpenInBrowserDirect,
   handleSrcLocate,
 } from "./PreviewerHandler";
-import { VariableSizeList } from "react-window";
+import { ListImperativeAPI } from "react-window";
 import {
   setContextCompileResultType,
   setAndDispatchPdfPage,
@@ -65,7 +65,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   const [devModel, setDevModel] = useState<boolean>();
   const [outline, setOutline] = useState<any[]>([]);
   const [pdfProxy, setPdfProxy] = useState<DocumentCallback | null>(null);
-  const virtualListRef = React.useRef<VariableSizeList>(null);
+  const virtualListRef = React.useRef<ListImperativeAPI>(null);
   const { handleScrollTop, handleZoomIn, handleFullScreen, handleZoomOut } =
     usePreviewHandler(props.projectId, props.viewModel);
   const { curPage } = useSelector((state: AppState) => state.preview);
