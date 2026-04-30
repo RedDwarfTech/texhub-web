@@ -167,8 +167,6 @@ export const doSocketIOConn = (
   return wsProvider;
 };
 
-var ydoc: any;
-
 export const metadata: Metadata = {
   labels: new Set<string>([]),
   packageNames: new Set<string>([]),
@@ -215,7 +213,6 @@ export function initSubDocSocketIO(
   setCurRootYDoc(rootYdoc);
   // @ts-ignore
   wsProvider.on("synced", () => {
-    console.log("WebSocket provider synced");
     if (loadFile) {
       // when run this first doc init, there contains 2 subdoc
       // still did not found where to add this 2 subdoc
