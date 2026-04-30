@@ -33,7 +33,9 @@ const AppBody: React.FC<AppBodyProps> = (props: AppBodyProps) => {
     return (
       <div role="alert">
         <p>Something went wrong:</p>
-        <div style={{ color: "red" }}>{props.error.message}</div>
+        <div style={{ color: "red" }}>
+          {props.error instanceof Error ? props.error.message : String(props.error)}
+        </div>
       </div>
     );
   };

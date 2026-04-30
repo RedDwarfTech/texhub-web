@@ -134,86 +134,86 @@ const TableDesigner: React.FC<TableDesignerProps> = (
             <div className={styles.tableAction}>
               <table>
                 <tbody>
-                <tr>
-                  <th>
-                    <PlusRowBefore
-                      width={"20px"}
-                      height={"20px"}
-                      onClick={() => {
-                        addRow();
-                      }}
-                    ></PlusRowBefore>
-                  </th>
-                  <th>
-                    <PlusRowAfter
-                      width={"20px"}
-                      height={"20px"}
-                      onClick={() => {
-                        addRow();
-                      }}
-                    ></PlusRowAfter>
-                  </th>
-                  <th>
-                    <PlusRowRemove
-                      width={"20px"}
-                      height={"20px"}
-                      onClick={() => {
-                        deleteRow();
-                      }}
-                    ></PlusRowRemove>
-                  </th>
-                </tr>
+                  <tr>
+                    <th>
+                      <PlusRowBefore
+                        width={"20px"}
+                        height={"20px"}
+                        onClick={() => {
+                          addRow();
+                        }}
+                      ></PlusRowBefore>
+                    </th>
+                    <th>
+                      <PlusRowAfter
+                        width={"20px"}
+                        height={"20px"}
+                        onClick={() => {
+                          addRow();
+                        }}
+                      ></PlusRowAfter>
+                    </th>
+                    <th>
+                      <PlusRowRemove
+                        width={"20px"}
+                        height={"20px"}
+                        onClick={() => {
+                          deleteRow();
+                        }}
+                      ></PlusRowRemove>
+                    </th>
+                  </tr>
                 </tbody>
               </table>
               <table>
-              <tbody>
-                <tr>
-                  <th>
-                    <PlusColumnBefore
-                      width={"20px"}
-                      height={"20px"}
-                      onClick={() => {
-                        addCol();
-                      }}
-                    ></PlusColumnBefore>
-                  </th>
-                  <th>
-                    <PlusColumnAfter
-                      width={"20px"}
-                      height={"20px"}
-                      onClick={() => {
-                        addCol();
-                      }}
-                    ></PlusColumnAfter>
-                  </th>
-                  <th>
-                    <PlusColumnRemove
-                      width={"20px"}
-                      height={"20px"}
-                      onClick={() => {
-                        deleteCol();
-                      }}
-                    ></PlusColumnRemove>
-                  </th>
-                </tr>
+                <tbody>
+                  <tr>
+                    <th>
+                      <PlusColumnBefore
+                        width={"20px"}
+                        height={"20px"}
+                        onClick={() => {
+                          addCol();
+                        }}
+                      ></PlusColumnBefore>
+                    </th>
+                    <th>
+                      <PlusColumnAfter
+                        width={"20px"}
+                        height={"20px"}
+                        onClick={() => {
+                          addCol();
+                        }}
+                      ></PlusColumnAfter>
+                    </th>
+                    <th>
+                      <PlusColumnRemove
+                        width={"20px"}
+                        height={"20px"}
+                        onClick={() => {
+                          deleteCol();
+                        }}
+                      ></PlusColumnRemove>
+                    </th>
+                  </tr>
                 </tbody>
               </table>
               <table>
-              <tbody>
-                <tr>
-                  <th>
-                    <BorderBottom width={"20px"} height={"20px"}></BorderBottom>
-                  </th>
-                  <th>
-                    <BorderTop width={"20px"} height={"20px"}></BorderTop>
-                  </th>
-                  <th>
-                    <BorderLeft width={"20px"} height={"20px"}></BorderLeft>
-                  </th>
-                  <th>
-                    <BorderRight width={"20px"} height={"20px"}></BorderRight>
-                  </th>
-                </tr>
+                <tbody>
+                  <tr>
+                    <th>
+                      <BorderBottom width={"20px"} height={"20px"}></BorderBottom>
+                    </th>
+                    <th>
+                      <BorderTop width={"20px"} height={"20px"}></BorderTop>
+                    </th>
+                    <th>
+                      <BorderLeft width={"20px"} height={"20px"}></BorderLeft>
+                    </th>
+                    <th>
+                      <BorderRight width={"20px"} height={"20px"}></BorderRight>
+                    </th>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -246,7 +246,7 @@ const TableDesigner: React.FC<TableDesignerProps> = (
               type="button"
               className="btn btn-primary"
               data-bs-dismiss="modal"
-              onClick={() => {}}
+              onClick={() => { }}
             >
               {t("btn_confirm")}
             </button>
