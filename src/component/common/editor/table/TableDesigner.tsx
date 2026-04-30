@@ -12,7 +12,7 @@ import styles from "./TableDesigner.module.css";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import jspreadsheet, {
-  JSpreadsheetOptions,
+  SpreadsheetOptions,
   JspreadsheetInstanceElement,
 } from "jspreadsheet-ce";
 import { useRef } from "react";
@@ -26,9 +26,10 @@ import { useTranslation } from "react-i18next";
 
 export type TableDesignerProps = {};
 
-const options: JSpreadsheetOptions = {
-  data: [[]],
-  minDimensions: [2, 2],
+const options = {
+  worksheets: [{
+    minDimensions: [2, 2] as [number, number],
+  }]
 };
 
 const TableDesigner: React.FC<TableDesignerProps> = (
@@ -41,42 +42,47 @@ const TableDesigner: React.FC<TableDesignerProps> = (
 
   React.useEffect(() => {
     if (jRef.current) {
-      if (!jRef.current.jspreadsheet) {
-        jspreadsheet(jRef.current, options);
+      if (!jRef.current.spreadsheet) {
+        const worksheets = jspreadsheet(jRef.current, options);
+        // Store reference to the first worksheet for later use
+        if (worksheets && worksheets.length > 0) {
+          (jRef.current as any).worksheet = worksheets[0];
+        }
       }
     }
   }, []);
 
   const addRow = () => {
-    if (jRef.current) {
-      jRef.current.jexcel.insertRow();
+    if (jRef.current && (jRef.current as any).worksheet) {
+      (jRef.current as any).worksheet.insertRow();
       setRowsCount(rowsCount + 1);
     }
   };
 
   const deleteRow = () => {
-    if (jRef.current) {
-      jRef.current.jexcel.deleteRow();
+    if (jRef.current && (jRef.current as any).worksheet) {
+      (jRef.current as any).worksheet.deleteRow();
       setRowsCount(rowsCount - 1);
     }
   };
 
   const addCol = () => {
-    if (jRef.current) {
-      jRef.current.jexcel.insertColumn();
+    if (jRef.current && (jRef.current as any).worksheet) {
+      (jRef.current as any).worksheet.insertColumn();
     }
   };
 
   const deleteCol = () => {
-    if (jRef.current) {
-      jRef.current.jexcel.deleteColumn();
+    if (jRef.current && (jRef.current as any).worksheet) {
+      (jRef.current as any).worksheet.deleteColumn();
     }
   };
 
   const handleTeXTableCodeGeneration = () => {
-    if (jRef.current) {
-      const spreadsheet = jspreadsheet(jRef.current);
-      const colNum = spreadsheet.getColumnOptions.length;
+    if (jRef.current && (jRef.current as any).worksheet) {
+      const worksheet = (jRef.current as any).worksheet;
+      // Get column count from the worksheet data or use a default
+      const colNum = worksheet.options?.columns?.length || 2;
       const latexCode = TexFileUtil.genTeXTableCode(rowsCount, colNum);
       setCode(latexCode);
     }
