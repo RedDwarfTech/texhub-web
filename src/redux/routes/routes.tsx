@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import { PaySuccess } from "rd-component";
-import "rd-component/dist/style.css";
+//import "rd-component/dist/style.css";
 import DocTab from "@/page/profile/project/tab/ProjectTab";
 import Home from "@/page/home/Home";
 import Template from "@/page/template/Template";
