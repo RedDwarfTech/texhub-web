@@ -89,9 +89,6 @@ dependencies:
   '@types/react-redux':
     specifier: ^7.1.34
     version: 7.1.34
-  '@types/uuid':
-    specifier: ^9.0.8
-    version: 9.0.8
   '@uiw/react-split':
     specifier: ^5.9.4
     version: 5.9.4(react-dom@18.2.0)(react@18.2.0)
