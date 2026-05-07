@@ -2,7 +2,7 @@ import React, { ChangeEvent, useMemo, useState } from "react";
 import styles from "./Previewer.module.css";
 import { ToastContainer } from "react-toastify";
 import { pdfjs } from "react-pdf";
-import { DocumentCallback } from "react-pdf/dist/shared/types";
+import { DocumentCallback } from "react-pdf/dist/shared/types.js";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import MemoizedPDFPreview from "../doc/MemoizedPDFPreview";

@@ -1,4 +1,4 @@
-import { DocumentCallback, Options } from "react-pdf/dist/shared/types";
+import { DocumentCallback, Options } from "react-pdf/dist/shared/types.js";
 import { ListImperativeAPI } from "react-window";
 
 export interface PDFPreviewProps {

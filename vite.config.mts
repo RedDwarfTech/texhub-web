@@ -14,6 +14,13 @@ const pdfjsDistPath = path.dirname(require.resolve('pdfjs-dist/package.json'));
 const cMapsDir = normalizePath(path.join(pdfjsDistPath, 'cmaps'));
 
 export default defineConfig({
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler'
+      }
+    }
+  },
   define: {
     "process.env": JSON.stringify({
       NODE_ENV: "production",
@@ -45,11 +52,11 @@ export default defineConfig({
       open: true,
     }) as PluginOption,
   ],
-  css: {},
   optimizeDeps: {
     exclude: [],
   },
   build: {
+    cssMinify: 'esbuild',
     commonjsOptions: { include: [] },
     outDir: "build",
     sourcemap: true,

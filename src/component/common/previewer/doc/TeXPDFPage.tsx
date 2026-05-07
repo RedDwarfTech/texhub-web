@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Page } from "react-pdf";
 import styles from "./TeXPDFPage.module.css";
-import { PageCallback } from "react-pdf/dist/shared/types";
 import { PreviewPdfAttribute } from "@/model/proj/config/PreviewPdfAttribute";
 import { useSelector } from "react-redux";
 import { AppState } from "@/redux/types/AppState";
@@ -11,6 +10,7 @@ import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import TeXPDFHighlight from "../feat/highlight/TeXPDFHighlight";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
+import { PageCallback } from "react-pdf/dist/shared/types.js";
 // Note: we intentionally do not extract highlights on page load to avoid
 // repeated state updates that can cause re-render loops. Instead we attach
 // mouse handlers to compute highlights on hover.

@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Document } from "react-pdf";
 import styles from "./MemoizedPDFPreview.module.css";
-import { DocumentCallback } from "react-pdf/dist/shared/types";
+
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import {
@@ -34,6 +34,7 @@ import { getNewScaleOffsetPosition } from "../calc/ScrollUtil";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import { CustomHighlightLayer, HighlightArea } from "../feat/highlight/CustomHighlightLayer";
+import { DocumentCallback } from "react-pdf/dist/shared/types.js";
 
 const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
   ({
@@ -112,7 +113,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
           (pageNumber: number) =>
             pdf
               .getPage(pageNumber)
-              .then((page) =>
+              .then((page:any) =>
                 page.getViewport({ scale: projAttr.pdfScale || 1 })
               )
         );
@@ -149,12 +150,12 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       // Get outline
       pdf
         .getOutline()
-        .then((outline) => {
+        .then((outline:any) => {
           if (onOutlineLoaded) {
             onOutlineLoaded(outline || []);
           }
         })
-        .catch((error) => {
+        .catch((error:any) => {
           console.error("Failed to get outline:", error);
           if (onOutlineLoaded) {
             onOutlineLoaded([]);
