@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useMemo, useState } from "react";
+import React, { ChangeEvent, useCallback, useMemo, useState } from "react";
 import styles from "./Previewer.module.css";
 import { ToastContainer } from "react-toastify";
 import { pdfjs } from "react-pdf";
@@ -49,13 +49,111 @@ export type PreviwerProps = {
   curPage?: number;
 };
 
-const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
-  const [curPdfUrl, setCurPdfUrl] = useState<string>("");
+const getNewLogText = (
+  prevState: string,
+  streamChunk: string,
+  compileResultType: CompileResultType,
+): string => {
+  let newLogText = "";
+  if (prevState && prevState.length > 0) {
+    if (streamChunk.startsWith("!")) {
+      console.log("compilewitherror");
+      newLogText =
+        prevState + "<br/><p style='color:red;'>" + streamChunk + "</p>";
+      setContextCompileResultType(CompileResultType.FAILED);
+    } else {
+      newLogText = prevState + "<br/>" + streamChunk;
+    }
+    if (
+      compileResultType !== CompileResultType.FAILED &&
+      streamChunk.indexOf("====END====") >= 0
+    ) {
+      setContextCompileResultType(CompileResultType.SUCCESS);
+    }
+  } else {
+    newLogText = prevState + streamChunk;
+  }
+  return newLogText;
+};
+
+/**
+ * Isolates streaming log state from Previewer so SSE log updates do not
+ * re-render the PDF tab, header, or page navigation.
+ */
+const PreviewerLogPanel: React.FC = () => {
+  const streamLogText = useSelector(
+    (state: AppState) => state.proj.streamLogText,
+  );
+  const logText = useSelector((state: AppState) => state.proj.logText);
+  const compileStatus = useSelector((state: AppState) => state.proj.compileStatus);
+  const compileResultType = useSelector(
+    (state: AppState) => state.preview.compileResultType,
+  );
+  const compileResultTypeRef = React.useRef(compileResultType);
+  compileResultTypeRef.current = compileResultType;
+  const [curLogText, setCurLogText] = useState<string>("");
   const [compStatus, setCompStatus] = useState<CompileStatus>(
     CompileStatus.COMPLETE,
   );
-  const { compileResultType } = useSelector((state: AppState) => state.preview);
-  const [curLogText, setCurLogText] = useState<string>("");
+
+  React.useEffect(() => {
+    setCompStatus(compileStatus as CompileStatus);
+  }, [compileStatus]);
+
+  React.useEffect(() => {
+    if (logText && logText === "====CLEAR====") {
+      setCurLogText("");
+      return;
+    }
+    if (logText && logText.length > 0 && logText !== "====CLEAR====") {
+      setCompStatus(CompileStatus.COMPLETE);
+      setCurLogText(logText);
+    }
+  }, [logText]);
+
+  React.useEffect(() => {
+    if (streamLogText && streamLogText.length > 0) {
+      const stringLog = streamLogText.map((log) => log.data).join("");
+      if (stringLog.indexOf("====CLEAR====") >= 0) {
+        setCurLogText("");
+        return;
+      }
+      setCompStatus(CompileStatus.COMPILING);
+      setCurLogText((prevState) =>
+        getNewLogText(prevState, stringLog, compileResultTypeRef.current),
+      );
+    }
+  }, [streamLogText]);
+
+  const createMarkup = () => {
+    const formatted = curLogText.replace(/\n/g, "<br/>");
+    return { __html: formatted };
+  };
+
+  if (compStatus === CompileStatus.WAITING) {
+    return (
+      <div className={styles.logLoadingContainer}>
+        <div className="d-flex justify-content-center">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className={styles.logContainer}>
+      <div
+        className={styles.logContent}
+        id="logtext"
+        dangerouslySetInnerHTML={createMarkup()}
+      ></div>
+    </div>
+  );
+};
+
+const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
+  const [curPdfUrl, setCurPdfUrl] = useState<string>("");
   const [curPreviewTab, setCurPreviewTab] = useState<string>("pdfview");
   const [curProjInfo, setCurProjInfo] = useState<ProjInfo>();
   const [texCompileResult, setTexCompileResult] = useState<CompileResultType>(
@@ -68,19 +166,19 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   const virtualListRef = React.useRef<ListImperativeAPI>(null);
   const { handleScrollTop, handleZoomIn, handleFullScreen, handleZoomOut } =
     usePreviewHandler(props.projectId, props.viewModel);
-  const { curPage } = useSelector((state: AppState) => state.preview);
-  const {
-    texPdfUrl,
-    streamLogText,
-    logText,
-    tabName,
-    compileStatus,
-    texQueue,
-    latestComp,
-    projInfo,
-    endSignal,
-    remoteCompileResult,
-  } = useSelector((state: AppState) => state.proj);
+  const compileResultType = useSelector(
+    (state: AppState) => state.preview.compileResultType,
+  );
+  const curPage = useSelector((state: AppState) => state.preview.curPage);
+  const texPdfUrl = useSelector((state: AppState) => state.proj.texPdfUrl);
+  const tabName = useSelector((state: AppState) => state.proj.tabName);
+  const texQueue = useSelector((state: AppState) => state.proj.texQueue);
+  const latestComp = useSelector((state: AppState) => state.proj.latestComp);
+  const projInfo = useSelector((state: AppState) => state.proj.projInfo);
+  const endSignal = useSelector((state: AppState) => state.proj.endSignal);
+  const remoteCompileResult = useSelector(
+    (state: AppState) => state.proj.remoteCompileResult,
+  );
   const { t } = useTranslation();
 
   React.useEffect(() => {
@@ -177,62 +275,10 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   }, [texPdfUrl]);
 
   React.useEffect(() => {
-    setCompStatus(compileStatus);
-  }, [compileStatus]);
-
-  React.useEffect(() => {
-    if (logText && logText === "====CLEAR====") {
-      setCurLogText("");
-      return;
-    }
-    if (logText && logText.length > 0 && logText !== "====CLEAR====") {
-      setCompStatus(CompileStatus.COMPLETE);
-      setCurLogText(logText);
-    }
-  }, [logText]);
-
-  React.useEffect(() => {
     if (tabName && tabName.length > 0) {
       setCurPreviewTab(tabName);
     }
   }, [tabName]);
-
-  React.useEffect(() => {
-    if (streamLogText && streamLogText.length > 0) {
-      let stringLog = streamLogText.map((log) => log.data).join("");
-      if (stringLog.indexOf("====CLEAR====") >= 0) {
-        setCurLogText("");
-        return;
-      }
-      setCompStatus(CompileStatus.COMPILING);
-      setCurLogText((prevState) => {
-        return getNewText(prevState, stringLog);
-      });
-    }
-  }, [streamLogText]);
-
-  const getNewText = (prevState: any, streamLogText: string) => {
-    let newLogText = "";
-    if (prevState && prevState.length > 0) {
-      if (streamLogText.startsWith("!")) {
-        console.log("compilewitherror");
-        newLogText =
-          prevState + "<br/><p style='color:red;'>" + streamLogText + "</p>";
-        setContextCompileResultType(CompileResultType.FAILED);
-      } else {
-        newLogText = prevState + "<br/>" + streamLogText;
-      }
-      if (
-        texCompileResult !== CompileResultType.FAILED &&
-        streamLogText.indexOf("====END====") >= 0
-      ) {
-        setContextCompileResultType(CompileResultType.SUCCESS);
-      }
-    } else {
-      newLogText = prevState + streamLogText;
-    }
-    return newLogText;
-  };
 
   const renderPreviewTab = () => {
     switch (curPreviewTab) {
@@ -245,32 +291,8 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     }
   };
 
-  const createMarkup = () => {
-    let formatted = curLogText.replace(/\n/g, "<br/>");
-    return { __html: formatted };
-  };
-
   const renderLogView = () => {
-    if (compStatus === CompileStatus.WAITING) {
-      return (
-        <div className={styles.logLoadingContainer}>
-          <div className="d-flex justify-content-center">
-            <div className="spinner-border" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    return (
-      <div className={styles.logContainer}>
-        <div
-          className={styles.logContent}
-          id="logtext"
-          dangerouslySetInnerHTML={createMarkup()}
-        ></div>
-      </div>
-    );
+    return <PreviewerLogPanel />;
   };
 
   const handleOutlineClick = async (dest: any) => {
@@ -328,9 +350,9 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     }
   };
 
-  const setPageNum = (pageNum: number) => {
+  const setPageNum = useCallback((pageNum: number) => {
     setNumPages(pageNum);
-  };
+  }, []);
 
   // https://stackoverflow.com/questions/76834748/react-pdf-gives-typeerror-cannot-read-properties-of-null-reading-sendwithprom
   const opt = useMemo(() => {
