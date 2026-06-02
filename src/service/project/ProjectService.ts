@@ -479,6 +479,11 @@ export function projHistoryPage(history: QueryHistory) {
   for (const [key, value] of Object.entries(history)) {
     params.append(key, value);
   }
+  if (params.has('offset') && params.get('offset') === 'null') {
+    params.set('offset', "0");
+  } else if (!params.has('offset')) {
+    params.append("offset", "0");
+  }
   const config: AxiosRequestConfig = {
     method: "get",
     url: "/tex/project/history/v1/page",
