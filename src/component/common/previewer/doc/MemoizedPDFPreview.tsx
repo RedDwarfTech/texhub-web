@@ -59,7 +59,10 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     };
 
     let cachedScale = getCurPdfScale(projId, viewModel);
-    const { pdfFocus, projAttr } = useSelector((state: AppState) => state.proj);
+    // Narrow selectors: any change to proj (e.g. streamLogText SSE) replaces the
+    // whole proj slice; subscribing to state.proj would re-render the PDF on every log line.
+    const pdfFocus = useSelector((state: AppState) => state.proj.pdfFocus);
+    const projAttr = useSelector((state: AppState) => state.proj.projAttr);
     const [pageLocalNum, setPageLocalNum] = useState<number>();
     const [highlightAreas, setHighlightAreas] = useState<HighlightArea[]>([]);
     const [pdf, setPdf] = useState<DocumentCallback>();
