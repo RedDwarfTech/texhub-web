@@ -15,6 +15,7 @@ import {
   UserModel,
   WheelGlobal,
 } from "rdjs-wheel";
+import { BaseMethods } from "rdjs-wheel";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { projHasFile } from "../project/ProjectService";
 import { Metadata } from "@/component/common/editor/foundation/extensions/language";
@@ -227,6 +228,11 @@ export function initSubDocSocketIO(
 }
 
 const initialFisrtSubDoc = (file: TexFileModel) => {
+  const current = store.getState().projEditor.curSubYDoc;
+  if (current && !BaseMethods.isNull(current) && current.guid) {
+    console.log("already has active subdoc, skip initialFisrtSubDoc");
+    return; // 已有激活 subdoc，不强制切回 loadFile
+  }
   let firstSubDoc = new Y.Doc();
   firstSubDoc.guid = file.file_id;
   let docMetadata: DocMeta = {
