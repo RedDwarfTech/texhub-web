@@ -126,10 +126,14 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     };
   }, []);
 
+  const loadedDocGuidRef = useRef<string | null>(null);
+
   React.useEffect(() => {
     if (BaseMethods.isNull(curSubYDoc)) {
       return;
     }
+    const guid = curSubYDoc.guid;
+    
     recordEditorViewUpdate("useEffect[curSubYDoc]", `curSubYDoc changed, guid: ${curSubYDoc.guid}`);
     let ytext = curSubYDoc.getText(curSubYDoc.guid);
     const undoManager = new Y.UndoManager(ytext);
@@ -152,6 +156,12 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       state: texEditorState,
       parent: edContainer.current!,
     });
+    // 同一文档且编辑器仍有效 → 跳过重建
+    if (loadedDocGuidRef.current === guid && editorView && !BaseMethods.isNull(editorView)) {
+      console.log("skip rebuild editor view for guid: ", guid);
+      return;
+    }
+    loadedDocGuidRef.current = guid;
     if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
       activeEditorView?.destroy();
     }
