@@ -2,9 +2,11 @@ import TexHeader from "@/component/header/TexHeader";
 import { readConfig } from "@/config/app/config-reader";
 import store from "@/redux/store/store";
 import { Goods } from "rd-component";
+import { useTranslation } from "react-i18next";
 
 const Price: React.FC = () => {
-  let lang = localStorage.getItem("userLanguage");
+  const { i18n } = useTranslation();
+
   return (
     <div>
       <TexHeader></TexHeader>
@@ -12,7 +14,7 @@ const Price: React.FC = () => {
         refreshUrl={readConfig("refreshUserUrl")}
         appId={readConfig("appId")}
         store={store}
-        lang={lang || "zh-CN"}
+        lang={i18n.language}
       ></Goods>
     </div>
   );

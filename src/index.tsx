@@ -10,21 +10,30 @@ import translationEN from '@/locales/en.json';
 import translationZH from '@/locales/zh.json';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { UserService } from 'rd-component';
+import { UserService, rdComponentResources } from 'rd-component';
 
-const userLanguage = UserService.getCurrLang();
+const normalizeLang = (lang: string): string =>
+  lang.startsWith('en') ? 'en-US' : 'zh-CN';
+
+const userLanguage = normalizeLang(UserService.getCurrLang());
 
 i18n.use(initReactI18next).init({
   resources: {
-    en: {
-      translation: translationEN
+    'zh-CN': {
+      translation: {
+        ...translationZH,
+        ...rdComponentResources['zh-CN'].translation,
+      },
     },
-    zh: {
-      translation: translationZH
-    }
+    'en-US': {
+      translation: {
+        ...translationEN,
+        ...rdComponentResources['en-US'].translation,
+      },
+    },
   },
   lng: userLanguage,
-  fallbackLng: 'zh',
+  fallbackLng: 'zh-CN',
   interpolation: {
     escapeValue: false
   }
