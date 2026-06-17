@@ -44,14 +44,14 @@ const RdTeXHubReg: React.FC<IRegProp> = (props: IRegProp) => {
       !phoneInputRef.current ||
       (phoneInputRef.current as HTMLInputElement).value.length === 0
     ) {
-      toast("请输入用户名!");
+      toast(t("tips_input_username"));
       return;
     }
     if (
       !passwordInputRef.current ||
       (passwordInputRef.current as HTMLInputElement).value.length === 0
     ) {
-      toast("请输入密码!");
+      toast(t("tips_input_pwd_exclaim"));
       return;
     }
     let pwd = (passwordInputRef.current as HTMLInputElement).value;
@@ -59,19 +59,19 @@ const RdTeXHubReg: React.FC<IRegProp> = (props: IRegProp) => {
       /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[`~!@#$%^&*()-=_+;':",./<>?])(?=\S+$).{6,32}$/;
     let pass = reg.test(pwd);
     if (!pass) {
-      toast("密码必须包含字母、数字和特殊符号且长度是6-32位!");
+      toast(t("tips_pwd_rule"));
       return;
     }
     if (
       !passwordReinputRef.current ||
       (passwordReinputRef.current as HTMLInputElement).value.length === 0
     ) {
-      toast("请输入密码!");
+      toast(t("tips_input_pwd_exclaim"));
       return;
     }
     let reinputPwd = (passwordReinputRef.current as HTMLInputElement).value;
     if (pwd !== reinputPwd) {
-      toast("输入密码不一致!");
+      toast(t("tips_pwd_inconsistent_reg"));
       return;
     }
     let values = {
@@ -111,7 +111,7 @@ const RdTeXHubReg: React.FC<IRegProp> = (props: IRegProp) => {
           className={styles.loginElement}
           onSubmit={(e) => handlePhoneReg(e)}
         >
-          <h5>注册</h5>
+          <h5>{t("signup")}</h5>
           <div className={styles.userName}>
             <select id="countryCode" className={styles.countryCodeSelect}>
               <option value="+86">+86</option>
@@ -121,14 +121,14 @@ const RdTeXHubReg: React.FC<IRegProp> = (props: IRegProp) => {
               type="text"
               ref={phoneInputRef}
               id="phone"
-              placeholder="请输入手机号码"
+              placeholder={t("tips_type_phone")}
             />
           </div>
           <div className={styles.password}>
             <input
               type="password"
               ref={passwordInputRef}
-              placeholder="密码"
+              placeholder={t("tips_password")}
               name="p"
             ></input>
             <button onClick={(e) => togglePasswordVisibility(e, false)}>
@@ -139,7 +139,7 @@ const RdTeXHubReg: React.FC<IRegProp> = (props: IRegProp) => {
             <input
               type="password"
               ref={passwordReinputRef}
-              placeholder="再次输入密码"
+              placeholder={t("tips_input_repeat_new_pwd_placeholder")}
               name="p"
             ></input>
             <button onClick={(e) => togglePasswordVisibility(e, true)}>
@@ -148,9 +148,9 @@ const RdTeXHubReg: React.FC<IRegProp> = (props: IRegProp) => {
           </div>
           <div className={styles.operate}>
             <button className={styles.loginButton} type="submit">
-              注册
+              {t("signup")}
             </button>
-            <a href="/user/login">已经有账号，去登录</a>
+            <a href="/user/login">{t("tips_has_account_login")}</a>
           </div>
         </form>
       </div>

@@ -6,6 +6,7 @@ import { TexProjectFolder } from "@/model/proj/TexProjectFolder";
 import React from "react";
 import { RenameFolderReq } from "@/model/request/proj/edit/RenameFolderReq";
 import { QueryProjReq } from "@/model/request/proj/query/QueryProjReq";
+import { useTranslation } from "react-i18next";
 
 export type RenameFolderProps = {
     currFolder: TexProjectFolder | undefined;
@@ -16,6 +17,7 @@ export type RenameFolderProps = {
 const FolderRename: React.FC<RenameFolderProps> = (props: RenameFolderProps) => {
 
     const editProjCancelRef = useRef<HTMLButtonElement>(null);
+    const { t } = useTranslation();
 
     const handleFolderRename = (folderId: number, folder_name: string) => {
         let renameReq: RenameFolderReq = {
@@ -29,7 +31,7 @@ const FolderRename: React.FC<RenameFolderProps> = (props: RenameFolderProps) => 
                     editProjCancelRef.current.click();
                 }
             } else {
-                toast.error("重命名文件夹失败，{}", resp.msg);
+                toast.error(t("err_rename_folder_failed", { msg: resp.msg }));
             }
         });
     }
@@ -40,7 +42,7 @@ const FolderRename: React.FC<RenameFolderProps> = (props: RenameFolderProps) => 
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">重命名文件夹</h5>
+                            <h5 className="modal-title">{t("btn_rename_folder")}</h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
@@ -48,13 +50,13 @@ const FolderRename: React.FC<RenameFolderProps> = (props: RenameFolderProps) => 
                                 onChange={props.handleFolderNameChange}
                                 className="form-control"
                                 value={props.currFolder?.folder_name.toString() || ""}
-                                placeholder="文件夹名称"></input>
+                                placeholder={t("tips_folder_name")}></input>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" ref={editProjCancelRef} className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                            <button type="button" ref={editProjCancelRef} className="btn btn-secondary" data-bs-dismiss="modal">{t("btn_cancel")}</button>
                             <button type="button" 
                             className="btn btn-primary" 
-                            onClick={() => { handleFolderRename(props.currFolder?.id!, props.currFolder?.folder_name!) }}>确定</button>
+                            onClick={() => { handleFolderRename(props.currFolder?.id!, props.currFolder?.folder_name!) }}>{t("btn_confirm")}</button>
                         </div>
                     </div>
                 </div>

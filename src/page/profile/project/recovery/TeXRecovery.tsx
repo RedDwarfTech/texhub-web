@@ -26,7 +26,7 @@ const TeXRecovery: React.FC<RecoveryProps> = (props: RecoveryProps) => {
 
   const handleProjTrash = () => {
     if (!currProject || !currProject.project_id) {
-      toast.info("请选择编辑项目");
+      toast.info(t("tips_choose_edit_proj"));
       return;
     }
     let proj: TrashProjReq = {
@@ -40,14 +40,14 @@ const TeXRecovery: React.FC<RecoveryProps> = (props: RecoveryProps) => {
           recoveryProjCancelRef.current.click();
         }
       } else {
-        toast.error("项目移动到回收站失败，{}", resp.msg);
+        toast.error(t("err_trash_proj_failed", { msg: resp.msg }));
       }
     });
   };
 
   const handleProjArchive = () => {
     if (!currProject || !currProject.project_id) {
-      toast.info("请选择编辑项目");
+      toast.info(t("tips_choose_edit_proj"));
       return;
     }
     let proj: ArchiveProjReq = {
@@ -61,7 +61,7 @@ const TeXRecovery: React.FC<RecoveryProps> = (props: RecoveryProps) => {
           recoveryProjCancelRef.current.click();
         }
       } else {
-        toast.error("项目移动到回收站失败，{}", resp.msg);
+        toast.error(t("err_trash_proj_failed", { msg: resp.msg }));
       }
     });
   };

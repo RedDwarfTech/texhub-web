@@ -68,7 +68,7 @@ const HistoryItem: React.FC<HistoryItemProps> = (props: HistoryItemProps) => {
     try {
       diffArr = JSON.parse(diffStr);
     } catch (e) {
-      return <div>diff 解析失败</div>;
+      return <div>{t("err_diff_parse_failed")}</div>;
     }
     return (
       <div className={styles.diffblock}>
@@ -104,7 +104,7 @@ const HistoryItem: React.FC<HistoryItemProps> = (props: HistoryItemProps) => {
                 <span
                   key={idx + "-nl-" + offset}
                   style={{ ...style, color: "#aaa", fontWeight: "bold" }}
-                  title="换行"
+                  title={t("title_line_wrap")}
                 >
                   ⏎
                 </span>

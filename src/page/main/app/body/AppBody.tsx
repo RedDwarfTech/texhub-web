@@ -7,6 +7,7 @@ import { getProjectInfo } from "@/service/project/ProjectService";
 import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import Split from "@uiw/react-split";
+import { useTranslation } from "react-i18next";
 const CollarCodeEditor = React.lazy(
   () => import("@/component/common/editor/main/CollarCodeEditor")
 );
@@ -18,6 +19,7 @@ export type AppBodyProps = {
 const AppBody: React.FC<AppBodyProps> = (props: AppBodyProps) => {
   let pid = props.projectId;
   const projTreeRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     if (pid) {
@@ -32,7 +34,7 @@ const AppBody: React.FC<AppBodyProps> = (props: AppBodyProps) => {
   const fallbackRender = (props: FallbackProps) => {
     return (
       <div role="alert">
-        <p>Something went wrong:</p>
+        <p>{t("err_something_wrong")}</p>
         <div style={{ color: "red" }}>
           {props.error instanceof Error ? props.error.message : String(props.error)}
         </div>
@@ -52,12 +54,12 @@ const AppBody: React.FC<AppBodyProps> = (props: AppBodyProps) => {
               treeDivRef={projTreeRef}
             ></ProjectTree>
           ) : (
-            <div>Loading...</div>
+            <div>{t("tips_loading")}</div>
           )}
         </div>
         <div style={{ width: "60%", minWidth: 100 }}>
           <div id="editor" className={styles.editor}>
-            <React.Suspense fallback={<div>Loading...</div>}>
+            <React.Suspense fallback={<div>{t("tips_loading")}</div>}>
               <ErrorBoundary fallbackRender={fallbackRender}>
                 <CollarCodeEditor projectId={pid.toString()}></CollarCodeEditor>
               </ErrorBoundary>
@@ -71,7 +73,7 @@ const AppBody: React.FC<AppBodyProps> = (props: AppBodyProps) => {
               viewModel={"default"}
             ></Previewer>
           ) : (
-            <div>Loading...</div>
+            <div>{t("tips_loading")}</div>
           )}
         </div>
       </Split>

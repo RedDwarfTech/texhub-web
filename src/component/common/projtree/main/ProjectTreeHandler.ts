@@ -2,6 +2,7 @@ import { TexFileModel } from "@/model/file/TexFileModel";
 import { addFile, chooseFile, switchFile } from "@/service/file/FileService";
 import { ProjectTreeFolder } from "./ProjectTreeFolder";
 import { toast } from "react-toastify";
+import i18n from "i18next";
 import { TeXFileType } from "@/model/enum/TeXFileType";
 import { BaseMethods } from "rdjs-wheel";
 import * as bootstrap from "bootstrap";
@@ -122,7 +123,7 @@ export function handleFileCreateConfirm(
   pid: string
 ) {
   if (!selectedFile) {
-    toast.warning("请指定文件创建的位置");
+    toast.warning(i18n.t("tips_specify_file_create_location"));
     return;
   }
   let parentId =

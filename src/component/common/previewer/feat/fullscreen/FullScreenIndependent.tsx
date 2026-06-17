@@ -5,6 +5,7 @@ import "react-pdf/dist/Page/TextLayer.css";
 import { useResizeObserver } from "@wojtekmaj/react-hooks";
 import { DocumentCallback } from "react-pdf/dist/shared/types.js";
 import "./FullScreenIndependent.module.css";
+import { useTranslation } from "react-i18next";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
 const FullScreenIndependent: React.FC = () => {
   const [numPages, setNumPages] = useState<number>();
@@ -15,6 +16,7 @@ const FullScreenIndependent: React.FC = () => {
   const curPage = params.get("curPage");
   const pdfUrl = params.get("pdfUrl");
   const maxWidth = 800;
+  const { t } = useTranslation();
   const resizeObserverOptions = {};
 
   React.useEffect(() => {
@@ -32,7 +34,7 @@ const FullScreenIndependent: React.FC = () => {
   useResizeObserver(containerRef, resizeObserverOptions, onResize);
 
   if (!projId) {
-    return <div>Loading...</div>;
+    return <div>{t("tips_loading")}</div>;
   }
 
   const options = {

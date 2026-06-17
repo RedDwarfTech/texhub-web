@@ -37,15 +37,15 @@ const TreeUpload: React.FC<TreeUploadProps> = (props: TreeUploadProps) => {
     ) {
       const uploadFile = fileInput.current?.files[0];
       if (!selectedFile || selectedFile.file_id === undefined) {
-        toast.warn("请选择文件上传位置");
+        toast.warn(t("tips_choose_upload_location"));
         return;
       }
       if (!uploadFile) {
-        toast.warn("请选择文件上传文件");
+        toast.warn(t("tips_choose_upload_file"));
         return;
       }
       if (uploadFile.size > 1024*1024) {
-        toast.warn("超出文件大小限制");
+        toast.warn(t("tips_file_size_exceed"));
         return;
       }
       if (uploadFile.size) {
@@ -76,7 +76,7 @@ const TreeUpload: React.FC<TreeUploadProps> = (props: TreeUploadProps) => {
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title" id="uploadModalLabel">
-              上传文件
+              {t("title_upload_file")}
             </h5>
             <button
               type="button"

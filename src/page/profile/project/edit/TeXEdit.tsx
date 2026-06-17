@@ -6,6 +6,7 @@ import { ChangeEvent, useRef } from "react";
 import { toast } from 'react-toastify';
 import { TexProjectModel } from "@/model/proj/TexProjectModel";
 import { TexProjectFolder } from "@/model/proj/TexProjectFolder";
+import { useTranslation } from "react-i18next";
 
 export type EditProps = {
     projectId: string;
@@ -21,18 +22,19 @@ const TeXEdit: React.FC<EditProps> = (props: EditProps) => {
 
     const editProjCancelRef = useRef<HTMLButtonElement>(null);
     const currProject = props.currProject;
+    const { t } = useTranslation();
 
     const handleProjEdit = () => {
         if (!currProject || !currProject.project_id) {
-            toast.info("请选择编辑项目");
+            toast.info(t("tips_choose_edit_proj"));
             return;
         }
         if (props.projName == null || props.projName.length == 0) {
-            toast.warning("请填写新项目名称");
+            toast.warning(t("tips_fill_new_proj_name"));
             return;
         }
         if (props.projName.length > 256) {
-            toast.warning("超过项目名称长度限制");
+            toast.warning(t("tips_proj_name_length_exceed"));
             return;
         }
         let proj: EditProjReq = {
@@ -50,7 +52,7 @@ const TeXEdit: React.FC<EditProps> = (props: EditProps) => {
                     editProjCancelRef.current.click();
                 }
             } else {
-                toast.error("重命名项目失败，{}", resp.msg);
+                toast.error(t("err_rename_proj_failed", { msg: resp.msg }));
             }
         });
     }
@@ -61,7 +63,7 @@ const TeXEdit: React.FC<EditProps> = (props: EditProps) => {
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">编辑项目</h5>
+                            <h5 className="modal-title">{t("title_edit_proj")}</h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
@@ -69,11 +71,11 @@ const TeXEdit: React.FC<EditProps> = (props: EditProps) => {
                                 onChange={props.handleEditInputChange}
                                 className="form-control"
                                 value={currProject?.proj_name.toString() || ""}
-                                placeholder="项目名称"></input>
+                                placeholder={t("tips_proj_name")}></input>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" ref={editProjCancelRef} className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                            <button type="button" className="btn btn-primary" onClick={() => { handleProjEdit() }}>确定</button>
+                            <button type="button" ref={editProjCancelRef} className="btn btn-secondary" data-bs-dismiss="modal">{t("btn_cancel")}</button>
+                            <button type="button" className="btn btn-primary" onClick={() => { handleProjEdit() }}>{t("btn_confirm")}</button>
                         </div>
                     </div>
                 </div>

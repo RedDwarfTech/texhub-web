@@ -4,12 +4,14 @@ import { UserService } from "rd-component";
 import { ResponseHandler } from "rdjs-wheel";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const PwdReset: React.FC = () => {
 
     const [oldPwd, setOldPwd] = useState<string>();
     const [newPwd, setNewPwd] = useState<string>();
     const [repeatNewPwd, setRepeatNewPwd] = useState<string>();
+    const { t } = useTranslation();
 
     const handleOldPwdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let inputValue = e.target.value;
@@ -28,23 +30,23 @@ const PwdReset: React.FC = () => {
 
     const handlePwdReset = () => {
         if (!oldPwd) {
-            toast.warn("请输入旧密码");
+            toast.warn(t("tips_input_old_pwd"));
             return;
         }
         if (!newPwd) {
-            toast.warn("请输入新密码");
+            toast.warn(t("tips_input_new_pwd"));
             return;
         }
         if (!repeatNewPwd) {
-            toast.warn("请输入重复的新密码");
+            toast.warn(t("tips_input_repeat_new_pwd"));
             return;
         }
         if(repeatNewPwd !== newPwd) {
-            toast.warn("新密码不匹配");
+            toast.warn(t("tips_pwd_not_match"));
             return;
         }
         if(oldPwd === newPwd){
-            toast.warn("新旧密码不能相同");
+            toast.warn(t("tips_old_new_pwd_same"));
             return;
         }
         let params = {
@@ -53,7 +55,7 @@ const PwdReset: React.FC = () => {
         };
         UserService.doResetPwd(params, "/infra/user/change/pwd", store).then((resp)=>{
             if(ResponseHandler.responseSuccess(resp)) {
-                toast.success("密码修改成功");
+                toast.success(t("tips_pwd_change_success"));
                 UserService.doLoginOut(readConfig("logoutUrl"));
             }else{
                 toast.warn(resp.msg);
@@ -65,38 +67,38 @@ const PwdReset: React.FC = () => {
         <div>
             <div className="card" style={{ marginBottom: '20px' }}>
                 <div className="card-header">
-                    <h6 className="card-title">重置密码</h6>
+                    <h6 className="card-title">{t("resetPwd")}</h6>
                 </div>
                 <div className="card-body col">
                     <div className="col mb-3">
-                        <div className="mb-1"><span className="user-info">旧密码:</span></div>
+                        <div className="mb-1"><span className="user-info">{t("label_old_pwd")}</span></div>
                         <div>
                             <input className="form-control"
                                 onChange={handleOldPwdChange}
                                 type="password"
-                                placeholder="输入旧密码"></input>
+                                placeholder={t("tips_input_old_pwd_placeholder")}></input>
                         </div>
                     </div>
                     <div className="col mb-3">
-                        <div className="mb-1"><span className="user-info">新密码:</span></div>
+                        <div className="mb-1"><span className="user-info">{t("label_new_pwd_colon")}</span></div>
                         <div >
                             <input className="form-control"
                                 onChange={handleNewPwdChange}
                                 type="password"
-                                placeholder="输入新密码"></input>
+                                placeholder={t("tips_input_new_pwd_placeholder")}></input>
                         </div>
                     </div>
                     <div className="col mb-4">
-                        <div className="mb-1"><span className="user-info">重复新密码:</span></div>
+                        <div className="mb-1"><span className="user-info">{t("label_repeat_new_pwd")}</span></div>
                         <div >
                             <input className="form-control"
                                 onChange={handleRepeatNewPwdChange}
                                 type="password"
-                                placeholder="再次输入新密码"></input>
+                                placeholder={t("tips_input_repeat_new_pwd_placeholder")}></input>
                         </div>
                     </div>
                     <div>
-                        <button className="btn btn-primary" onClick={handlePwdReset}>重置密码</button>
+                        <button className="btn btn-primary" onClick={handlePwdReset}>{t("resetPwd")}</button>
                     </div>
                 </div>
             </div>

@@ -10,28 +10,29 @@ import CountdownTimer from "./CountdownTimer";
 import { readConfig } from "@/config/app/config-reader";
 import { SmsRemainInfo } from "@/model/user/SmsRemainInfo";
 import TeXHubLogo from "@/assets/icon/texhub-logo.png";
+import { useTranslation } from "react-i18next";
 
 const VerifyPwd: React.FC = () => {
   const phoneInputRef = useRef(null);
   const codeInputRef = useRef(null);
   const navigate = useNavigate();
   const [showCountDown, setShowCountDown] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   const handleNextStep = (e: React.FormEvent<HTMLFormElement>) => {
-    // https://stackoverflow.com/questions/78001281/why-the-react-cllient-axios-send-http-with-an-extended-local-url
     e.preventDefault();
     if (
       !codeInputRef.current ||
       (codeInputRef.current as HTMLInputElement).value.length === 0
     ) {
-      toast("请输入验证码");
+      toast(t("tips_input_verify_code"));
       return;
     }
     if (
       !phoneInputRef.current ||
       (phoneInputRef.current as HTMLInputElement).value.length === 0
     ) {
-      toast("请输入手机号码");
+      toast(t("tips_type_phone"));
       return;
     }
     let codeValue = (codeInputRef.current as HTMLInputElement).value;
@@ -42,7 +43,6 @@ const VerifyPwd: React.FC = () => {
     };
     verifySmsCode(req).then((resp) => {
       if (ResponseHandler.responseSuccess(resp)) {
-        // https://reactrouter.com/en/main/hooks/use-navigate
         navigate("/userpage/pwd/reset", {
           state: {
             phone: phoneValue,
@@ -64,7 +64,7 @@ const VerifyPwd: React.FC = () => {
       !phoneInputRef.current ||
       (phoneInputRef.current as HTMLInputElement).value.length === 0
     ) {
-      toast("请输入手机号码!");
+      toast(t("tips_input_phone_exclaim"));
       return;
     }
     let phoneValue = (phoneInputRef.current as HTMLInputElement).value;
@@ -96,7 +96,7 @@ const VerifyPwd: React.FC = () => {
                 sendverifyCode();
               }}
             >
-              获取验证码
+              {t("btn_get_verify_code")}
             </button>
           );
         } else {
@@ -121,7 +121,7 @@ const VerifyPwd: React.FC = () => {
             sendverifyCode();
           }}
         >
-          获取验证码
+          {t("btn_get_verify_code")}
         </button>
       );
     }
@@ -138,7 +138,7 @@ const VerifyPwd: React.FC = () => {
       </div>
       <div className={styles.verifyCodeContainer}>
         <div id="phone" className={styles.tabcontent}>
-          <h5>找回密码</h5>
+          <h5>{t("title_retrieve_pwd")}</h5>
           <form
             method="post"
             className={styles.loginElement}
@@ -153,7 +153,7 @@ const VerifyPwd: React.FC = () => {
                 type="text"
                 ref={phoneInputRef}
                 id="phone"
-                placeholder="请输入手机号码"
+                placeholder={t("tips_type_phone")}
               />
             </div>
             {renderVerifyCodeAction()}
@@ -161,13 +161,13 @@ const VerifyPwd: React.FC = () => {
               <input
                 type="text"
                 ref={codeInputRef}
-                placeholder="验证码"
+                placeholder={t("label_verify_code")}
                 name=""
               ></input>
             </div>
             <div className={styles.operate}>
               <button className={styles.loginButton} type="submit">
-                下一步
+                {t("btn_next_step")}
               </button>
             </div>
           </form>

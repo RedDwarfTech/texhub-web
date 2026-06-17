@@ -44,7 +44,7 @@ const TeXTrash: React.FC<TrashProps> = (props: TrashProps) => {
           trashProjCancelRef.current.click();
         }
       } else {
-        toast.error("项目移动到回收站失败，{}", resp.msg);
+        toast.error(t("err_trash_proj_failed", { msg: resp.msg }));
       }
     });
   };

@@ -58,7 +58,7 @@ const Settings: React.FC = () => {
 
   const handleNicknameConfirm = () => {
     if (!curNickname || curNickname.length === 0) {
-      toast.warn("请输入文件夹名称");
+      toast.warn(t("tips_input_nickname"));
       return;
     }
     let newNick = {
@@ -173,7 +173,7 @@ const Settings: React.FC = () => {
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title" id="renameModalLabel">
-                    重命名
+                    {t("title_rename")}
                   </h5>
                   <button
                     type="button"
@@ -189,7 +189,7 @@ const Settings: React.FC = () => {
                       type="text"
                       onChange={handleInputChange}
                       className="form-control"
-                      placeholder="新名称"
+                      placeholder={t("tips_new_name")}
                       aria-label="Username"
                       aria-describedby="addon-wrapping"
                     />
@@ -201,7 +201,7 @@ const Settings: React.FC = () => {
                     className="btn btn-secondary"
                     data-bs-dismiss="modal"
                   >
-                    取消
+                    {t("btn_cancel")}
                   </button>
                   <button
                     type="button"
@@ -211,7 +211,7 @@ const Settings: React.FC = () => {
                       handleNicknameConfirm();
                     }}
                   >
-                    确定
+                    {t("btn_confirm")}
                   </button>
                 </div>
               </div>

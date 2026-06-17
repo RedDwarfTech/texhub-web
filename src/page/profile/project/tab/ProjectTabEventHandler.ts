@@ -7,13 +7,14 @@ import {
 } from "@/service/project/ProjectService";
 import { ResponseHandler } from "rdjs-wheel";
 import { toast } from "react-toastify";
+import i18n from "i18next";
 
 export function handleProjDel(
   delProjCancelRef: any,
   currProject: TexProjectModel
 ) {
   if (!currProject) {
-    toast.info("请选择删除项目");
+    toast.info(i18n.t("tips_choose_proj"));
   }
   let proj = {
     project_id: currProject?.project_id,
@@ -27,7 +28,7 @@ export function handleProjDel(
         delProjCancelRef.current.click();
       }
     } else {
-      toast.error("删除项目失败，{}", resp.msg);
+      toast.error(i18n.t("err_del_proj_failed", { msg: resp.msg }));
     }
   });
 }

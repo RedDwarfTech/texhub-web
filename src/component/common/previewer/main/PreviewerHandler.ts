@@ -7,6 +7,7 @@ import {
   sendQueueCompileRequest,
 } from "@/service/project/ProjectService";
 import { toast } from "react-toastify";
+import i18n from "i18next";
 import { getAccessToken } from "../../cache/Cache";
 import { getPreviewUrl } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
@@ -91,7 +92,7 @@ export const handleOpenInBrowser = (projectId: string) => {
 
 export const handleDownloadPdf = async (pdfUrl: string) => {
   if (!pdfUrl) {
-    toast.error("PDF文件Url为空");
+    toast.error(i18n.t("err_pdf_url_empty"));
     return;
   }
   try {

@@ -7,6 +7,7 @@ import { useState } from "react";
 import "antd/lib/tree/style";
 import React from "react";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 import { RenameFile } from "@/model/request/file/edit/RenameFile";
 import { ResponseHandler } from "rdjs-wheel";
 
@@ -19,6 +20,7 @@ const TreeFileRename: React.FC<TreeFileRenameProps> = (
   props: TreeFileRenameProps
 ) => {
   const [renameFile, setRenameFile] = useState<TexFileModel>(props.operFile);
+  const { t } = useTranslation();
 
   React.useEffect(() =>{
     if(props.operFile){
@@ -28,7 +30,7 @@ const TreeFileRename: React.FC<TreeFileRenameProps> = (
 
   const handleRenameFile = () => {
     if (!renameFile || renameFile.name.length === 0 || !props.operFile) {
-      toast.warn("请输入文件新名称");
+      toast.warn(t("tips_input_file_new_name"));
       return;
     }
     let req: RenameFile = {
@@ -67,7 +69,7 @@ const TreeFileRename: React.FC<TreeFileRenameProps> = (
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title" id="renameModalLabel">
-              重命名
+              {t("title_rename")}
             </h5>
             <button
               type="button"
@@ -83,7 +85,7 @@ const TreeFileRename: React.FC<TreeFileRenameProps> = (
                 type="text"
                 onChange={handleRenameFileChange}
                 className="form-control"
-                placeholder="新名称"
+                placeholder={t("tips_new_name")}
                 aria-label="Username"
                 value={renameFile ? renameFile.name : ""}
                 aria-describedby="addon-wrapping"
@@ -96,7 +98,7 @@ const TreeFileRename: React.FC<TreeFileRenameProps> = (
               className="btn btn-secondary"
               data-bs-dismiss="modal"
             >
-              取消
+              {t("btn_cancel")}
             </button>
             <button
               type="button"
@@ -106,7 +108,7 @@ const TreeFileRename: React.FC<TreeFileRenameProps> = (
                 handleRenameFile();
               }}
             >
-              确定
+              {t("btn_confirm")}
             </button>
           </div>
         </div>

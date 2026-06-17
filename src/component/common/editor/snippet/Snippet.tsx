@@ -41,12 +41,12 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
 
   const columns = [
     {
-      title: "名称",
+      title: t("label_name"),
       dataIndex: "title",
       key: "title",
     },
     {
-      title: "创建时间",
+      title: t("label_create_time"),
       dataIndex: "created_time",
       key: "created_time",
       render: (value: number) => {
@@ -57,7 +57,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
       },
     },
     {
-      title: "操作",
+      title: t("btn_action"),
       dataIndex: "",
       key: "operations",
       render: (record: TexSnippetModel) => {
@@ -96,7 +96,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
 
   const handleSnippetSearch = () => {
     if (!searchWord || searchWord.length === 0) {
-      toast.warn("请输入搜索关键字");
+      toast.warn(t("tips_enter_search_keyword"));
       return;
     }
     let query: QuerySnippetReq = {
@@ -113,13 +113,13 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
               setTitle(e.target.value);
             }}
-            placeholder="输入标题"
+            placeholder={t("tips_input_snippet_title")}
           ></input>
           <textarea
             onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
               setSnippet(e.target.value);
             }}
-            placeholder="输入代码片段"
+            placeholder={t("tips_input_snippet")}
             rows={5}
           ></textarea>
           <div className={styles.snipAddOper}>
@@ -166,11 +166,11 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
             {previewSnippet}
           </SyntaxHighlighter>
           <button className="btn btn-primary">
-            <span className="m-1 pb-1 basis-3/4 text-xs">{"复制"}</span>
+            <span className="m-1 pb-1 basis-3/4 text-xs">{t("btn_copy")}</span>
             <CopyToClipboard
               text={previewSnippet}
               onCopy={() => {
-                toast.info("代码已复制");
+                toast.info(t("tips_code_copied"));
               }}
             >
               <i className="fa fa-copy"></i>
@@ -192,7 +192,7 @@ const Snippet: React.FC<SnippetProps> = (props: SnippetProps) => {
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title" id="tableDesignerLabel">
-              LaTeX代码片段
+              {t("title_latex_snippet")}
             </h5>
             <button
               type="button"

@@ -163,7 +163,7 @@ const TexHeader: React.FC = () => {
                     </button>
                     <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                         <li onClick={() => langChoose("zh-CN")}>
-                            <a className="dropdown-item" href="#/">简体中文</a>
+                            <a className="dropdown-item" href="#/">{t("btn_zh_cn")}</a>
                         </li>
                         <li onClick={() => langChoose("en-US")}>
                             <a className="dropdown-item" href="#/">English</a>

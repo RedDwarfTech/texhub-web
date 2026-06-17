@@ -32,7 +32,7 @@ const TeXMoveToFolder: React.FC<MoveProps> = (props: MoveProps) => {
 
     const handleProjMove = () => {
         if (!currProject || !currProject.project_id) {
-            toast.info("请选择项目");
+            toast.info(t("tips_choose_proj_move"));
             return;
         }
         let proj: MoveProjReq = {
@@ -48,7 +48,7 @@ const TeXMoveToFolder: React.FC<MoveProps> = (props: MoveProps) => {
                     editProjCancelRef.current.click();
                 }
             } else {
-                toast.error("移动项目失败，{}", resp.msg);
+                toast.error(t("err_move_proj_failed", { msg: resp.msg }));
             }
         });
     }
@@ -92,8 +92,8 @@ const TeXMoveToFolder: React.FC<MoveProps> = (props: MoveProps) => {
                             </select>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" ref={editProjCancelRef} className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                            <button type="button" className="btn btn-primary" onClick={() => { handleProjMove() }}>确定</button>
+                            <button type="button" ref={editProjCancelRef} className="btn btn-secondary" data-bs-dismiss="modal">{t("btn_cancel")}</button>
+                            <button type="button" className="btn btn-primary" onClick={() => { handleProjMove() }}>{t("btn_confirm")}</button>
                         </div>
                     </div>
                 </div>

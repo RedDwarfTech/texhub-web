@@ -81,6 +81,7 @@ const getNewLogText = (
  * re-render the PDF tab, header, or page navigation.
  */
 const PreviewerLogPanel: React.FC = () => {
+  const { t } = useTranslation();
   const streamLogText = useSelector(
     (state: AppState) => state.proj.streamLogText,
   );
@@ -135,7 +136,7 @@ const PreviewerLogPanel: React.FC = () => {
       <div className={styles.logLoadingContainer}>
         <div className="d-flex justify-content-center">
           <div className="spinner-border" role="status">
-            <span className="visually-hidden">Loading...</span>
+            <span className="visually-hidden">{t("tips_loading")}</span>
           </div>
         </div>
       </div>
@@ -361,7 +362,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
 
   const renderPdfView = () => {
     if (!curPdfUrl || !props.projectId) {
-      return <div>Loading...</div>;
+      return <div>{t("tips_loading")}</div>;
     }
     if (props.viewModel === "fullscreen") {
       return (

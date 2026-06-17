@@ -4,6 +4,7 @@ import { archiveProj, getProjectList } from "@/service/project/ProjectService";
 import { ResponseHandler } from "rdjs-wheel";
 import { useRef } from "react";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export type ArchiveProps = {
     projectId: string;
@@ -15,10 +16,11 @@ const TeXArchive: React.FC<ArchiveProps> = (props: ArchiveProps) => {
 
     const archiveProjCancelRef = useRef<HTMLButtonElement>(null);
     const currProject = props.currProject;
+    const { t } = useTranslation();
 
     const handleProjArchive = () => {
         if (!currProject || !currProject.project_id) {
-            toast.info("请选择编辑项目");
+            toast.info(t("tips_choose_edit_proj"));
             return;
         }
         let proj: ArchiveProjReq = {
@@ -32,7 +34,7 @@ const TeXArchive: React.FC<ArchiveProps> = (props: ArchiveProps) => {
                     archiveProjCancelRef.current.click();
                 }
             } else {
-                toast.error("归档项目失败，{}", resp.msg);
+                toast.error(t("err_archive_proj_failed", { msg: resp.msg }));
             }
         });
     }
@@ -43,15 +45,15 @@ const TeXArchive: React.FC<ArchiveProps> = (props: ArchiveProps) => {
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">归档项目</h5>
+                            <h5 className="modal-title">{t("title_archive_proj")}</h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            <div>确定归档项目？</div>
+                            <div>{t("tips_archive_proj_confirm")}</div>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" ref={archiveProjCancelRef} className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                            <button type="button" className="btn btn-primary" onClick={() => { handleProjArchive() }}>确定</button>
+                            <button type="button" ref={archiveProjCancelRef} className="btn btn-secondary" data-bs-dismiss="modal">{t("btn_cancel")}</button>
+                            <button type="button" className="btn btn-primary" onClick={() => { handleProjArchive() }}>{t("btn_confirm")}</button>
                         </div>
                     </div>
                 </div>

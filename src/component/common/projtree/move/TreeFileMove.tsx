@@ -68,7 +68,7 @@ const TreeFileMove: React.FC<TreeFileEditProps> = (props: TreeFileEditProps) => 
 
     const handleOk = () => {
         if (!distFileId) {
-            toast.warn("请选择目标文件夹");
+            toast.warn(t("tips_choose_target_folder"));
             return;
         }
         let req: MoveFileReq = {
@@ -113,8 +113,8 @@ const TreeFileMove: React.FC<TreeFileEditProps> = (props: TreeFileEditProps) => 
                         />
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                        <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={() => { handleOk() }}>确定</button>
+                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">{t("btn_cancel")}</button>
+                        <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={() => { handleOk() }}>{t("btn_confirm")}</button>
                     </div>
                 </div>
             </div>

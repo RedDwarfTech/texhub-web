@@ -70,18 +70,18 @@ const ProjHistoryDetail: React.FC<HistoryProps> = (props: HistoryProps) => {
                 onClick={() => {
                   if (currentHistory?.content) {
                     copyToClipboard(currentHistory.content);
-                    setCopyTip(t("tips_success") || "已复制");
+                    setCopyTip(t("tips_copied"));
                   }
                 }}
-                title={t("btn_copy") || "Copy"}
+                title={t("btn_copy")}
               >
-                {t("btn_copy") || "Copy"}
+                {t("btn_copy")}
               </button>
               {copyTip && (
                 <span style={{ color: "#28a745", fontSize: "0.95em" }}>{copyTip}</span>
               )}
             </div>
-            <React.Suspense fallback={<div>Loading...</div>}>
+            <React.Suspense fallback={<div>{t("tips_loading")}</div>}>
               <OmsSyntaxHighlight
                 textContent={currentHistory?.content!}
                 language={"tex"}
@@ -95,7 +95,7 @@ const ProjHistoryDetail: React.FC<HistoryProps> = (props: HistoryProps) => {
               className="btn btn-secondary"
               data-bs-dismiss="modal"
             >
-              取消
+              {t("btn_cancel")}
             </button>
           </div>
         </div>

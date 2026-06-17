@@ -18,7 +18,7 @@ const TreeFileDel: React.FC<TreeFileRenameProps> = (
 
   const handleFileDelete = () => {
     if (!props.operFile) {
-      toast.error("请先选择要删除的文件");
+      toast.error(t("tips_choose_file_to_del"));
       return;
     }
     let params = {

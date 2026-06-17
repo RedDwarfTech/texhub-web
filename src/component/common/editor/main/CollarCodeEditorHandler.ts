@@ -4,6 +4,7 @@ import { EditorView } from "codemirror";
 import { BaseMethods } from "rdjs-wheel";
 import { EditorProps } from "./CollarCodeEditor";
 import { toast } from "react-toastify";
+import i18n from "i18next";
 import { getPdfPosition, projHasFile } from "@/service/project/ProjectService";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { ProjectTreeFolder } from "../../projtree/main/ProjectTreeFolder";
@@ -69,7 +70,7 @@ export const handlePdfLocate = (
       "proj-select-file:" + props.projectId
     );
     if (!selected) {
-      toast.info("请选择文件");
+      toast.info(i18n.t("tips_choose_file"));
       return;
     }
     let selectFile: TexFileModel = JSON.parse(selected);
@@ -77,7 +78,7 @@ export const handlePdfLocate = (
       // if the select file is null, then try to use the current active file
       let activeFile = localStorage.getItem(activeKey);
       if (!activeFile || BaseMethods.isNull(activeFile)) {
-        toast.info("请选择文件");
+        toast.info(i18n.t("tips_choose_file"));
         return;
       }
       selectFile = JSON.parse(activeFile);

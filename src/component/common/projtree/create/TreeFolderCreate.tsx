@@ -19,7 +19,7 @@ const TreeFolderCreate: React.FC<TreeFolderCreateProps> = (
 
   const getParentId = (): string => {
     if (!props.selectedFile) {
-      toast.warn("请选择目录位置");
+      toast.warn(t("tips_choose_dir_location"));
       return "";
     }
     if (props.selectedFile.file_type === 0) {
@@ -31,7 +31,7 @@ const TreeFolderCreate: React.FC<TreeFolderCreateProps> = (
 
   const handleFolderAddConfirm = () => {
     if (!folderName || folderName.length === 0) {
-      toast.warn("请输入文件夹名称");
+      toast.warn(t("tips_input_folder_name"));
       return;
     }
     let parentId = getParentId();

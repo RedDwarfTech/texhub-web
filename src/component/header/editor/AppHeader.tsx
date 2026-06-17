@@ -106,7 +106,7 @@ const EHeader: React.FC = () => {
 
   const handleQueueCompile = (mainFile: TexFileModel) => {
     if (!mainFile) {
-      toast.error("file is null");
+      toast.error(t("err_file_null"));
       return;
     }
     let req: CompileQueueReq = {
@@ -136,7 +136,7 @@ const EHeader: React.FC = () => {
   };
 
   if (!mainFile) {
-    return <div>Loading...</div>;
+    return <div>{t("tips_loading")}</div>;
   }
 
   const handleNavProfile = () => {

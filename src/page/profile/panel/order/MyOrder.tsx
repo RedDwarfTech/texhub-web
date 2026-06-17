@@ -4,12 +4,14 @@ import { TimeUtils, Pagination } from "rdjs-wheel";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import styles from "./MyOrder.module.css";
+import { useTranslation } from "react-i18next";
 
 const MyOrder: React.FC = () => {
     const { orderPage } = useSelector((state: any) => state.rdRootReducer.order);
     const [curOrders, setCurOrders] = useState<Order[]>();
     const [curPagination, setCurPagination] = useState<Pagination>();
     const [currentPage, setCurrentPage] = useState<number>(1);
+    const { t } = useTranslation();
 
     React.useEffect(() => {
         let params = {
@@ -31,7 +33,7 @@ const MyOrder: React.FC = () => {
         if (!curOrders || curOrders.length === 0) {
             return (
                 <tr>
-                    <td colSpan={5} className={styles.noData}>暂无订单数据</td>
+                    <td colSpan={5} className={styles.noData}>{t("tips_no_order_data")}</td>
                 </tr>
             );
         }
@@ -144,16 +146,16 @@ const MyOrder: React.FC = () => {
 
     return (
         <div className={styles.orderContainer}>
-            <h2 className={styles.orderTitle}>我的订单</h2>
+            <h2 className={styles.orderTitle}>{t("title_my_order")}</h2>
             <div className={styles.tableWrapper}>
                 <table className={`table ${styles.orderTable}`}>
                     <thead className={styles.tableHeader}>
                         <tr>
-                            <th scope="col">订单编号</th>
-                            <th scope="col">支付项目</th>
-                            <th scope="col">金额</th>
-                            <th scope="col">支付时间</th>
-                            <th scope="col">订单状态</th>
+                            <th scope="col">{t("label_order_no")}</th>
+                            <th scope="col">{t("label_pay_item")}</th>
+                            <th scope="col">{t("label_amount")}</th>
+                            <th scope="col">{t("label_pay_time")}</th>
+                            <th scope="col">{t("label_order_status")}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -163,13 +165,13 @@ const MyOrder: React.FC = () => {
             </div>
             
             {curPagination && curPagination.total > 0 && (
-                <nav aria-label="订单分页" className={styles.pagination}>
+                <nav aria-label={t("aria_order_pagination")} className={styles.pagination}>
                     <ul className={`pagination ${styles.paginationList}`}>
                         <li className={`page-item ${styles.pageItem} ${currentPage === 1 ? styles.disabled : ''}`}>
                             <a 
                                 className={`page-link ${styles.pageLink}`} 
                                 href="#" 
-                                aria-label="上一页"
+                                aria-label={t("btn_prev_page")}
                                 onClick={(e) => {e.preventDefault(); handlePrevPage();}}
                             >
                                 <span aria-hidden="true">&laquo;</span>
@@ -180,7 +182,7 @@ const MyOrder: React.FC = () => {
                             <a 
                                 className={`page-link ${styles.pageLink}`} 
                                 href="#" 
-                                aria-label="下一页"
+                                aria-label={t("btn_next_page")}
                                 onClick={(e) => {e.preventDefault(); handleNextPage();}}
                             >
                                 <span aria-hidden="true">&raquo;</span>

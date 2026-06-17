@@ -1,9 +1,11 @@
 import { OmsProps } from '@/model/props/component/OmsProps.js';
 import { useState } from 'react';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const OmsSyntaxHighlight: React.FC<OmsProps> = (props: OmsProps) => {
   const { textContent, darkMode, language = 'txt' } = props;
+  const { t } = useTranslation();
 
   const [SyntaxHighlighter, setSyntaxHighlighter] = useState<any>();
   const [ThemeDark, setThemeDark] = useState<any>();
@@ -22,7 +24,7 @@ const OmsSyntaxHighlight: React.FC<OmsProps> = (props: OmsProps) => {
   }, []);
 
   if (!SyntaxHighlighter || !ThemeDark || !ThemeLight) {
-    return <div>Loading...</div>;
+    return <div>{t("tips_loading")}</div>;
   }
 
   return (

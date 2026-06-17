@@ -100,7 +100,7 @@ const TableDesigner: React.FC<TableDesignerProps> = (
           <CopyToClipboard
             text={code}
             onCopy={() => {
-              toast.info("代码已复制");
+              toast.info(t("tips_code_copied"));
             }}
           >
             <i className="fa fa-copy"></i>

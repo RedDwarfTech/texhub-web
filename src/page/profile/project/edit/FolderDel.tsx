@@ -6,6 +6,7 @@ import { TexProjectFolder } from "@/model/proj/TexProjectFolder";
 import React from "react";
 import { QueryProjReq } from "@/model/request/proj/query/QueryProjReq";
 import { DelFolderReq } from "@/model/request/proj/edit/DelFolderReq";
+import { useTranslation } from "react-i18next";
 
 export type DelFolderProps = {
     currFolder: TexProjectFolder | undefined;
@@ -15,6 +16,7 @@ export type DelFolderProps = {
 const FolderDel: React.FC<DelFolderProps> = (props: DelFolderProps) => {
 
     const editProjCancelRef = useRef<HTMLButtonElement>(null);
+    const { t } = useTranslation();
 
     const handleFolderDel = (folderId: number) => {
         let renameReq: DelFolderReq = {
@@ -27,7 +29,7 @@ const FolderDel: React.FC<DelFolderProps> = (props: DelFolderProps) => {
                     editProjCancelRef.current.click();
                 }
             } else {
-                toast.error("删除文件夹失败，{}", resp.msg);
+                toast.error(t("err_del_folder_failed", { msg: resp.msg }));
             }
         });
     }
@@ -38,17 +40,17 @@ const FolderDel: React.FC<DelFolderProps> = (props: DelFolderProps) => {
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">删除文件夹</h5>
+                            <h5 className="modal-title">{t("btn_del_folder")}</h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            <div>删除文件夹后，文件夹下的文件会移动到列表</div>
+                            <div>{t("tips_del_folder_desc")}</div>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" ref={editProjCancelRef} className="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                            <button type="button" ref={editProjCancelRef} className="btn btn-secondary" data-bs-dismiss="modal">{t("btn_cancel")}</button>
                             <button type="button" 
                             className="btn btn-primary" 
-                            onClick={() => { handleFolderDel(props.currFolder?.id!) }}>确定</button>
+                            onClick={() => { handleFolderDel(props.currFolder?.id!) }}>{t("btn_confirm")}</button>
                         </div>
                     </div>
                 </div>

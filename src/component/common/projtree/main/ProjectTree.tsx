@@ -419,7 +419,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         <div>
           <button
             className={styles.menuButton}
-            title="新增文件"
+            title={t("title_new_file")}
             onClick={() => {
               handleFileAdd();
             }}
@@ -428,7 +428,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
           </button>
           <button
             className={styles.menuButton}
-            title="创建文件夹"
+            title={t("title_create_folder")}
             onClick={() => {
               handleHeaderAction("createFolderModal");
             }}
@@ -437,7 +437,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
           </button>
           <button
             className={styles.menuButton}
-            title="上传文件"
+            title={t("title_upload_file")}
             onClick={() => {
               handleHeaderAction("uploadFileModal");
             }}
@@ -448,7 +448,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         <div>
           <button
             className={styles.menuButton}
-            title="折叠"
+            title={t("title_collapse")}
             onClick={() => {
               let newTree = ProjectTreeFolder.handleCollapseAll(
                 props.projectId
@@ -460,7 +460,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
           </button>
           <button
             className={styles.menuButton}
-            title="常用符号"
+            title={t("title_common_symbols")}
             onClick={() => {
               handleProjSymbol(curTabName, setCurTabName);
             }}
@@ -489,7 +489,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="createModalLabel">
-                创建文件
+                {t("title_create_file")}
               </h5>
               <button
                 type="button"
@@ -505,7 +505,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                   type="text"
                   onChange={handleFileInputChange}
                   className="form-control"
-                  placeholder="新名称"
+                  placeholder={t("tips_new_name")}
                   aria-label="Username"
                   aria-describedby="addon-wrapping"
                 />
@@ -517,7 +517,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                 className="btn btn-secondary"
                 data-bs-dismiss="modal"
               >
-                取消
+                {t("btn_cancel")}
               </button>
               <button
                 type="button"
@@ -527,7 +527,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                   handleFileCreateConfirm(selectedFile, createFileName, pid);
                 }}
               >
-                确定
+                {t("btn_confirm")}
               </button>
             </div>
           </div>

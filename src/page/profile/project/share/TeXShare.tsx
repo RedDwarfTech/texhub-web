@@ -41,19 +41,19 @@ const TeXShare: React.FC<ShareProps> = (props: ShareProps) => {
 
   const handleShareLinkCopy = () => {
     if (!props.projectId || props.projectId.length === 0) {
-      toast.error("项目ID获取失败");
+      toast.error(t("err_proj_id_failed"));
       return;
     }
     if (!projShareLink || projShareLink.length === 0) {
-      toast.error("分享链接生成异常");
+      toast.error(t("err_share_link_failed"));
       return;
     }
     writeText(projShareLink)
       .then(() => {
-        toast.success("拷贝成功");
+        toast.success(t("tips_copy_success"));
       })
       .catch((error) => {
-        toast.error("Failed to copy:", error);
+        toast.error(t("err_copy_failed"), error);
       });
   };
 
@@ -75,13 +75,13 @@ const TeXShare: React.FC<ShareProps> = (props: ShareProps) => {
 
   const columns = [
     {
-      title: "用户",
+      title: t("label_user"),
       dataIndex: "nickname",
       key: "nickname",
       width: 140,
     },
     {
-      title: "加入时间",
+      title: t("label_join_time"),
       dataIndex: "created_time",
       key: "created_time",
       width: 200,
@@ -93,35 +93,35 @@ const TeXShare: React.FC<ShareProps> = (props: ShareProps) => {
       },
     },
     {
-      title: "角色",
+      title: t("label_role"),
       dataIndex: "role_id",
       key: "role_id",
       width: 100,
       render: (value: number) => {
         if (value === 1) {
-          return (<div>创建者</div>);
+          return (<div>{t("label_creator")}</div>);
         } else {
-          return (<div>协作者</div>);
+          return (<div>{t("label_collaborator")}</div>);
         }
       },
     },
     {
-      title: "协作状态",
+      title: t("label_collab_status"),
       dataIndex: "collar_status",
       key: "collar_status",
       width: 100,
       render: (val: number) => {
         if (val === CollarType.NORMAL) {
-          return <div>正常</div>;
+          return <div>{t("label_status_normal")}</div>;
         } else if (val === CollarType.EXIT) {
-          return <div>退出协作</div>;
+          return <div>{t("label_status_quit")}</div>;
         } else {
-          return <div>未知</div>;
+          return <div>{t("label_status_unknown")}</div>;
         }
       },
     },
     {
-      title: "操作",
+      title: t("btn_action"),
       dataIndex: "",
       key: "operations",
       render: () => {
@@ -139,31 +139,31 @@ const TeXShare: React.FC<ShareProps> = (props: ShareProps) => {
       return (
         <div className="modal-body">
           <div className={styles.sharedSection}>
-            <span>权限：</span>
+            <span>{t("label_permission")}</span>
             <select
               id="tpl-type"
               className="form-select"
               defaultValue="0"
               onChange={selectChanged}
             >
-              <option value="1">允许编辑</option>
+              <option value="1">{t("label_allow_edit")}</option>
               <option value="2" disabled>
-                仅查看
+                {t("label_view_only")}
               </option>
             </select>
           </div>
           <div className={styles.sharedSection}>
-            <span>分享方式：</span>
+            <span>{t("label_share_method")}</span>
             <input
               className="form-check-input"
               type="checkbox"
               value=""
               id="checkboxLink"
             ></input>
-            <label className="form-check-label">链接分享</label>
+            <label className="form-check-label">{t("label_link_share")}</label>
           </div>
           <div className={styles.sharedSection}>
-            <div>分享链接：</div>
+            <div>{t("label_share_link")}</div>
             <div>{projShareLink}</div>
           </div>
           <div className={styles.sharedSection}>

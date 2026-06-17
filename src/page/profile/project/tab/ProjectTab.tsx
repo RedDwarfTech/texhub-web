@@ -106,7 +106,7 @@ const ProjectTab: React.FC = () => {
           delProjCancelRef.current.click();
         }
       } else {
-        toast.error("删除项目失败，{}", resp.msg);
+        toast.error(t("err_del_proj_failed", { msg: resp.msg }));
       }
     });
   };
@@ -512,7 +512,7 @@ const ProjectTab: React.FC = () => {
       return [
         <div key="projloading" className={styles.loadingA}>
           <div className="spinner-border text-primary" role="status">
-            <span className="sr-only">Loading...</span>
+            <span className="sr-only">{t("tips_loading")}</span>
           </div>
         </div>,
       ];
