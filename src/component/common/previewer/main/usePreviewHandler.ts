@@ -1,15 +1,37 @@
 import {
   getCurPdfScale,
   setCurPdfScale,
+  setCurPdfScrollOffset,
 } from "@/service/project/preview/PreviewService";
 import { setProjAttr } from "@/service/project/ProjectService";
+import { RefObject } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { scrollToOffset } from "../doc/PDFPreviewHandle";
 import { ListImperativeAPI } from "react-window";
 
-export const usePreviewHandler = (projectId: string, viewModel: string) => {
+export const usePreviewHandler = (
+  projectId: string,
+  viewModel: string,
+  virtualListRef: RefObject<ListImperativeAPI | null>
+) => {
   const { t } = useTranslation();
+
+  const persistScrollBeforeZoom = () => {
+    const scrollEl = virtualListRef.current?.element;
+    if (scrollEl) {
+      setCurPdfScrollOffset(scrollEl.scrollTop, projectId, "handleZoom");
+    }
+  };
+
+  const applyZoom = (newScale: number, oldScale: number) => {
+    persistScrollBeforeZoom();
+    setCurPdfScale(newScale, projectId, viewModel);
+    setProjAttr({
+      pdfScale: newScale,
+      legacyPdfScale: oldScale,
+    });
+  };
 
   const handleScrollTop = (
     virtualListRef: React.RefObject<ListImperativeAPI>,
@@ -35,19 +57,12 @@ export const usePreviewHandler = (projectId: string, viewModel: string) => {
       toast.warn(t("msg_empty_proj_info"));
       return;
     }
-    let cachedScale = getCurPdfScale(projectId, viewModel);
-    let numberScale = Number(cachedScale);
-    let curScale;
-    if (numberScale > 5) {
-      curScale = 5;
-    } else {
-      curScale = numberScale + 0.1;
+    const oldScale = Number(getCurPdfScale(projectId, viewModel));
+    const newScale = oldScale >= 5 ? 5 : oldScale + 0.1;
+    if (newScale === oldScale) {
+      return;
     }
-    setCurPdfScale(curScale, projectId, viewModel);
-    setProjAttr({
-      pdfScale: curScale,
-      legacyPdfScale: Number(cachedScale),
-    });
+    applyZoom(newScale, oldScale);
   };
 
   const handleZoomOut = async () => {
@@ -55,19 +70,12 @@ export const usePreviewHandler = (projectId: string, viewModel: string) => {
       toast.warn(t("msg_empty_proj_info"));
       return;
     }
-    let cachedScale = getCurPdfScale(projectId, viewModel);
-    let numberScale = Number(cachedScale);
-    let curScale;
-    if (numberScale < 0.2) {
-      curScale = 0.2;
-    } else {
-      curScale = numberScale - 0.1;
+    const oldScale = Number(getCurPdfScale(projectId, viewModel));
+    const newScale = oldScale <= 0.2 ? 0.2 : oldScale - 0.1;
+    if (newScale === oldScale) {
+      return;
     }
-    setCurPdfScale(curScale, projectId, viewModel);
-    setProjAttr({
-      pdfScale: curScale,
-      legacyPdfScale: Number(cachedScale),
-    });
+    applyZoom(newScale, oldScale);
   };
 
   return {

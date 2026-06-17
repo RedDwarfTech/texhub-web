@@ -166,7 +166,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   const [pdfProxy, setPdfProxy] = useState<DocumentCallback | null>(null);
   const virtualListRef = React.useRef<ListImperativeAPI>(null);
   const { handleScrollTop, handleZoomIn, handleFullScreen, handleZoomOut } =
-    usePreviewHandler(props.projectId, props.viewModel);
+    usePreviewHandler(props.projectId, props.viewModel, virtualListRef);
   const compileResultType = useSelector(
     (state: AppState) => state.preview.compileResultType,
   );

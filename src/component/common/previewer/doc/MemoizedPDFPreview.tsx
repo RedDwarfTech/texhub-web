@@ -68,6 +68,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const [pdf, setPdf] = useState<DocumentCallback>();
     const [pageViewports, setPageViewports] = useState<any>();
     const divRef = useRef<HTMLDivElement>(null);
+    const pendingScrollOffsetRef = useRef<number | null>(null);
     const [projAttribute, setProjAttribute] = useState<PreviewPdfAttribute>({
       pdfScale: cachedScale,
       legacyPdfScale: cachedScale,
@@ -79,25 +80,34 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     }
 
     React.useEffect(() => {
-      if (projAttr.pdfScale === 1 && cachedScale) {
-        return;
-      }
-      setProjAttribute(projAttr);
-      if (virtualListRef.current) {
-        let curOffset = getCurPdfScrollOffset(projId);
-        let fullScreenOffset = getNewScaleOffsetPosition(
+      if (projAttr.pdfScale !== projAttr.legacyPdfScale) {
+        const curOffset = getCurPdfScrollOffset(projId);
+        pendingScrollOffsetRef.current = getNewScaleOffsetPosition(
           projAttr.legacyPdfScale,
           projAttr.pdfScale,
           curOffset
         );
-        if (fullScreenOffset) {
-          console.log("get the newOffset:" + fullScreenOffset);
-          setTimeout(() => {
-            scrollToOffset(fullScreenOffset, virtualListRef, projId);
-          }, 500);
-        }
       }
-    }, [projAttr, cachedScale]);
+      setProjAttribute(projAttr);
+    }, [projAttr, projId]);
+
+    React.useLayoutEffect(() => {
+      if (pendingScrollOffsetRef.current === null) {
+        return;
+      }
+      const targetOffset = pendingScrollOffsetRef.current;
+      pendingScrollOffsetRef.current = null;
+
+      const restoreScroll = () => {
+        if (virtualListRef.current?.element) {
+          scrollToOffset(targetOffset, virtualListRef, projId);
+        }
+      };
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(restoreScroll);
+      });
+    }, [projAttribute.pdfScale, projId]);
 
     React.useEffect(() => {
       setPageViewports(undefined);
