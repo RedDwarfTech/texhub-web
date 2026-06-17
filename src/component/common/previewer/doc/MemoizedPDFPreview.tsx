@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 import {
   isMoreThanFiveSeconds,
   openPdfUrlLink,
-  scrollToOffset,
   scrollToPage,
 } from "./PDFPreviewHandle";
 import {
@@ -69,11 +68,53 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     const [pageViewports, setPageViewports] = useState<any>();
     const divRef = useRef<HTMLDivElement>(null);
     const pendingScrollOffsetRef = useRef<number | null>(null);
+    const suppressRowsRenderedRef = useRef(false);
+    const initialPageNavRef = useRef(false);
+    const zoomScrollGuardRef = useRef<{ target: number; until: number } | null>(
+      null
+    );
     const [projAttribute, setProjAttribute] = useState<PreviewPdfAttribute>({
       pdfScale: cachedScale,
       legacyPdfScale: cachedScale,
     });
     const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
+
+    const restoreScrollAfterZoom = (targetOffset: number) => {
+      zoomScrollGuardRef.current = {
+        target: targetOffset,
+        until: Date.now() + 2000,
+      };
+      suppressRowsRenderedRef.current = true;
+
+      let attempts = 0;
+      const maxAttempts = 20;
+
+      const tryRestore = () => {
+        const el = virtualListRef.current?.element;
+        if (!el) {
+          if (++attempts < maxAttempts) {
+            requestAnimationFrame(tryRestore);
+          } else {
+            suppressRowsRenderedRef.current = false;
+          }
+          return;
+        }
+
+        el.scrollTop = targetOffset;
+        const settled = Math.abs(el.scrollTop - targetOffset) <= 1;
+
+        if (!settled && ++attempts < maxAttempts) {
+          requestAnimationFrame(tryRestore);
+        } else {
+          setCurPdfScrollOffset(el.scrollTop, projId, "zoomRestore");
+          setTimeout(() => {
+            suppressRowsRenderedRef.current = false;
+          }, 300);
+        }
+      };
+
+      requestAnimationFrame(tryRestore);
+    };
 
     const setAreas = (areas: HighlightArea[]) => {
       setHighlightAreas(areas);
@@ -97,16 +138,7 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
       }
       const targetOffset = pendingScrollOffsetRef.current;
       pendingScrollOffsetRef.current = null;
-
-      const restoreScroll = () => {
-        if (virtualListRef.current?.element) {
-          scrollToOffset(targetOffset, virtualListRef, projId);
-        }
-      };
-
-      requestAnimationFrame(() => {
-        requestAnimationFrame(restoreScroll);
-      });
+      restoreScrollAfterZoom(targetOffset);
     }, [projAttribute.pdfScale, projId]);
 
     React.useEffect(() => {
@@ -188,7 +220,22 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
     };
 
     const handleWindowPdfScroll = (e: React.UIEvent<HTMLDivElement>) => {
-      const scrollOffset = e.currentTarget.scrollTop;
+      const scrollEl = e.currentTarget;
+      let scrollOffset = scrollEl.scrollTop;
+
+      const guard = zoomScrollGuardRef.current;
+      if (
+        guard &&
+        Date.now() < guard.until &&
+        scrollOffset < 10 &&
+        guard.target > 50
+      ) {
+        scrollEl.scrollTop = guard.target;
+        scrollOffset = guard.target;
+      } else if (guard && Date.now() >= guard.until) {
+        zoomScrollGuardRef.current = null;
+      }
+
       let docLoadTime = localStorage.getItem("docLoadTime");
       if (docLoadTime && isMoreThanFiveSeconds(docLoadTime)) {
         setCurPdfScrollOffset(scrollOffset, projId, "handleWindowPdfScroll");
@@ -271,21 +318,24 @@ const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
             overscanCount={0}
             onScroll={handleWindowPdfScroll}
             onRowsRendered={(visibleRows) => {
-              if (curPdfPage && curPdfPage > 0) {
-                setAndDispatchPdfPage(curPdfPage, projId, "fullscreennav");
-                let cp = curPdfPage;
-                setTimeout(() => {
-                  scrollToPage(cp, virtualListRef);
-                }, 1000);
-
-                curPdfPage = undefined;
-              } else {
-                setAndDispatchPdfPage(
-                  visibleRows.stopIndex,
-                  projId,
-                  "IntersectionObserver"
-                );
+              if (suppressRowsRenderedRef.current) {
+                return;
               }
+
+              if (curPdfPage && curPdfPage > 0 && !initialPageNavRef.current) {
+                initialPageNavRef.current = true;
+                setAndDispatchPdfPage(curPdfPage, projId, "fullscreennav");
+                requestAnimationFrame(() => {
+                  scrollToPage(curPdfPage, virtualListRef);
+                });
+                return;
+              }
+
+              setAndDispatchPdfPage(
+                visibleRows.stopIndex,
+                projId,
+                "IntersectionObserver"
+              );
             }}
             style={{ width, height }}
           />
