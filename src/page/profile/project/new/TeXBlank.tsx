@@ -40,14 +40,16 @@ const TeXBlank: React.FC<BlankProjProps> = (props: BlankProjProps) => {
                 if (createDocCancelRef && createDocCancelRef.current) {
                     createDocCancelRef.current.click();
                 }
-            }else{
-                switch(res.resultCode){
+            } else {
+                switch (res.result) {
                     case "NON_VIP_TOO_MUCH_PROJ":
                         toast.error(t("msg_non_vip_exceed"));
                         break;
                     case "VIP_TOO_MUCH_PROJ":
                         toast.error(t("msg_vip_exceed"));
                         break;
+                    default:
+                        toast.error(res.msg);
                 }
             }
         });
