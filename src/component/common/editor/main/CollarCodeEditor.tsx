@@ -34,11 +34,13 @@ import {
   clearCurSubDoc,
   clearEditorInstance,
   clearSocketIOProvider,
+  isWsProviderReady,
   setCurRootYDoc,
   setEditorInstance,
   setWsConnState,
 } from "@/service/project/editor/EditorService";
 import { recordEditorViewUpdate } from "@/service/editor/EditorUpdateHistory";
+import { toast } from "react-toastify";
 
 // sometimes when we replaced the Y.Doc
 // we need to bind the events to the new doc
@@ -127,20 +129,46 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   }, []);
 
   const loadedDocGuidRef = useRef<string | null>(null);
+  const editorViewRef = useRef<EditorView | undefined>();
 
   React.useEffect(() => {
-    if (BaseMethods.isNull(curSubYDoc)) {
+    if (editorView && !BaseMethods.isNull(editorView) && editorView.state) {
+      editorViewRef.current = editorView;
+    }
+  }, [editorView]);
+
+  React.useEffect(() => {
+    if (BaseMethods.isNull(curSubYDoc) || !curSubYDoc.guid) {
       return;
     }
     const guid = curSubYDoc.guid;
-    
-    recordEditorViewUpdate("useEffect[curSubYDoc]", `curSubYDoc changed, guid: ${curSubYDoc.guid}`);
-    let ytext = curSubYDoc.getText(curSubYDoc.guid);
-    const undoManager = new Y.UndoManager(ytext);
-    if (!texEditorSocketIOWs) {
-      logger.error("texEditorSocketIOWs is null");
+
+    recordEditorViewUpdate(
+      "useEffect[curSubYDoc]",
+      `curSubYDoc changed, guid: ${curSubYDoc.guid}`
+    );
+
+    const boundView = editorViewRef.current;
+    const alreadyShowingDoc =
+      loadedDocGuidRef.current === guid &&
+      boundView &&
+      !BaseMethods.isNull(boundView) &&
+      boundView.state &&
+      edContainer.current?.contains(boundView.dom);
+
+    if (alreadyShowingDoc) {
+      console.log("skip rebuild editor view for guid: ", guid);
       return;
     }
+
+    if (!isWsProviderReady(texEditorSocketIOWs)) {
+      logger.error("texEditorSocketIOWs is not ready");
+      toast.warning(t("tips_file_switch_failed_ws"));
+      return;
+    }
+
+    let ytext = curSubYDoc.getText(curSubYDoc.guid);
+    const undoManager = new Y.UndoManager(ytext);
     const texEditorState: EditorState = EditorState.create({
       doc: ytext.toString(),
       extensions: createExtensions({
@@ -151,22 +179,28 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         metadata: metadata,
       }),
     });
-    edContainer.current!.id = curSubYDoc.guid + "-curSubYDoc-update";;
-    const editorView: EditorView = new EditorView({
+
+    if (edContainer.current) {
+      edContainer.current.innerHTML = "";
+      edContainer.current.id = curSubYDoc.guid + "-curSubYDoc-update";
+    }
+
+    if (boundView && !BaseMethods.isNull(boundView) && boundView.state) {
+      boundView.destroy();
+    }
+
+    const newEditorView: EditorView = new EditorView({
       state: texEditorState,
       parent: edContainer.current!,
     });
-    // 同一文档且编辑器仍有效 → 跳过重建
-    if (loadedDocGuidRef.current === guid && editorView && !BaseMethods.isNull(editorView)) {
-      console.log("skip rebuild editor view for guid: ", guid);
-      return;
-    }
+
     loadedDocGuidRef.current = guid;
-    if (activeEditorView && !BaseMethods.isNull(activeEditorView)) {
-      activeEditorView?.destroy();
-    }
-    recordEditorViewUpdate("useEffect[curSubYDoc]", `Setting editor instance for guid: ${curSubYDoc.guid}`);
-    setEditorInstance(editorView);
+    recordEditorViewUpdate(
+      "useEffect[curSubYDoc]",
+      `Setting editor instance for guid: ${curSubYDoc.guid}`
+    );
+    setEditorInstance(newEditorView);
+
     if (!curRootYDoc || BaseMethods.isNull(curRootYDoc)) {
       return;
     }
@@ -182,15 +216,16 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         curSubYDoc.guid,
         texEditorSocketIOWs,
         edContainer,
-        activeEditorView,
+        newEditorView,
         setEditorInstance
       );
       curRootYDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, newDoc);
+      loadedDocGuidRef.current = guid;
     } else {
       curRootYDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, curSubYDoc);
     }
     setCurRootYDoc(curRootYDoc);
-  }, [curSubYDoc]);
+  }, [curSubYDoc, texEditorSocketIOWs]);
 
   React.useEffect(() => {
     if (editorView) {

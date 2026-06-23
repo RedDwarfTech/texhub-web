@@ -392,7 +392,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   ) => {
     e.preventDefault();
     e.stopPropagation();
-    handleFileSelected(fileItem, selectedFile, curRootYDoc!);
+    handleFileSelected(fileItem, selectedFile, curRootYDoc);
   };
 
   const handleFileInputChange = (event: any) => {

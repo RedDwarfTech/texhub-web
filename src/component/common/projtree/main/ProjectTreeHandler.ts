@@ -9,8 +9,9 @@ import * as bootstrap from "bootstrap";
 import * as Y from "rdyjs";
 import { EditorView } from "@codemirror/view";
 import {
+  forceSetCurSubDoc,
+  isEditorSyncedWithFile,
   setCurRootYDoc,
-  setCurSubDoc,
 } from "@/service/project/editor/EditorService";
 import store from "@/redux/store/store.js";
 
@@ -54,67 +55,88 @@ export function handleExpandFolderEvent(
   setTexFileTree(updatedItems);
 }
 
+function resolveRootYDoc(curRootYDoc?: Y.Doc | null): Y.Doc | null {
+  if (
+    curRootYDoc &&
+    !BaseMethods.isNull(curRootYDoc) &&
+    typeof curRootYDoc.getMap === "function"
+  ) {
+    return curRootYDoc;
+  }
+  const fromStore = store.getState().projEditor.curRootYDoc;
+  if (
+    fromStore &&
+    !BaseMethods.isNull(fromStore) &&
+    typeof fromStore.getMap === "function"
+  ) {
+    return fromStore;
+  }
+  return null;
+}
+
 export function handleFileSelected(
   newSelectedFile: TexFileModel,
   oldSelectedFile: TexFileModel | null,
-  curRootYDoc: Y.Doc
+  curRootYDoc?: Y.Doc | null
 ) {
-  if (oldSelectedFile && newSelectedFile.file_id === oldSelectedFile.file_id)
-    return;
-  chooseFile(newSelectedFile);
-  if (newSelectedFile.file_type !== TeXFileType.FOLDER) {
-    switchFile(newSelectedFile);
-    let subDocs: Y.Map<Y.Doc> = curRootYDoc.getMap("texhubsubdoc");
-    if (oldSelectedFile && !BaseMethods.isNull(oldSelectedFile)) {
-      // destroy the legacy select file
-      let legacySubDoc: Y.Doc | undefined = subDocs.get(
-        oldSelectedFile.file_id
-      );
-      if (legacySubDoc) {
-        const { editorView } = store.getState().projEditor;
-        clearLegacyFile(oldSelectedFile, curRootYDoc, editorView);
-      } else {
-        console.error("did not get the legacy subdoc", oldSelectedFile.file_id);
-      }
-    }
-    let chooseSubDoc: Y.Doc | undefined = subDocs.get(newSelectedFile.file_id);
-    if (chooseSubDoc && !BaseMethods.isNull(chooseSubDoc)) {
-      console.log("Found existing subdoc:", chooseSubDoc.guid);
-      const subDocText = chooseSubDoc.getText(chooseSubDoc.guid);
-      chooseSubDoc.load();
-      setCurSubDoc(chooseSubDoc);
-      // @ts-ignore
-      chooseSubDoc.on("synced", () => {
-        console.log("chooseSubDoc subdoc synced:" + chooseSubDoc.guid);
-        const text = subDocText.toString();
-        console.log("subdoc content:", text);
-        setCurSubDoc(chooseSubDoc);
-      });
+  const sameFileSelected =
+    oldSelectedFile &&
+    !BaseMethods.isNull(oldSelectedFile) &&
+    newSelectedFile.file_id === oldSelectedFile.file_id;
 
-      // Add connection status listener
-      // @ts-ignore
-      chooseSubDoc.on("connectionStatus", (status: any) => {
-        console.log("SubDoc connection status:", status);
-      });
-      subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-        console.log("doc receive update,id:" + chooseSubDoc!.guid);
-        // updateEditor(tr, event, chooseSubDoc, editorView!);
-      });
-      setCurRootYDoc(curRootYDoc);
-      return;
-    }
-    let subDocEden = new Y.Doc();
-    subDocEden.guid = newSelectedFile.file_id;
-    const subDocText = subDocEden.getText(subDocEden.guid);
-    subDocText.observe((event: Y.YTextEvent, tr: Y.Transaction) => {
-      console.log("doc(new) receive update,id:" + subDocEden.guid);
-      //updateEditor(tr, event, subDocEden, editorView!);
-    });
-    // subDocEden.load();
-    setCurRootYDoc(curRootYDoc);
-    console.log("handleFileSelected: create new subdoc:", subDocEden.guid);
-    setCurSubDoc(subDocEden);
+  if (sameFileSelected && isEditorSyncedWithFile(newSelectedFile.file_id)) {
+    return;
   }
+
+  chooseFile(newSelectedFile);
+  if (newSelectedFile.file_type === TeXFileType.FOLDER) {
+    return;
+  }
+
+  switchFile(newSelectedFile);
+
+  const rootYDoc = resolveRootYDoc(curRootYDoc);
+  if (!rootYDoc) {
+    toast.warning(i18n.t("tips_editor_not_ready"));
+    return;
+  }
+
+  const resyncingSameFile = !!sameFileSelected;
+  if (resyncingSameFile) {
+    toast.info(i18n.t("tips_file_switch_resync"));
+  }
+
+  let subDocs: Y.Map<Y.Doc> = rootYDoc.getMap("texhubsubdoc");
+  const { editorView } = store.getState().projEditor;
+
+  if (
+    oldSelectedFile &&
+    !BaseMethods.isNull(oldSelectedFile) &&
+    oldSelectedFile.file_id !== newSelectedFile.file_id
+  ) {
+    const legacySubDoc: Y.Doc | undefined = subDocs.get(
+      oldSelectedFile.file_id
+    );
+    if (legacySubDoc) {
+      clearLegacyFile(oldSelectedFile, rootYDoc, editorView);
+    } else {
+      clearLegacyEditor(oldSelectedFile, rootYDoc, editorView);
+    }
+  }
+
+  let chooseSubDoc: Y.Doc | undefined = subDocs.get(newSelectedFile.file_id);
+  if (chooseSubDoc && !BaseMethods.isNull(chooseSubDoc)) {
+    chooseSubDoc.load();
+    forceSetCurSubDoc(chooseSubDoc);
+    setCurRootYDoc(rootYDoc);
+    return;
+  }
+
+  let subDocEden = new Y.Doc();
+  subDocEden.guid = newSelectedFile.file_id;
+  subDocEden.load();
+  setCurRootYDoc(rootYDoc);
+  forceSetCurSubDoc(subDocEden);
 }
 
 export function handleFileCreateConfirm(
@@ -174,9 +196,11 @@ export const clearLegacyEditor = (
   editorView: EditorView | undefined
 ) => {
   console.warn("destroy the legacy file", selectedFile);
-  // curRootYDoc.getMap("texhubsubdoc").delete(selectedFile.file_id);
-  // clear the legacy codemirror editor
-  if (editorView) {
+  if (
+    editorView &&
+    !BaseMethods.isNull(editorView) &&
+    (editorView as EditorView).state
+  ) {
     editorView.dispatch({
       changes: {
         from: 0,
