@@ -48,6 +48,7 @@ import {
   detectCompileResultFromLog,
   formatCompileLogHtml,
 } from "./compileLogResultDetector";
+import { sseLogMessagesToPlainText } from "@/model/proj/compile/CompileLogMarkers";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
 
 export type PreviwerProps = {
@@ -106,7 +107,7 @@ const PreviewerLogPanel: React.FC = () => {
 
   React.useEffect(() => {
     if (streamLogText && streamLogText.length > 0) {
-      const chunk = streamLogText.map((log) => log.data).join("");
+      const chunk = sseLogMessagesToPlainText(streamLogText);
       if (chunk.includes(COMPILE_CLEAR_MARKER)) {
         accumulatedPlainLogRef.current = "";
         setCurLogText("");

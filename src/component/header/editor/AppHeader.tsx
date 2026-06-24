@@ -17,7 +17,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
 import { CompileProjLog } from "@/model/request/proj/CompileProjLog";
-import { ResponseHandler, SSEMessage } from "rdjs-wheel";
+import { ResponseHandler } from "rdjs-wheel";
 import { CompileStatus } from "@/model/proj/compile/CompileStatus";
 import { getAccessToken } from "@/component/common/cache/Cache";
 import ProjSetting from "@/page/main/setting/ProjSetting";
@@ -117,10 +117,7 @@ const EHeader: React.FC = () => {
         showPreviewTab("logview");
         setContextCompileStatus(CompileStatus.WAITING);
         setContextCompileResultType(CompileResultType.PROCESSING);
-        let msg: SSEMessage = {
-          data: "====CLEAR====",
-        };
-        clearCompLogText(new Array<SSEMessage>().concat(msg));
+        clearCompLogText();
       }
     });
   };

@@ -35,6 +35,7 @@ import { CompileResultType } from "@/model/proj/compile/CompileResultType";
 import { PreviewActionType } from "@/redux/action/project/preview/PreviewAction";
 import { getSSEBatchProcessor } from "@/redux/store/middleware/SSEMiddleware";
 import { SSEMessage } from "rdjs-wheel";
+import { COMPILE_CLEAR_MARKER } from "@/model/proj/compile/CompileLogMarkers";
 
 export function getProjectList(req: QueryProjReq) {
   const params = new URLSearchParams();
@@ -393,7 +394,8 @@ export function changeProjConf(projConf: ProjConf) {
   return XHRClient.dispathAction(projConf, actionTypeString, store);
 }
 
-export function clearCompLogText(sse: SSEMessage[]) {
+export function clearCompLogText() {
+  const sse: SSEMessage[] = [{ data: COMPILE_CLEAR_MARKER }];
   const actionTypeString: string =
     ProjectActionType[ProjectActionType.CLEAR_COMP_LOG];
   return XHRClient.dispathAction(sse, actionTypeString, store);

@@ -1,6 +1,7 @@
 import { CompileStatus } from "@/model/proj/compile/CompileStatus";
 import { PreviewPdfAttribute } from "@/model/proj/config/PreviewPdfAttribute";
 import { CompileResultType } from "@/model/proj/compile/CompileResultType";
+import { SSEMessage } from "rdjs-wheel";
 
 export type projectAction = saveDocAction | getDocListAction | compileProjAction | getLatestCompileAction | renderLogAction | clearCompLogAction | addQueueCompileAction | getCompQueueStatusAction | texCompEndAction | getProjInfoAction | delProjInfoAction | uploadProjFileAction | getHisPageAction;
 
@@ -97,12 +98,12 @@ export interface renderPdfAction {
 
 export interface renderLogAction {
     type: ProjectActionType.APPEND_LOG;
-    data: string;
+    data: SSEMessage[];
 }
 
 export interface clearCompLogAction {
     type: ProjectActionType.CLEAR_COMP_LOG;
-    data: string;
+    data: SSEMessage[];
 }
 
 export interface addQueueCompileAction {

@@ -11,6 +11,8 @@ import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 import { ProjConf } from "@/model/proj/config/ProjConf";
 import { ProjHisotry as ProjHistory } from "@/model/proj/history/ProjHistory";
 import { TexProjects } from "@/model/proj/TexProjects";
+import { SSEMessage } from "rdjs-wheel";
+import { sseLogMessagesToPlainText } from "@/model/proj/compile/CompileLogMarkers";
 
 const initState: AppState["proj"] = {
     projList: {} as TexProjects,
@@ -78,12 +80,16 @@ const ProjectReducer = (state = initState, action: any) => {
                 ...state,
                 streamLogText: action.data
             };
-        case "CLEAR_COMP_LOG":
+        case "CLEAR_COMP_LOG": {
+            const streamLogText: SSEMessage[] = Array.isArray(action.data)
+                ? action.data
+                : [];
             return {
                 ...state,
-                logText: action.data,
-                streamLogText: action.data
+                logText: sseLogMessagesToPlainText(streamLogText),
+                streamLogText,
             };
+        }
         case "TEX_COMP_END":
             return {
                 ...state,

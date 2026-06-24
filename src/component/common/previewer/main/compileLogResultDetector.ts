@@ -1,7 +1,10 @@
 import { CompileResultType } from "@/model/proj/compile/CompileResultType";
+import {
+  COMPILE_CLEAR_MARKER,
+  COMPILE_END_MARKER,
+} from "@/model/proj/compile/CompileLogMarkers";
 
-export const COMPILE_END_MARKER = "====END====";
-export const COMPILE_CLEAR_MARKER = "====CLEAR====";
+export { COMPILE_CLEAR_MARKER, COMPILE_END_MARKER };
 
 /** LaTeX 以 `!` 开头的致命错误行 */
 const LATEX_ERROR_LINE = /^\s*!/;
