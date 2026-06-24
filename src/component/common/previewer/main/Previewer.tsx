@@ -41,39 +41,19 @@ import { usePreviewHandler } from "./usePreviewHandler";
 import OutlineTree from "../feat/outline/OutlineTree";
 import { getPreviewUrl } from "@/service/file/FileService";
 import Split from "@uiw/react-split";
+import {
+  appendCompileLogChunk,
+  COMPILE_CLEAR_MARKER,
+  compileResultFromBackend,
+  detectCompileResultFromLog,
+  formatCompileLogHtml,
+} from "./compileLogResultDetector";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
 
 export type PreviwerProps = {
   projectId: string;
   viewModel: string;
   curPage?: number;
-};
-
-const getNewLogText = (
-  prevState: string,
-  streamChunk: string,
-  compileResultType: CompileResultType,
-): string => {
-  let newLogText = "";
-  if (prevState && prevState.length > 0) {
-    if (streamChunk.startsWith("!")) {
-      console.log("compilewitherror");
-      newLogText =
-        prevState + "<br/><p style='color:red;'>" + streamChunk + "</p>";
-      setContextCompileResultType(CompileResultType.FAILED);
-    } else {
-      newLogText = prevState + "<br/>" + streamChunk;
-    }
-    if (
-      compileResultType !== CompileResultType.FAILED &&
-      streamChunk.indexOf("====END====") >= 0
-    ) {
-      setContextCompileResultType(CompileResultType.SUCCESS);
-    }
-  } else {
-    newLogText = prevState + streamChunk;
-  }
-  return newLogText;
 };
 
 /**
@@ -92,43 +72,60 @@ const PreviewerLogPanel: React.FC = () => {
   );
   const compileResultTypeRef = React.useRef(compileResultType);
   compileResultTypeRef.current = compileResultType;
+  const accumulatedPlainLogRef = React.useRef("");
   const [curLogText, setCurLogText] = useState<string>("");
   const [compStatus, setCompStatus] = useState<CompileStatus>(
     CompileStatus.COMPLETE,
   );
+
+  const applyDetectedResult = (detected: CompileResultType | null) => {
+    if (detected !== null) {
+      setContextCompileResultType(detected);
+    }
+  };
 
   React.useEffect(() => {
     setCompStatus(compileStatus as CompileStatus);
   }, [compileStatus]);
 
   React.useEffect(() => {
-    if (logText && logText === "====CLEAR====") {
+    if (logText && logText === COMPILE_CLEAR_MARKER) {
+      accumulatedPlainLogRef.current = "";
       setCurLogText("");
       return;
     }
-    if (logText && logText.length > 0 && logText !== "====CLEAR====") {
+    if (logText && logText.length > 0 && logText !== COMPILE_CLEAR_MARKER) {
       setCompStatus(CompileStatus.COMPLETE);
-      setCurLogText(logText);
+      accumulatedPlainLogRef.current = logText;
+      applyDetectedResult(
+        detectCompileResultFromLog(logText, compileResultTypeRef.current),
+      );
+      setCurLogText(formatCompileLogHtml(logText));
     }
   }, [logText]);
 
   React.useEffect(() => {
     if (streamLogText && streamLogText.length > 0) {
-      const stringLog = streamLogText.map((log) => log.data).join("");
-      if (stringLog.indexOf("====CLEAR====") >= 0) {
+      const chunk = streamLogText.map((log) => log.data).join("");
+      if (chunk.includes(COMPILE_CLEAR_MARKER)) {
+        accumulatedPlainLogRef.current = "";
         setCurLogText("");
         return;
       }
       setCompStatus(CompileStatus.COMPILING);
-      setCurLogText((prevState) =>
-        getNewLogText(prevState, stringLog, compileResultTypeRef.current),
+      const { plainLog, htmlLog, resultType } = appendCompileLogChunk(
+        accumulatedPlainLogRef.current,
+        chunk,
+        compileResultTypeRef.current,
       );
+      accumulatedPlainLogRef.current = plainLog;
+      applyDetectedResult(resultType);
+      setCurLogText(htmlLog);
     }
   }, [streamLogText]);
 
   const createMarkup = () => {
-    const formatted = curLogText.replace(/\n/g, "<br/>");
-    return { __html: formatted };
+    return { __html: curLogText };
   };
 
   if (compStatus === CompileStatus.WAITING) {
@@ -252,6 +249,10 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
       let result = JSON.parse(endSignal);
       setLatestCompile(result.comp);
       setCompileQueue(result.queue);
+      const backendResult = compileResultFromBackend(result?.queue?.comp_result);
+      if (backendResult !== null && backendResult !== CompileResultType.PROCESSING) {
+        setContextCompileResultType(backendResult);
+      }
       if (
         result &&
         result.queue &&
