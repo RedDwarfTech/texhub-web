@@ -7,7 +7,7 @@ import { AppState } from "@/redux/types/AppState";
 import { getCurPdfScale } from "@/service/project/preview/PreviewService";
 import { PageViewport } from "pdfjs-dist";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
-import { pdfPositionToViewportRect } from "../feat/highlight/HighlightUtil";
+import { computeMedianLineStep, pdfPositionToViewportRect } from "../feat/highlight/HighlightUtil";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import { PageCallback } from "react-pdf/dist/shared/types.js";
@@ -100,8 +100,14 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     overlay.style.pointerEvents = "none";
     overlay.style.zIndex = "5";
 
+    const lineStep = computeMedianLineStep(positions);
+
     positions.forEach((pos) => {
-      const { left, top, width, height } = pdfPositionToViewportRect(pos, pageViewport);
+      const { left, top, width, height } = pdfPositionToViewportRect(
+        pos,
+        pageViewport,
+        lineStep
+      );
       const highlightDiv = document.createElement("div");
 
       highlightDiv.style.position = "absolute";

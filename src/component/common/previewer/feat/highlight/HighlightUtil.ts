@@ -3,21 +3,45 @@ import { CSSProperties } from "react";
 import { TextItem } from "react-pdf";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 
-/** SyncTeX (top-left origin) → viewport CSS rect for PDF highlight overlays. */
+/** Median line spacing inferred from SyncTeX y values on the same page. */
+export const computeMedianLineStep = (positions: PdfPosition[]): number | undefined => {
+  const ys = [...new Set(positions.map((p) => p.y))].sort((a, b) => a - b);
+  if (ys.length < 2) return undefined;
+
+  const steps: number[] = [];
+  for (let i = 1; i < ys.length; i++) {
+    const step = ys[i] - ys[i - 1];
+    if (step > 0) steps.push(step);
+  }
+  if (steps.length === 0) return undefined;
+
+  steps.sort((a, b) => a - b);
+  const mid = Math.floor(steps.length / 2);
+  return steps.length % 2 === 0 ? (steps[mid - 1] + steps[mid]) / 2 : steps[mid];
+};
+
+/**
+ * SyncTeX box → viewport CSS rect.
+ * API `x`/`y` map to synctex box_visible_h / box_visible_v; `y` is the lower
+ * reference point (baseline area), not the box top — see TeXworks TWSynchronize.
+ */
 export const pdfPositionToViewportRect = (
   pos: PdfPosition,
-  viewport: PageViewport
+  viewport: PageViewport,
+  lineStep?: number
 ): { left: number; top: number; width: number; height: number } => {
-  const pageHeight = viewport.viewBox[3] - viewport.viewBox[1];
-  const pdfX1 = pos.x;
-  const pdfX2 = pos.x + pos.width;
-  const pdfYBottom = pageHeight - pos.y - pos.height;
-  const pdfYTop = pageHeight - pos.y;
+  const syncTop = pos.y - pos.height;
+  const depth =
+    lineStep !== undefined && lineStep > pos.height ? lineStep - pos.height : 0;
+  const boxHeight = pos.height + depth;
+
+  const pdfYTop = viewport.viewBox[3] - syncTop;
+  const pdfYBottom = viewport.viewBox[3] - syncTop - boxHeight;
 
   const [x1, y1, x2, y2] = viewport.convertToViewportRectangle([
-    pdfX1,
+    pos.x,
     pdfYBottom,
-    pdfX2,
+    pos.x + pos.width,
     pdfYTop,
   ]);
 
