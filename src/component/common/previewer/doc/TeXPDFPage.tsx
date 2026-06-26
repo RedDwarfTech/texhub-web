@@ -7,7 +7,7 @@ import { AppState } from "@/redux/types/AppState";
 import { getCurPdfScale } from "@/service/project/preview/PreviewService";
 import { PageViewport } from "pdfjs-dist";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
-import TeXPDFHighlight from "../feat/highlight/TeXPDFHighlight";
+import { pdfPositionToViewportRect } from "../feat/highlight/HighlightUtil";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import { PageCallback } from "react-pdf/dist/shared/types.js";
@@ -77,66 +77,46 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   // Render highlights for PDF positions on the page
   const renderHighlightsOnPage = (positions: PdfPosition[]) => {
     if (!pageViewport) return;
-    
+
     const container = document.getElementById("page-" + index);
     if (!container) return;
-    
-    // Ensure container has position context for absolute children
-    const originalPosition = container.style.position;
-    if (!originalPosition || originalPosition === 'static') {
-      container.style.position = 'relative';
+
+    const pageElement = container.querySelector(".react-pdf__Page") as HTMLElement | null;
+    const overlayHost = pageElement ?? container;
+
+    if (!overlayHost.style.position || overlayHost.style.position === "static") {
+      overlayHost.style.position = "relative";
     }
-    
-    // Remove existing highlight overlay if present
-    let existingOverlay = container.querySelector('.pdf-highlight-overlay');
-    if (existingOverlay) {
-      existingOverlay.remove();
-    }
-    
-    // Create overlay canvas for highlights
-    const overlay = document.createElement('div');
-    overlay.className = 'pdf-highlight-overlay';
-    overlay.style.position = 'absolute';
-    overlay.style.top = '0';
-    overlay.style.left = '0';
-    overlay.style.width = '100%';
-    overlay.style.height = '100%';
-    overlay.style.pointerEvents = 'none';
-    overlay.style.zIndex = '5';
-    
-    // Render each highlight rectangle
+
+    overlayHost.querySelector(".pdf-highlight-overlay")?.remove();
+
+    const overlay = document.createElement("div");
+    overlay.className = "pdf-highlight-overlay";
+    overlay.style.position = "absolute";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.width = "100%";
+    overlay.style.height = "100%";
+    overlay.style.pointerEvents = "none";
+    overlay.style.zIndex = "5";
+
     positions.forEach((pos) => {
-      const highlightDiv = document.createElement('div');
-      
-      // Convert PDF coordinates to viewport coordinates
-      const [x1, y1, x2, y2] = pageViewport.convertToViewportRectangle([
-        pos.h,
-        pos.v,
-        pos.x,
-        pos.y,
-      ]);
-      
-      const left = Math.min(x1, x2);
-      const top = Math.min(y1, y2);
-      
-      // Use the original PDF dimensions scaled by viewport scale
-      const scaledWidth = pos.width * pageViewport.scale;
-      const scaledHeight = pos.height * pageViewport.scale;
-      
-      highlightDiv.style.position = 'absolute';
-      highlightDiv.style.left = left + 'px';
-      // Note: PDF coordinates are from bottom, viewport from top
-      highlightDiv.style.top = (pageViewport.height - top - scaledHeight) + 'px';
-      highlightDiv.style.width = scaledWidth + 'px';
-      highlightDiv.style.height = scaledHeight + 'px';
-      highlightDiv.style.backgroundColor = 'rgba(255, 226, 143, 0.6)';
-      highlightDiv.style.border = '1px solid rgba(255, 200, 0, 0.8)';
-      highlightDiv.style.transition = 'background-color 0.3s ease';
-      
+      const { left, top, width, height } = pdfPositionToViewportRect(pos, pageViewport);
+      const highlightDiv = document.createElement("div");
+
+      highlightDiv.style.position = "absolute";
+      highlightDiv.style.left = `${left}px`;
+      highlightDiv.style.top = `${top}px`;
+      highlightDiv.style.width = `${width}px`;
+      highlightDiv.style.height = `${height}px`;
+      highlightDiv.style.backgroundColor = "rgba(255, 226, 143, 0.6)";
+      highlightDiv.style.border = "1px solid rgba(255, 200, 0, 0.8)";
+      highlightDiv.style.transition = "background-color 0.3s ease";
+
       overlay.appendChild(highlightDiv);
     });
-    
-    container.appendChild(overlay);
+
+    overlayHost.appendChild(overlay);
   };
 
   // Find URL-like matches across an array of text items and map them to per-item ranges.

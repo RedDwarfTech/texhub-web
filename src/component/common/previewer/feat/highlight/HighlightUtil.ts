@@ -1,6 +1,33 @@
-import { PDFPageProxy } from "pdfjs-dist";
+import { PageViewport, PDFPageProxy } from "pdfjs-dist";
 import { CSSProperties } from "react";
 import { TextItem } from "react-pdf";
+import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
+
+/** SyncTeX (top-left origin) → viewport CSS rect for PDF highlight overlays. */
+export const pdfPositionToViewportRect = (
+  pos: PdfPosition,
+  viewport: PageViewport
+): { left: number; top: number; width: number; height: number } => {
+  const pageHeight = viewport.viewBox[3] - viewport.viewBox[1];
+  const pdfX1 = pos.x;
+  const pdfX2 = pos.x + pos.width;
+  const pdfYBottom = pageHeight - pos.y - pos.height;
+  const pdfYTop = pageHeight - pos.y;
+
+  const [x1, y1, x2, y2] = viewport.convertToViewportRectangle([
+    pdfX1,
+    pdfYBottom,
+    pdfX2,
+    pdfYTop,
+  ]);
+
+  return {
+    left: Math.min(x1, x2),
+    top: Math.min(y1, y2),
+    width: Math.abs(x2 - x1),
+    height: Math.abs(y2 - y1),
+  };
+};
 
 export const extractTextItems = async (
   page: PDFPageProxy,
