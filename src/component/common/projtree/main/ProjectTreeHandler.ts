@@ -192,21 +192,12 @@ export const clearLegacyFile = (
 
 export const clearLegacyEditor = (
   selectedFile: TexFileModel,
-  curRootYDoc: Y.Doc,
-  editorView: EditorView | undefined
+  _curRootYDoc: Y.Doc,
+  _editorView: EditorView | undefined
 ) => {
-  console.warn("destroy the legacy file", selectedFile);
-  if (
-    editorView &&
-    !BaseMethods.isNull(editorView) &&
-    (editorView as EditorView).state
-  ) {
-    editorView.dispatch({
-      changes: {
-        from: 0,
-        to: editorView.state.doc.length,
-        insert: "",
-      },
-    });
-  }
+  // 切换文件时仅解绑编辑器，不可 dispatch 空内容：yCollab 仍绑定旧文件 Y.Text，会同步全文删除到服务端
+  console.log("[file-switch] leaving file without clearing yjs content", {
+    fileId: selectedFile.file_id,
+    name: selectedFile.name,
+  });
 };
