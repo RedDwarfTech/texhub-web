@@ -1,11 +1,6 @@
 /**
  * all offset change based on base offset
  * which offset with the scale of 1
- * 
- * @param legacyScale 
- * @param newScale 
- * @param offset 
- * @returns 
  */
 export const getNewScaleOffsetPosition = (
   legacyScale: number,
@@ -18,7 +13,30 @@ export const getNewScaleOffsetPosition = (
   if (newScale <= 0) {
     newScale = 0.1;
   }
-  let baseOffset = offset / legacyScale;
-  let newOffset = baseOffset * newScale;
-  return newOffset;
+  const baseOffset = offset / legacyScale;
+  return baseOffset * newScale;
+};
+
+export interface ScrollAnchor {
+  viewportCenterY: number;
+  scale: number;
+}
+
+export const captureScrollAnchor = (
+  scrollTop: number,
+  clientHeight: number,
+  scale: number
+): ScrollAnchor => ({
+  viewportCenterY: scrollTop + clientHeight / 2,
+  scale,
+});
+
+export const restoreScrollFromAnchor = (
+  anchor: ScrollAnchor,
+  newScale: number,
+  clientHeight: number
+): number => {
+  const scaleRatio = newScale / anchor.scale;
+  const newCenterY = anchor.viewportCenterY * scaleRatio;
+  return Math.max(0, newCenterY - clientHeight / 2);
 };

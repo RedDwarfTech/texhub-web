@@ -6,6 +6,7 @@ import { DocumentCallback } from "react-pdf/dist/shared/types.js";
 import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import MemoizedPDFPreview from "../doc/MemoizedPDFPreview";
+import { PDFPreviewZoomHandle } from "@/model/props/proj/pdf/PDFPreviewZoomHandle";
 import { CompileStatus } from "@/model/proj/compile/CompileStatus";
 import { CompileQueue } from "@/model/proj/CompileQueue";
 import {
@@ -163,8 +164,14 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   const [outline, setOutline] = useState<any[]>([]);
   const [pdfProxy, setPdfProxy] = useState<DocumentCallback | null>(null);
   const virtualListRef = React.useRef<ListImperativeAPI>(null);
+  const pdfPreviewRef = React.useRef<PDFPreviewZoomHandle>(null);
   const { handleScrollTop, handleZoomIn, handleFullScreen, handleZoomOut } =
-    usePreviewHandler(props.projectId, props.viewModel, virtualListRef);
+    usePreviewHandler(
+      props.projectId,
+      props.viewModel,
+      virtualListRef,
+      pdfPreviewRef,
+    );
   const compileResultType = useSelector(
     (state: AppState) => state.preview.compileResultType,
   );
@@ -398,6 +405,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
               className={styles.fcPdfPreviewContainer}
             >
               <MemoizedPDFPreview
+                ref={pdfPreviewRef}
                 curPdfUrl={curPdfUrl}
                 projId={props.projectId}
                 viewModel={props.viewModel}
@@ -416,6 +424,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     return (
       <div id="pdf-preview-container" className={styles.pdfPreviewContainer}>
         <MemoizedPDFPreview
+          ref={pdfPreviewRef}
           curPdfUrl={curPdfUrl}
           projId={props.projectId}
           viewModel={props.viewModel}
@@ -527,7 +536,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
             data-bs-toggle="tooltip"
             title={t("btn_scroll_top")}
             onClick={() => {
-              handleScrollTop(virtualListRef, props.projectId, props.viewModel);
+              handleScrollTop(virtualListRef, props.projectId);
             }}
           >
             <i className="fa-solid fa-arrow-up"></i>

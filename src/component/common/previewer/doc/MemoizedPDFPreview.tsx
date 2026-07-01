@@ -1,4 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, {
+  useRef,
+  useState,
+  useImperativeHandle,
+  useCallback,
+} from "react";
 import { Document } from "react-pdf";
 import styles from "./MemoizedPDFPreview.module.css";
 
@@ -21,388 +26,480 @@ import {
   getCurPdfScale,
   getCurPdfScrollOffset,
   setAndDispatchPdfPage,
+  setCurPdfScale,
   setCurPdfScrollOffset,
   setDocLoadTime,
 } from "@/service/project/preview/PreviewService";
-import { PreviewPdfAttribute } from "@/model/proj/config/PreviewPdfAttribute";
+import { setProjAttr } from "@/service/project/ProjectService";
 import TeXPDFPage from "./TeXPDFPage";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { getAccessToken } from "../../cache/Cache";
 import { authTokenEquals, getAuthorization } from "@/config/pdf/PdfJsConfig";
-import { getNewScaleOffsetPosition } from "../calc/ScrollUtil";
+import {
+  captureScrollAnchor,
+  restoreScrollFromAnchor,
+  ScrollAnchor,
+} from "../calc/ScrollUtil";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import { CustomHighlightLayer, HighlightArea } from "../feat/highlight/CustomHighlightLayer";
 import { DocumentCallback } from "react-pdf/dist/shared/types.js";
+import { PDFPreviewZoomHandle } from "@/model/props/proj/pdf/PDFPreviewZoomHandle";
 
-const MemoizedPDFPreview: React.FC<PDFPreviewProps> = React.memo(
-  ({
-    curPdfUrl,
-    projId,
-    viewModel = "default",
-    setPageNum,
-    virtualListRef,
-    pdfOptions,
-    curPdfPage,
-    onOutlineLoaded,
-    onPdfLoaded,
-  }) => {
-    type PdfRowProps = {
-      width: number;
-      height: number;
-      pageViewports: any;
-      projId: string;
-      curPdfPosition?: PdfPosition[];
-      setAreas: (areas: HighlightArea[]) => void;
-      viewModel: string;
-    };
+const ZOOM_DEBOUNCE_MS = 150;
+const MIN_SCALE = 0.2;
+const MAX_SCALE = 5;
 
-    let cachedScale = getCurPdfScale(projId, viewModel);
-    // Narrow selectors: any change to proj (e.g. streamLogText SSE) replaces the
-    // whole proj slice; subscribing to state.proj would re-render the PDF on every log line.
-    const pdfFocus = useSelector((state: AppState) => state.proj.pdfFocus);
-    const projAttr = useSelector((state: AppState) => state.proj.projAttr);
-    const [pageLocalNum, setPageLocalNum] = useState<number>();
-    const [highlightAreas, setHighlightAreas] = useState<HighlightArea[]>([]);
-    const [pdf, setPdf] = useState<DocumentCallback>();
-    const [pageViewports, setPageViewports] = useState<any>();
-    const divRef = useRef<HTMLDivElement>(null);
-    const pendingScrollOffsetRef = useRef<number | null>(null);
-    const suppressRowsRenderedRef = useRef(false);
-    const initialPageNavRef = useRef(false);
-    const zoomScrollGuardRef = useRef<{ target: number; until: number } | null>(
-      null
-    );
-    const [projAttribute, setProjAttribute] = useState<PreviewPdfAttribute>({
-      pdfScale: cachedScale,
-      legacyPdfScale: cachedScale,
-    });
-    const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
-
-    const restoreScrollAfterZoom = (targetOffset: number) => {
-      zoomScrollGuardRef.current = {
-        target: targetOffset,
-        until: Date.now() + 2000,
+const MemoizedPDFPreview = React.memo(
+  React.forwardRef<PDFPreviewZoomHandle, PDFPreviewProps>(
+    (
+      {
+        curPdfUrl,
+        projId,
+        viewModel = "default",
+        setPageNum,
+        virtualListRef,
+        pdfOptions,
+        curPdfPage,
+        onOutlineLoaded,
+        onPdfLoaded,
+      },
+      ref
+    ) => {
+      type PdfRowProps = {
+        width: number;
+        height: number;
+        pageViewports: any;
+        curPdfPosition?: PdfPosition[];
+        pdfScale: number;
+        visualScale: number;
       };
-      suppressRowsRenderedRef.current = true;
 
-      let attempts = 0;
-      const maxAttempts = 20;
+      const initialScale = getCurPdfScale(projId, viewModel);
+      const pdfFocus = useSelector((state: AppState) => state.proj.pdfFocus);
+      const [pageLocalNum, setPageLocalNum] = useState<number>();
+      const [highlightAreas, setHighlightAreas] = useState<HighlightArea[]>([]);
+      const [pdf, setPdf] = useState<DocumentCallback>();
+      const [pageViewports, setPageViewports] = useState<any>();
+      const [committedScale, setCommittedScale] = useState(initialScale);
+      const [visualScale, setVisualScale] = useState(initialScale);
+      const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
 
-      const tryRestore = () => {
+      const divRef = useRef<HTMLDivElement>(null);
+      const suppressRowsRenderedRef = useRef(false);
+      const initialPageNavRef = useRef(false);
+      const zoomScrollGuardRef = useRef<{ target: number; until: number } | null>(
+        null
+      );
+      const zoomDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+      const scrollAnchorRef = useRef<ScrollAnchor | null>(null);
+      const pendingScrollRestoreRef = useRef(false);
+      const committedScaleRef = useRef(initialScale);
+      const visualScaleRef = useRef(initialScale);
+      const listWidthRef = useRef(0);
+
+      committedScaleRef.current = committedScale;
+      visualScaleRef.current = visualScale;
+
+      const restoreScrollAfterZoom = useCallback(
+        (targetOffset: number) => {
+          zoomScrollGuardRef.current = {
+            target: targetOffset,
+            until: Date.now() + 2000,
+          };
+          suppressRowsRenderedRef.current = true;
+
+          let attempts = 0;
+          const maxAttempts = 20;
+
+          const tryRestore = () => {
+            const el = virtualListRef.current?.element;
+            if (!el) {
+              if (++attempts < maxAttempts) {
+                requestAnimationFrame(tryRestore);
+              } else {
+                suppressRowsRenderedRef.current = false;
+              }
+              return;
+            }
+
+            el.scrollTop = targetOffset;
+            const settled = Math.abs(el.scrollTop - targetOffset) <= 1;
+
+            if (!settled && ++attempts < maxAttempts) {
+              requestAnimationFrame(tryRestore);
+            } else {
+              setCurPdfScrollOffset(el.scrollTop, projId, "zoomRestore");
+              setTimeout(() => {
+                suppressRowsRenderedRef.current = false;
+              }, 300);
+            }
+          };
+
+          requestAnimationFrame(tryRestore);
+        },
+        [projId, virtualListRef]
+      );
+
+      const commitScale = useCallback(
+        (newScale: number) => {
+          const oldScale = committedScaleRef.current;
+          if (Math.abs(newScale - oldScale) < 0.001) {
+            setVisualScale(newScale);
+            return;
+          }
+
+          setCommittedScale(newScale);
+          setVisualScale(newScale);
+          committedScaleRef.current = newScale;
+          visualScaleRef.current = newScale;
+
+          setCurPdfScale(newScale, projId, viewModel);
+          setProjAttr({
+            pdfScale: newScale,
+            legacyPdfScale: oldScale,
+          });
+
+          pendingScrollRestoreRef.current = true;
+        },
+        [projId, viewModel]
+      );
+
+      const applyVisualZoom = useCallback(
+        (newScale: number) => {
+          const scrollEl = virtualListRef.current?.element;
+          if (scrollEl && !zoomDebounceRef.current) {
+            scrollAnchorRef.current = captureScrollAnchor(
+              scrollEl.scrollTop,
+              scrollEl.clientHeight,
+              committedScaleRef.current
+            );
+            setCurPdfScrollOffset(scrollEl.scrollTop, projId, "handleZoom");
+          }
+
+          visualScaleRef.current = newScale;
+          setVisualScale(newScale);
+
+          if (zoomDebounceRef.current) {
+            clearTimeout(zoomDebounceRef.current);
+          }
+          zoomDebounceRef.current = setTimeout(() => {
+            zoomDebounceRef.current = null;
+            commitScale(newScale);
+          }, ZOOM_DEBOUNCE_MS);
+        },
+        [commitScale, projId, virtualListRef]
+      );
+
+      useImperativeHandle(
+        ref,
+        () => ({
+          zoomIn: () => {
+            const current = visualScaleRef.current;
+            const newScale =
+              current >= MAX_SCALE ? MAX_SCALE : current + 0.1;
+            if (Math.abs(newScale - current) < 0.001) {
+              return;
+            }
+            applyVisualZoom(newScale);
+          },
+          zoomOut: () => {
+            const current = visualScaleRef.current;
+            const newScale =
+              current <= MIN_SCALE ? MIN_SCALE : current - 0.1;
+            if (Math.abs(newScale - current) < 0.001) {
+              return;
+            }
+            applyVisualZoom(newScale);
+          },
+        }),
+        [applyVisualZoom]
+      );
+
+      React.useEffect(() => {
+        return () => {
+          if (zoomDebounceRef.current) {
+            clearTimeout(zoomDebounceRef.current);
+          }
+        };
+      }, []);
+
+      React.useLayoutEffect(() => {
+        if (!pendingScrollRestoreRef.current || !scrollAnchorRef.current) {
+          return;
+        }
+        pendingScrollRestoreRef.current = false;
+
         const el = virtualListRef.current?.element;
         if (!el) {
-          if (++attempts < maxAttempts) {
-            requestAnimationFrame(tryRestore);
-          } else {
-            suppressRowsRenderedRef.current = false;
-          }
           return;
         }
 
-        el.scrollTop = targetOffset;
-        const settled = Math.abs(el.scrollTop - targetOffset) <= 1;
+        const targetOffset = restoreScrollFromAnchor(
+          scrollAnchorRef.current,
+          committedScale,
+          el.clientHeight
+        );
+        scrollAnchorRef.current = null;
+        restoreScrollAfterZoom(targetOffset);
+      }, [committedScale, restoreScrollAfterZoom, virtualListRef]);
 
-        if (!settled && ++attempts < maxAttempts) {
-          requestAnimationFrame(tryRestore);
-        } else {
-          setCurPdfScrollOffset(el.scrollTop, projId, "zoomRestore");
-          setTimeout(() => {
-            suppressRowsRenderedRef.current = false;
-          }, 300);
+      React.useEffect(() => {
+        setPageViewports(undefined);
+
+        if (!pdf) {
+          return;
+        }
+
+        (async () => {
+          const pageNumbers = Array.from(new Array(pdf.numPages)).map(
+            (_, index) => index + 1
+          );
+
+          const nextPageViewports = await asyncMap(
+            pageNumbers,
+            (pageNumber: number) =>
+              pdf
+                .getPage(pageNumber)
+                .then((page: any) => page.getViewport({ scale: 1 }))
+          );
+          setPageViewports(nextPageViewports);
+        })();
+      }, [pdf]);
+
+      React.useEffect(() => {
+        if (pdfFocus && pdfFocus.length > 0) {
+          const pageNum = pdfFocus[0].page;
+          setAndDispatchPdfPage(pageNum, projId, "pdfFocus");
+          setCurPdfPosition(pdfFocus);
+          if (virtualListRef.current) {
+            scrollToPage(pageNum, virtualListRef);
+          }
+        }
+      }, [pdfFocus, projId, virtualListRef]);
+
+      const onDocumentLoadSuccess = (loadedPdf: DocumentCallback) => {
+        const { numPages } = loadedPdf;
+        setPageNum(numPages);
+        setPageLocalNum(numPages);
+        setPdf(loadedPdf);
+        if (onPdfLoaded) {
+          onPdfLoaded(loadedPdf);
+        }
+        setDocLoadTime();
+        loadedPdf
+          .getOutline()
+          .then((outline: any) => {
+            if (onOutlineLoaded) {
+              onOutlineLoaded(outline || []);
+            }
+          })
+          .catch((error: any) => {
+            console.error("Failed to get outline:", error);
+            if (onOutlineLoaded) {
+              onOutlineLoaded([]);
+            }
+          });
+      };
+
+      const getDynStyles = (vm: string) => {
+        switch (vm) {
+          case "default":
+            return styles.previewBody;
+          case "fullscreen":
+            return styles.previewFsBody;
+          default:
+            return styles.previewBody;
         }
       };
 
-      requestAnimationFrame(tryRestore);
-    };
+      const handleWindowPdfScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        const scrollEl = e.currentTarget;
+        let scrollOffset = scrollEl.scrollTop;
 
-    const setAreas = (areas: HighlightArea[]) => {
-      setHighlightAreas(areas);
-    }
-
-    React.useEffect(() => {
-      if (projAttr.pdfScale !== projAttr.legacyPdfScale) {
-        const curOffset = getCurPdfScrollOffset(projId);
-        pendingScrollOffsetRef.current = getNewScaleOffsetPosition(
-          projAttr.legacyPdfScale,
-          projAttr.pdfScale,
-          curOffset
-        );
-      }
-      setProjAttribute(projAttr);
-    }, [projAttr, projId]);
-
-    React.useLayoutEffect(() => {
-      if (pendingScrollOffsetRef.current === null) {
-        return;
-      }
-      const targetOffset = pendingScrollOffsetRef.current;
-      pendingScrollOffsetRef.current = null;
-      restoreScrollAfterZoom(targetOffset);
-    }, [projAttribute.pdfScale, projId]);
-
-    React.useEffect(() => {
-      setPageViewports(undefined);
-
-      if (!pdf) {
-        return;
-      }
-
-      (async () => {
-        const pageNumbers = Array.from(new Array(pdf.numPages)).map(
-          (_, index) => index + 1
-        );
-
-        const nextPageViewports = await asyncMap(
-          pageNumbers,
-          (pageNumber: number) =>
-            pdf
-              .getPage(pageNumber)
-              .then((page:any) =>
-                page.getViewport({ scale: projAttr.pdfScale || 1 })
-              )
-        );
-        setPageViewports(nextPageViewports);
-      })();
-    }, [pdf]);
-
-    React.useEffect(() => {
-      if (pdfFocus && pdfFocus.length > 0) {
-        let pageNum = pdfFocus[0].page;
-        setAndDispatchPdfPage(pageNum, projId, "pdfFocus");
-        setCurPdfPosition(pdfFocus);
-        if (virtualListRef.current) {
-          scrollToPage(pageNum, virtualListRef);
+        const guard = zoomScrollGuardRef.current;
+        if (
+          guard &&
+          Date.now() < guard.until &&
+          scrollOffset < 10 &&
+          guard.target > 50
+        ) {
+          scrollEl.scrollTop = guard.target;
+          scrollOffset = guard.target;
+        } else if (guard && Date.now() >= guard.until) {
+          zoomScrollGuardRef.current = null;
         }
-        setTimeout(() => {
-          // setCurPdfPosition([]);
-        }, 10000);
-      }
-    }, [pdfFocus]);
 
-    const onDocumentLoadSuccess = (pdf: DocumentCallback) => {
-      const { numPages } = pdf;
-      setPageNum(numPages);
-      setPageLocalNum(numPages);
-      setPdf(pdf);
-      if (onPdfLoaded) {
-        onPdfLoaded(pdf);
-      }
-      if (virtualListRef.current) {
-        console.log("current list is not null");
-      }
-      setDocLoadTime();
-      // Get outline
-      pdf
-        .getOutline()
-        .then((outline:any) => {
-          if (onOutlineLoaded) {
-            onOutlineLoaded(outline || []);
-          }
-        })
-        .catch((error:any) => {
-          console.error("Failed to get outline:", error);
-          if (onOutlineLoaded) {
-            onOutlineLoaded([]);
-          }
-        });
-    };
+        const docLoadTime = localStorage.getItem("docLoadTime");
+        if (docLoadTime && isMoreThanFiveSeconds(docLoadTime)) {
+          setCurPdfScrollOffset(scrollOffset, projId, "handleWindowPdfScroll");
+        }
+      };
 
-    const getDynStyles = (viewModel: string) => {
-      switch (viewModel) {
-        case "default":
-          return styles.previewBody;
-        case "fullscreen":
-          return styles.previewFsBody;
-        default:
-          return styles.previewBody;
-      }
-    };
+      const getPageHeight = (pageIndex: number, width: number) => {
+        if (!pageViewports) {
+          throw new Error("getPageHeight() called too early");
+        }
+        const pageViewport = pageViewports[pageIndex];
+        const fitScale = width / pageViewport.width;
+        const actualHeight = pageViewport.height * fitScale * committedScale;
+        return actualHeight + 10;
+      };
 
-    const handleWindowPdfScroll = (e: React.UIEvent<HTMLDivElement>) => {
-      const scrollEl = e.currentTarget;
-      let scrollOffset = scrollEl.scrollTop;
+      const setAreas = (areas: HighlightArea[]) => {
+        setHighlightAreas(areas);
+      };
 
-      const guard = zoomScrollGuardRef.current;
-      if (
-        guard &&
-        Date.now() < guard.until &&
-        scrollOffset < 10 &&
-        guard.target > 50
-      ) {
-        scrollEl.scrollTop = guard.target;
-        scrollOffset = guard.target;
-      } else if (guard && Date.now() >= guard.until) {
-        zoomScrollGuardRef.current = null;
-      }
+      const renderPdfList = (width: number, height: number) => {
+        listWidthRef.current = width;
+        if (pdf && pageViewports) {
+          const PdfRow = ({
+            index,
+            style,
+            width,
+            height,
+            pageViewports,
+            curPdfPosition,
+            pdfScale,
+            visualScale,
+          }: RowComponentProps<PdfRowProps>) => {
+            return (
+              <TeXPDFPage
+                index={index + 1}
+                width={width}
+                height={height}
+                style={style}
+                viewPort={pageViewports[index]}
+                curPdfPosition={curPdfPosition}
+                pdfScale={pdfScale}
+                visualScale={visualScale}
+              />
+            );
+          };
 
-      let docLoadTime = localStorage.getItem("docLoadTime");
-      if (docLoadTime && isMoreThanFiveSeconds(docLoadTime)) {
-        setCurPdfScrollOffset(scrollOffset, projId, "handleWindowPdfScroll");
-      }
-    };
-
-    const getPageHeight = (pageIndex: number, width: number) => {
-      if (!pageViewports) {
-        throw new Error("getPageHeight() called too early");
-      }
-      const pageViewport = pageViewports[pageIndex];
-      const scale = width / pageViewport.width;
-      // we need to change the height of the pdf page when scale
-      // the pdf content will override each other when scale the page
-      const actualHeight = pageViewport.height * scale * projAttribute.pdfScale;
-      // margin 10px for each pdf pages
-      return actualHeight + 10;
-    };
-
-    /**
-     * only work for the first time loading
-     *
-     * @param projAttribute
-     * @returns
-     */
-    const getInitialOffset = () => {
-      let curOffset = getCurPdfScrollOffset(projId);
-      return curOffset;
-    };
-
-    /**
-     * https://codesandbox.io/p/sandbox/react-pdf-react-window-forked-rcw56x?file=%2Fsrc%2FApp.js%3A81%2C35
-     *
-     * @returns
-     */
-    const renderPdfList = (width: number, height: number) => {
-      if (pdf && pageViewports) {
-        const PdfRow = ({
-          index,
-          style,
-          width,
-          height,
-          pageViewports,
-          projId,
-          curPdfPosition,
-          setAreas,
-          viewModel,
-        }: RowComponentProps<PdfRowProps>) => {
           return (
-            <TeXPDFPage
-              index={index + 1}
-              width={width}
-              height={height}
-              style={style}
-              projId={projId}
-              viewPort={pageViewports[index]}
-              curPdfPosition={curPdfPosition}
-              setHighlightAreas={setAreas}
-              viewModel={viewModel}
+            <List
+              key={"pdfScrollList"}
+              listRef={virtualListRef as React.RefObject<ListImperativeAPI>}
+              rowCount={pdf.numPages}
+              rowHeight={(pageIndex: number) => getPageHeight(pageIndex, width)}
+              rowComponent={PdfRow}
+              rowProps={{
+                width,
+                height,
+                pageViewports,
+                curPdfPosition,
+                pdfScale: committedScale,
+                visualScale,
+              }}
+              overscanCount={2}
+              onScroll={handleWindowPdfScroll}
+              onRowsRendered={(visibleRows) => {
+                if (suppressRowsRenderedRef.current) {
+                  return;
+                }
+
+                if (
+                  curPdfPage &&
+                  curPdfPage > 0 &&
+                  !initialPageNavRef.current
+                ) {
+                  initialPageNavRef.current = true;
+                  setAndDispatchPdfPage(curPdfPage, projId, "fullscreennav");
+                  requestAnimationFrame(() => {
+                    scrollToPage(curPdfPage, virtualListRef);
+                  });
+                  return;
+                }
+
+                setAndDispatchPdfPage(
+                  visibleRows.stopIndex,
+                  projId,
+                  "IntersectionObserver"
+                );
+              }}
+              style={{ width, height }}
             />
           );
-        };
-
-        return (
-          <List
-            key={"pdfScrollList"}
-            listRef={virtualListRef as React.RefObject<ListImperativeAPI>}
-            rowCount={pdf.numPages}
-            rowHeight={(pageIndex: number) => getPageHeight(pageIndex, width)}
-            rowComponent={PdfRow}
-            rowProps={{
-              width,
-              height,
-              pageViewports,
-              projId,
-              curPdfPosition,
-              setAreas,
-              viewModel,
-            }}
-            overscanCount={0}
-            onScroll={handleWindowPdfScroll}
-            onRowsRendered={(visibleRows) => {
-              if (suppressRowsRenderedRef.current) {
-                return;
-              }
-
-              if (curPdfPage && curPdfPage > 0 && !initialPageNavRef.current) {
-                initialPageNavRef.current = true;
-                setAndDispatchPdfPage(curPdfPage, projId, "fullscreennav");
-                requestAnimationFrame(() => {
-                  scrollToPage(curPdfPage, virtualListRef);
-                });
-                return;
-              }
-
-              setAndDispatchPdfPage(
-                visibleRows.stopIndex,
-                projId,
-                "IntersectionObserver"
-              );
-            }}
-            style={{ width, height }}
-          />
-        );
-      }
-    };
-
-    const onResize = (size: Size) => {};
-
-    // avoid the cached expired token
-    if (
-      pdfOptions &&
-      pdfOptions.httpHeaders &&
-      getAuthorization(pdfOptions.httpHeaders) !== "Bearer " + getAccessToken()
-    ) {
-      pdfOptions.httpHeaders = {
-        Authorization: "Bearer " + getAccessToken(),
+        }
       };
-    }
 
-    return (
-      <AutoSizer
-        onResize={onResize}
-        style={{ width: "100%", height: "100%" }}
-        renderProp={({ width, height }: { width: number | undefined; height: number | undefined }) => (
-          <div id="autoSizerContainer" style={{ flex: 1, display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
-            <Document
-              options={pdfOptions}
-              file={curPdfUrl!}
-              onLoadSuccess={onDocumentLoadSuccess}
+      const onResize = (_size: Size) => {};
+
+      if (
+        pdfOptions &&
+        pdfOptions.httpHeaders &&
+        getAuthorization(pdfOptions.httpHeaders) !==
+          "Bearer " + getAccessToken()
+      ) {
+        pdfOptions.httpHeaders = {
+          Authorization: "Bearer " + getAccessToken(),
+        };
+      }
+
+      return (
+        <AutoSizer
+          onResize={onResize}
+          style={{ width: "100%", height: "100%" }}
+          renderProp={({
+            width,
+            height,
+          }: {
+            width: number | undefined;
+            height: number | undefined;
+          }) => (
+            <div
+              id="autoSizerContainer"
+              style={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+                height: "100%",
+              }}
             >
-              <div
-                id="pdfContainer"
-                ref={divRef}
-                className={getDynStyles(viewModel)}
-                style={{
-                  height: viewModel === "fullscreen" ? "100%" : "100vh",
-                  // do not setting the width to make it auto fit
-                  width: viewModel === "fullscreen" ? "100%" : "100vw",
-                  display: "flex",
-                  flexDirection: "column",
-                  overflow: "hidden",
-                  flex: 1,
-                  backgroundColor: "#ededed",
-                }}
-                onClick={openPdfUrlLink}
+              <Document
+                options={pdfOptions}
+                file={curPdfUrl!}
+                onLoadSuccess={onDocumentLoadSuccess}
               >
-                {renderPdfList(width || 0, height || 0)}
-              </div>
-            </Document>
-            <CustomHighlightLayer
-              highlightAreas={highlightAreas}
-              totalPages={pageLocalNum || 0}
-              scale={projAttribute.pdfScale}
-            />
-          </div>
-        )}
-      />
-    );
-  },
+                <div
+                  id="pdfContainer"
+                  ref={divRef}
+                  className={getDynStyles(viewModel)}
+                  style={{
+                    height: viewModel === "fullscreen" ? "100%" : "100vh",
+                    width: viewModel === "fullscreen" ? "100%" : "100vw",
+                    display: "flex",
+                    flexDirection: "column",
+                    overflow: "hidden",
+                    flex: 1,
+                    backgroundColor: "#ededed",
+                  }}
+                  onClick={openPdfUrlLink}
+                >
+                  {renderPdfList(width || 0, height || 0)}
+                </div>
+              </Document>
+              <CustomHighlightLayer
+                highlightAreas={highlightAreas}
+                totalPages={pageLocalNum || 0}
+                scale={visualScale}
+              />
+            </div>
+          )}
+        />
+      );
+    }
+  ),
   (prevProps, nextProps) => {
-    let arePropsEqual = prevProps.curPdfUrl === nextProps.curPdfUrl;
-    let areAuthEqual = authTokenEquals(nextProps.pdfOptions);
-    let binded = prevProps.virtualListRef.current !== null;
-    // if the final value is true, means did not need to rerender
+    const arePropsEqual = prevProps.curPdfUrl === nextProps.curPdfUrl;
+    const areAuthEqual = authTokenEquals(nextProps.pdfOptions);
+    const binded = prevProps.virtualListRef.current !== null;
     return arePropsEqual && areAuthEqual && binded;
   }
 );
+
+MemoizedPDFPreview.displayName = "MemoizedPDFPreview";
 
 export default MemoizedPDFPreview;
