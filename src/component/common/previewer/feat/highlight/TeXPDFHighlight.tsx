@@ -1,7 +1,7 @@
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { v4 as uuid } from 'uuid';
 import { PageViewport } from 'pdfjs-dist';
-import { computeMedianLineStep, pdfPositionToViewportRect } from "./HighlightUtil";
+import { pdfPositionToViewportRect } from "./HighlightUtil";
 
 interface HighlightProps {
     position: PdfPosition[];
@@ -17,7 +17,6 @@ const TeXPDFHighlight: React.FC<HighlightProps> = ({ position, pageNumber, viewp
     const renderArea = (position: PdfPosition[]) => {
         const highlightList: JSX.Element[] = [];
         const pagePositions = position.filter((item) => item.page === pageNumber);
-        const lineStep = computeMedianLineStep(pagePositions);
 
         pagePositions.forEach((item) => {
             if (!viewport) {
@@ -25,8 +24,7 @@ const TeXPDFHighlight: React.FC<HighlightProps> = ({ position, pageNumber, viewp
             }
             const { left, top, width, height } = pdfPositionToViewportRect(
                 item,
-                viewport,
-                lineStep
+                viewport
             );
             highlightList.push(
                 <div key={uuid()} style={{

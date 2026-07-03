@@ -3,7 +3,10 @@ import { Page } from "react-pdf";
 import styles from "./TeXPDFPage.module.css";
 import { PageViewport } from "pdfjs-dist";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
-import { computeMedianLineStep, pdfPositionToViewportRect } from "../feat/highlight/HighlightUtil";
+import {
+  getEffectivePageScale,
+  pdfPositionToViewportRect,
+} from "../feat/highlight/HighlightUtil";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import { PageCallback } from "react-pdf/dist/shared/types.js";
@@ -68,6 +71,17 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     }
   }, [curPdfPosition, index, pageViewport]);
 
+  const updatePageViewport = (page: { getViewport: (params: { scale: number }) => PageViewport }) => {
+    const effectiveScale = getEffectivePageScale(page, pdfScale || 1, width);
+    setPageViewport(page.getViewport({ scale: effectiveScale }));
+  };
+
+  useEffect(() => {
+    if (pageRef.current) {
+      updatePageViewport(pageRef.current);
+    }
+  }, [pdfScale, width]);
+
   const renderHighlightsOnPage = (positions: PdfPosition[]) => {
     if (!pageViewport) return;
 
@@ -95,13 +109,10 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     overlay.style.pointerEvents = "none";
     overlay.style.zIndex = "5";
 
-    const lineStep = computeMedianLineStep(positions);
-
     positions.forEach((pos) => {
       const { left, top, width, height } = pdfPositionToViewportRect(
         pos,
-        pageViewport,
-        lineStep
+        pageViewport
       );
       const highlightDiv = document.createElement("div");
       highlightDiv.style.position = "absolute";
@@ -118,9 +129,9 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   };
 
   const handlePageChange = (page: any) => {
-    if (page && page.getViewport) {
-      const viewport = page.getViewport({ scale: pdfScale || 1 });
-      setPageViewport(viewport);
+    if (page?.getViewport) {
+      pageRef.current = page;
+      updatePageViewport(page);
     }
   };
 
@@ -176,8 +187,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
           renderTextLayer={true}
           onLoadSuccess={(page) => {
             pageRef.current = page;
-            const viewport = page.getViewport({ scale: pdfScale || 1 });
-            setPageViewport(viewport);
+            updatePageViewport(page);
           }}
         />
       </div>
