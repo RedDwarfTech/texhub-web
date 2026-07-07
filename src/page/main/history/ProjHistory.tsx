@@ -62,6 +62,16 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
     };
   }, []);
 
+  const historyContextKey = curHistoryFile?.id
+    ? `file:${curHistoryFile.id}`
+    : "project";
+
+  React.useEffect(() => {
+    setHistoryList([]);
+    setHasMore(true);
+    loadingRef.current = false;
+  }, [historyContextKey]);
+
   React.useEffect(() => {
     const pageData = projHisPage?.data;
     if (!pageData) {
@@ -213,6 +223,11 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
 
   const backToDefaultHistory = () => {
     setHistoryVersionFile({} as TexFileModel);
+    const hist: QueryHistory = {
+      project_id: props.projectId,
+      page_size: defaultHistoryPageSize,
+    };
+    projHistoryPage(hist);
   };
 
   return (
