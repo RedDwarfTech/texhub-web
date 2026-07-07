@@ -3,46 +3,34 @@ import { CSSProperties } from "react";
 import { TextItem } from "react-pdf";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 
-/** Median line spacing inferred from SyncTeX y values on the same page. */
-export const computeMedianLineStep = (positions: PdfPosition[]): number | undefined => {
-  const ys = [...new Set(positions.map((p) => p.y))].sort((a, b) => a - b);
-  if (ys.length < 2) return undefined;
-
-  const steps: number[] = [];
-  for (let i = 1; i < ys.length; i++) {
-    const step = ys[i] - ys[i - 1];
-    if (step > 0) steps.push(step);
-  }
-  if (steps.length === 0) return undefined;
-
-  steps.sort((a, b) => a - b);
-  const mid = Math.floor(steps.length / 2);
-  return steps.length % 2 === 0 ? (steps[mid - 1] + steps[mid]) / 2 : steps[mid];
+/** Match react-pdf Page scale when both `width` and `scale` props are set. */
+export const getEffectivePageScale = (
+  page: { getViewport: (params: { scale: number }) => PageViewport },
+  pdfScale: number,
+  fitWidth: number
+): number => {
+  const baseViewport = page.getViewport({ scale: 1 });
+  const widthScale = fitWidth > 0 ? fitWidth / baseViewport.width : 1;
+  return pdfScale * widthScale;
 };
 
 /**
  * SyncTeX box → viewport CSS rect.
- * API `x`/`y` map to synctex box_visible_h / box_visible_v; `y` is the lower
- * reference point (baseline area), not the box top — see TeXworks TWSynchronize.
+ * Uses h/v/width/height (box_visible_*), matching synctex_main.c CLI output:
+ * h = box_visible_h, v = box_visible_v + depth, height = height + depth.
  */
 export const pdfPositionToViewportRect = (
   pos: PdfPosition,
-  viewport: PageViewport,
-  lineStep?: number
+  viewport: PageViewport
 ): { left: number; top: number; width: number; height: number } => {
-  const syncTop = pos.y - pos.height;
-  const depth =
-    lineStep !== undefined && lineStep > pos.height ? lineStep - pos.height : 0;
-  const boxHeight = pos.height + depth;
-
-  const pdfYTop = viewport.viewBox[3] - syncTop;
-  const pdfYBottom = viewport.viewBox[3] - syncTop - boxHeight;
+  const pageHeight = viewport.viewBox[3];
+  const syncTop = pos.v - pos.height;
 
   const [x1, y1, x2, y2] = viewport.convertToViewportRectangle([
-    pos.x,
-    pdfYBottom,
-    pos.x + pos.width,
-    pdfYTop,
+    pos.h,
+    pageHeight - pos.v,
+    pos.h + pos.width,
+    pageHeight - syncTop,
   ]);
 
   return {
