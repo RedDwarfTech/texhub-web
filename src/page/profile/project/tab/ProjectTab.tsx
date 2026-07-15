@@ -494,10 +494,6 @@ const ProjectTab: React.FC = () => {
                 <span>{t("label_create_time")}：</span>
                 {projCreatedTime}
               </div>
-              <div>
-                <span>{t("label_update_time")}：</span>
-                {formattedTime}
-              </div>
             </div>
             <div>{renderFolderProj(folderItem.id)}</div>
           </div>
@@ -566,10 +562,6 @@ const ProjectTab: React.FC = () => {
             <div>
               <span>{t("label_create_time")}：</span>
               {projCreatedTime}
-            </div>
-            <div>
-              <span>{t("label_update_time")}：</span>
-              {formattedTime}
             </div>
           </div>
         </div>
