@@ -148,13 +148,13 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
   };
 
   const showHistory = (file: TexFileModel) => {
-    const hist: QueryHistory = {
+    setHistoryVersionFile(file);
+    const histQueryParam: QueryHistory = {
       project_id: file.project_id,
       page_size: defaultHistoryPageSize,
       file_int_id: file.id,
     };
-    projHistoryPage(hist);
-    setHistoryVersionFile(file);
+    projHistoryPage(histQueryParam);
     const offcanvasEl = document.getElementById("projHistory");
     if (offcanvasEl) {
       const bsOffcanvas = Offcanvas.getOrCreateInstance(offcanvasEl);

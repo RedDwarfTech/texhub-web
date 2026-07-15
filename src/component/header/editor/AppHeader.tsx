@@ -13,6 +13,7 @@ import {
   setContextCompileStatus,
   showPreviewTab,
   projHistoryPage,
+  setHistoryVersionFile,
 } from "@/service/project/ProjectService";
 import { useNavigate } from "react-router-dom";
 import { CompileQueueReq } from "@/model/request/proj/CompileQueueReq";
@@ -125,6 +126,7 @@ const EHeader: React.FC = () => {
   const handleSettings = (mainFile: TexFileModel) => {};
 
   const showProjHistory = (mainFile: TexFileModel) => {
+    setHistoryVersionFile({} as TexFileModel);
     const hist: QueryHistory = {
       project_id: mainFile.project_id,
       page_size: defaultHistoryPageSize
