@@ -4,10 +4,17 @@ import styles from "./RdTeXHubReg.module.css";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ResponseHandler } from "rdjs-wheel";
+import { BaseMethods, ResponseHandler } from "rdjs-wheel";
 import { AnyAction, Store } from "redux";
 import { UserService } from "rd-component";
 import { useTranslation } from "react-i18next";
+import { sendRegVerifySMS } from "@/service/project/PwdService";
+import { SendVerifyReq } from "@/model/request/pwd/SendVerifyReq";
+import { readConfig } from "@/config/app/config-reader";
+import CountdownTimer from "@/page/pwd/verify/CountdownTimer";
+import { SmsRemainInfo } from "@/model/user/SmsRemainInfo";
+
+const SMS_REG_REMAIN_KEY = "sms-reg-remain-seconds";
 
 interface IRegProp {
   appId: string;
@@ -18,11 +25,13 @@ interface IRegProp {
 const RdTeXHubReg: React.FC<IRegProp> = (props: IRegProp) => {
   const fpPromise = FingerprintJS.load();
   const phoneInputRef = useRef(null);
+  const codeInputRef = useRef(null);
   const passwordInputRef = useRef(null);
   const passwordReinputRef = useRef(null);
   const navigate = useNavigate();
   const [passwordShown, setPasswordShown] = useState(false);
   const [pwdConfirmShown, setPwdConfirmShown] = useState(false);
+  const [showCountDown, setShowCountDown] = useState<boolean>(false);
   const { t } = useTranslation();
 
   const togglePasswordVisibility = (
@@ -38,6 +47,83 @@ const RdTeXHubReg: React.FC<IRegProp> = (props: IRegProp) => {
     }
   };
 
+  const resetCodeSend = () => {
+    setShowCountDown(false);
+  };
+
+  const sendVerifyCode = () => {
+    if (
+      !phoneInputRef.current ||
+      (phoneInputRef.current as HTMLInputElement).value.length === 0
+    ) {
+      toast(t("tips_input_phone_exclaim"));
+      return;
+    }
+    const phoneValue = (phoneInputRef.current as HTMLInputElement).value;
+    const req: SendVerifyReq = {
+      phone: phoneValue,
+      app_id: readConfig("appId"),
+    };
+    sendRegVerifySMS(req).then((resp) => {
+      if (ResponseHandler.responseSuccess(resp)) {
+        setShowCountDown(true);
+      } else {
+        toast(resp.msg);
+      }
+    });
+  };
+
+  const renderVerifyCodeAction = () => {
+    const remain = localStorage.getItem(SMS_REG_REMAIN_KEY);
+    if (showCountDown || !BaseMethods.isNull(remain)) {
+      if (!BaseMethods.isNull(remain)) {
+        const remainObj: SmsRemainInfo = JSON.parse(remain!);
+        if (remainObj.createdTime < Date.now() - 60000) {
+          localStorage.removeItem(SMS_REG_REMAIN_KEY);
+          return (
+            <button
+              type="button"
+              className={styles.verifyCodeBtn}
+              onClick={() => {
+                sendVerifyCode();
+              }}
+            >
+              {t("btn_get_verify_code")}
+            </button>
+          );
+        } else {
+          return (
+            <CountdownTimer
+              seconds={remainObj.remainSeconds}
+              resetCodeSend={() => resetCodeSend()}
+              storageKey={SMS_REG_REMAIN_KEY}
+            />
+          );
+        }
+      } else {
+        return (
+          <CountdownTimer
+            seconds={60}
+            resetCodeSend={() => resetCodeSend()}
+            storageKey={SMS_REG_REMAIN_KEY}
+          />
+        );
+      }
+    } else {
+      return (
+        <button
+          type="button"
+          className={styles.verifyCodeBtn}
+          onClick={() => {
+            sendVerifyCode();
+          }}
+        >
+          {t("btn_get_verify_code")}
+        </button>
+      );
+    }
+  };
+
   const handlePhoneReg = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
@@ -45,6 +131,13 @@ const RdTeXHubReg: React.FC<IRegProp> = (props: IRegProp) => {
       (phoneInputRef.current as HTMLInputElement).value.length === 0
     ) {
       toast(t("tips_input_username"));
+      return;
+    }
+    if (
+      !codeInputRef.current ||
+      (codeInputRef.current as HTMLInputElement).value.length === 0
+    ) {
+      toast(t("tips_input_verify_code"));
       return;
     }
     if (
@@ -77,9 +170,9 @@ const RdTeXHubReg: React.FC<IRegProp> = (props: IRegProp) => {
     let values = {
       phone: (phoneInputRef.current as HTMLInputElement).value,
       password: pwd,
+      verifyCode: (codeInputRef.current as HTMLInputElement).value,
     };
     (async () => {
-      // Get the visitor identifier when you need it.
       const fp = await fpPromise;
       const result = await fp.get();
       let params = {
@@ -123,6 +216,14 @@ const RdTeXHubReg: React.FC<IRegProp> = (props: IRegProp) => {
               id="phone"
               placeholder={t("tips_type_phone")}
             />
+          </div>
+          <div className={styles.verifyCodeRow}>
+            <input
+              type="text"
+              ref={codeInputRef}
+              placeholder={t("label_verify_code")}
+            />
+            {renderVerifyCodeAction()}
           </div>
           <div className={styles.password}>
             <input

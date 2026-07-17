@@ -8,7 +8,9 @@
 
 .regForm {
     width: 500px;
-    height: 300px;
+    min-height: 420px;
+    height: auto;
+    padding-bottom: 20px;
     border-radius: var(--login-border-radius); /* 设置圆角半径 */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
 }
@@ -111,6 +113,34 @@
     margin-top: 20px;
     border-radius: 15px;
     font-size: 16px;
+}
+
+.verifyCodeRow {
+    display: flex;
+    align-items: center;
+    width: 80%;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.verifyCodeRow input {
+    flex: 1;
+    height: var(--login-input-height);
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    font-size: 16px;
+}
+
+.verifyCodeBtn {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 14px;
 }
 
 .loginButton {

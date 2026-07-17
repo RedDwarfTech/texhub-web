@@ -16,6 +16,16 @@ export function sendVerifySMS(doc: SendVerifyReq) {
     return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
+export function sendRegVerifySMS(doc: SendVerifyReq) {
+    const config: AxiosRequestConfig = {
+      method: 'put',
+      url: '/infra/user/reg/send-verify-code',
+      data: JSON.stringify(doc)
+    };
+    const actionTypeString: string = PwdActionType[PwdActionType.SEND_VERIFY_CODE];
+    return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
 export function verifySmsCode(doc: VerifyReq) {
   const config: AxiosRequestConfig = {
     method: 'put',
