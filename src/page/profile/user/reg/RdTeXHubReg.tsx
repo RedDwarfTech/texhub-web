@@ -205,8 +205,12 @@ const RdTeXHubReg: React.FC<IRegProp> = (props: IRegProp) => {
           onSubmit={(e) => handlePhoneReg(e)}
         >
           <h5>{t("signup")}</h5>
-          <div className={styles.userName}>
-            <select id="countryCode" className={styles.countryCodeSelect}>
+          <div className={styles.phoneInputGroup}>
+            <select
+              id="countryCode"
+              className={styles.countryCodeSelect}
+              aria-label="国家区号"
+            >
               <option value="+86">+86</option>
               <option value="+1">+1</option>
             </select>
@@ -214,6 +218,7 @@ const RdTeXHubReg: React.FC<IRegProp> = (props: IRegProp) => {
               type="text"
               ref={phoneInputRef}
               id="phone"
+              className={styles.phoneInput}
               placeholder={t("tips_type_phone")}
             />
           </div>
