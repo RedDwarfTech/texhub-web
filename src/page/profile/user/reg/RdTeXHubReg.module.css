@@ -1,26 +1,39 @@
+.loginHaader img {
+    width: 95px;
+    height: 40px;
+    margin-top: 18px;
+    margin-left: 20px;
+    border-radius: 10px;
+}
+
+.loginHaader img:hover {
+    cursor: pointer;
+}
+
 .regContainer {
     --login-border-radius: 16px;
     --login-input-height: 44px;
     --login-input-radius: 12px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 100%;
     height: 100%;
+    margin-top: 100px;
 }
 
 .regForm {
     width: 500px;
     min-height: 420px;
     height: auto;
-    padding-bottom: 24px;
     border-radius: var(--login-border-radius);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     background-color: #fff;
     overflow: hidden;
 }
 
-.loginTabs {
+.regTabs {
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
@@ -28,31 +41,20 @@
     border-top-right-radius: var(--login-border-radius);
 }
 
-.loginTabs button {
-    background-color: inherit;
-    float: left;
-    border: none;
-    outline: none;
-    cursor: pointer;
+.tablinks {
+    font-size: 16px;
+    font-weight: 400;
     padding: 14px 16px;
-    transition: 0.3s;
-}
-
-.loginTabs button:hover {
-    background-color: #ddd;
-}
-
-.loginTabs button.active {
-    background-color: #ccc;
 }
 
 .tabcontent {
-    display: none;
-    padding: 6px 12px;
+    display: block;
+    padding: 6px 12px 24px;
     border: 1px solid #ccc;
     border-top: none;
     border-bottom-left-radius: var(--login-border-radius);
     border-bottom-right-radius: var(--login-border-radius);
+    background-color: #fff;
 }
 
 .loginElement {

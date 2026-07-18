@@ -91,7 +91,7 @@ const VerifyPwd: React.FC = () => {
           return (
             <button
               type="button"
-              className="btn btn-primary"
+              className={styles.verifyCodeBtn}
               onClick={() => {
                 sendverifyCode();
               }}
@@ -116,7 +116,7 @@ const VerifyPwd: React.FC = () => {
       return (
         <button
           type="button"
-          className="btn btn-primary"
+          className={styles.verifyCodeBtn}
           onClick={() => {
             sendverifyCode();
           }}
@@ -137,40 +137,53 @@ const VerifyPwd: React.FC = () => {
         <img alt="logo" onClick={handleClick} src={TeXHubLogo}></img>
       </div>
       <div className={styles.verifyCodeContainer}>
-        <div id="phone" className={styles.tabcontent}>
-          <h5>{t("title_retrieve_pwd")}</h5>
-          <form
-            method="post"
-            className={styles.loginElement}
-            onSubmit={(e) => handleNextStep(e)}
-          >
-            <div className={styles.userName}>
-              <select id="countryCode" className={styles.countryCodeSelect}>
-                <option value="+86">+86</option>
-                <option value="+1">+1</option>
-              </select>
-              <input
-                type="text"
-                ref={phoneInputRef}
-                id="phone"
-                placeholder={t("tips_type_phone")}
-              />
-            </div>
-            {renderVerifyCodeAction()}
-            <div className={styles.password}>
-              <input
-                type="text"
-                ref={codeInputRef}
-                placeholder={t("label_verify_code")}
-                name=""
-              ></input>
-            </div>
-            <div className={styles.operate}>
-              <button className={styles.loginButton} type="submit">
-                {t("btn_next_step")}
-              </button>
-            </div>
-          </form>
+        <div className={styles.pwdForm}>
+          <div className={styles.pwdTabs}>
+            <div className={styles.tablinks}>{t("title_retrieve_pwd")}</div>
+          </div>
+          <div className={styles.tabcontent}>
+            <h5>{t("title_retrieve_pwd")}</h5>
+            <form
+              method="post"
+              className={styles.loginElement}
+              onSubmit={(e) => handleNextStep(e)}
+            >
+              <div className={styles.phoneInputGroup}>
+                <select
+                  id="countryCode"
+                  className={styles.countryCodeSelect}
+                  aria-label="国家区号"
+                >
+                  <option value="+86">+86</option>
+                  <option value="+1">+1</option>
+                </select>
+                <input
+                  type="text"
+                  ref={phoneInputRef}
+                  id="phone"
+                  className={styles.phoneInput}
+                  placeholder={t("tips_type_phone")}
+                />
+              </div>
+              <div className={styles.verifyCodeRow}>
+                <input
+                  type="text"
+                  ref={codeInputRef}
+                  placeholder={t("label_verify_code")}
+                  name=""
+                />
+                {renderVerifyCodeAction()}
+              </div>
+              <div className={styles.operate}>
+                <button className={styles.loginButton} type="submit">
+                  {t("btn_next_step")}
+                </button>
+              </div>
+              <div className={styles.handleSituation}>
+                <a href="/user/login">{t("tips_has_account_login")}</a>
+              </div>
+            </form>
+          </div>
         </div>
         <ToastContainer />
       </div>

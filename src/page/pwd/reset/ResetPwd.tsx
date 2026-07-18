@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { readConfig } from "@/config/app/config-reader";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import TeXHubLogo from "@/assets/icon/texhub-logo.png";
 
 const ResetPwd: React.FC = () => {
 
@@ -68,40 +69,57 @@ const ResetPwd: React.FC = () => {
         });
     }
 
-    return (
-        <div className={styles.verifyCodeContainer}>
-            <div id="phone" className={styles.tabcontent}>
-                <h5>{t("title_set_new_pwd")}</h5>
-                <form
-                    method="post"
-                    className={styles.loginElement}
-                    onSubmit={(e) => { handleResetPwd(e) }}
-                >
-                    <div className={styles.password}>
-                        <input
-                            type="password"
-                            ref={passwordInputRef}
-                            placeholder={t("tips_new_pwd_placeholder")}
-                            name="p"
-                        ></input>
-                    </div>
+    const handleClick = () => {
+        navigate("/");
+    };
 
-                    <div className={styles.password}>
-                        <input
-                            type="password"
-                            ref={reinputPwdInputRef}
-                            placeholder={t("tips_input_new_pwd_again_placeholder")}
-                            name="p"
-                        ></input>
-                    </div>
-                    <div className={styles.operate}>
-                        <button className={styles.loginButton} type="submit">
-                            {t("btn_next_step")}
-                        </button>
-                    </div>
-                </form>
+    return (
+        <div>
+            <div className={styles.loginHaader}>
+                <img alt="logo" onClick={handleClick} src={TeXHubLogo} />
             </div>
-            <ToastContainer />
+            <div className={styles.verifyCodeContainer}>
+                <div className={styles.pwdForm}>
+                    <div className={styles.pwdTabs}>
+                        <div className={styles.tablinks}>{t("title_set_new_pwd")}</div>
+                    </div>
+                    <div className={styles.tabcontent}>
+                        <h5>{t("title_set_new_pwd")}</h5>
+                        <form
+                            method="post"
+                            className={styles.loginElement}
+                            onSubmit={(e) => { handleResetPwd(e) }}
+                        >
+                            <div className={styles.password}>
+                                <input
+                                    type="password"
+                                    ref={passwordInputRef}
+                                    placeholder={t("tips_new_pwd_placeholder")}
+                                    name="p"
+                                />
+                            </div>
+
+                            <div className={styles.password}>
+                                <input
+                                    type="password"
+                                    ref={reinputPwdInputRef}
+                                    placeholder={t("tips_input_new_pwd_again_placeholder")}
+                                    name="p"
+                                />
+                            </div>
+                            <div className={styles.operate}>
+                                <button className={styles.loginButton} type="submit">
+                                    {t("btn_next_step")}
+                                </button>
+                            </div>
+                            <div className={styles.handleSituation}>
+                                <a href="/user/login">{t("tips_has_account_login")}</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <ToastContainer />
+            </div>
         </div>
     );
 }

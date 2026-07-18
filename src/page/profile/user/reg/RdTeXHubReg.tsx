@@ -13,6 +13,7 @@ import { SendVerifyReq } from "@/model/request/pwd/SendVerifyReq";
 import { readConfig } from "@/config/app/config-reader";
 import CountdownTimer from "@/page/pwd/verify/CountdownTimer";
 import { SmsRemainInfo } from "@/model/user/SmsRemainInfo";
+import TeXHubLogo from "@/assets/icon/texhub-logo.png";
 
 const SMS_REG_REMAIN_KEY = "sms-reg-remain-seconds";
 
@@ -196,71 +197,85 @@ const RdTeXHubReg: React.FC<IRegProp> = (props: IRegProp) => {
     })();
   };
 
+  const handleClick = () => {
+    navigate("/");
+  };
+
   return (
-    <div className={styles.regContainer}>
-      <div className={styles.regForm}>
-        <form
-          method="post"
-          className={styles.loginElement}
-          onSubmit={(e) => handlePhoneReg(e)}
-        >
-          <h5>{t("signup")}</h5>
-          <div className={styles.phoneInputGroup}>
-            <select
-              id="countryCode"
-              className={styles.countryCodeSelect}
-              aria-label="国家区号"
-            >
-              <option value="+86">+86</option>
-              <option value="+1">+1</option>
-            </select>
-            <input
-              type="text"
-              ref={phoneInputRef}
-              id="phone"
-              className={styles.phoneInput}
-              placeholder={t("tips_type_phone")}
-            />
-          </div>
-          <div className={styles.verifyCodeRow}>
-            <input
-              type="text"
-              ref={codeInputRef}
-              placeholder={t("label_verify_code")}
-            />
-            {renderVerifyCodeAction()}
-          </div>
-          <div className={styles.password}>
-            <input
-              type="password"
-              ref={passwordInputRef}
-              placeholder={t("tips_password")}
-              name="p"
-            ></input>
-            <button onClick={(e) => togglePasswordVisibility(e, false)}>
-              {passwordShown ? "👁️" : "🔒"}
-            </button>
-          </div>
-          <div className={styles.password}>
-            <input
-              type="password"
-              ref={passwordReinputRef}
-              placeholder={t("tips_input_repeat_new_pwd_placeholder")}
-              name="p"
-            ></input>
-            <button onClick={(e) => togglePasswordVisibility(e, true)}>
-              {pwdConfirmShown ? "👁️" : "🔒"}
-            </button>
-          </div>
-          <div className={styles.operate}>
-            <button className={styles.loginButton} type="submit">
-              {t("signup")}
-            </button>
-            <a href="/user/login">{t("tips_has_account_login")}</a>
-          </div>
-        </form>
+    <div>
+      <div className={styles.loginHaader}>
+        <img alt="logo" onClick={handleClick} src={TeXHubLogo} />
       </div>
-      <ToastContainer />
+      <div className={styles.regContainer}>
+        <div className={styles.regForm}>
+          <div className={styles.regTabs}>
+            <div className={styles.tablinks}>{t("signup")}</div>
+          </div>
+          <div className={styles.tabcontent}>
+            <h5>{t("signup")}</h5>
+            <form
+              method="post"
+              className={styles.loginElement}
+              onSubmit={(e) => handlePhoneReg(e)}
+            >
+              <div className={styles.phoneInputGroup}>
+                <select
+                  id="countryCode"
+                  className={styles.countryCodeSelect}
+                  aria-label="国家区号"
+                >
+                  <option value="+86">+86</option>
+                  <option value="+1">+1</option>
+                </select>
+                <input
+                  type="text"
+                  ref={phoneInputRef}
+                  id="phone"
+                  className={styles.phoneInput}
+                  placeholder={t("tips_type_phone")}
+                />
+              </div>
+              <div className={styles.verifyCodeRow}>
+                <input
+                  type="text"
+                  ref={codeInputRef}
+                  placeholder={t("label_verify_code")}
+                />
+                {renderVerifyCodeAction()}
+              </div>
+              <div className={styles.password}>
+                <input
+                  type="password"
+                  ref={passwordInputRef}
+                  placeholder={t("tips_password")}
+                  name="p"
+                />
+                <button onClick={(e) => togglePasswordVisibility(e, false)}>
+                  {passwordShown ? "👁️" : "🔒"}
+                </button>
+              </div>
+              <div className={styles.password}>
+                <input
+                  type="password"
+                  ref={passwordReinputRef}
+                  placeholder={t("tips_input_repeat_new_pwd_placeholder")}
+                  name="p"
+                />
+                <button onClick={(e) => togglePasswordVisibility(e, true)}>
+                  {pwdConfirmShown ? "👁️" : "🔒"}
+                </button>
+              </div>
+              <div className={styles.operate}>
+                <button className={styles.loginButton} type="submit">
+                  {t("signup")}
+                </button>
+                <a href="/user/login">{t("tips_has_account_login")}</a>
+              </div>
+            </form>
+          </div>
+        </div>
+        <ToastContainer />
+      </div>
     </div>
   );
 };
