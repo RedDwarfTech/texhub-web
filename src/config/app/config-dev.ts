@@ -19,6 +19,7 @@ let devConfigMap = new Map([
     ["pdfScaleKey",""],
     ["pdfScrollKey","pdf:scroll:"],
     ["pdfCurPage","pdf:page:"],
+    ["cfSiteKey","0x4AAAAAAANSWx3t0X_4XgDR"]
 ]); 
 
 export default devConfigMap;

@@ -105,6 +105,7 @@
     "tips_type_phone": "请输入手机号码",
     "tips_password": "密码",
     "tips_input_pwd": "请输入密码",
+    "tips_complete_captcha": "请完成人机验证",
     "tips_proj_archived": "项目已归档",
     "tips_input_username": "请输入用户名",
     "tips_choose_proj": "请选择删除项目",

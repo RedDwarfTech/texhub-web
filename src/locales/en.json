@@ -107,6 +107,7 @@
     "tips_type_phone": "Please enter phone number",
     "tips_password": "Password",
     "tips_input_pwd": "Please enter password",
+    "tips_complete_captcha": "Please complete the captcha verification",
     "tips_input_username": "Please enter username",
     "tips_proj_archived": "Project archived",
     "tips_choose_proj": "Choose project to delete",

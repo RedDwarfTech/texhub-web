@@ -6,7 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { ResponseHandler } from "rdjs-wheel";
 import { AnyAction, Store } from "redux";
-import Turnstile from "react-turnstile";
+import Turnstile, { useTurnstile } from "react-turnstile";
 import { UserService } from "rd-component";
 import TeXHubLogo from "@/assets/icon/texhub-logo.png";
 import { useTranslation } from "react-i18next";
@@ -22,10 +22,11 @@ interface ILoginProp {
 const RdTeXHubLogin: React.FC<ILoginProp> = (props: ILoginProp) => {
   const fpPromise = FingerprintJS.load();
   const [activeTab, setActiveTab] = useState<String>("");
-  const [cfVerifyToken, setCfVerifyToken] = useState<String>("");
+  const [cfVerifyToken, setCfVerifyToken] = useState<string>("");
   const phoneInputRef = useRef(null);
   const passwordInputRef = useRef(null);
   const navigate = useNavigate();
+  const turnstile = useTurnstile();
   const { t } = useTranslation();
 
   const [passwordShown, setPasswordShown] = useState(false);
@@ -72,6 +73,11 @@ const RdTeXHubLogin: React.FC<ILoginProp> = (props: ILoginProp) => {
     (evt.currentTarget as HTMLElement).className += " active";
   };
 
+  const resetTurnstile = () => {
+    setCfVerifyToken("");
+    turnstile?.reset();
+  };
+
   const handlePhoneLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
@@ -86,6 +92,10 @@ const RdTeXHubLogin: React.FC<ILoginProp> = (props: ILoginProp) => {
       (passwordInputRef.current as HTMLInputElement).value.length === 0
     ) {
       toast(t("tips_input_pwd"));
+      return;
+    }
+    if (!cfVerifyToken) {
+      toast(t("tips_complete_captcha"));
       return;
     }
     let values = {
@@ -114,6 +124,7 @@ const RdTeXHubLogin: React.FC<ILoginProp> = (props: ILoginProp) => {
           navigate("/");
         } else {
           toast.error(res.msg);
+          resetTurnstile();
         }
       });
     })();
@@ -223,6 +234,12 @@ const RdTeXHubLogin: React.FC<ILoginProp> = (props: ILoginProp) => {
                   sitekey={props.cfSiteKey}
                   onVerify={(token) => {
                     setCfVerifyToken(token);
+                  }}
+                  onExpire={() => {
+                    resetTurnstile();
+                  }}
+                  onError={() => {
+                    resetTurnstile();
                   }}
                 />
               </div>
