@@ -1,5 +1,6 @@
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { addFile, chooseFile, switchFile } from "@/service/file/FileService";
+import { validateFileName } from "@/service/file/FileNameValidator";
 import { ProjectTreeFolder } from "./ProjectTreeFolder";
 import { toast } from "react-toastify";
 import i18n from "i18next";
@@ -148,15 +149,15 @@ export function handleFileCreateConfirm(
     toast.warning(i18n.t("tips_specify_file_create_location"));
     return;
   }
-  const trimmedName = createFileName.trim();
-  if (!trimmedName) {
-    toast.warning(i18n.t("tips_input_file_new_name"));
+  const validated = validateFileName(createFileName, "tips_input_file_new_name");
+  if (!validated.ok) {
+    toast.warning(i18n.t(validated.messageKey));
     return;
   }
   let parentId =
     selectedFile.file_type === 0 ? selectedFile.file_id : selectedFile.parent;
   let params = {
-    name: trimmedName,
+    name: validated.name,
     project_id: pid,
     parent: parentId,
     file_type: TeXFileType.TEX,

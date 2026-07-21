@@ -3,6 +3,7 @@ import {
   getFileTree,
   renameFileImpl,
 } from "@/service/file/FileService";
+import { validateFileName } from "@/service/file/FileNameValidator";
 import { useState } from "react";
 import "antd/lib/tree/style";
 import React from "react";
@@ -33,19 +34,21 @@ const TreeFileRename: React.FC<TreeFileRenameProps> = (
       toast.warn(t("tips_input_file_new_name"));
       return;
     }
-    const trimmedName = renameFile.name.trim();
-    if (!trimmedName) {
-      toast.warn(t("tips_input_file_new_name"));
+    const validated = validateFileName(renameFile.name, "tips_input_file_new_name");
+    if (!validated.ok) {
+      toast.warn(t(validated.messageKey));
       return;
     }
     let req: RenameFile = {
       file_id: renameFile.file_id,
-      name: trimmedName,
+      name: validated.name,
       legacy_name: props.operFile.name,
     };
     renameFileImpl(req).then((res) => {
       if (ResponseHandler.responseSuccess(res)) {
         getFileTree(props.projectId.toString());
+      } else if (res.msg) {
+        toast.error(res.msg);
       }
     });
   };

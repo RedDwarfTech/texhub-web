@@ -1,5 +1,6 @@
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { addFile, getFileTree } from "@/service/file/FileService";
+import { validateFileName } from "@/service/file/FileNameValidator";
 import { ResponseHandler } from "rdjs-wheel";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -30,9 +31,9 @@ const TreeFolderCreate: React.FC<TreeFolderCreateProps> = (
   };
 
   const handleFolderAddConfirm = () => {
-    const trimmedName = folderName.trim();
-    if (!trimmedName) {
-      toast.warn(t("tips_input_folder_name"));
+    const validated = validateFileName(folderName, "tips_input_folder_name");
+    if (!validated.ok) {
+      toast.warn(t(validated.messageKey));
       return;
     }
     let parentId = getParentId();
@@ -47,7 +48,7 @@ const TreeFolderCreate: React.FC<TreeFolderCreateProps> = (
       parentId = pid;
     }
     let params = {
-      name: trimmedName,
+      name: validated.name,
       project_id: pid,
       parent: parentId,
       file_type: 0,
