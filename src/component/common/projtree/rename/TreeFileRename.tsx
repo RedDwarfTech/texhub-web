@@ -29,13 +29,18 @@ const TreeFileRename: React.FC<TreeFileRenameProps> = (
   },[props.operFile]);
 
   const handleRenameFile = () => {
-    if (!renameFile || renameFile.name.length === 0 || !props.operFile) {
+    if (!renameFile || !props.operFile) {
+      toast.warn(t("tips_input_file_new_name"));
+      return;
+    }
+    const trimmedName = renameFile.name.trim();
+    if (!trimmedName) {
       toast.warn(t("tips_input_file_new_name"));
       return;
     }
     let req: RenameFile = {
       file_id: renameFile.file_id,
-      name: renameFile.name,
+      name: trimmedName,
       legacy_name: props.operFile.name,
     };
     renameFileImpl(req).then((res) => {

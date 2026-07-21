@@ -148,10 +148,15 @@ export function handleFileCreateConfirm(
     toast.warning(i18n.t("tips_specify_file_create_location"));
     return;
   }
+  const trimmedName = createFileName.trim();
+  if (!trimmedName) {
+    toast.warning(i18n.t("tips_input_file_new_name"));
+    return;
+  }
   let parentId =
     selectedFile.file_type === 0 ? selectedFile.file_id : selectedFile.parent;
   let params = {
-    name: createFileName,
+    name: trimmedName,
     project_id: pid,
     parent: parentId,
     file_type: TeXFileType.TEX,

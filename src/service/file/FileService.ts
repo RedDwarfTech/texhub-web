@@ -53,13 +53,17 @@ export function updateFileInit(fileId: string) {
 }
 
 export function renameFileImpl(fileInfo: RenameFile) {
+  const payload: RenameFile = {
+    ...fileInfo,
+    name: fileInfo.name.trim(),
+  };
   const config: AxiosRequestConfig = {
     method: "patch",
     url: "/tex/file/rename",
     headers: {
       "content-type": "application/json",
     },
-    data: JSON.stringify(fileInfo),
+    data: JSON.stringify(payload),
   };
   const actionTypeString: string =
     FileActionType[FileActionType.UPDATE_FILE_INITIAL];
@@ -67,10 +71,15 @@ export function renameFileImpl(fileInfo: RenameFile) {
 }
 
 export function addFile(params: any) {
+  const payload = {
+    ...params,
+    name:
+      typeof params?.name === "string" ? params.name.trim() : params?.name,
+  };
   const config: AxiosRequestConfig = {
     method: "post",
     url: "/tex/file/add",
-    data: JSON.stringify(params),
+    data: JSON.stringify(payload),
   };
   const actionTypeString: string = FileActionType[FileActionType.ADD_FILE];
   return XHRClient.requestWithActionType(config, actionTypeString, store);

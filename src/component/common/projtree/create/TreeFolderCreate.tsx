@@ -30,7 +30,8 @@ const TreeFolderCreate: React.FC<TreeFolderCreateProps> = (
   };
 
   const handleFolderAddConfirm = () => {
-    if (!folderName || folderName.length === 0) {
+    const trimmedName = folderName.trim();
+    if (!trimmedName) {
       toast.warn(t("tips_input_folder_name"));
       return;
     }
@@ -46,7 +47,7 @@ const TreeFolderCreate: React.FC<TreeFolderCreateProps> = (
       parentId = pid;
     }
     let params = {
-      name: folderName,
+      name: trimmedName,
       project_id: pid,
       parent: parentId,
       file_type: 0,
