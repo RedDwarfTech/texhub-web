@@ -20,6 +20,7 @@ import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { projHasFile } from "../project/ProjectService";
 import { Metadata } from "@/component/common/editor/foundation/extensions/language";
 import {
+  clearSocketIOProvider,
   setCurRootYDoc,
   setCurSubDoc,
   setSocketIOProvider,
@@ -47,8 +48,166 @@ export const usercolors = [
 ];
 export const themeConfig = new Compartment();
 export const userColor = usercolors[random.uint32() % usercolors.length];
-const wsMaxRetries = 1;
-let wsRetryCount = 0;
+
+const AUTO_RECONNECT_MAX = 3;
+const AUTO_RECONNECT_DELAY_MS = 5000;
+
+let autoReconnectAttempts = 0;
+let autoReconnectTimer: ReturnType<typeof setTimeout> | null = null;
+let manualReconnectRequired = false;
+
+export const COLLABORATION_RECONNECT_EXHAUSTED_EVENT =
+  "texhub:collaboration-reconnect-exhausted";
+
+export function isManualReconnectRequired(): boolean {
+  return manualReconnectRequired;
+}
+
+export function isAutoReconnectInProgress(): boolean {
+  return autoReconnectTimer !== null && !manualReconnectRequired;
+}
+
+function clearAutoReconnectTimer() {
+  if (autoReconnectTimer !== null) {
+    clearTimeout(autoReconnectTimer);
+    autoReconnectTimer = null;
+  }
+}
+
+export function resetAutoReconnectState() {
+  autoReconnectAttempts = 0;
+  manualReconnectRequired = false;
+  clearAutoReconnectTimer();
+}
+
+function attemptProviderConnect(provider: SocketIOClientProvider) {
+  provider.shouldConnect = true;
+  const token = getAccessToken();
+  if (provider.ws) {
+    provider.ws.auth = { token };
+    if (!provider.ws.connected) {
+      provider.ws.connect();
+    }
+  } else {
+    provider.connect();
+  }
+  setWsConnState("connecting");
+}
+
+function markAutoReconnectExhausted(provider: SocketIOClientProvider) {
+  manualReconnectRequired = true;
+  provider.shouldConnect = false;
+  clearAutoReconnectTimer();
+  setWsConnState("disconnected");
+  logger.warn("collaboration auto reconnect exhausted, manual reconnect required");
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(
+      new CustomEvent(COLLABORATION_RECONNECT_EXHAUSTED_EVENT)
+    );
+  }
+}
+
+function scheduleAutoReconnectAttempt(provider: SocketIOClientProvider) {
+  clearAutoReconnectTimer();
+  if (manualReconnectRequired) {
+    setWsConnState("disconnected");
+    return;
+  }
+  if (isCollaborationProviderConnected(provider)) {
+    resetAutoReconnectState();
+    return;
+  }
+  if (autoReconnectAttempts >= AUTO_RECONNECT_MAX) {
+    markAutoReconnectExhausted(provider);
+    return;
+  }
+
+  setWsConnState("connecting");
+  autoReconnectTimer = setTimeout(async () => {
+    autoReconnectTimer = null;
+    if (isCollaborationProviderConnected(provider)) {
+      resetAutoReconnectState();
+      return;
+    }
+    if (manualReconnectRequired) {
+      setWsConnState("disconnected");
+      return;
+    }
+
+    autoReconnectAttempts += 1;
+    logger.info("collaboration auto reconnect attempt", {
+      attempt: autoReconnectAttempts,
+      max: AUTO_RECONNECT_MAX,
+    });
+
+    if (AuthHandler.isTokenNeedRefresh(120)) {
+      await RequestHandler.handleWebAccessTokenExpire();
+    }
+    attemptProviderConnect(provider);
+  }, AUTO_RECONNECT_DELAY_MS);
+}
+
+function onCollaborationDisconnected(provider: SocketIOClientProvider) {
+  if (manualReconnectRequired) {
+    setWsConnState("disconnected");
+    return;
+  }
+  if (isCollaborationProviderConnected(provider)) {
+    resetAutoReconnectState();
+    setWsConnState("connected");
+    return;
+  }
+  if (autoReconnectAttempts >= AUTO_RECONNECT_MAX) {
+    markAutoReconnectExhausted(provider);
+    return;
+  }
+  if (autoReconnectTimer === null) {
+    scheduleAutoReconnectAttempt(provider);
+  }
+}
+
+export function isCollaborationProviderConnected(provider: unknown): boolean {
+  if (!provider || typeof provider !== "object") {
+    return false;
+  }
+  const p = provider as {
+    ws?: { connected?: boolean } | null;
+    wsconnected?: boolean;
+  };
+  return p.ws?.connected === true;
+}
+
+/**
+ * 手动或断线后恢复协作连接：刷新 token、恢复 shouldConnect 并触发 provider/socket 重连。
+ */
+export async function reconnectCollaboration(
+  editorAttr: EditorAttr,
+  loadFile: TexFileModel
+): Promise<void> {
+  resetAutoReconnectState();
+
+  const provider = store.getState().projEditor
+    .texEditorSocketIOWs as SocketIOClientProvider | null;
+
+  if (isCollaborationProviderConnected(provider)) {
+    setWsConnState("connected");
+    return;
+  }
+
+  if (AuthHandler.isTokenNeedRefresh(120)) {
+    await RequestHandler.handleWebAccessTokenExpire();
+  }
+
+  if (provider) {
+    attemptProviderConnect(provider);
+    setSocketIOProvider(provider);
+    return;
+  }
+
+  SingleClientProvider.destroy();
+  clearSocketIOProvider();
+  initSubDocSocketIO(editorAttr, loadFile);
+}
 
 const handleWsAuth = (
   event: any,
@@ -59,6 +218,9 @@ const handleWsAuth = (
   if (event.status === "failed") {
     wsProvider.shouldConnect = false;
     wsProvider.ws?.close();
+    manualReconnectRequired = true;
+    clearAutoReconnectTimer();
+    setWsConnState("disconnected");
   }
   if (event.status === "expired") {
     RequestHandler.handleWebAccessTokenExpire().then((res) => {
@@ -88,10 +250,7 @@ export const doSocketIOConn = (
   // avoid the cached expired token
   let options: Partial<ManagerOptions & SocketOptions> = {
     withCredentials: true,
-    reconnection: true,
-    reconnectionDelay: 15000,
-    reconnectionDelayMax: 15000,
-    reconnectionAttempts: 5,
+    reconnection: false,
     transports: ["websocket", "polling"],
     tryAllTransports: true,
     path: "/sync",
@@ -144,25 +303,26 @@ export const doSocketIOConn = (
   // @ts-ignore
   wsProvider.on("connect_error", (err: any) => {
     console.error("connection error:" + editorAttr.docId, err);
-    // the reason of the error, for example "xhr poll error"
     console.error(err.message);
-
-    // some additional description, for example the status code of the initial HTTP response
     console.error(err.description);
-
-    // some additional context, for example the XMLHttpRequest object
     console.error(err.context);
+    if (!manualReconnectRequired) {
+      setWsConnState("connecting");
+    } else {
+      setWsConnState("disconnected");
+    }
   });
   // @ts-ignore
   wsProvider.on("message", (event: MessageEvent) => {});
   // @ts-ignore
   wsProvider.on("status", (event: any) => {
     if (event.status === "connected") {
+      resetAutoReconnectState();
       setWsConnState("connected");
-    } else if (event.status === "disconnected" && wsRetryCount < wsMaxRetries) {
-      setWsConnState("connecting");
+    } else if (event.status === "disconnected") {
+      onCollaborationDisconnected(wsProvider);
     } else {
-      setWsConnState("disconnected");
+      setWsConnState("connecting");
     }
   });
   return wsProvider;
@@ -186,6 +346,7 @@ export function initSubDocSocketIO(
   editorAttr: EditorAttr,
   loadFile: TexFileModel
 ) {
+  resetAutoReconnectState();
   let rootDocOpt = {
     guid: editorAttr.projectId,
     collectionid: editorAttr.projectId,

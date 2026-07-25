@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { EditorView } from "@codemirror/view";
 import styles from "./CollarCodeEditor.module.css";
 import React from "react";
@@ -34,11 +34,17 @@ import {
   clearCurSubDoc,
   clearEditorInstance,
   clearSocketIOProvider,
+  isWsProviderConnected,
   isWsProviderReady,
   setCurRootYDoc,
   setEditorInstance,
   setWsConnState,
 } from "@/service/project/editor/EditorService";
+import {
+  COLLABORATION_RECONNECT_EXHAUSTED_EVENT,
+  reconnectCollaboration,
+} from "@/service/editor/CollarEditorSocketIOService";
+import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { recordEditorViewUpdate } from "@/service/editor/EditorUpdateHistory";
 import { toast } from "react-toastify";
 
@@ -102,13 +108,25 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   );
   const { t } = useTranslation();
 
+  useEffect(() => {
+    const onExhausted = () => {
+      toast.warning(t("tips_ws_reconnect_exhausted"));
+    };
+    window.addEventListener(COLLABORATION_RECONNECT_EXHAUSTED_EVENT, onExhausted);
+    return () => {
+      window.removeEventListener(
+        COLLABORATION_RECONNECT_EXHAUSTED_EVENT,
+        onExhausted
+      );
+    };
+  }, [t]);
+
   const handleVisibilityChange = () => {
     if (!texEditorSocketIOWs) {
       console.warn("provider is null");
       return;
     }
-    let connected = texEditorSocketIOWs?.ws?.connected;
-    if (connected) {
+    if (isWsProviderConnected(texEditorSocketIOWs)) {
       setWsConnState("connected");
     } else {
       setWsConnState("disconnected");
@@ -348,26 +366,71 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   const renderConnState = () => {
     if (!texEditorSocketIOWs) {
-      console.warn("provider is null");
-      return;
-    }
-    if (wsConnState === "connected") {
-      return <i className={`fa-solid fa-wifi ${styles.stateConnect}`}></i>;
-    } else {
       return <i className={`fa-solid fa-wifi ${styles.stateDisconnect}`}></i>;
     }
+    const live = isWsProviderConnected(texEditorSocketIOWs);
+    if (live || wsConnState === "connected") {
+      return <i className={`fa-solid fa-wifi ${styles.stateConnect}`}></i>;
+    }
+    if (wsConnState === "connecting") {
+      return <i className={`fa-solid fa-wifi ${styles.stateConnecting}`}></i>;
+    }
+    return <i className={`fa-solid fa-wifi ${styles.stateDisconnect}`}></i>;
+  };
+
+  const buildEditorAttr = (
+    info: ProjInfo,
+    file: TexFileModel
+  ): EditorAttr => ({
+    projectId: props.projectId,
+    docIntId: file.id.toString(),
+    docId: file.file_id,
+    name: file.name,
+    theme: themeMap.get("Solarized Light")!,
+    docShowName: file.name,
+  });
+
+  const resolveLoadFile = (info: ProjInfo): TexFileModel | undefined => {
+    const activeFileJson = localStorage.getItem(activeKey);
+    if (activeFileJson) {
+      try {
+        return JSON.parse(activeFileJson) as TexFileModel;
+      } catch {
+        return info.main_file;
+      }
+    }
+    return info.main_file;
   };
 
   /**
-   * if the websocket connect disconnected
-   * Try to reconnect the editor websocket
+   * 协作 WebSocket 断开时手动重连（或纠正 Redux 状态与真实连接不一致）。
    */
-  const tryReconnect = () => {
-    if (wsConnState && wsConnState === "disconnected") {
-      setWsConnState("connecting");
-      initEditor(props.projectId, projInfo);
-    } else {
-      console.log("did not need to reconnect");
+  const tryReconnect = async () => {
+    const info = curProjInfo ?? projInfo;
+    if (!info || Object.keys(info).length === 0) {
+      toast.warning(t("tips_loading"));
+      return;
+    }
+
+    if (isWsProviderConnected(texEditorSocketIOWs)) {
+      setWsConnState("connected");
+      toast.info(t("tips_ws_already_connected"));
+      return;
+    }
+
+    const loadFile = resolveLoadFile(info);
+    if (!loadFile?.file_id) {
+      toast.warning(t("tips_file_switch_failed_ws"));
+      return;
+    }
+
+    try {
+      await reconnectCollaboration(buildEditorAttr(info, loadFile), loadFile);
+      toast.info(t("tips_ws_reconnecting"));
+    } catch (err) {
+      logger.error("manual ws reconnect failed", err);
+      setWsConnState("disconnected");
+      toast.error(t("tips_file_switch_failed_ws"));
     }
   };
 

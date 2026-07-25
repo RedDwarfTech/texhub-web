@@ -65,12 +65,16 @@ export function forceSetCurSubDoc(ydoc: Y.Doc) {
   setCurSubDoc(ydoc);
 }
 
-export function isWsProviderReady(ws: unknown): boolean {
+export function isWsProviderConnected(ws: unknown): boolean {
   if (!ws || typeof ws !== "object") {
     return false;
   }
-  const provider = ws as { ws?: { connected?: boolean } };
-  return !!provider.ws;
+  const provider = ws as { ws?: { connected?: boolean } | null };
+  return provider.ws?.connected === true;
+}
+
+export function isWsProviderReady(ws: unknown): boolean {
+  return isWsProviderConnected(ws);
 }
 
 export function isEditorSyncedWithFile(fileId: string): boolean {
