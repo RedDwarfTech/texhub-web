@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import styles from "./OutlineTree.module.css";
 import { getOutlineNodeKey } from "./outlineNavigation";
 
@@ -23,6 +23,7 @@ const OutlineTree: React.FC<OutlineTreeProps> = ({
 }) => {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const activeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const expandKeysToken = useMemo(() => expandKeys.join("\0"), [expandKeys]);
 
   useEffect(() => {
     if (expandKeys.length === 0) {
@@ -35,20 +36,20 @@ const OutlineTree: React.FC<OutlineTreeProps> = ({
       }
       return next;
     });
-  }, [expandKeys]);
+  }, [expandKeys, expandKeysToken]);
 
-  useEffect(() => {
+  const isExpandedForKey = (key: string) =>
+    expanded.has(key) || expandKeys.includes(key);
+
+  useLayoutEffect(() => {
     if (!activeNodeKey) {
       return;
     }
-    const frame = requestAnimationFrame(() => {
-      activeButtonRef.current?.scrollIntoView({
-        block: "nearest",
-        behavior: "auto",
-      });
+    activeButtonRef.current?.scrollIntoView({
+      block: "nearest",
+      behavior: "auto",
     });
-    return () => cancelAnimationFrame(frame);
-  }, [activeNodeKey, expandKeys]);
+  }, [activeNodeKey, expandKeysToken]);
 
   const toggleExpanded = (key: string) => {
     const newExpanded = new Set(expanded);
@@ -67,7 +68,7 @@ const OutlineTree: React.FC<OutlineTreeProps> = ({
   ) => {
     const key = getOutlineNodeKey(parentKey, item.title, level);
     const hasChildren = item.items && item.items.length > 0;
-    const isExpanded = expanded.has(key);
+    const isExpanded = isExpandedForKey(key);
     const marginLeft = level == 0 ? 2 : 20;
     const isActive = activeNodeKey === key;
 

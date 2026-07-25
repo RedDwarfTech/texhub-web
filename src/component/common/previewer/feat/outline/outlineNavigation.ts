@@ -111,17 +111,31 @@ export async function buildOutlineIndex(
   return entries;
 }
 
+function outlineEntryDepth(entry: OutlineIndexEntry): number {
+  return entry.ancestorKeys.length;
+}
+
+function isBetterOutlineMatch(
+  candidate: OutlineIndexEntry,
+  current: OutlineIndexEntry
+): boolean {
+  if (candidate.page !== current.page) {
+    return candidate.page > current.page;
+  }
+  return outlineEntryDepth(candidate) > outlineEntryDepth(current);
+}
+
 export function findActiveOutlineKey(
   entries: OutlineIndexEntry[],
   curPage: number
 ): OutlineIndexEntry | undefined {
-  if (!entries.length || curPage == null || curPage < 0) {
+  if (!entries.length || curPage == null || curPage < 1) {
     return undefined;
   }
   let best: OutlineIndexEntry | undefined;
   for (const entry of entries) {
     if (entry.page <= curPage) {
-      if (!best || entry.page > best.page) {
+      if (!best || isBetterOutlineMatch(entry, best)) {
         best = entry;
       }
     }

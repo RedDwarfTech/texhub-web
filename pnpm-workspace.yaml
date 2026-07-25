@@ -3,3 +3,12 @@ allowBuilds:
   '@parcel/watcher': false
   esbuild: false
   unrs-resolver: false
+
+overrides:
+  rdyjs: 13.6.33
+  rdy-protocols: 1.0.14
+  rdlib0: 0.2.106
+  react: 18.2.0
+  react-dom: 18.2.0
+  react-redux: 9.2.0
+  redux: 5.0.1

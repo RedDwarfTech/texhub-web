@@ -412,8 +412,9 @@ const MemoizedPDFPreview = React.memo(
                   return;
                 }
 
+                const visiblePage = visibleRows.startIndex + 1;
                 setAndDispatchPdfPage(
-                  visibleRows.stopIndex,
+                  visiblePage,
                   projId,
                   "IntersectionObserver"
                 );
