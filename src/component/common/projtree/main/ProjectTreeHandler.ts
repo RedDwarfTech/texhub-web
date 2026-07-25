@@ -1,11 +1,11 @@
 import { TexFileModel } from "@/model/file/TexFileModel";
-import { addFile, chooseFile, switchFile } from "@/service/file/FileService";
+import { addFile, chooseFile, getFileTree, switchFile } from "@/service/file/FileService";
 import { validateFileName } from "@/service/file/FileNameValidator";
 import { ProjectTreeFolder } from "./ProjectTreeFolder";
 import { toast } from "react-toastify";
 import i18n from "i18next";
 import { TeXFileType } from "@/model/enum/TeXFileType";
-import { BaseMethods } from "rdjs-wheel";
+import { BaseMethods, ResponseHandler } from "rdjs-wheel";
 import * as bootstrap from "bootstrap";
 import * as Y from "rdyjs";
 import { EditorView } from "@codemirror/view";
@@ -162,7 +162,13 @@ export function handleFileCreateConfirm(
     parent: parentId,
     file_type: TeXFileType.TEX,
   };
-  addFile(params);
+  addFile(params).then((resp) => {
+    if (ResponseHandler.responseSuccess(resp)) {
+      getFileTree(pid?.toString());
+    } else {
+      toast.error(resp.msg);
+    }
+  });
 }
 
 export function handleProjSearch(
