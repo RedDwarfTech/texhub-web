@@ -4,6 +4,11 @@ import store from "@/redux/store/store";
 import { readConfig } from "@/config/app/config-reader";
 import { BaseMethods } from "rdjs-wheel";
 import { CompileResultType } from "@/model/proj/compile/CompileResultType";
+import { OutlineItemRaw } from "@/component/common/previewer/feat/outline/outlineNavigation";
+import {
+  PdfActiveOutline,
+  PdfOutlineNavRequest,
+} from "@/model/proj/pdf/PdfOutlineNavRequest";
 
 export function setCurPdfScale(
   scale: number,
@@ -108,4 +113,26 @@ export function setContextCompileResultType(compResult: CompileResultType) {
   const actionTypeString: string =
   PreviewActionType[PreviewActionType.SET_COMPILE_RESULT_TYPE];
   return XHRClient.dispathAction(compResult, actionTypeString, store);
+}
+
+export function setAndDispatchPdfOutline(outline: OutlineItemRaw[]) {
+  const actionTypeString: string =
+    PreviewActionType[PreviewActionType.SET_PDF_OUTLINE];
+  return XHRClient.dispathAction(outline, actionTypeString, store);
+}
+
+export function requestOutlineNavigation(dest: unknown) {
+  const payload: PdfOutlineNavRequest = {
+    dest,
+    id: Date.now(),
+  };
+  const actionTypeString: string =
+    PreviewActionType[PreviewActionType.REQUEST_OUTLINE_NAV];
+  return XHRClient.dispathAction(payload, actionTypeString, store);
+}
+
+export function setAndDispatchActiveOutline(active: PdfActiveOutline) {
+  const actionTypeString: string =
+    PreviewActionType[PreviewActionType.SET_ACTIVE_OUTLINE];
+  return XHRClient.dispathAction(active, actionTypeString, store);
 }

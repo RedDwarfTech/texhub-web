@@ -21,6 +21,11 @@ import { ProjCollarModel } from "@/model/proj/share/ProjCollarModel";
 import { EditorView } from "codemirror";
 import { CompileResultType } from "@/model/proj/compile/CompileResultType";
 import { SocketIOClientProvider } from "@/component/common/collar/collar";
+import { OutlineItemRaw } from "@/component/common/previewer/feat/outline/outlineNavigation";
+import {
+  PdfActiveOutline,
+  PdfOutlineNavRequest,
+} from "@/model/proj/pdf/PdfOutlineNavRequest";
 
 /**
  * the legacy proj contains too much state fields that make
@@ -90,6 +95,9 @@ export interface AppState {
     preview: {
         curPage: number,
         fullscreenFlag: boolean,
-        compileResultType: CompileResultType
+        compileResultType: CompileResultType,
+        pdfOutline: OutlineItemRaw[],
+        outlineNavRequest: PdfOutlineNavRequest | null,
+        activeOutline: PdfActiveOutline,
     }
 }

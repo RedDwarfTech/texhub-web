@@ -8,6 +8,9 @@ export enum PreviewActionType {
   SET_CUR_SCALE_FULL_SCREEN,
   SET_FULLSCREEN_FLAG,
   SET_COMPILE_RESULT_TYPE,
+  SET_PDF_OUTLINE,
+  REQUEST_OUTLINE_NAV,
+  SET_ACTIVE_OUTLINE,
 }
 
 export interface setCompileResultTypeAction {

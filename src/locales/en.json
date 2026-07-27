@@ -133,6 +133,8 @@
     "tips_no_data": "No data",
     "title_del": "Delete",
     "title_create_folder": "Create Folder",
+    "title_pdf_outline": "PDF outline",
+    "tips_pdf_outline_empty": "Compile the PDF to show document bookmarks",
     "title_template_detail": "Template detail",
     "title_search_proj": "Search project",
     "title_table_designer": "Table Designer",

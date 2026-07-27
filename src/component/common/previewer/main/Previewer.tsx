@@ -37,17 +37,18 @@ import { ListImperativeAPI } from "react-window";
 import {
   setContextCompileResultType,
   setAndDispatchPdfPage,
+  setAndDispatchActiveOutline,
+  setAndDispatchPdfOutline,
 } from "@/service/project/preview/PreviewService";
 import { usePreviewHandler } from "./usePreviewHandler";
-import OutlineTree from "../feat/outline/OutlineTree";
 import {
   buildOutlineIndex,
   findActiveOutlineKey,
   OutlineIndexEntry,
+  OutlineItemRaw,
   resolveOutlinePageNumber,
 } from "../feat/outline/outlineNavigation";
 import { getPreviewUrl } from "@/service/file/FileService";
-import Split from "@uiw/react-split";
 import {
   appendCompileLogChunk,
   COMPILE_CLEAR_MARKER,
@@ -167,11 +168,11 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   );
   const [numPages, setNumPages] = useState<number>();
   const [devModel, setDevModel] = useState<boolean>();
-  const [outline, setOutline] = useState<any[]>([]);
   const [pdfProxy, setPdfProxy] = useState<DocumentCallback | null>(null);
   const [outlineIndex, setOutlineIndex] = useState<OutlineIndexEntry[]>([]);
   const [debouncedCurPage, setDebouncedCurPage] = useState<number>(0);
   const [outlineSyncPaused, setOutlineSyncPaused] = useState(false);
+  const outlineNavHandledIdRef = React.useRef<number>(0);
   const outlineSyncPauseTimerRef = React.useRef<ReturnType<
     typeof setTimeout
   > | null>(null);
@@ -188,6 +189,10 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     (state: AppState) => state.preview.compileResultType,
   );
   const curPage = useSelector((state: AppState) => state.preview.curPage);
+  const pdfOutline = useSelector((state: AppState) => state.preview.pdfOutline);
+  const outlineNavRequest = useSelector(
+    (state: AppState) => state.preview.outlineNavRequest,
+  );
   const texPdfUrl = useSelector((state: AppState) => state.proj.texPdfUrl);
   const tabName = useSelector((state: AppState) => state.proj.tabName);
   const texQueue = useSelector((state: AppState) => state.proj.texQueue);
@@ -208,11 +213,11 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
 
   React.useEffect(() => {
     let cancelled = false;
-    if (!pdfProxy || !outline.length) {
+    if (!pdfProxy || !pdfOutline.length) {
       setOutlineIndex([]);
       return;
     }
-    buildOutlineIndex(pdfProxy, outline).then((entries) => {
+    buildOutlineIndex(pdfProxy, pdfOutline).then((entries) => {
       if (!cancelled) {
         setOutlineIndex(entries);
       }
@@ -220,7 +225,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     return () => {
       cancelled = true;
     };
-  }, [pdfProxy, outline]);
+  }, [pdfProxy, pdfOutline]);
 
   React.useEffect(() => {
     return () => {
@@ -237,6 +242,21 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     return findActiveOutlineKey(outlineIndex, debouncedCurPage);
   }, [outlineSyncPaused, outlineIndex, debouncedCurPage]);
 
+  React.useEffect(() => {
+    if (outlineSyncPaused) {
+      setAndDispatchActiveOutline({ ancestorKeys: [] });
+      return;
+    }
+    if (activeOutlineEntry) {
+      setAndDispatchActiveOutline({
+        key: activeOutlineEntry.key,
+        ancestorKeys: activeOutlineEntry.ancestorKeys,
+      });
+    } else {
+      setAndDispatchActiveOutline({ ancestorKeys: [] });
+    }
+  }, [activeOutlineEntry, outlineSyncPaused]);
+
   const pauseOutlineScrollSync = useCallback(() => {
     setOutlineSyncPaused(true);
     if (outlineSyncPauseTimerRef.current) {
@@ -247,6 +267,31 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
       outlineSyncPauseTimerRef.current = null;
     }, 600);
   }, []);
+  const handleOutlineNavigation = useCallback(
+    async (dest: unknown) => {
+      pauseOutlineScrollSync();
+      if (!pdfProxy) {
+        console.warn("PDF not loaded yet, cannot navigate outline");
+        return;
+      }
+      const pageNum = await resolveOutlinePageNumber(pdfProxy, dest);
+      if (pageNum && pageNum > 0) {
+        scrollToPage(pageNum, virtualListRef);
+      } else {
+        console.warn("Unable to resolve outline destination to page", dest);
+      }
+    },
+    [pdfProxy, pauseOutlineScrollSync, virtualListRef],
+  );
+
+  React.useEffect(() => {
+    if (!outlineNavRequest || outlineNavRequest.id === outlineNavHandledIdRef.current) {
+      return;
+    }
+    outlineNavHandledIdRef.current = outlineNavRequest.id;
+    void handleOutlineNavigation(outlineNavRequest.dest);
+  }, [outlineNavRequest, handleOutlineNavigation]);
+
   React.useEffect(() => {
     let devModelFlag = localStorage.getItem("devModel");
     if (devModelFlag && Boolean(devModelFlag) === true) {
@@ -365,23 +410,12 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     return <PreviewerLogPanel />;
   };
 
-  const handleOutlineClick = async (dest: any) => {
-    pauseOutlineScrollSync();
-    if (!pdfProxy) {
-      console.warn("PDF not loaded yet, cannot navigate outline");
-      return;
-    }
-
-    const pageNum = await resolveOutlinePageNumber(pdfProxy, dest);
-    if (pageNum && pageNum > 0) {
-      scrollToPage(pageNum, virtualListRef);
-    } else {
-      console.warn("Unable to resolve outline destination to page", dest);
-    }
-  };
-
   const setPageNum = useCallback((pageNum: number) => {
     setNumPages(pageNum);
+  }, []);
+
+  const handleOutlineLoaded = useCallback((outline: OutlineItemRaw[]) => {
+    setAndDispatchPdfOutline(outline);
   }, []);
 
   // https://stackoverflow.com/questions/76834748/react-pdf-gives-typeerror-cannot-read-properties-of-null-reading-sendwithprom
@@ -393,58 +427,24 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     if (!curPdfUrl || !props.projectId) {
       return <div>{t("tips_loading")}</div>;
     }
-    if (props.viewModel === "fullscreen") {
-      return (
-        <div
-          id="pdf-fullscreen-preview-container"
-          style={{ display: "flex", height: "100%" }}
-        >
-          <Split
-            visible={[2, 3]}
-            style={{
-              width: "100%",
-              border: "0px solid #d5d5d5",
-              borderRadius: 3,
-            }}
-          >
-            <div id="pdf-outline"
-              style={{
-                width: "200px",
-                borderRight: "0px solid #ccc",
-                overflowY: "auto",
-              }}
-            >
-              <h4>Outline</h4>
-              <OutlineTree
-                outline={outline}
-                onItemClick={(dest) => handleOutlineClick(dest)}
-                activeNodeKey={activeOutlineEntry?.key}
-                expandKeys={activeOutlineEntry?.ancestorKeys}
-              />
-            </div>
-            <div
-              id="fc-preview-container"
-              className={styles.fcPdfPreviewContainer}
-            >
-              <MemoizedPDFPreview
-                ref={pdfPreviewRef}
-                curPdfUrl={curPdfUrl}
-                projId={props.projectId}
-                viewModel={props.viewModel}
-                setPageNum={setPageNum}
-                virtualListRef={virtualListRef}
-                pdfOptions={opt}
-                curPdfPage={props.curPage}
-                onOutlineLoaded={setOutline}
-                onPdfLoaded={setPdfProxy}
-              />
-            </div>
-          </Split>
-        </div>
-      );
-    }
+    const containerClass =
+      props.viewModel === "fullscreen"
+        ? styles.fcPdfPreviewContainer
+        : styles.pdfPreviewContainer;
     return (
-      <div id="pdf-preview-container" className={styles.pdfPreviewContainer}>
+      <div
+        id={
+          props.viewModel === "fullscreen"
+            ? "pdf-fullscreen-preview-container"
+            : "pdf-preview-container"
+        }
+        className={containerClass}
+        style={
+          props.viewModel === "fullscreen"
+            ? { display: "flex", height: "100%" }
+            : undefined
+        }
+      >
         <MemoizedPDFPreview
           ref={pdfPreviewRef}
           curPdfUrl={curPdfUrl}
@@ -454,7 +454,8 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
           virtualListRef={virtualListRef}
           pdfOptions={opt}
           curPdfPage={props.curPage}
-          onOutlineLoaded={setOutline}
+          onOutlineLoaded={handleOutlineLoaded}
+          onPdfLoaded={setPdfProxy}
         />
       </div>
     );

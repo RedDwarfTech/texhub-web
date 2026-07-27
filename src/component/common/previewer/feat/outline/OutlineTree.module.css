@@ -43,6 +43,44 @@
   text-decoration: none;
 }
 
+.outlineTreeSidebar {
+  list-style: none;
+  padding: 6px 4px 10px;
+  margin: 0;
+}
+
+.titleButtonSidebar {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  text-align: left;
+  padding: 2px 4px;
+  font-size: 13px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.titleButtonSidebarActive {
+  font-weight: 600;
+  background-color: rgb(93, 97, 123);
+  border-radius: 2px;
+}
+
+.expandButtonSidebar {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 4px;
+  font-size: 10px;
+  width: 17px;
+  color: rgba(255, 255, 255, 0.75);
+  flex-shrink: 0;
+}
+
 .nestedList {
   padding: 0;
   margin: 0;

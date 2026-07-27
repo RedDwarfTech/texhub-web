@@ -16,6 +16,8 @@ import TreeFileDel from "../del/TreeFileDel";
 import { TreeProps } from "@/model/props/TreeProps";
 import { ProjectTreeFolder } from "./ProjectTreeFolder";
 import TreeFolderCreate from "../create/TreeFolderCreate";
+import ProjectOutlinePanel from "../outline/ProjectOutlinePanel";
+import Split from "@uiw/react-split";
 import {
   handleExpandFolderEvent,
   handleFileAdd,
@@ -235,7 +237,22 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
 
   const renderBody = () => {
     if (curTabName === "tree") {
-      return renderDirectoryTree(texFileTree, 0);
+      return (
+        <div className={styles.treeBodySplit}>
+          <Split
+            mode="vertical"
+            visible={[2, 3]}
+            style={{ height: "100%", width: "100%" }}
+          >
+            <div className={styles.fileTreePane}>
+              {renderDirectoryTree(texFileTree, 0)}
+            </div>
+            <div className={styles.outlinePane}>
+              <ProjectOutlinePanel />
+            </div>
+          </Split>
+        </div>
+      );
     } else if (curTabName === "search") {
       return (
         <ProjFileSearch

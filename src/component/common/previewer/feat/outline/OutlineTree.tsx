@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import styles from "./OutlineTree.module.css";
-import { getOutlineNodeKey } from "./outlineNavigation";
+import { getOutlineNodeKey, OutlineItemRaw } from "./outlineNavigation";
 
 interface OutlineItem {
   title: string;
@@ -9,10 +9,11 @@ interface OutlineItem {
 }
 
 interface OutlineTreeProps {
-  outline: OutlineItem[];
+  outline: OutlineItem[] | OutlineItemRaw[];
   onItemClick: (dest: any) => void;
   activeNodeKey?: string;
   expandKeys?: string[];
+  theme?: "default" | "sidebar";
 }
 
 const OutlineTree: React.FC<OutlineTreeProps> = ({
@@ -20,6 +21,7 @@ const OutlineTree: React.FC<OutlineTreeProps> = ({
   onItemClick,
   activeNodeKey,
   expandKeys = [],
+  theme = "default",
 }) => {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const activeButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -71,6 +73,16 @@ const OutlineTree: React.FC<OutlineTreeProps> = ({
     const isExpanded = isExpandedForKey(key);
     const marginLeft = level == 0 ? 2 : 20;
     const isActive = activeNodeKey === key;
+    const titleClass =
+      theme === "sidebar"
+        ? isActive
+          ? `${styles.titleButtonSidebar} ${styles.titleButtonSidebarActive}`
+          : styles.titleButtonSidebar
+        : isActive
+          ? `${styles.titleButton} ${styles.titleButtonActive}`
+          : styles.titleButton;
+    const expandClass =
+      theme === "sidebar" ? styles.expandButtonSidebar : styles.expandButton;
 
     return (
       <li key={key} className={styles.outlineItem} style={{ marginLeft: marginLeft }}>
@@ -78,7 +90,7 @@ const OutlineTree: React.FC<OutlineTreeProps> = ({
           {hasChildren && (
             <button
               onClick={() => toggleExpanded(key)}
-              className={styles.expandButton}
+              className={expandClass}
             >
               {isExpanded ? "▼" : "▶"}
             </button>
@@ -88,11 +100,7 @@ const OutlineTree: React.FC<OutlineTreeProps> = ({
             ref={isActive ? activeButtonRef : undefined}
             data-outline-key={key}
             onClick={() => onItemClick(item.dest)}
-            className={
-              isActive
-                ? `${styles.titleButton} ${styles.titleButtonActive}`
-                : styles.titleButton
-            }
+            className={titleClass}
           >
             {item.title}
           </button>
@@ -109,7 +117,11 @@ const OutlineTree: React.FC<OutlineTreeProps> = ({
   };
 
   return (
-    <ul className={styles.outlineTree}>
+    <ul
+      className={
+        theme === "sidebar" ? styles.outlineTreeSidebar : styles.outlineTree
+      }
+    >
       {outline.map((item, index) => renderOutlineItem(item, 0, "root" + index))}
     </ul>
   );
