@@ -49,6 +49,8 @@ import {
   resolveOutlinePageNumber,
 } from "../feat/outline/outlineNavigation";
 import { getPreviewUrl } from "@/service/file/FileService";
+import Split from "@uiw/react-split";
+import PdfOutlinePanel from "../feat/outline/PdfOutlinePanel";
 import {
   appendCompileLogChunk,
   COMPILE_CLEAR_MARKER,
@@ -423,40 +425,55 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     return getPdfjsOptions();
   }, []);
 
+  const renderPdfPreview = () => (
+    <MemoizedPDFPreview
+      ref={pdfPreviewRef}
+      curPdfUrl={curPdfUrl}
+      projId={props.projectId}
+      viewModel={props.viewModel}
+      setPageNum={setPageNum}
+      virtualListRef={virtualListRef}
+      pdfOptions={opt}
+      curPdfPage={props.curPage}
+      onOutlineLoaded={handleOutlineLoaded}
+      onPdfLoaded={setPdfProxy}
+    />
+  );
+
   const renderPdfView = () => {
     if (!curPdfUrl || !props.projectId) {
       return <div>{t("tips_loading")}</div>;
     }
-    const containerClass =
-      props.viewModel === "fullscreen"
-        ? styles.fcPdfPreviewContainer
-        : styles.pdfPreviewContainer;
+    if (props.viewModel === "fullscreen") {
+      return (
+        <div
+          id="pdf-fullscreen-preview-container"
+          style={{ display: "flex", height: "100%" }}
+        >
+          <Split
+            visible={[2, 3]}
+            style={{
+              width: "100%",
+              border: "0px solid #d5d5d5",
+              borderRadius: 3,
+            }}
+          >
+            <div id="pdf-outline" className={styles.fullscreenOutlinePane}>
+              <PdfOutlinePanel variant="fullscreen" />
+            </div>
+            <div
+              id="fc-preview-container"
+              className={styles.fcPdfPreviewContainer}
+            >
+              {renderPdfPreview()}
+            </div>
+          </Split>
+        </div>
+      );
+    }
     return (
-      <div
-        id={
-          props.viewModel === "fullscreen"
-            ? "pdf-fullscreen-preview-container"
-            : "pdf-preview-container"
-        }
-        className={containerClass}
-        style={
-          props.viewModel === "fullscreen"
-            ? { display: "flex", height: "100%" }
-            : undefined
-        }
-      >
-        <MemoizedPDFPreview
-          ref={pdfPreviewRef}
-          curPdfUrl={curPdfUrl}
-          projId={props.projectId}
-          viewModel={props.viewModel}
-          setPageNum={setPageNum}
-          virtualListRef={virtualListRef}
-          pdfOptions={opt}
-          curPdfPage={props.curPage}
-          onOutlineLoaded={handleOutlineLoaded}
-          onPdfLoaded={setPdfProxy}
-        />
+      <div id="pdf-preview-container" className={styles.pdfPreviewContainer}>
+        {renderPdfPreview()}
       </div>
     );
   };

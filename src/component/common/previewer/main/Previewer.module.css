@@ -16,6 +16,12 @@
     width: 100%;
 }
 
+.fullscreenOutlinePane {
+  min-width: 160px;
+  height: 100%;
+  overflow: hidden;
+}
+
 .fspreview {
   flex-grow: 1;
   height: 100%;
