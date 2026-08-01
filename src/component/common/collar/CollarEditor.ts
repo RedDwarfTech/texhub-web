@@ -1,7 +1,10 @@
 import { BaseMethods } from "rdjs-wheel";
 import { EditorView } from "./collar.js";
-import * as Y from "rdyjs";
-import { ySyncAnnotation, ySyncFacet } from "rdy-codemirror.next";
+import { Annotation } from "@codemirror/state";
+import * as Y from "yjs";
+import { ySyncFacet } from "y-codemirror.next";
+
+const ySyncAnnotation = Annotation.define();
 
 export const updateEditor = (
   tr: Y.Transaction,

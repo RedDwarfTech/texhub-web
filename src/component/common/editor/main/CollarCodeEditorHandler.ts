@@ -8,7 +8,7 @@ import i18n from "i18next";
 import { getPdfPosition, projHasFile } from "@/service/project/ProjectService";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { ProjectTreeFolder } from "../../projtree/main/ProjectTreeFolder";
-import * as Y from "rdyjs";
+import * as Y from "yjs";
 import { initSubDocSocketIO } from "@/service/editor/CollarEditorSocketIOService";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { themeMap } from "@/component/common/editor/foundation/extensions/theme/theme";

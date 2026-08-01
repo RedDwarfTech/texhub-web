@@ -1,4 +1,4 @@
-import * as Y from "rdyjs";
+import * as Y from "yjs";
 
 export interface SubDocEventProps {
   added: Set<Y.Doc>;

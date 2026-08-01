@@ -5,9 +5,9 @@ allowBuilds:
   unrs-resolver: false
 
 overrides:
-  rdyjs: 13.6.33
-  rdy-protocols: 1.0.14
-  rdlib0: 0.2.106
+  yjs: 13.6.31
+  y-protocols: 1.0.7
+  lib0: 0.2.117
   react: 18.2.0
   react-dom: 18.2.0
   react-redux: 9.2.0

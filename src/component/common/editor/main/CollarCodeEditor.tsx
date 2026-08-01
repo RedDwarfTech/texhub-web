@@ -24,7 +24,7 @@ import { useTranslation } from "react-i18next";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { BaseMethods } from "rdjs-wheel";
 import { metadata } from "@/service/editor/CollarEditorSocketIOService";
-import * as Y from "rdyjs";
+import * as Y from "yjs";
 import { SingleClientProvider } from "texhub-broadcast";
 import { EditorState } from "@codemirror/state";
 import logger from "@/common/storage/log/Logger";

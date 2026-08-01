@@ -1,6 +1,6 @@
 import { AppState } from "@/redux/types/AppState";
 import { EditorView } from "@codemirror/view";
-import * as Y from "rdyjs";
+import * as Y from "yjs";
 
 const initState: AppState["projEditor"] = {
   editorView: {} as EditorView,

@@ -4,7 +4,7 @@ import { TreeFileType } from "@/model/file/TreeFileType";
 import { handleFileSelected } from "./ProjectTreeHandler";
 import { BaseMethods } from "rdjs-wheel";
 import { setCurFileTree } from "@/service/file/FileService";
-import * as Y from "rdyjs";
+import * as Y from "yjs";
 
 export const ProjectTreeFolder = {
   getExpandStatus: (item: TexFileModel): boolean => {

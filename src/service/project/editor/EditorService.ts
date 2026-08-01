@@ -3,7 +3,7 @@ import store from "@/redux/store/store";
 import { EditorView } from "codemirror";
 import { XHRClient } from "rd-component";
 import { BaseMethods } from "rdjs-wheel";
-import * as Y from 'rdyjs';
+import * as Y from 'yjs';
 
 export function setEditorInstance(view: EditorView) {
   const actionTypeString: string =

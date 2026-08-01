@@ -7,7 +7,7 @@ import i18n from "i18next";
 import { TeXFileType } from "@/model/enum/TeXFileType";
 import { BaseMethods, ResponseHandler } from "rdjs-wheel";
 import * as bootstrap from "bootstrap";
-import * as Y from "rdyjs";
+import * as Y from "yjs";
 import { EditorView } from "@codemirror/view";
 import {
   forceSetCurSubDoc,

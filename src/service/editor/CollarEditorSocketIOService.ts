@@ -2,9 +2,9 @@ import { EditorView } from "@codemirror/view";
 import { SocketIOClientProvider } from "texhub-broadcast";
 import { SingleClientProvider } from "texhub-broadcast";
 import { DocMeta } from "texhub-broadcast";
-import * as Y from "rdyjs";
+import * as Y from "yjs";
 // @ts-ignore
-import * as random from "rdlib0/random";
+import * as random from "lib0/random";
 import { createExtensions } from "@/component/common/editor/foundation/extensions/extensions";
 import { Compartment, EditorState } from "@codemirror/state";
 import { readConfig } from "@/config/app/config-reader";
@@ -29,8 +29,6 @@ import {
 import { ManagerOptions, SocketOptions } from "socket.io-client";
 import { getAccessToken } from "@/component/common/cache/Cache";
 import { SubDocEventProps } from "@/model/props/yjs/subdoc/SubDocEventProps.js";
-// @ts-ignore
-import { DocOpts } from "rdyjs/dist/src/utils/Doc.mjs";
 import store from "@/redux/store/store";
 import { TexFileModel } from "@/model/file/TexFileModel";
 import { TeXFileType } from "@/model/enum/TeXFileType";

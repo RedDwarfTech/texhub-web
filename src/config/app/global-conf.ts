@@ -1,5 +1,5 @@
 // @ts-ignore
-import * as random from "rdlib0/random";
+import * as random from "lib0/random";
 import { Compartment } from "@codemirror/state";
 
 export const usercolors = [

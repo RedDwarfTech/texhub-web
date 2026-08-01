@@ -1,5 +1,5 @@
 import { EditorView } from "@codemirror/view";
-import * as Y from "rdyjs";
+import * as Y from "yjs";
 
 export type editorAction =
   | setCollarEditorAction
