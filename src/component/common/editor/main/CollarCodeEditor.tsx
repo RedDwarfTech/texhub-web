@@ -227,6 +227,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         .getMap("texhubsubdoc")
         .get(curSubYDoc.guid);
       const update = Y.encodeStateAsUpdate(oldDoc);
+      // 用新的 Y.Doc 实例替换已同步的旧 doc，避免旧 doc 上残留的状态影响后续同步
       const newDoc = new Y.Doc({ guid: curSubYDoc.guid });
       Y.applyUpdate(newDoc, update);
       rebindEditorToYDoc(
@@ -238,9 +239,20 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         setEditorInstance
       );
       curRootYDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, newDoc);
+      // map.set 会触发 subdocs 事件从而间接调用 addSubdoc 注册新 doc，
+      // 但这里显式注册以保证：即使该事件在某种时序下未到达 handleSubDocChanged，
+      // 新 doc 也一定挂上 update handler 并能广播 SubDocMessageSync。
+      // addSubdoc 幂等，重复注册无害。
+      if (texEditorSocketIOWs && typeof texEditorSocketIOWs.addSubdoc === "function") {
+        texEditorSocketIOWs.addSubdoc(newDoc);
+      }
       loadedDocGuidRef.current = guid;
     } else {
       curRootYDoc.getMap("texhubsubdoc").set(curSubYDoc.guid, curSubYDoc);
+      // 同样显式注册新激活的 subdoc，保证编辑能立即同步
+      if (texEditorSocketIOWs && typeof texEditorSocketIOWs.addSubdoc === "function") {
+        texEditorSocketIOWs.addSubdoc(curSubYDoc);
+      }
     }
     setCurRootYDoc(curRootYDoc);
   }, [curSubYDoc, texEditorSocketIOWs]);

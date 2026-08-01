@@ -412,28 +412,32 @@ const handleSubDocChanged = (
   props: SubDocEventProps,
   wsProvider: SocketIOClientProvider
 ) => {
-  if (props && props.added && props.added.size > 0) {
-    // use added to sync documents in the background
-    handleSubDocAdd(props, wsProvider);
+  // Yjs 的 subdocs 事件有两种触发形态：
+  // 1) 本地新建/嵌入 subdoc：added 与 loaded 同时包含该 doc；
+  // 2) 从服务端反序列化（shouldLoad=false）后调用 .load() 再次打开：
+  //    首次嵌入只出现在 added，.load() 时又单独触发一次 loaded。
+  // 因此必须取 added 与 loaded 的并集统一注册，否则从服务端下发的 subdoc
+  // 会漏掉 addSubdoc：其 update handler 不挂载，本地编辑只会进入 Y.Text
+  // （触发 editor 的 observer 日志），而不会广播 SubDocMessageSync。
+  const toRegister = new Set<Y.Doc>();
+  if (props && props.added) {
+    props.added.forEach((subdoc) => toRegister.add(subdoc));
   }
+  if (props && props.loaded) {
+    props.loaded.forEach((subdoc) => toRegister.add(subdoc));
+  }
+  toRegister.forEach((subdoc) => {
+    if (subdoc && subdoc.guid) {
+      console.log("add sub doc:" + subdoc.guid);
+      // addSubdoc 是幂等的：内部会先解绑旧 handler 再绑定新 handler，
+      // 并把 doc 放进 provider.docs、发送 sync_step_1 拉取内容。
+      wsProvider.addSubdoc(subdoc);
+    }
+  });
   if (props && props.removed && props.removed.size > 0) {
     // use removed to sync documents in the background
     handleSubDocRemoved(props, wsProvider);
   }
-  if (props && props.loaded && props.loaded.size > 0) {
-    // use loaded to fill document content
-    // handleLoadedSubDoc(props.loaded);
-  }
-};
-
-const handleSubDocAdd = (
-  props: SubDocEventProps,
-  wsProvider: SocketIOClientProvider
-) => {
-  props.loaded.forEach((subdoc: Y.Doc) => {
-    console.log("add sub doc:" + subdoc.guid);
-    wsProvider.addSubdoc(subdoc);
-  });
 };
 
 const handleSubDocRemoved = (
