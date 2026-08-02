@@ -4,6 +4,9 @@ allowBuilds:
   esbuild: false
   unrs-resolver: false
 
+minimumReleaseAgeExclude:
+  - texhub-broadcast@1.0.135
+
 overrides:
   yjs: 13.6.31
   y-protocols: 1.0.7

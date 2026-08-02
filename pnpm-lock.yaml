@@ -219,8 +219,8 @@ importers:
         specifier: ^4.8.3
         version: 4.8.3
       texhub-broadcast:
-        specifier: file:../../backend/texhub-broadcast
-        version: file:../../backend/texhub-broadcast(@types/node@25.6.0)(rollup@4.60.3)(ts-node@10.9.2(@types/node@25.6.0)(typescript@5.9.3))(ts-toolbelt@9.6.0)(typescript@5.9.3)(vite@7.3.5(@types/node@25.6.0)(lightningcss@1.32.0)(sass@1.99.0)(terser@5.46.2))(webpack@5.106.2(esbuild@0.18.20))
+        specifier: 1.0.135
+        version: 1.0.135(@types/node@25.6.0)(rollup@4.60.3)(ts-node@10.9.2(@types/node@25.6.0)(typescript@5.9.3))(ts-toolbelt@9.6.0)(typescript@5.9.3)(vite@7.3.5(@types/node@25.6.0)(lightningcss@1.32.0)(sass@1.99.0)(terser@5.46.2))(webpack@5.106.2(esbuild@0.18.20))
       uuid:
         specifier: ^14.0.0
         version: 14.0.0
@@ -7778,8 +7778,8 @@ packages:
     resolution: {integrity: sha512-cAGWPIyOHU6zlmg88jwm7VRyXnMN7iV68OGAbYDk/Mh/xC/pzVPlQtY6ngoIH/5/tciuhGfvESU8GrHrcxD56w==}
     engines: {node: '>=8'}
 
-  texhub-broadcast@file:../../backend/texhub-broadcast:
-    resolution: {directory: ../../backend/texhub-broadcast, type: directory}
+  texhub-broadcast@1.0.135:
+    resolution: {integrity: sha512-xdakkv17G4pOcfbWfu06QoY1s5Pg/adyxM5TOF1BAnq9l/0gXlKMHpJo8A3epAybp3WMtQddhzj9uSRHs+w/mA==}
     engines: {node: '>=20.0.0'}
 
   text-table@0.2.0:
@@ -17149,7 +17149,7 @@ snapshots:
       glob: 7.2.3
       minimatch: 3.1.5
 
-  texhub-broadcast@file:../../backend/texhub-broadcast(@types/node@25.6.0)(rollup@4.60.3)(ts-node@10.9.2(@types/node@25.6.0)(typescript@5.9.3))(ts-toolbelt@9.6.0)(typescript@5.9.3)(vite@7.3.5(@types/node@25.6.0)(lightningcss@1.32.0)(sass@1.99.0)(terser@5.46.2))(webpack@5.106.2(esbuild@0.18.20)):
+  texhub-broadcast@1.0.135(@types/node@25.6.0)(rollup@4.60.3)(ts-node@10.9.2(@types/node@25.6.0)(typescript@5.9.3))(ts-toolbelt@9.6.0)(typescript@5.9.3)(vite@7.3.5(@types/node@25.6.0)(lightningcss@1.32.0)(sass@1.99.0)(terser@5.46.2))(webpack@5.106.2(esbuild@0.18.20)):
     dependencies:
       '@socket.io/admin-ui': 0.5.1(socket.io@4.8.3)
       diff: 8.0.4

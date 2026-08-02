@@ -392,8 +392,23 @@ const initialFisrtSubDoc = (file: TexFileModel) => {
     console.log("already has active subdoc, skip initialFisrtSubDoc");
     return; // 已有激活 subdoc，不强制切回 loadFile
   }
-  let firstSubDoc = new Y.Doc();
-  firstSubDoc.guid = file.file_id;
+  // 优先复用 root doc texhubsubdoc map 中已存在的 subdoc 实例。
+  // 若每个浏览器都各自 new 一个同 guid 的实例并嵌入 map，root doc 同步时会触发
+  // Yjs 冲突销毁其中一个实例，导致该浏览器编辑器绑定的 subdoc 失效。
+  const rootYDoc = store.getState().projEditor.curRootYDoc;
+  let firstSubDoc: Y.Doc;
+  const existing =
+    rootYDoc &&
+    typeof rootYDoc.getMap === "function"
+      ? rootYDoc.getMap("texhubsubdoc").get(file.file_id)
+      : undefined;
+  if (existing && !BaseMethods.isNull(existing)) {
+    firstSubDoc = existing;
+    firstSubDoc.load();
+  } else {
+    firstSubDoc = new Y.Doc();
+    firstSubDoc.guid = file.file_id;
+  }
   let docMetadata: DocMeta = {
     name: file.name,
     id: file.id,
@@ -435,6 +450,27 @@ const handleSubDocChanged = (
   if (props && props.removed && props.removed.size > 0) {
     // use removed to sync documents in the background
     handleSubDocRemoved(props, wsProvider);
+    // 防御：若当前编辑器绑定的 subdoc 实例被 Yjs 销毁（如跨端同 guid 冲突时
+    // root doc 的 texhubsubdoc map 项被替换），尝试改挂到替换进来的同 guid
+    // 新实例上，避免编辑器失联、不再触发 subdoc update。
+    const current = store.getState().projEditor.curSubYDoc;
+    if (
+      current &&
+      !BaseMethods.isNull(current) &&
+      current.guid &&
+      props.removed.has(current)
+    ) {
+      const replacement = Array.from(toRegister).find(
+        (subdoc) => subdoc.guid === current.guid && subdoc !== current
+      );
+      if (replacement) {
+        console.warn(
+          "re-adopt replacement subdoc for destroyed active doc:",
+          current.guid
+        );
+        setCurSubDoc(replacement);
+      }
+    }
   }
 };
 
