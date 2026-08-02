@@ -26,7 +26,7 @@ import {
   setSocketIOProvider,
   setWsConnState,
 } from "../project/editor/EditorService";
-import { ManagerOptions, SocketOptions } from "socket.io-client";
+import { ManagerOptions, Socket, SocketOptions } from "socket.io-client";
 import { getAccessToken } from "@/component/common/cache/Cache";
 import { SubDocEventProps } from "@/model/props/yjs/subdoc/SubDocEventProps.js";
 import store from "@/redux/store/store";
@@ -47,8 +47,11 @@ export const usercolors = [
 export const themeConfig = new Compartment();
 export const userColor = usercolors[random.uint32() % usercolors.length];
 
-const AUTO_RECONNECT_MAX = 3;
-const AUTO_RECONNECT_DELAY_MS = 5000;
+// 自动重连采用指数退避：第 1 次 5s、第 2 次 10s、第 3 次 20s... 封顶 60s。
+// 每次再叠加少量随机抖动，避免大量客户端同时重连打爆服务器。
+const AUTO_RECONNECT_BASE_DELAY_MS = 5000;
+const AUTO_RECONNECT_MAX_DELAY_MS = 60000;
+const AUTO_RECONNECT_JITTER_MS = 2000;
 
 let autoReconnectAttempts = 0;
 let autoReconnectTimer: ReturnType<typeof setTimeout> | null = null;
@@ -78,6 +81,13 @@ export function resetAutoReconnectState() {
   clearAutoReconnectTimer();
 }
 
+function getReconnectDelayMs(attempt: number): number {
+  const exponential = AUTO_RECONNECT_BASE_DELAY_MS * Math.pow(2, attempt - 1);
+  const capped = Math.min(exponential, AUTO_RECONNECT_MAX_DELAY_MS);
+  const jitter = Math.floor(Math.random() * AUTO_RECONNECT_JITTER_MS);
+  return capped + jitter;
+}
+
 function attemptProviderConnect(provider: SocketIOClientProvider) {
   provider.shouldConnect = true;
   const token = getAccessToken();
@@ -89,20 +99,25 @@ function attemptProviderConnect(provider: SocketIOClientProvider) {
   } else {
     provider.connect();
   }
+  attachProviderReconnectHooks(provider);
   setWsConnState("connecting");
 }
 
-function markAutoReconnectExhausted(provider: SocketIOClientProvider) {
-  manualReconnectRequired = true;
-  provider.shouldConnect = false;
-  clearAutoReconnectTimer();
-  setWsConnState("disconnected");
-  logger.warn("collaboration auto reconnect exhausted, manual reconnect required");
-  if (typeof window !== "undefined") {
-    window.dispatchEvent(
-      new CustomEvent(COLLABORATION_RECONNECT_EXHAUSTED_EVENT)
-    );
+// texhub-broadcast 库把断线重连挂在 Socket 的 "close" 事件上，
+// 但 socket.io-client v4 的 Socket 不会发 "close"（该事件属于 Manager），
+// 所以库内与前端 status:"disconnected" 链路实际从未触发。
+// 这里直接监听 Socket 真实存在的 "disconnect" 事件来驱动重连循环。
+const hookedSockets = new WeakSet<Socket>();
+
+function attachProviderReconnectHooks(provider: SocketIOClientProvider) {
+  const socket = provider.ws;
+  if (!socket || hookedSockets.has(socket)) {
+    return;
   }
+  hookedSockets.add(socket);
+  socket.on("disconnect", () => {
+    onCollaborationDisconnected(provider);
+  });
 }
 
 function scheduleAutoReconnectAttempt(provider: SocketIOClientProvider) {
@@ -113,10 +128,6 @@ function scheduleAutoReconnectAttempt(provider: SocketIOClientProvider) {
   }
   if (isCollaborationProviderConnected(provider)) {
     resetAutoReconnectState();
-    return;
-  }
-  if (autoReconnectAttempts >= AUTO_RECONNECT_MAX) {
-    markAutoReconnectExhausted(provider);
     return;
   }
 
@@ -135,14 +146,13 @@ function scheduleAutoReconnectAttempt(provider: SocketIOClientProvider) {
     autoReconnectAttempts += 1;
     logger.info("collaboration auto reconnect attempt", {
       attempt: autoReconnectAttempts,
-      max: AUTO_RECONNECT_MAX,
     });
 
     if (AuthHandler.isTokenNeedRefresh(120)) {
       await RequestHandler.handleWebAccessTokenExpire();
     }
     attemptProviderConnect(provider);
-  }, AUTO_RECONNECT_DELAY_MS);
+  }, getReconnectDelayMs(autoReconnectAttempts + 1));
 }
 
 function onCollaborationDisconnected(provider: SocketIOClientProvider) {
@@ -153,10 +163,6 @@ function onCollaborationDisconnected(provider: SocketIOClientProvider) {
   if (isCollaborationProviderConnected(provider)) {
     resetAutoReconnectState();
     setWsConnState("connected");
-    return;
-  }
-  if (autoReconnectAttempts >= AUTO_RECONNECT_MAX) {
-    markAutoReconnectExhausted(provider);
     return;
   }
   if (autoReconnectTimer === null) {
@@ -306,6 +312,8 @@ export const doSocketIOConn = (
     console.error(err.context);
     if (!manualReconnectRequired) {
       setWsConnState("connecting");
+      // 连接尝试失败不会触发 Socket 的 "disconnect"，需要在此驱动下一次退避重试
+      onCollaborationDisconnected(wsProvider);
     } else {
       setWsConnState("disconnected");
     }
@@ -323,6 +331,7 @@ export const doSocketIOConn = (
       setWsConnState("connecting");
     }
   });
+  attachProviderReconnectHooks(wsProvider);
   return wsProvider;
 };
 

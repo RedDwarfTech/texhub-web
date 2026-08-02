@@ -88,11 +88,16 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       console.warn("provider is null");
       return;
     }
+    if (document.visibilityState !== "visible") {
+      return;
+    }
     if (isWsProviderConnected(texEditorSocketIOWs)) {
       setWsConnState("connected");
     } else {
       setWsConnState("disconnected");
       console.error("disconnected......");
+      // 后台期间连接已被服务器 ping 超时断开，回到前台立即尝试恢复
+      tryReconnect();
     }
   };
 
