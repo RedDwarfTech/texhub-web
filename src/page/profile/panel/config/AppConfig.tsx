@@ -9,6 +9,7 @@ const AppConfig: React.FC = () => {
   const [githubToken, setGithubToken] = useState<string>();
   const [devModel, setDevModel] = useState<boolean>();
   const [legacyModel, setLegacyModel] = useState<string>();
+  const [multiPlatformPay, setMultiPlatformPay] = useState<boolean>();
   const { t } = useTranslation();
 
   React.useEffect(() => {
@@ -17,6 +18,13 @@ const AppConfig: React.FC = () => {
       setDevModel(true);
     } else {
       setDevModel(false);
+    }
+
+    let multiPlatformPayFlag = localStorage.getItem("multiPlatformPay");
+    if (multiPlatformPayFlag && Boolean(multiPlatformPayFlag) === true) {
+      setMultiPlatformPay(true);
+    } else {
+      setMultiPlatformPay(false);
     }
 
     let wsLegacyModelFlag = localStorage.getItem("legacyModel");
@@ -71,6 +79,22 @@ const AppConfig: React.FC = () => {
         />
       );
     }
+  };
+
+  const renderMultiPlatformPayInput = () => {
+    return (
+      <input
+        className="form-check-input"
+        type="checkbox"
+        id="multiPlatformPaySwitch"
+        onChange={() => {
+          let curModel: boolean = multiPlatformPay ? false : true;
+          setMultiPlatformPay(curModel);
+          localStorage.setItem("multiPlatformPay", String(curModel));
+        }}
+        checked={multiPlatformPay}
+      />
+    );
   };
 
   const renderShortFileIdInput = () => {
@@ -145,6 +169,12 @@ const AppConfig: React.FC = () => {
             <div className="form-check form-switch">
               {renderShortFileIdInput()}
               <label className="form-check-label">Short File ID</label>
+            </div>
+          </div>
+          <div className="col mb-3">
+            <div className="form-check form-switch">
+              {renderMultiPlatformPayInput()}
+              <label className="form-check-label">{t("title_multi_platform_pay")}</label>
             </div>
           </div>
         </div>
