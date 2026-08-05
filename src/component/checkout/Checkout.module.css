@@ -1,0 +1,396 @@
+.mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.panel {
+    width: 90%;
+    max-width: 420px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.headerSecure {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+}
+
+.closeBtn {
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    color: #999;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.closeBtn:hover {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.checkoutBody {
+    padding: 20px;
+}
+
+.orderPanel {
+    background-color: #fafafa;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.orderTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.orderDivider {
+    border-top: 1px dashed #e5e5e5;
+    margin: 12px 0;
+}
+
+.productRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.productIcon {
+    font-size: 20px;
+}
+
+.productTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: #222;
+}
+
+.benefitTitle {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.benefitList {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.benefitItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #555;
+}
+
+.benefitCheck {
+    font-size: 14px;
+}
+
+.amountRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #333;
+}
+
+.amount {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ff5722;
+}
+
+.sectionTitle {
+    margin: 18px 0 10px;
+    font-size: 13px;
+    color: #888;
+    letter-spacing: 0.5px;
+}
+
+.providerList {
+    display: flex;
+    gap: 10px;
+}
+
+.providerItem {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 14px 8px;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.providerItem:hover {
+    border-color: #1677ff;
+}
+
+.providerActive {
+    border-color: #1677ff;
+    box-shadow: 0 0 0 1px #1677ff;
+}
+
+.providerDisabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.providerDisabled:hover {
+    border-color: #e5e5e5;
+}
+
+.providerName {
+    font-size: 14px;
+    color: #333;
+}
+
+.providerSuffix {
+    font-size: 11px;
+    color: #aaa;
+}
+
+.providerCheck {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    color: #1677ff;
+    font-weight: 700;
+}
+
+.confirmBtn {
+    width: 100%;
+    height: 46px;
+    margin-top: 20px;
+    background-color: #1677ff;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.confirmBtn:hover {
+    background-color: #4096ff;
+}
+
+.confirmBtn:disabled {
+    background-color: #a0c6ff;
+    cursor: not-allowed;
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    font-size: 12px;
+    color: #aaa;
+}
+
+.secure {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.qrBody {
+    padding: 24px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.qrHeader {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+}
+
+.qrCountdown {
+    font-size: 13px;
+    font-weight: 500;
+    color: #ff5722;
+}
+
+.qrImg {
+    border: none;
+    width: 200px;
+    margin: 0 auto;
+}
+
+.qrImg iframe {
+    border: none;
+}
+
+.qrPlaceholder {
+    width: 200px;
+    height: 205px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+}
+
+.qrExpired {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    font-size: 14px;
+    color: #888;
+}
+
+.qrRefreshBtn {
+    background-color: #1677ff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 20px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.qrTip {
+    font-size: 13px;
+    color: #666;
+    margin: 12px 0 8px;
+    text-align: center;
+}
+
+.qrAmount {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.qrActions {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+}
+
+.qrIssue {
+    font-size: 13px;
+    color: #1677ff;
+    cursor: pointer;
+}
+
+.paidBtn {
+    background-color: #1677ff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 22px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.paidBtn:disabled {
+    background-color: #a0c6ff;
+    cursor: not-allowed;
+}
+
+.resultBody {
+    padding: 36px 20px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.resultIcon {
+    font-size: 52px;
+}
+
+.resultTitle {
+    font-size: 20px;
+    font-weight: 700;
+    color: #222;
+    margin-top: 12px;
+}
+
+.resultMember {
+    font-size: 14px;
+    color: #555;
+    margin-top: 14px;
+    text-align: center;
+}
+
+.resultExpire {
+    font-size: 13px;
+    color: #888;
+    margin-top: 8px;
+}
+
+.resultActions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.resultPrimaryBtn {
+    background-color: #1677ff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.resultPrimaryBtn:hover {
+    background-color: #4096ff;
+}
+
+.resultGhostBtn {
+    background-color: #fff;
+    color: #1677ff;
+    border: 1px solid #1677ff;
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.resultGhostBtn:hover {
+    background-color: #f0f7ff;
+}
