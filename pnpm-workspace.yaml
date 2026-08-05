@@ -8,6 +8,7 @@ minimumReleaseAgeExclude:
   - texhub-broadcast@1.0.135
 
 overrides:
+  axios: 1.16.1
   yjs: 13.6.31
   y-protocols: 1.0.7
   lib0: 0.2.117
@@ -15,3 +16,4 @@ overrides:
   react-dom: 18.2.0
   react-redux: 9.2.0
   redux: 5.0.1
+  rd-component: link:../rd-component

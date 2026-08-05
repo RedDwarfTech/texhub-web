@@ -1,0 +1,99 @@
+.product-body {
+    width: 100%;
+}
+
+.container {
+    margin: 0 auto;
+    width: 80%;
+    max-width: 900px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 50px;
+    gap: 1px;
+}
+
+.package {
+    /** 
+     * change to 25% to make the item arrange more reasonable
+     * the original 32% is too wide for the popup page, based on the macbook pro 15 inch screen
+     **/
+    width: 25%;
+    background-color: #f7f7f7;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 3px 3px 5px #ccc;
+    display: flex;
+    flex-direction: column;
+    /**
+    * setting the min width to avoid the popup window
+    * shrink the width too small
+    **/
+    min-width: 200px;
+}
+
+.package h2 {
+    text-align: center;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+.package p {
+    text-align: center;
+}
+
+.price {
+    font-size: 48px;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.price span {
+    font-size: 24px;
+    vertical-align: super;
+}
+
+.package ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.package li {
+    margin-bottom: 10px;
+}
+
+.package button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: auto;
+    height: 45px;
+    font-size: 17px;
+    display: block;
+}
+
+.goodsDivider {
+    border-top: 1px solid #ccc;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+    .package {
+        width: 45%;
+    }
+}
+
+@media (max-width: 576px) {
+    .package {
+        width: 100%;
+    }
+}

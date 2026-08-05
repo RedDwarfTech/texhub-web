@@ -1,7 +1,7 @@
 import TexHeader from "@/component/header/TexHeader";
 import { readConfig } from "@/config/app/config-reader";
 import store from "@/redux/store/store";
-import { Goods } from "rd-component";
+import Goods from "@/component/good/Goods";
 import { useTranslation } from "react-i18next";
 
 const Price: React.FC = () => {

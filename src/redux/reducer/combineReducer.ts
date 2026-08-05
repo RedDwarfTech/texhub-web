@@ -8,6 +8,8 @@ import projShare from "@/redux/reducer/project/ProjectShareReducer";
 import projEditor from "@/redux/reducer/project/EditorReducer";
 import preview from "@/redux/reducer/project/preview/PreviewReducer";
 import projTree from "@/redux/reducer/project/tree/ProjectTreeReducer";
+import pay from "@/reducer/pay/PayReducer";
+import iapproduct from "@/reducer/iapproduct/IapProductReducer";
 
 const rootReducer = combineReducers({
     proj,
@@ -18,7 +20,9 @@ const rootReducer = combineReducers({
     projShare,
     projEditor,
     preview,
-    projTree
+    projTree,
+    pay,
+    iapproduct
 });
 
 export default rootReducer;
