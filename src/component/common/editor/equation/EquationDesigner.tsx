@@ -398,7 +398,7 @@ const EquationDesigner: React.FC<EquationDesignerProps> = () => {
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title" id="equationDesignerLabel">
-              {t("title_equation_designer_alpha")}
+              {t("title_equation_designer")}
             </h5>
             <button
               type="button"

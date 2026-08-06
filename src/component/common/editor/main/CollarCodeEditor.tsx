@@ -478,9 +478,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
           title={t("title_equation_designer")}
           data-bs-toggle="modal"
           data-bs-target="#equationDesignerModal"
-          onClick={() => {
-            handleTables();
-          }}
         >
           <i className="fa-solid fa-square-root-variable"></i>
         </button>
