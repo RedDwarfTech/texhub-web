@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import { QRCodeSVG } from "qrcode.react";
 import { AnyAction, Store } from "redux";
 import { OrderService, UserService } from "rd-component";
 import { ResponseHandler } from "rdjs-wheel";
@@ -249,7 +250,11 @@ const Checkout: React.FC<CheckoutProps> = ({ open, product, store, refreshUrl = 
         </div>
         <div className={styles.qrImg}>
           {createdOrder && createdOrder.formText ? (
-            <iframe srcDoc={createdOrder.formText} width="200" height="205" title="pay-qr"></iframe>
+            payProvider === "wechat" ? (
+              <QRCodeSVG value={createdOrder.formText} size={200} includeMargin />
+            ) : (
+              <iframe srcDoc={createdOrder.formText} width="200" height="205" title="pay-qr"></iframe>
+            )
           ) : (
             <div className={styles.qrPlaceholder}></div>
           )}
