@@ -155,6 +155,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       project_id: file.project_id,
       page_size: defaultHistoryPageSize,
       file_int_id: file.id,
+      flush: true,
     };
     projHistoryPage(histQueryParam);
     const offcanvasEl = document.getElementById("projHistory");

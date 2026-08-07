@@ -129,7 +129,8 @@ const EHeader: React.FC = () => {
     setHistoryVersionFile({} as TexFileModel);
     const hist: QueryHistory = {
       project_id: mainFile.project_id,
-      page_size: defaultHistoryPageSize
+      page_size: defaultHistoryPageSize,
+      flush: true
     };
     projHistoryPage(hist);
   };

@@ -3,4 +3,5 @@ export interface QueryHistory {
     offset?: string | null;
     page_size?: number,
     file_int_id?: string | null;
+    flush?: boolean;
 }
