@@ -85,9 +85,18 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
 
     setHasMore(true);
     setHistoryList((prev) => {
-      const ids = new Set(prev.map((item) => item.id));
-      const newItems = pageData.filter((item) => !ids.has(item.id));
-      return [...prev, ...newItems];
+      const merged = new Map<string, ProjHisotry>();
+      for (const item of [...prev, ...pageData]) {
+        merged.set(String(item.id), item);
+      }
+      return Array.from(merged.values()).sort(
+        (a, b) =>
+          BigInt(b.id) > BigInt(a.id)
+            ? 1
+            : BigInt(b.id) < BigInt(a.id)
+            ? -1
+            : 0
+      );
     });
   }, [projHisPage]);
 
