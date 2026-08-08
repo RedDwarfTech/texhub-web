@@ -520,14 +520,33 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   }, [tabName]);
 
   const renderPreviewTab = () => {
-    switch (curPreviewTab) {
-      case "pdfview":
-        return renderPdfView();
-      case "logview":
-        return renderLogView();
-      default:
-        return <div></div>;
-    }
+    const isPdf = curPreviewTab === "pdfview";
+    const isLog = curPreviewTab === "logview";
+    return (
+      <>
+        <div
+          style={{
+            display: isPdf ? "flex" : "none",
+            flexDirection: "column",
+            flex: 1,
+            height: "100%",
+            overflow: "hidden",
+          }}
+        >
+          {renderPdfView()}
+        </div>
+        <div
+          style={{
+            display: isLog ? "block" : "none",
+            flex: 1,
+            height: "100%",
+            overflow: "hidden",
+          }}
+        >
+          {renderLogView()}
+        </div>
+      </>
+    );
   };
 
   const renderLogView = () => {
