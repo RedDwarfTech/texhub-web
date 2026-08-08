@@ -88,11 +88,12 @@ const EHeader: React.FC = () => {
         getStreamLog(req);
       }
     } else if (texQueue.comp_status === CompileStatus.COMPLETE) {
-      compileProjectLog(req).then((resp)=>{
-        if (ResponseHandler.responseSuccess(resp)) {
-          showPreviewTab("pdfview");
-        }
-      });
+      // Only switch to the pdf view when the compile actually succeeded;
+      // on failure keep the log view so the errors stay visible.
+      if (texQueue.comp_result === CompileResultType.SUCCESS) {
+        showPreviewTab("pdfview");
+      }
+      compileProjectLog(req);
     }
 
     prevCompStatusRef.current = texQueue.comp_status;

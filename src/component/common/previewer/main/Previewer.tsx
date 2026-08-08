@@ -90,9 +90,17 @@ const PreviewerLogPanel: React.FC = () => {
   );
 
   const applyDetectedResult = (detected: CompileResultType | null) => {
-    if (detected !== null) {
-      setContextCompileResultType(detected);
+    if (detected === null) {
+      return;
     }
+    // 后端 queue.comp_result 是权威结果，日志检测出的"成功"不能覆盖已判定的失败
+    if (
+      detected === CompileResultType.SUCCESS &&
+      compileResultTypeRef.current === CompileResultType.FAILED
+    ) {
+      return;
+    }
+    setContextCompileResultType(detected);
   };
 
   React.useEffect(() => {
