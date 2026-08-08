@@ -119,6 +119,154 @@
   overflow: scroll;
 }
 
+.logFilterBar {
+  display: flex;
+  gap: 8px;
+  padding: 10px 10px 0 10px;
+}
+
+.logFilterBtn {
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: transparent;
+  color: #555;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.logFilterBtn:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.logFilterBtnActive {
+  background-color: #3b82f6;
+  color: #fff;
+}
+
+.logFilterBtnActive:hover {
+  background-color: #2f6fe0;
+  color: #fff;
+}
+
+.logFilterCount {
+  display: inline-block;
+  margin-left: 4px;
+  min-width: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.logFilterBtn:not(.logFilterBtnActive) .logFilterCount {
+  background-color: rgba(0, 0, 0, 0.12);
+  color: #555;
+}
+
+.logEntryList {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.logEntry {
+  border-radius: 5px;
+  padding: 10px 12px;
+  background-color: #f7f7f7;
+  border-left: 4px solid transparent;
+}
+
+.logEntryError {
+  border-left-color: #dc3545;
+  background-color: #fdf3f3;
+}
+
+.logEntryWarning {
+  border-left-color: #f59e0b;
+  background-color: #fefaf1;
+}
+
+.logEntryBadbox {
+  border-left-color: #6b7280;
+  background-color: #f7f7f7;
+}
+
+.logEntryHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.logEntryBadge {
+  flex-shrink: 0;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 18px;
+  color: #fff;
+  background-color: #6b7280;
+}
+
+.logEntryError .logEntryBadge {
+  background-color: #dc3545;
+}
+
+.logEntryWarning .logEntryBadge {
+  background-color: #f59e0b;
+}
+
+.logEntryBadbox .logEntryBadge {
+  background-color: #6b7280;
+}
+
+.logEntryMeta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  color: #888;
+}
+
+.logEntryText {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+  font-size: 13px;
+  color: #333;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.logRawPanel {
+  padding: 10px;
+}
+
+.rawLogToggle {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #555;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.rawLogToggle:hover {
+  background-color: #f3f4f6;
+}
+
+.logEmpty {
+  padding: 30px 10px;
+  text-align: center;
+  font-size: 14px;
+  color: #999;
+}
+
 .logContent {
   padding-left: 10px;
   padding-top: 20px;

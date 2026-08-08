@@ -54,9 +54,12 @@ import PdfOutlinePanel from "../feat/outline/PdfOutlinePanel";
 import {
   appendCompileLogChunk,
   COMPILE_CLEAR_MARKER,
+  CompileLogEntry,
+  CompileLogEntryType,
   compileResultFromBackend,
   detectCompileResultFromLog,
   formatCompileLogHtml,
+  parseCompileLog,
 } from "./compileLogResultDetector";
 import { sseLogMessagesToPlainText } from "@/model/proj/compile/CompileLogMarkers";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
@@ -85,9 +88,14 @@ const PreviewerLogPanel: React.FC = () => {
   compileResultTypeRef.current = compileResultType;
   const accumulatedPlainLogRef = React.useRef("");
   const [curLogText, setCurLogText] = useState<string>("");
+  const [plainLog, setPlainLog] = useState<string>("");
   const [compStatus, setCompStatus] = useState<CompileStatus>(
     CompileStatus.COMPLETE,
   );
+  const [logFilter, setLogFilter] = useState<
+    "error" | "warning" | "all" | "raw"
+  >("all");
+  const [rawLogExpanded, setRawLogExpanded] = useState<boolean>(false);
 
   const applyDetectedResult = (detected: CompileResultType | null) => {
     if (detected === null) {
@@ -110,12 +118,14 @@ const PreviewerLogPanel: React.FC = () => {
   React.useEffect(() => {
     if (logText && logText === COMPILE_CLEAR_MARKER) {
       accumulatedPlainLogRef.current = "";
+      setPlainLog("");
       setCurLogText("");
       return;
     }
     if (logText && logText.length > 0 && logText !== COMPILE_CLEAR_MARKER) {
       setCompStatus(CompileStatus.COMPLETE);
       accumulatedPlainLogRef.current = logText;
+      setPlainLog(logText);
       applyDetectedResult(
         detectCompileResultFromLog(logText, compileResultTypeRef.current),
       );
@@ -128,6 +138,7 @@ const PreviewerLogPanel: React.FC = () => {
       const chunk = sseLogMessagesToPlainText(streamLogText);
       if (chunk.includes(COMPILE_CLEAR_MARKER)) {
         accumulatedPlainLogRef.current = "";
+        setPlainLog("");
         setCurLogText("");
         return;
       }
@@ -138,6 +149,7 @@ const PreviewerLogPanel: React.FC = () => {
         compileResultTypeRef.current,
       );
       accumulatedPlainLogRef.current = plainLog;
+      setPlainLog(plainLog);
       applyDetectedResult(resultType);
       setCurLogText(htmlLog);
     }
@@ -145,6 +157,37 @@ const PreviewerLogPanel: React.FC = () => {
 
   const createMarkup = () => {
     return { __html: curLogText };
+  };
+
+  const entries = useMemo<CompileLogEntry[]>(
+    () => parseCompileLog(plainLog),
+    [plainLog],
+  );
+
+  const errorEntries = useMemo(
+    () => entries.filter((entry) => entry.type === "error"),
+    [entries],
+  );
+
+  const warningEntries = useMemo(
+    () =>
+      entries.filter(
+        (entry) => entry.type === "warning" || entry.type === "badbox",
+      ),
+    [entries],
+  );
+
+  const shownEntries =
+    logFilter === "error"
+      ? errorEntries
+      : logFilter === "warning"
+        ? warningEntries
+        : entries;
+
+  const entryBadgeKey: Record<CompileLogEntryType, string> = {
+    error: "log_entry_error",
+    warning: "log_entry_warning",
+    badbox: "log_entry_badbox",
   };
 
   if (compStatus === CompileStatus.WAITING) {
@@ -158,13 +201,84 @@ const PreviewerLogPanel: React.FC = () => {
       </div>
     );
   }
+
+  const filterTabs: { key: typeof logFilter; label: string; count?: number }[] =
+    [
+      { key: "error", label: t("log_filter_error"), count: errorEntries.length },
+      {
+        key: "warning",
+        label: t("log_filter_warning"),
+        count: warningEntries.length,
+      },
+      { key: "all", label: t("log_filter_all"), count: entries.length },
+      { key: "raw", label: t("log_filter_raw") },
+    ];
+
   return (
     <div className={styles.logContainer}>
-      <div
-        className={styles.logContent}
-        id="logtext"
-        dangerouslySetInnerHTML={createMarkup()}
-      ></div>
+      <div className={styles.logFilterBar}>
+        {filterTabs.map((tab) => (
+          <button
+            key={tab.key}
+            type="button"
+            className={`${styles.logFilterBtn} ${
+              logFilter === tab.key ? styles.logFilterBtnActive : ""
+            }`}
+            onClick={() => setLogFilter(tab.key)}
+          >
+            {tab.label}
+            {tab.count !== undefined && tab.count > 0 && (
+              <span className={styles.logFilterCount}>{tab.count}</span>
+            )}
+          </button>
+        ))}
+      </div>
+      {logFilter === "raw" ? (
+        <div className={styles.logRawPanel}>
+          <button
+            type="button"
+            className={styles.rawLogToggle}
+            onClick={() => setRawLogExpanded((expanded) => !expanded)}
+          >
+            {rawLogExpanded ? t("log_collapse_raw") : t("log_expand_raw")}
+          </button>
+          {rawLogExpanded && (
+            <div
+              className={styles.logContent}
+              id="logtext"
+              dangerouslySetInnerHTML={createMarkup()}
+            ></div>
+          )}
+        </div>
+      ) : shownEntries.length > 0 ? (
+        <div className={styles.logEntryList}>
+          {shownEntries.map((entry, index) => (
+            <div
+              key={`${entry.type}-${index}`}
+              className={`${styles.logEntry} ${
+                styles[
+                  `logEntry${entry.type[0].toUpperCase()}${entry.type.slice(1)}`
+                ]
+              }`}
+            >
+              <div className={styles.logEntryHeader}>
+                <span className={styles.logEntryBadge}>
+                  {t(entryBadgeKey[entry.type])}
+                </span>
+                {entry.file && (
+                  <span className={styles.logEntryMeta}>
+                    {entry.file}
+                    {entry.line !== undefined ? `:${entry.line}` : ""}
+                  </span>
+                )}
+              </div>
+              <pre className={styles.logEntryText}>{entry.text}</pre>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className={styles.logEmpty}>{t("log_empty")}</div>
+      )}
     </div>
   );
 };

@@ -376,5 +376,15 @@
     "checkout_view_order": "View Order",
     "checkout_create_order_failed": "Failed to create order, please try again",
     "checkout_qr_expired": "QR code has expired",
-    "checkout_qr_refresh": "Get a new QR code"
+    "checkout_qr_refresh": "Get a new QR code",
+    "log_filter_error": "Errors",
+    "log_filter_warning": "Warnings",
+    "log_filter_all": "All",
+    "log_filter_raw": "Log",
+    "log_expand_raw": "Expand full log",
+    "log_collapse_raw": "Collapse log",
+    "log_empty": "No relevant log entries",
+    "log_entry_error": "Error",
+    "log_entry_warning": "Warning",
+    "log_entry_badbox": "Overfull/Underfull"
 }

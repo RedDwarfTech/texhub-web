@@ -375,5 +375,15 @@
     "checkout_view_order": "查看订单",
     "checkout_create_order_failed": "订单创建失败，请稍后重试",
     "checkout_qr_expired": "二维码已过期",
-    "checkout_qr_refresh": "重新获取二维码"
+    "checkout_qr_refresh": "重新获取二维码",
+    "log_filter_error": "错误",
+    "log_filter_warning": "警告",
+    "log_filter_all": "全部",
+    "log_filter_raw": "日志",
+    "log_expand_raw": "展开完整日志",
+    "log_collapse_raw": "收起日志",
+    "log_empty": "暂无相关日志",
+    "log_entry_error": "错误",
+    "log_entry_warning": "警告",
+    "log_entry_badbox": "排版溢出"
 }

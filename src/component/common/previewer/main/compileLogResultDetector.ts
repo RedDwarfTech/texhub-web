@@ -39,6 +39,175 @@ const SUCCESS_PATTERNS: RegExp[] = [
   /Output written on .*\.pdf\b/i,
 ];
 
+export type CompileLogEntryType = "error" | "warning" | "badbox";
+
+export interface CompileLogEntry {
+  type: CompileLogEntryType;
+  text: string;
+  file?: string;
+  line?: number;
+}
+
+/** 单行打开文件，如 `(/usr/.../article.cls` 或 `(./main.tex` */
+const FILE_OPEN_RE = /^\((?<path>.+)$/;
+
+/** 同一行打开并关闭文件，如 `(a.tex)` */
+const FILE_OPEN_CLOSE_RE = /^\((?<path>.+)\)$/;
+
+const FILE_CLOSE_RE = /^\s*\)\s*$/;
+
+const LINE_NO_RE = /^l\.(?<num>\d+)/;
+
+const BADBOX_RE = /^(Overfull|Underfull) \\[hv]box/;
+
+const WARNING_RE =
+  /^(LaTeX Warning:|Package [\w.-]+ Warning:|Class [\w.-]+ Warning:|.* Warning:)/;
+
+const INPUT_LINE_RE = /on input line (\d+)/;
+
+const KNOWN_TEX_EXT_RE =
+  /\.(tex|sty|cls|clo|def|cfg|ltx|bib|bbl|aux|toc|fd)$/i;
+
+/** 是否为可信的日志文件路径行（路径分隔符 / 以 ./ 开头 / 已知 TeX 扩展名） */
+function isLikelyFilePath(path: string): boolean {
+  const trimmed = path.trim();
+  if (!trimmed) {
+    return false;
+  }
+  return /[\\/]/.test(trimmed) || /^\.\//.test(trimmed) || KNOWN_TEX_EXT_RE.test(trimmed);
+}
+
+function isMarkerLine(line: string): boolean {
+  const trimmed = line.trim();
+  return (
+    trimmed === "" ||
+    /^!/.test(trimmed) ||
+    FILE_CLOSE_RE.test(line) ||
+    FILE_OPEN_RE.test(line) ||
+    FILE_OPEN_CLOSE_RE.test(line) ||
+    WARNING_RE.test(trimmed) ||
+    BADBOX_RE.test(trimmed)
+  );
+}
+
+/**
+ * 解析 LaTeX 编译日志为结构化条目（错误 / 警告 / 坏盒），并尽可能标注 file:line。
+ *
+ * 依赖 TeX 日志的常见格式约定：
+ * - 错误以 `! ...` 开头，随后紧跟 `l.<n>` 行号与上下文行；
+ * - 警告以 `LaTeX Warning:` / `Package ... Warning:` 开头；
+ * - 坏盒以 `Overfull \hbox` / `Underfull \vbox` 开头；
+ * - 文件出入栈以 `(path` 与 `)` 标记。
+ */
+export function parseCompileLog(plainLog: string): CompileLogEntry[] {
+  const plain = stripCompileLogMarkup(plainLog ?? "");
+  if (!plain.trim()) {
+    return [];
+  }
+
+  const lines = plain.split("\n");
+  const entries: CompileLogEntry[] = [];
+  const fileStack: string[] = [];
+  let currentFile = "";
+
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+
+    const openClose = FILE_OPEN_CLOSE_RE.exec(line);
+    if (openClose && isLikelyFilePath(openClose.groups!.path)) {
+      currentFile = openClose.groups!.path.trim();
+      i++;
+      continue;
+    }
+
+    if (FILE_CLOSE_RE.test(line)) {
+      fileStack.pop();
+      currentFile = fileStack[fileStack.length - 1] ?? "";
+      i++;
+      continue;
+    }
+
+    const open = FILE_OPEN_RE.exec(line);
+    if (open && isLikelyFilePath(open.groups!.path)) {
+      const path = open.groups!.path.trim();
+      fileStack.push(path);
+      currentFile = path;
+      i++;
+      continue;
+    }
+
+    if (BADBOX_RE.test(line)) {
+      const block: string[] = [line];
+      i++;
+      while (i < lines.length && !isMarkerLine(lines[i])) {
+        block.push(lines[i]);
+        i++;
+      }
+      entries.push({
+        type: "badbox",
+        text: block.join("\n"),
+        file: currentFile || undefined,
+        line: undefined,
+      });
+      continue;
+    }
+
+    if (WARNING_RE.test(line.trim())) {
+      const block: string[] = [line];
+      i++;
+      while (
+        i < lines.length &&
+        /^\s/.test(lines[i]) &&
+        lines[i].trim() !== ""
+      ) {
+        block.push(lines[i]);
+        i++;
+      }
+      const text = block.join("\n");
+      const inputLine = INPUT_LINE_RE.exec(text);
+      entries.push({
+        type: "warning",
+        text,
+        file: currentFile || undefined,
+        line: inputLine ? Number(inputLine[1]) : undefined,
+      });
+      continue;
+    }
+
+    if (/^!/.test(line)) {
+      const block: string[] = [line];
+      i++;
+      let lineNo: number | undefined;
+      while (i < lines.length) {
+        const current = lines[i];
+        if (isMarkerLine(current)) {
+          break;
+        }
+        if (lineNo === undefined) {
+          const lineMatch = LINE_NO_RE.exec(current);
+          if (lineMatch) {
+            lineNo = Number(lineMatch.groups!.num);
+          }
+        }
+        block.push(current);
+        i++;
+      }
+      entries.push({
+        type: "error",
+        text: block.join("\n"),
+        file: currentFile || undefined,
+        line: lineNo,
+      });
+      continue;
+    }
+
+    i++;
+  }
+
+  return entries;
+}
+
 function escapeHtml(text: string): string {
   return text
     .replace(/&/g, "&amp;")
