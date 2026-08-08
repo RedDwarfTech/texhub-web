@@ -91,11 +91,7 @@ const ProjHistory: React.FC<HistoryProps> = (props: HistoryProps) => {
       }
       return Array.from(merged.values()).sort(
         (a, b) =>
-          BigInt(b.id) > BigInt(a.id)
-            ? 1
-            : BigInt(b.id) < BigInt(a.id)
-            ? -1
-            : 0
+          new Date(b.created_time).getTime() - new Date(a.created_time).getTime()
       );
     });
   }, [projHisPage]);
