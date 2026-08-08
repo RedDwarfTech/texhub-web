@@ -2,7 +2,7 @@ import React from "react";
 import "./Pay.css";
 import { useTranslation } from "react-i18next";
 
-export type PayProvider = "alipay" | "wechat";
+export type PayProvider = "alipay";
 
 export type PayProps = {
   payFormText: string;
@@ -48,7 +48,6 @@ const Pay: React.FC<PayProps> = (props) => {
           {platformSelectMode ? (
             <div className="pay-provider-select">
               <button className="pay-provider-btn" onClick={() => props.onSelectProvider && props.onSelectProvider('alipay')}>{t("alipay")}</button>
-              <button className="pay-provider-btn" onClick={() => props.onSelectProvider && props.onSelectProvider('wechat')}>{t("wechat")}</button>
             </div>
           ) : (
             <div>
@@ -62,9 +61,7 @@ const Pay: React.FC<PayProps> = (props) => {
                 </div>
               </div>
               <p className="pay-paragraph">
-                <img className="pay-scan"
-                  src="/addons/zzzy_idcard_pc/core/web/statics/images/site/icon-wechat.png"
-                  alt="" />{t("scan_to_pay", { provider: payProvider })}
+                {t("scan_to_pay", { provider: payProvider })}
               </p>
               <div className="pay-complete-action">
                 <button className="pay-complete-btn" onClick={props.onPayComplete}>{t("pay_complete")}</button>

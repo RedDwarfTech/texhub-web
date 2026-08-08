@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import { QRCodeSVG } from "qrcode.react";
 import { AnyAction, Store } from "redux";
 import { OrderService, UserService } from "rd-component";
 import { ResponseHandler } from "rdjs-wheel";
@@ -11,7 +10,7 @@ import { IapProduct } from "@/models/product/IapProduct";
 import { IOrder } from "@/models/pay/IOrder";
 import styles from "./Checkout.module.css";
 
-export type CheckoutPayProvider = "wechat" | "alipay" | "bankcard";
+export type CheckoutPayProvider = "alipay" | "bankcard";
 
 export interface CheckoutProps {
   open: boolean;
@@ -36,7 +35,7 @@ const Checkout: React.FC<CheckoutProps> = ({ open, product, store, refreshUrl = 
   const navigate = useNavigate();
 
   const [step, setStep] = useState<CheckoutStep>("confirm");
-  const [payProvider, setPayProvider] = useState<CheckoutPayProvider>("wechat");
+  const [payProvider, setPayProvider] = useState<CheckoutPayProvider>("alipay");
   const [createdOrder, setCreatedOrder] = useState<IOrder>();
   const [paying, setPaying] = useState(false);
   const [checking, setChecking] = useState(false);
@@ -46,7 +45,7 @@ const Checkout: React.FC<CheckoutProps> = ({ open, product, store, refreshUrl = 
   useEffect(() => {
     if (open) {
       setStep("confirm");
-      setPayProvider("wechat");
+      setPayProvider("alipay");
       setCreatedOrder(undefined);
       setCountdown(QR_EXPIRE_SECONDS);
       setMemberExpireAt("");
@@ -85,7 +84,6 @@ const Checkout: React.FC<CheckoutProps> = ({ open, product, store, refreshUrl = 
   const benefits = parseBenefits(product.description || "");
 
   const providerOptions: { key: CheckoutPayProvider; label: string; disabled?: boolean; suffix?: string }[] = [
-    { key: "wechat", label: t("checkout_wechat") },
     { key: "alipay", label: t("checkout_alipay") },
     { key: "bankcard", label: t("checkout_bank_card"), disabled: true, suffix: t("checkout_bank_card_soon") },
   ];
@@ -101,8 +99,7 @@ const Checkout: React.FC<CheckoutProps> = ({ open, product, store, refreshUrl = 
     setPaying(true);
     PayService.doPay(
       { productId: Number(product.id) },
-      store,
-      payProvider === "wechat" ? "wechat" : undefined
+      store
     ).then((resp: any) => {
       setPaying(false);
       if (!resp || !ResponseHandler.responseSuccess(resp)) {
@@ -245,16 +242,12 @@ const Checkout: React.FC<CheckoutProps> = ({ open, product, store, refreshUrl = 
     return (
       <div className={styles.qrBody}>
         <div className={styles.qrHeader}>
-          <span>{payProvider === "wechat" ? t("checkout_wechat") : t("checkout_alipay")} {t("checkout_scan_pay")}</span>
+          <span>{t("checkout_alipay")} {t("checkout_scan_pay")}</span>
           <span className={styles.qrCountdown}>⏱️ {formatCountdown(countdown)}</span>
         </div>
         <div className={styles.qrImg}>
           {createdOrder && createdOrder.formText ? (
-            payProvider === "wechat" ? (
-              <QRCodeSVG value={createdOrder.formText} size={200} includeMargin />
-            ) : (
-              <iframe srcDoc={createdOrder.formText} width="200" height="205" title="pay-qr"></iframe>
-            )
+            <iframe srcDoc={createdOrder.formText} width="200" height="205" title="pay-qr"></iframe>
           ) : (
             <div className={styles.qrPlaceholder}></div>
           )}
@@ -267,7 +260,7 @@ const Checkout: React.FC<CheckoutProps> = ({ open, product, store, refreshUrl = 
             </button>
           </div>
         ) : (
-          <p className={styles.qrTip}>{t("checkout_scan_tip", { provider: payProvider === "wechat" ? t("checkout_wechat") : t("checkout_alipay") })}</p>
+          <p className={styles.qrTip}>{t("checkout_scan_tip", { provider: t("checkout_alipay") })}</p>
         )}
         <div className={styles.qrAmount}>
           {t("checkout_pay_amount")}：¥{product.price}

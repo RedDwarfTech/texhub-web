@@ -4,8 +4,8 @@ import { IOrder } from '@/models/pay/IOrder';
 import { AnyAction, Store } from 'redux';
 
 export const PayService:any = {
-    doPay:(params: any, store: Store<any, AnyAction>, provider?: string)=>{
-        const payUrl = provider === 'wechat' ? '/infra/wechat/pay/createOrder' : '/infra/alipay/pay/createOrder';
+    doPay:(params: any, store: Store<any, AnyAction>)=>{
+        const payUrl = '/infra/alipay/pay/createOrder';
         const config = {
             method: 'post',
             url: payUrl,
