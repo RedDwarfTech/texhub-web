@@ -13,6 +13,7 @@ import ProjFileSearch from "../search/ProjFileSearch";
 import TeXSymbol from "../symbol/TeXSymbol";
 import TreeFileRename from "../rename/TreeFileRename";
 import TreeFileDel from "../del/TreeFileDel";
+import TreeFileInfo from "../info/TreeFileInfo";
 import { TreeProps } from "@/model/props/TreeProps";
 import { ProjectTreeFolder } from "./ProjectTreeFolder";
 import TreeFolderCreate from "../create/TreeFolderCreate";
@@ -333,7 +334,17 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                   <li>
                     <div
                       className="dropdown-item"
-                      onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+                      onClick={(e) => {
+                        handleModal(e, true, "fileInfoModal", item);
+                      }}
+                    >
+                      {t("btn_show_info")}
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      className="dropdown-item"
+                      onClick={(e) => {
                         handleModal(e, true, "deleteFileModal", item);
                       }}
                     >
@@ -559,6 +570,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
       <TreeFileMove projectId={pid} texFile={moveFile!}></TreeFileMove>
       <TreeFileRename projectId={pid} operFile={operFile!}></TreeFileRename>
       <TreeFileDel projectId={pid} operFile={operFile!}></TreeFileDel>
+      <TreeFileInfo operFile={operFile!}></TreeFileInfo>
     </div>
   );
 };

@@ -145,3 +145,12 @@ export function getPreviewUrl(proj_id: String) {
   const actionTypeString: string = FileActionType[FileActionType.GET_PREVIEW_URL];
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
+
+export function getFileDetail(fileId: string) {
+  const config: AxiosRequestConfig = {
+    method: "get",
+    url: "/tex/file/detail?file_id=" + fileId,
+  };
+  const actionTypeString: string = FileActionType[FileActionType.GET_FILE_TREE];
+  return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
