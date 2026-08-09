@@ -32,12 +32,52 @@ import { defaultHistoryPageSize } from "@/config/app/global-conf.js";
 
 const EHeader: React.FC = () => {
   const { fileTree } = useSelector((state: AppState) => state.file);
-  const { texQueue, projInfo } = useSelector((state: AppState) => state.proj);
+  const { texQueue, projInfo, compileStatus } = useSelector(
+    (state: AppState) => state.proj,
+  );
   const [mainFile, setMainFile] = useState<TexFileModel>();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const intervalRef = React.useRef<NodeJS.Timeout | null>(null);
   const prevCompStatusRef = React.useRef<number | undefined>(undefined);
+  const [compileLoading, setCompileLoading] = useState(false);
+  const compileLoadingTimerRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  const stopCompileLoading = () => {
+    setCompileLoading(false);
+    if (compileLoadingTimerRef.current) {
+      clearTimeout(compileLoadingTimerRef.current);
+      compileLoadingTimerRef.current = null;
+    }
+  };
+
+  const startCompileLoading = () => {
+    setCompileLoading(true);
+    if (compileLoadingTimerRef.current) {
+      clearTimeout(compileLoadingTimerRef.current);
+    }
+    // 最长 loading 2 分钟，兜底防止进度卡死
+    compileLoadingTimerRef.current = setTimeout(() => {
+      setCompileLoading(false);
+      compileLoadingTimerRef.current = null;
+    }, 2 * 60 * 1000);
+  };
+
+  React.useEffect(() => {
+    if (compileStatus === CompileStatus.COMPLETE) {
+      stopCompileLoading();
+    }
+  }, [compileStatus]);
+
+  React.useEffect(
+    () => () => {
+      if (compileLoadingTimerRef.current) {
+        clearTimeout(compileLoadingTimerRef.current);
+        compileLoadingTimerRef.current = null;
+      }
+    },
+    [],
+  );
 
   React.useEffect(() => {
     if (fileTree && fileTree.length > 0) {
@@ -120,6 +160,7 @@ const EHeader: React.FC = () => {
         setContextCompileStatus(CompileStatus.WAITING);
         setContextCompileResultType(CompileResultType.PROCESSING);
         clearCompLogText();
+        startCompileLoading();
       }
     });
   };
@@ -155,11 +196,25 @@ const EHeader: React.FC = () => {
         <button
           type="button"
           className="btn btn-primary btn-sm"
+          disabled={compileLoading}
           onClick={() => {
             handleQueueCompile(mainFile);
           }}
         >
-          <i className="fa-solid fa-play"></i> {t("btn_compile")}
+          {compileLoading ? (
+            <>
+              <span
+                className="spinner-border spinner-border-sm me-1"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              {t("btn_compiling")}
+            </>
+          ) : (
+            <>
+              <i className="fa-solid fa-play"></i> {t("btn_compile")}
+            </>
+          )}
         </button>
         <button
           type="button"
