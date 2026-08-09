@@ -77,6 +77,21 @@ function isLikelyFilePath(path: string): boolean {
   return /[\\/]/.test(trimmed) || /^\.\//.test(trimmed) || KNOWN_TEX_EXT_RE.test(trimmed);
 }
 
+/**
+ * 规整日志中的文件路径：
+ * - 折叠 `a/./b`、`a/././b` 为 `a/b`
+ * - 折叠开头的 `././` 为 `./`
+ * - 压缩重复分隔符 `//`
+ *
+ * 例如 `./theory/./transformer/./intro/how-llm-works.tex` → `./theory/transformer/intro/how-llm-works.tex`
+ */
+export function normalizeTexPath(path: string): string {
+  return path
+    .replace(/\/{2,}/g, "/")
+    .replace(/\/(?:\.\/)+/g, "/")
+    .replace(/\.\/(?:\.\/)+/g, "./");
+}
+
 function isMarkerLine(line: string): boolean {
   const trimmed = line.trim();
   return (
@@ -116,7 +131,7 @@ export function parseCompileLog(plainLog: string): CompileLogEntry[] {
 
     const openClose = FILE_OPEN_CLOSE_RE.exec(line);
     if (openClose && isLikelyFilePath(openClose.groups!.path)) {
-      currentFile = openClose.groups!.path.trim();
+      currentFile = normalizeTexPath(openClose.groups!.path.trim());
       i++;
       continue;
     }
@@ -130,7 +145,7 @@ export function parseCompileLog(plainLog: string): CompileLogEntry[] {
 
     const open = FILE_OPEN_RE.exec(line);
     if (open && isLikelyFilePath(open.groups!.path)) {
-      const path = open.groups!.path.trim();
+      const path = normalizeTexPath(open.groups!.path.trim());
       fileStack.push(path);
       currentFile = path;
       i++;
@@ -310,11 +325,15 @@ export function formatCompileLogHtml(plainLog: string): string {
   }
   return plainLog
     .split("\n")
-    .map((line) =>
-      isErrorLogLine(line)
-        ? `<p style='color:red;'>${escapeHtml(line)}</p>`
-        : escapeHtml(line),
-    )
+    .map((line) => {
+      const displayLine =
+        FILE_OPEN_RE.test(line) || FILE_OPEN_CLOSE_RE.test(line)
+          ? normalizeTexPath(line)
+          : line;
+      return isErrorLogLine(displayLine)
+        ? `<p style='color:red;'>${escapeHtml(displayLine)}</p>`
+        : escapeHtml(displayLine);
+    })
     .join("<br/>");
 }
 
