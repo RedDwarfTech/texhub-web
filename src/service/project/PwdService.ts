@@ -1,6 +1,7 @@
 import { ResetPwdReq } from "@/model/request/pwd/ResetPwdReq";
 import { SendVerifyReq } from "@/model/request/pwd/SendVerifyReq";
 import { VerifyReq } from "@/model/request/pwd/VerifyReq";
+import { EmailSendVerifyReq } from "@/model/request/pwd/EmailSendVerifyReq";
 import { PwdActionType } from "@/redux/action/pwd/PwdAction";
 import store from "@/redux/store/store";
 import { AxiosRequestConfig } from "axios";
@@ -20,6 +21,26 @@ export function sendRegVerifySMS(doc: SendVerifyReq) {
     const config: AxiosRequestConfig = {
       method: 'put',
       url: '/infra/user/reg/send-verify-code',
+      data: JSON.stringify(doc)
+    };
+    const actionTypeString: string = PwdActionType[PwdActionType.SEND_VERIFY_CODE];
+    return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
+export function sendRegVerifyEmail(doc: EmailSendVerifyReq) {
+    const config: AxiosRequestConfig = {
+      method: 'put',
+      url: '/infra/user/reg/send-email-verify-code',
+      data: JSON.stringify(doc)
+    };
+    const actionTypeString: string = PwdActionType[PwdActionType.SEND_VERIFY_CODE];
+    return XHRClient.requestWithActionType(config, actionTypeString, store);
+}
+
+export function sendLoginVerifyEmail(doc: EmailSendVerifyReq) {
+    const config: AxiosRequestConfig = {
+      method: 'put',
+      url: '/infra/user/email/send-verify-code',
       data: JSON.stringify(doc)
     };
     const actionTypeString: string = PwdActionType[PwdActionType.SEND_VERIFY_CODE];

@@ -41,6 +41,24 @@
     border-top-right-radius: var(--login-border-radius);
 }
 
+.regTabs button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+.regTabs button:hover {
+    background-color: #ddd;
+}
+
+.regTabs button.active {
+    background-color: #ccc;
+}
+
 .tablinks {
     font-size: 16px;
     font-weight: 400;
@@ -48,7 +66,7 @@
 }
 
 .tabcontent {
-    display: block;
+    display: none;
     padding: 6px 12px 24px;
     border: 1px solid #ccc;
     border-top: none;
