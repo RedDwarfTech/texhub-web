@@ -151,6 +151,7 @@ const EHeader: React.FC = () => {
       toast.error(t("err_file_null"));
       return;
     }
+    startCompileLoading();
     let req: CompileQueueReq = {
       project_id: mainFile.project_id,
     };
@@ -160,7 +161,8 @@ const EHeader: React.FC = () => {
         setContextCompileStatus(CompileStatus.WAITING);
         setContextCompileResultType(CompileResultType.PROCESSING);
         clearCompLogText();
-        startCompileLoading();
+      } else {
+        stopCompileLoading();
       }
     });
   };
