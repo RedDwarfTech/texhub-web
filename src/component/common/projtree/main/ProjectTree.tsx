@@ -335,6 +335,36 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                     <div
                       className="dropdown-item"
                       onClick={(e) => {
+                        handleModal(e, true, "renameFileModal", item);
+                      }}
+                    >
+                      {t("btn_rename")}
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      className="dropdown-item"
+                      onClick={(e) => {
+                        handleDownloadFile(item);
+                      }}
+                    >
+                      {t("btn_download")}
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      className="dropdown-item"
+                      onClick={(e) => {
+                        handleModal(e, true, "moveFileModal", item);
+                      }}
+                    >
+                      {t("btn_move_to_folder")}
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      className="dropdown-item"
+                      onClick={(e) => {
                         showHistory(item);
                       }}
                     >
@@ -349,6 +379,16 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
                       }}
                     >
                       {t("btn_show_info")}
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      className="dropdown-item"
+                      onClick={(e) => {
+                        handleModal(e, true, "deleteFileModal", item);
+                      }}
+                    >
+                      {t("btn_del")}
                     </div>
                   </li>
                 </ul>
