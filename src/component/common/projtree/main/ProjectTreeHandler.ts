@@ -1,4 +1,5 @@
 import { TexFileModel } from "@/model/file/TexFileModel";
+import { SrcPosition } from "@/model/proj/pdf/SrcPosition";
 import { addFile, chooseFile, getFileTree, switchFile } from "@/service/file/FileService";
 import { validateFileName } from "@/service/file/FileNameValidator";
 import { ProjectTreeFolder } from "./ProjectTreeFolder";
@@ -213,3 +214,60 @@ export const clearLegacyEditor = (
     name: selectedFile.name,
   });
 };
+
+/**
+ * 将 CodeMirror 编辑器滚动定位到指定源文件的指定行。
+ *
+ * 切换文件后编辑器视图是异步重建的（CollarCodeEditor 在 curSubYDoc 变化时
+ * 重新 new EditorView），因此这里轮询等待目标文件对应的 editorView 挂载完成：
+ * 通过 edContainer 的 id（guid + "-curSubYDoc-update"）判断当前视图是否已是目标文件，
+ * 避免在旧文件视图上误定位。
+ */
+export function handleSrcFocusEditorLocate(pos: SrcPosition) {
+  if (!pos || !pos.file || !pos.line || pos.line < 1) {
+    return;
+  }
+  const targetFileName = pos.file.split("/").pop();
+  if (!targetFileName) {
+    return;
+  }
+  const maxAttempts = 30;
+  const intervalMs = 120;
+  let attempt = 0;
+
+  const tryLocate = () => {
+    attempt++;
+    const { editorView } = store.getState().projEditor;
+    const { activeFile } = store.getState().file;
+    const containerId =
+      editorView && editorView.dom && editorView.dom.parentElement
+        ? editorView.dom.parentElement.id
+        : "";
+    const isTargetEditorMounted =
+      !!activeFile &&
+      !!activeFile.name &&
+      activeFile.name === targetFileName &&
+      containerId === activeFile.file_id + "-curSubYDoc-update";
+    if (
+      editorView &&
+      editorView.state &&
+      isTargetEditorMounted &&
+      pos.line >= 1 &&
+      pos.line <= editorView.state.doc.lines
+    ) {
+      const linePos = editorView.state.doc.line(pos.line).from;
+      editorView.dispatch({
+        selection: { anchor: linePos, head: linePos },
+        scrollIntoView: true,
+        effects: EditorView.scrollIntoView(linePos, { y: "center" }),
+      });
+      editorView.focus();
+      return;
+    }
+    if (attempt < maxAttempts) {
+      setTimeout(tryLocate, intervalMs);
+    }
+  };
+
+  tryLocate();
+}

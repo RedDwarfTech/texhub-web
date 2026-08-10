@@ -12,6 +12,12 @@ export interface OutlineIndexEntry {
   ancestorKeys: string[];
 }
 
+export interface OutlineDestPosition {
+  page: number;
+  h: number;
+  v: number;
+}
+
 export function getOutlineNodeKey(
   parentKey: string,
   title: string,
@@ -56,6 +62,102 @@ export async function resolveOutlinePageNumber(
     console.error("Failed to resolve outline destination:", error, destination);
   }
   return null;
+}
+
+const toNumberOr = (value: unknown, fallback: number): number => {
+  return typeof value === "number" && isFinite(value) ? value : fallback;
+};
+
+/**
+ * Resolve a pdf.js outline destination into a SyncTeX source query position.
+ *
+ * Returns {page, h, v} in the same coordinate system the backend expects for
+ * synctex_edit_query (top-left origin, y down, PDF points at scale 1), matching
+ * the convention used by HighlightUtil.pdfPositionToViewportRect.
+ */
+export async function resolveOutlineDestPosition(
+  pdf: DocumentCallback,
+  destination: unknown
+): Promise<OutlineDestPosition | null> {
+  if (!destination) {
+    return null;
+  }
+
+  let resolvedDest: any = destination;
+  if (typeof destination === "string") {
+    try {
+      resolvedDest = await pdf.getDestination(destination);
+    } catch (error) {
+      console.error(
+        "Failed to resolve named outline destination:",
+        error,
+        destination
+      );
+      return null;
+    }
+  }
+
+  if (!Array.isArray(resolvedDest) || resolvedDest.length < 2) {
+    return null;
+  }
+
+  const pageRef = resolvedDest[0];
+  let pageNum: number | null = null;
+  if (typeof pageRef === "number") {
+    pageNum = pageRef + 1;
+  } else if (pageRef && typeof pageRef === "object") {
+    try {
+      const pageIndex = await pdf.getPageIndex(pageRef);
+      pageNum = pageIndex + 1;
+    } catch (error) {
+      console.error("Failed to resolve outline page ref:", error, pageRef);
+      return null;
+    }
+  }
+  if (!pageNum || pageNum < 1) {
+    return null;
+  }
+
+  let destX = 0;
+  let destY: number | undefined;
+  const mode = resolvedDest[1];
+  switch (mode) {
+    case "XYZ":
+      destX = toNumberOr(resolvedDest[2], 0);
+      destY = toNumberOr(resolvedDest[3], 0);
+      break;
+    case "FitH":
+    case "FitBH":
+      destY = toNumberOr(resolvedDest[2], 0);
+      break;
+    case "FitV":
+    case "FitBV":
+      destX = toNumberOr(resolvedDest[2], 0);
+      break;
+    case "FitR":
+      destX = toNumberOr(resolvedDest[2], 0);
+      destY = toNumberOr(resolvedDest[3], 0);
+      break;
+    default:
+      break;
+  }
+
+  try {
+    const page = await pdf.getPage(pageNum);
+    const viewport = page.getViewport({ scale: 1 });
+    const pageHeight = viewport.viewBox[3];
+    // pdf.js dest coordinates are PDF user space (y up); SyncTeX v is measured
+    // from the top of the page, so flip the vertical axis.
+    const v = destY === undefined ? 0 : pageHeight - destY;
+    return { page: pageNum, h: destX, v };
+  } catch (error) {
+    console.error(
+      "Failed to get page viewport for outline destination:",
+      error,
+      destination
+    );
+    return null;
+  }
 }
 
 async function walkOutlineItem(

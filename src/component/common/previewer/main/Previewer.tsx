@@ -11,6 +11,7 @@ import { CompileStatus } from "@/model/proj/compile/CompileStatus";
 import { CompileQueue } from "@/model/proj/CompileQueue";
 import {
   getLatestCompile,
+  getSrcPosition,
   setCompileQueue,
   setLatestCompile,
   showPreviewTab,
@@ -46,6 +47,7 @@ import {
   findActiveOutlineKey,
   OutlineIndexEntry,
   OutlineItemRaw,
+  resolveOutlineDestPosition,
   resolveOutlinePageNumber,
 } from "../feat/outline/outlineNavigation";
 import { getPreviewUrl } from "@/service/file/FileService";
@@ -409,8 +411,24 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
       } else {
         console.warn("Unable to resolve outline destination to page", dest);
       }
+      const destPos = await resolveOutlineDestPosition(pdfProxy, dest);
+      if (destPos && projInfo && projInfo.main_file) {
+        getSrcPosition({
+          project_id: props.projectId,
+          main_file: projInfo.main_file.name,
+          page: destPos.page,
+          h: destPos.h,
+          v: destPos.v,
+        });
+      }
     },
-    [pdfProxy, pauseOutlineScrollSync, virtualListRef],
+    [
+      pdfProxy,
+      pauseOutlineScrollSync,
+      virtualListRef,
+      projInfo,
+      props.projectId,
+    ],
   );
 
   React.useEffect(() => {

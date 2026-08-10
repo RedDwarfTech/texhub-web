@@ -27,6 +27,7 @@ import {
   handleFileTreeUpdate,
   handleProjSearch,
   handleProjSymbol,
+  handleSrcFocusEditorLocate,
 } from "./ProjectTreeHandler";
 import { TeXFileType } from "@/model/enum/TeXFileType";
 import { DownloadFileReq } from "@/model/request/file/query/DownloadFileReq";
@@ -439,6 +440,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
         selectedFile,
         curRootYDoc!
       );
+      handleSrcFocusEditorLocate(pos);
     }
   }, [srcFocus, props.projectId]);
 
