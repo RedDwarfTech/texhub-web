@@ -64,6 +64,11 @@ import {
 import { sseLogMessagesToPlainText } from "@/model/proj/compile/CompileLogMarkers";
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs-dist/${pdfjs.version}/pdf.worker.min.mjs`;
 
+const extractPdfVersion = (path: string): string => {
+  const match = path.match(/[?&]v=([^&]+)/);
+  return match ? match[1] : "";
+};
+
 export type PreviwerProps = {
   projectId: string;
   viewModel: string;
@@ -461,7 +466,11 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   React.useEffect(() => {
     if (latestComp && Object.keys(latestComp).length > 0) {
       if (latestComp.path && latestComp.path.length > 0) {
+        const pdfVersion = extractPdfVersion(latestComp.path);
         let newPdfUrl = "/tex/file/pdf/partial?proj_id=" + props.projectId;
+        if (pdfVersion) {
+          newPdfUrl += "&v=" + pdfVersion;
+        }
         updatePdfUrl(newPdfUrl);
       } else {
         compile(props.projectId.toString());
