@@ -11,12 +11,13 @@ export const goPage = (i: number) => {
 
 export const scrollToPage = (
   pageIndex: number,
-  virtualListRef: React.RefObject<ListImperativeAPI>
+  virtualListRef: React.RefObject<ListImperativeAPI>,
+  align: "auto" | "smart" | "center" | "end" | "start" = "center"
 ) => {
   if (virtualListRef.current) {
     // list index starts from 0 while page starts from 1
     // the page size start by 1
-    virtualListRef.current.scrollToRow({ index: pageIndex - 1, align: "center" });
+    virtualListRef.current.scrollToRow({ index: pageIndex - 1, align });
   }
 };
 

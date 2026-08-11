@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { AppState } from "@/redux/types/AppState";
 import OutlineTree from "./OutlineTree";
-import { requestOutlineNavigation } from "@/service/project/preview/PreviewService";
+import { requestOutlineNavigation, setAndDispatchActiveOutline } from "@/service/project/preview/PreviewService";
 import styles from "./PdfOutlinePanel.module.css";
 
 export type PdfOutlinePanelProps = {
@@ -23,7 +23,14 @@ const PdfOutlinePanel: React.FC<PdfOutlinePanelProps> = ({
   const panelClass =
     variant === "sidebar" ? styles.outlinePanelSidebar : styles.outlinePanelFullscreen;
 
-  const handleOutlineClick = (dest: unknown) => {
+  const handleOutlineClick = (
+    dest: unknown,
+    key: string,
+    ancestorKeys: string[]
+  ) => {
+    if (key) {
+      setAndDispatchActiveOutline({ key, ancestorKeys });
+    }
     requestOutlineNavigation(dest);
   };
 

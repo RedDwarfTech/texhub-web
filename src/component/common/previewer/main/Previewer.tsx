@@ -375,7 +375,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
 
   React.useEffect(() => {
     if (outlineSyncPaused) {
-      setAndDispatchActiveOutline({ ancestorKeys: [] });
+      // 暂停期间保留用户点击设置的高亮，避免导航过程中的滚动同步抢走高亮
       return;
     }
     if (activeOutlineEntry) {
@@ -407,7 +407,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
       }
       const pageNum = await resolveOutlinePageNumber(pdfProxy, dest);
       if (pageNum && pageNum > 0) {
-        scrollToPage(pageNum, virtualListRef);
+        scrollToPage(pageNum, virtualListRef, "start");
       } else {
         console.warn("Unable to resolve outline destination to page", dest);
       }

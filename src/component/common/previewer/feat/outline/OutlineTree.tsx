@@ -10,7 +10,7 @@ interface OutlineItem {
 
 interface OutlineTreeProps {
   outline: OutlineItem[] | OutlineItemRaw[];
-  onItemClick: (dest: any) => void;
+  onItemClick: (dest: any, key: string, ancestorKeys: string[]) => void;
   activeNodeKey?: string;
   expandKeys?: string[];
   theme?: "default" | "sidebar";
@@ -66,7 +66,8 @@ const OutlineTree: React.FC<OutlineTreeProps> = ({
   const renderOutlineItem = (
     item: OutlineItem,
     level: number = 0,
-    parentKey: string = ""
+    parentKey: string = "",
+    ancestorKeys: string[] = []
   ) => {
     const key = getOutlineNodeKey(parentKey, item.title, level);
     const hasChildren = item.items && item.items.length > 0;
@@ -99,7 +100,7 @@ const OutlineTree: React.FC<OutlineTreeProps> = ({
           <button
             ref={isActive ? activeButtonRef : undefined}
             data-outline-key={key}
-            onClick={() => onItemClick(item.dest)}
+            onClick={() => onItemClick(item.dest, key, ancestorKeys)}
             className={titleClass}
           >
             {item.title}
@@ -108,7 +109,12 @@ const OutlineTree: React.FC<OutlineTreeProps> = ({
         {hasChildren && isExpanded && (
           <ul className={styles.nestedList}>
             {item.items!.map((subItem, index) =>
-              renderOutlineItem(subItem, level + 1, key + index)
+              renderOutlineItem(
+                subItem,
+                level + 1,
+                key + index,
+                [...ancestorKeys, key]
+              )
             )}
           </ul>
         )}
