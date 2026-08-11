@@ -121,10 +121,16 @@ export function setAndDispatchPdfOutline(outline: OutlineItemRaw[]) {
   return XHRClient.dispathAction(outline, actionTypeString, store);
 }
 
-export function requestOutlineNavigation(dest: unknown) {
+export function requestOutlineNavigation(
+  dest: unknown,
+  key?: string,
+  ancestorKeys: string[] = []
+) {
   const payload: PdfOutlineNavRequest = {
     dest,
     id: Date.now(),
+    key,
+    ancestorKeys,
   };
   const actionTypeString: string =
     PreviewActionType[PreviewActionType.REQUEST_OUTLINE_NAV];

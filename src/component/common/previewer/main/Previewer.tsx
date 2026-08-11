@@ -35,6 +35,7 @@ import {
   handleSrcLocate,
 } from "./PreviewerHandler";
 import { ListImperativeAPI } from "react-window";
+import { PdfOutlineNavRequest } from "@/model/proj/pdf/PdfOutlineNavRequest";
 import {
   setContextCompileResultType,
   setAndDispatchPdfPage,
@@ -304,6 +305,11 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   const [debouncedCurPage, setDebouncedCurPage] = useState<number>(0);
   const [outlineSyncPaused, setOutlineSyncPaused] = useState(false);
   const outlineNavHandledIdRef = React.useRef<number>(0);
+  const outlineLockRef = React.useRef<{
+    key: string;
+    ancestorKeys: string[];
+    page: number;
+  } | null>(null);
   const outlineSyncPauseTimerRef = React.useRef<ReturnType<
     typeof setTimeout
   > | null>(null);
@@ -343,6 +349,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   }, [curPage]);
 
   React.useEffect(() => {
+    outlineLockRef.current = null;
     let cancelled = false;
     if (!pdfProxy || !pdfOutline.length) {
       setOutlineIndex([]);
@@ -378,6 +385,19 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
       // 暂停期间保留用户点击设置的高亮，避免导航过程中的滚动同步抢走高亮
       return;
     }
+    const lock = outlineLockRef.current;
+    if (lock && debouncedCurPage === lock.page) {
+      // 用户仍停留在点击时所在页：保持点击节点的亮，避免同页多个章节时
+      // 滚动同步把高亮拉回该页第一个章节
+      setAndDispatchActiveOutline({
+        key: lock.key,
+        ancestorKeys: lock.ancestorKeys,
+      });
+      return;
+    }
+    if (lock) {
+      outlineLockRef.current = null;
+    }
     if (activeOutlineEntry) {
       setAndDispatchActiveOutline({
         key: activeOutlineEntry.key,
@@ -386,7 +406,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     } else {
       setAndDispatchActiveOutline({ ancestorKeys: [] });
     }
-  }, [activeOutlineEntry, outlineSyncPaused]);
+  }, [activeOutlineEntry, outlineSyncPaused, debouncedCurPage]);
 
   const pauseOutlineScrollSync = useCallback(() => {
     setOutlineSyncPaused(true);
@@ -399,19 +419,26 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     }, 600);
   }, []);
   const handleOutlineNavigation = useCallback(
-    async (dest: unknown) => {
+    async (req: PdfOutlineNavRequest) => {
       pauseOutlineScrollSync();
       if (!pdfProxy) {
         console.warn("PDF not loaded yet, cannot navigate outline");
         return;
       }
-      const pageNum = await resolveOutlinePageNumber(pdfProxy, dest);
+      const pageNum = await resolveOutlinePageNumber(pdfProxy, req.dest);
       if (pageNum && pageNum > 0) {
         scrollToPage(pageNum, virtualListRef, "start");
+        if (req.key) {
+          outlineLockRef.current = {
+            key: req.key,
+            ancestorKeys: req.ancestorKeys ?? [],
+            page: pageNum,
+          };
+        }
       } else {
-        console.warn("Unable to resolve outline destination to page", dest);
+        console.warn("Unable to resolve outline destination to page", req.dest);
       }
-      const destPos = await resolveOutlineDestPosition(pdfProxy, dest);
+      const destPos = await resolveOutlineDestPosition(pdfProxy, req.dest);
       if (destPos && projInfo && projInfo.main_file) {
         getSrcPosition({
           project_id: props.projectId,
@@ -436,7 +463,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
       return;
     }
     outlineNavHandledIdRef.current = outlineNavRequest.id;
-    void handleOutlineNavigation(outlineNavRequest.dest);
+    void handleOutlineNavigation(outlineNavRequest);
   }, [outlineNavRequest, handleOutlineNavigation]);
 
   React.useEffect(() => {

@@ -31,7 +31,7 @@ const PdfOutlinePanel: React.FC<PdfOutlinePanelProps> = ({
     if (key) {
       setAndDispatchActiveOutline({ key, ancestorKeys });
     }
-    requestOutlineNavigation(dest);
+    requestOutlineNavigation(dest, key, ancestorKeys);
   };
 
   return (
