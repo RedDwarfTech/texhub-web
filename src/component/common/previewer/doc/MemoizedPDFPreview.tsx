@@ -413,6 +413,12 @@ const MemoizedPDFPreview = React.memo(
                 }
 
                 const visiblePage = visibleRows.startIndex + 1;
+                console.log(
+                  "[OUTLINE-DEBUG] onRowsRendered visiblePage",
+                  visiblePage,
+                  "startIndex",
+                  visibleRows.startIndex
+                );
                 setAndDispatchPdfPage(
                   visiblePage,
                   projId,
