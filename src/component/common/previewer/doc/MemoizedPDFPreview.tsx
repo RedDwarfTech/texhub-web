@@ -316,14 +316,6 @@ const MemoizedPDFPreview = React.memo(
       const handleWindowPdfScroll = (e: React.UIEvent<HTMLDivElement>) => {
         const scrollEl = e.currentTarget;
         let scrollOffset = scrollEl.scrollTop;
-        console.log(
-          "[OUTLINE-DEBUG] onScroll",
-          scrollOffset,
-          "suppressRowsRenderedRef",
-          suppressRowsRenderedRef.current,
-          "initialPageNavRef",
-          initialPageNavRef.current
-        );
 
         const guard = zoomScrollGuardRef.current;
         if (
@@ -404,11 +396,6 @@ const MemoizedPDFPreview = React.memo(
               onScroll={handleWindowPdfScroll}
               onRowsRendered={(visibleRows) => {
                 if (suppressRowsRenderedRef.current) {
-                  console.log(
-                    "[OUTLINE-DEBUG] onRowsRendered SUPPRESSED",
-                    "startIndex",
-                    visibleRows.startIndex
-                  );
                   return;
                 }
 
@@ -426,12 +413,6 @@ const MemoizedPDFPreview = React.memo(
                 }
 
                 const visiblePage = visibleRows.startIndex + 1;
-                console.log(
-                  "[OUTLINE-DEBUG] onRowsRendered visiblePage",
-                  visiblePage,
-                  "startIndex",
-                  visibleRows.startIndex
-                );
                 setAndDispatchPdfPage(
                   visiblePage,
                   projId,

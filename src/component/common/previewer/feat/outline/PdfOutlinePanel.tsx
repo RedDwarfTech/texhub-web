@@ -28,7 +28,6 @@ const PdfOutlinePanel: React.FC<PdfOutlinePanelProps> = ({
     key: string,
     ancestorKeys: string[]
   ) => {
-    console.log("[OUTLINE-DEBUG] click", { key, ancestorKeys, dest });
     if (key) {
       setAndDispatchActiveOutline({ key, ancestorKeys });
     }

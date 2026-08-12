@@ -16,40 +16,7 @@ export const scrollToPage = (
 ) => {
   if (virtualListRef.current) {
     // list index starts from 0 while page starts from 1
-    // the page size start by 1
-    const before = virtualListRef.current.element?.scrollTop;
-    const scrollEl = virtualListRef.current.element;
-    console.log(
-      "[OUTLINE-DEBUG] scrollToPage",
-      pageIndex,
-      "align",
-      align,
-      "before scrollTop",
-      before,
-      "hasScrollTo",
-      typeof scrollEl?.scrollTo,
-      "scrollHeight",
-      scrollEl?.scrollHeight,
-      "clientHeight",
-      scrollEl?.clientHeight
-    );
-    if (scrollEl && typeof scrollEl.scrollTo === "function") {
-      const originalScrollTo = scrollEl.scrollTo.bind(scrollEl);
-      (scrollEl as any).scrollTo = (args: ScrollToOptions) => {
-        console.log(
-          "[OUTLINE-DEBUG] element.scrollTo CALLED",
-          JSON.stringify(args)
-        );
-        return originalScrollTo(args);
-      };
-    }
     virtualListRef.current.scrollToRow({ index: pageIndex - 1, align });
-    requestAnimationFrame(() => {
-      console.log(
-        "[OUTLINE-DEBUG] scrollToPage after rAF scrollTop",
-        virtualListRef.current?.element?.scrollTop
-      );
-    });
   }
 };
 
@@ -59,7 +26,6 @@ export const scrollToOffset = (
   projId: string
 ) => {
   if (virtualListRef.current) {
-    console.warn("trigger scrolltooffset:" + offset);
     if (virtualListRef.current.element) {
       virtualListRef.current.element.scrollTop = offset;
     }

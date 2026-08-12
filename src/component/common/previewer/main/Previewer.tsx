@@ -344,10 +344,6 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
-      console.log(
-        "[OUTLINE-DEBUG] debouncedCurPage update",
-        curPage ?? 0
-      );
       setDebouncedCurPage(curPage ?? 0);
     }, 150);
     return () => clearTimeout(timer);
@@ -386,16 +382,6 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   }, [outlineSyncPaused, outlineIndex, debouncedCurPage]);
 
   React.useEffect(() => {
-    console.log(
-      "[OUTLINE-DEBUG] outline effect run",
-      JSON.stringify({
-        outlineSyncPaused,
-        curPage,
-        debouncedCurPage,
-        lock: outlineLockRef.current,
-        activeOutlineKey: activeOutlineEntry?.key ?? null,
-      })
-    );
     if (outlineSyncPaused || outlineSyncPausedRef.current) {
       // 暂停期间保留用户点击设置的高亮，避免导航过程中的滚动同步抢走高亮
       return;
@@ -404,43 +390,23 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     if (lock) {
       // 只要仍未确认离开点击时所在页（curPage 或 debouncedCurPage 任一命中），
       // 就持续保持点击节点的亮，避免同页多个章节时滚动同步把高亮拉回第一个章节。
-      // 仅在两个页面指标都偏离目标页时，才放行给滚动同步。
-      if (curPage === lock.page || debouncedCurPage === lock.page) {
-        console.log(
-          "[OUTLINE-DEBUG] lock HOLD",
-          lock.key,
-          "page",
-          lock.page,
-          "curPage",
-          curPage,
-          "debouncedCurPage",
-          debouncedCurPage
-        );
+      // 另外，若滚动同步计算出的当前页章节（activeOutlineEntry）仍落在 lock 所在页
+      // （例如 scrollToRow 有 1 页偏差或 onRowsRendered 延迟），也保持用户点击的章节，
+      // 避免高亮被同页的“最深/最后”章节覆盖。
+      const stillOnLockPage =
+        curPage === lock.page ||
+        debouncedCurPage === lock.page ||
+        (activeOutlineEntry != null && activeOutlineEntry.page === lock.page);
+      if (stillOnLockPage) {
         setAndDispatchActiveOutline({
           key: lock.key,
           ancestorKeys: lock.ancestorKeys,
         });
         return;
       }
-      console.log(
-        "[OUTLINE-DEBUG] lock RELEASE",
-        lock.key,
-        "page",
-        lock.page,
-        "curPage",
-        curPage,
-        "debouncedCurPage",
-        debouncedCurPage
-      );
       outlineLockRef.current = null;
     }
     if (activeOutlineEntry) {
-      console.log(
-        "[OUTLINE-DEBUG] scroll-sync highlight",
-        activeOutlineEntry.key,
-        "page",
-        activeOutlineEntry.page
-      );
       setAndDispatchActiveOutline({
         key: activeOutlineEntry.key,
         ancestorKeys: activeOutlineEntry.ancestorKeys,
@@ -451,14 +417,12 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   }, [activeOutlineEntry, outlineSyncPaused, debouncedCurPage, curPage]);
 
   const pauseOutlineScrollSync = useCallback(() => {
-    console.log("[OUTLINE-DEBUG] pause START");
     outlineSyncPausedRef.current = true;
     setOutlineSyncPaused(true);
     if (outlineSyncPauseTimerRef.current) {
       clearTimeout(outlineSyncPauseTimerRef.current);
     }
     outlineSyncPauseTimerRef.current = setTimeout(() => {
-      console.log("[OUTLINE-DEBUG] pause END");
       outlineSyncPausedRef.current = false;
       setOutlineSyncPaused(false);
       outlineSyncPauseTimerRef.current = null;
@@ -470,14 +434,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
         console.warn("PDF not loaded yet, cannot navigate outline");
         return;
       }
-      console.log("[OUTLINE-DEBUG] resolve start", req.id, req.key);
       const pageNum = await resolveOutlinePageNumber(pdfProxy, req.dest);
-      console.log(
-        "[OUTLINE-DEBUG] resolve done pageNum",
-        pageNum,
-        "req.key",
-        req.key
-      );
       if (pageNum && pageNum > 0) {
         scrollToPage(pageNum, virtualListRef, "start");
         if (req.key) {
@@ -489,12 +446,6 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
             ancestorKeys: req.ancestorKeys ?? [],
             page: pageNum,
           };
-          console.log(
-            "[OUTLINE-DEBUG] lock SET",
-            req.key,
-            "page",
-            pageNum
-          );
         }
       } else {
         console.warn("Unable to resolve outline destination to page", req.dest);
@@ -524,7 +475,6 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
       return;
     }
     outlineNavHandledIdRef.current = outlineNavRequest.id;
-    console.log("[OUTLINE-DEBUG] nav effect trigger", outlineNavRequest.id, outlineNavRequest.key);
     void handleOutlineNavigation(outlineNavRequest);
   }, [outlineNavRequest, handleOutlineNavigation]);
 

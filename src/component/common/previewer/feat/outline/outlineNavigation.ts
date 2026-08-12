@@ -43,7 +43,9 @@ export async function resolveOutlinePageNumber(
     if (Array.isArray(resolvedDest) && resolvedDest.length > 0) {
       const pageRef = resolvedDest[0];
       if (typeof pageRef === "number") {
-        return pageRef + 1;
+        // pdf.js 中 outline dest 数组第一个元素若是数字，是 PDF 规范定义的
+        // 1-based 页码（例如 2 表示第 2 页），直接返回即可，不能 +1。
+        return pageRef;
       }
       if (pageRef && typeof pageRef === "object") {
         const pageIndex = await pdf.getPageIndex(pageRef);
@@ -104,7 +106,8 @@ export async function resolveOutlineDestPosition(
   const pageRef = resolvedDest[0];
   let pageNum: number | null = null;
   if (typeof pageRef === "number") {
-    pageNum = pageRef + 1;
+    // pdf.js 中数字 pageRef 是 1-based 页码，直接使用，不能 +1。
+    pageNum = pageRef;
   } else if (pageRef && typeof pageRef === "object") {
     try {
       const pageIndex = await pdf.getPageIndex(pageRef);
