@@ -304,6 +304,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   const [outlineIndex, setOutlineIndex] = useState<OutlineIndexEntry[]>([]);
   const [debouncedCurPage, setDebouncedCurPage] = useState<number>(0);
   const [outlineSyncPaused, setOutlineSyncPaused] = useState(false);
+  const outlineSyncPausedRef = React.useRef(false);
   const outlineNavHandledIdRef = React.useRef<number>(0);
   const outlineLockRef = React.useRef<{
     key: string;
@@ -395,7 +396,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
         activeOutlineKey: activeOutlineEntry?.key ?? null,
       })
     );
-    if (outlineSyncPaused) {
+    if (outlineSyncPaused || outlineSyncPausedRef.current) {
       // 暂停期间保留用户点击设置的高亮，避免导航过程中的滚动同步抢走高亮
       return;
     }
@@ -451,12 +452,14 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
 
   const pauseOutlineScrollSync = useCallback(() => {
     console.log("[OUTLINE-DEBUG] pause START");
+    outlineSyncPausedRef.current = true;
     setOutlineSyncPaused(true);
     if (outlineSyncPauseTimerRef.current) {
       clearTimeout(outlineSyncPauseTimerRef.current);
     }
     outlineSyncPauseTimerRef.current = setTimeout(() => {
       console.log("[OUTLINE-DEBUG] pause END");
+      outlineSyncPausedRef.current = false;
       setOutlineSyncPaused(false);
       outlineSyncPauseTimerRef.current = null;
     }, 600);
