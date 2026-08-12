@@ -17,7 +17,22 @@ export const scrollToPage = (
   if (virtualListRef.current) {
     // list index starts from 0 while page starts from 1
     // the page size start by 1
+    const before = virtualListRef.current.element?.scrollTop;
+    console.log(
+      "[OUTLINE-DEBUG] scrollToPage",
+      pageIndex,
+      "align",
+      align,
+      "before scrollTop",
+      before
+    );
     virtualListRef.current.scrollToRow({ index: pageIndex - 1, align });
+    requestAnimationFrame(() => {
+      console.log(
+        "[OUTLINE-DEBUG] scrollToPage after rAF scrollTop",
+        virtualListRef.current?.element?.scrollTop
+      );
+    });
   }
 };
 
