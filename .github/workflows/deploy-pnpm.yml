@@ -42,9 +42,6 @@ jobs:
           cache-to: type=gha,mode=max
           file: Dockerfile
           push: true
-          # ACR 旧版不识别 OCI empty manifest class，禁用 provenance/sbom 属性清单
-          provenance: false
-          sbom: false
     
        # https://github.com/steebchen/kubectl
       - name: deploy to cluster
