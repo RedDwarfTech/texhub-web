@@ -388,11 +388,11 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     }
     const lock = outlineLockRef.current;
     if (lock) {
-      // 只要仍未确认离开点击时所在页（curPage 或 debouncedCurPage 任一命中），
-      // 就持续保持点击节点的亮，避免同页多个章节时滚动同步把高亮拉回第一个章节。
-      // 另外，若滚动同步计算出的当前页章节（activeOutlineEntry）仍落在 lock 所在页
-      // （例如 scrollToRow 有 1 页偏差或 onRowsRendered 延迟），也保持用户点击的章节，
-      // 避免高亮被同页的“最深/最后”章节覆盖。
+      // 点击后定位期间：只要当前浏览位置仍落在 lock 所在页
+      // （curPage / debouncedCurPage / 滚动同步计算结果任一命中），
+      // 就保持用户点击章节的高亮，防止同页多个章节或定位偏差
+      // 时滚动同步把高亮换到其他章节。只有用户手动滚动离开
+      // lock 所在页后，才放行给滚动同步。
       const stillOnLockPage =
         curPage === lock.page ||
         debouncedCurPage === lock.page ||
@@ -407,6 +407,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
       outlineLockRef.current = null;
     }
     if (activeOutlineEntry) {
+      // 用户手动滚动/翻页：高亮跟随当前页对应的 outline 章节
       setAndDispatchActiveOutline({
         key: activeOutlineEntry.key,
         ancestorKeys: activeOutlineEntry.ancestorKeys,
@@ -426,7 +427,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
       outlineSyncPausedRef.current = false;
       setOutlineSyncPaused(false);
       outlineSyncPauseTimerRef.current = null;
-    }, 600);
+    }, 800);
   }, []);
   const handleOutlineNavigation = useCallback(
     async (req: PdfOutlineNavRequest) => {
@@ -438,8 +439,8 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
       if (pageNum && pageNum > 0) {
         scrollToPage(pageNum, virtualListRef, "start");
         if (req.key) {
-          // 解析出目标页并写入锁之后再开始暂停，避免解析较慢时锁在暂停
-          // 结束后才写入，导致滚动同步抢先覆盖点击高亮。
+          // 先暂停滚动同步并写入锁，确保点击后第一次定位期间
+          // 高亮保持用户点击的章节，不被定位滚动触发的高亮更新覆盖。
           pauseOutlineScrollSync();
           outlineLockRef.current = {
             key: req.key,
