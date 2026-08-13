@@ -4,7 +4,18 @@
 }
 
 .pdfPage {
+    line-height: 0;
+}
 
+.pdfPage canvas {
+    /*
+     * canvas 默认是 inline 元素，底部有约 3-5px 基线间隙，
+     * 导致每页实际 DOM 高度比行高模型（getPageHeight）多出几像素，
+     * 长文档累计后 scrollToRow 定位会错页（最终高亮落到其他章节）。
+     * 这里强制 block + line-height: 0 消除基线间隙，
+     * 使实际行高 = 模型行高，定位精确。
+     */
+    display: block;
 }
 
 .pageContent {

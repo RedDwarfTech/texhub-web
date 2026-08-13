@@ -311,6 +311,8 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     key: string;
     ancestorKeys: string[];
     page: number;
+    createdAt: number;
+    calibrated: boolean;
   } | null>(null);
   const outlineSyncPauseTimerRef = React.useRef<ReturnType<
     typeof setTimeout
@@ -394,6 +396,20 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     }
     const lock = outlineLockRef.current;
     if (lock) {
+      // 定位校准：点击后的定位滚动已到达（curPage 已更新），若实际到达页
+      // 与解析目标页偏差在 1 页内（行高/渲染残留偏差导致），将 lock.page
+      // 校准为实际到达页，保持用户点击章节的高亮，避免定位偏差被滚动同步
+      // 接管后把高亮切到其他章节。仅在定位后短时间内校准一次，
+      // 之后用户手动滚动不受影响。
+      if (
+        !lock.calibrated &&
+        Date.now() - lock.createdAt < 2000 &&
+        curPage > 0 &&
+        Math.abs(curPage - lock.page) <= 1
+      ) {
+        lock.page = curPage;
+        lock.calibrated = true;
+      }
       // 点击后定位期间：只要当前浏览位置仍落在 lock 所在页
       // （curPage / debouncedCurPage / 滚动同步计算结果任一命中），
       // 就保持用户点击章节的高亮，防止同页多个章节或定位偏差
@@ -452,6 +468,8 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
             key: req.key,
             ancestorKeys: req.ancestorKeys ?? [],
             page: pageNum,
+            createdAt: Date.now(),
+            calibrated: false,
           };
         }
       } else {
