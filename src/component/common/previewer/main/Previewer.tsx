@@ -22,6 +22,7 @@ import { BaseMethods, ResponseHandler } from "rdjs-wheel";
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import {
   enterFullScreen,
+  isProgrammaticScroll,
   restorePdfOffset,
   scrollToPage,
 } from "../doc/PDFPreviewHandle";
@@ -384,6 +385,11 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   React.useEffect(() => {
     if (outlineSyncPaused || outlineSyncPausedRef.current) {
       // 暂停期间保留用户点击设置的高亮，避免导航过程中的滚动同步抢走高亮
+      return;
+    }
+    if (isProgrammaticScroll()) {
+      // 本次 curPage 变化由程序滚动（outline 导航/翻页/恢复位置）引起，
+      // 不触发滚动同步，避免定位过程把高亮改到其他章节。
       return;
     }
     const lock = outlineLockRef.current;

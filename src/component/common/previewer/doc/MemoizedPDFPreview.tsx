@@ -11,6 +11,8 @@ import { AppState } from "@/redux/types/AppState";
 import { useSelector } from "react-redux";
 import {
   isMoreThanFiveSeconds,
+  isProgrammaticScroll,
+  markProgrammaticScroll,
   openPdfUrlLink,
   scrollToPage,
 } from "./PDFPreviewHandle";
@@ -124,6 +126,7 @@ const MemoizedPDFPreview = React.memo(
             }
 
             el.scrollTop = targetOffset;
+            markProgrammaticScroll();
             const settled = Math.abs(el.scrollTop - targetOffset) <= 1;
 
             if (!settled && ++attempts < maxAttempts) {
@@ -325,6 +328,7 @@ const MemoizedPDFPreview = React.memo(
           guard.target > 50
         ) {
           scrollEl.scrollTop = guard.target;
+          markProgrammaticScroll();
           scrollOffset = guard.target;
         } else if (guard && Date.now() >= guard.until) {
           zoomScrollGuardRef.current = null;
@@ -416,7 +420,9 @@ const MemoizedPDFPreview = React.memo(
                 setAndDispatchPdfPage(
                   visiblePage,
                   projId,
-                  "IntersectionObserver"
+                  isProgrammaticScroll()
+                    ? "outlineProgrammatic"
+                    : "userScroll"
                 );
               }}
               style={{ width, height }}
