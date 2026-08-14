@@ -65,6 +65,7 @@ const MemoizedPDFPreview = React.memo(
         curPdfPage,
         onOutlineLoaded,
         onPdfLoaded,
+        onPageClick,
       },
       ref
     ) => {
@@ -75,6 +76,7 @@ const MemoizedPDFPreview = React.memo(
         curPdfPosition?: PdfPosition[];
         pdfScale: number;
         visualScale: number;
+        onPageClick?: (page: number, h: number, v: number) => void;
       };
 
       const initialScale = getCurPdfScale(projId, viewModel);
@@ -377,6 +379,7 @@ const MemoizedPDFPreview = React.memo(
                 curPdfPosition={curPdfPosition}
                 pdfScale={pdfScale}
                 visualScale={visualScale}
+                onPageClick={onPageClick}
               />
             );
           };

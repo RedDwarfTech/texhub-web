@@ -20,6 +20,7 @@ interface PDFPageProps {
   curPdfPosition: PdfPosition[] | undefined;
   pdfScale: number;
   visualScale: number;
+  onPageClick?: (page: number, h: number, v: number) => void;
 }
 
 const TeXPDFPage: React.FC<PDFPageProps> = ({
@@ -30,6 +31,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   curPdfPosition,
   pdfScale,
   visualScale,
+  onPageClick,
 }) => {
   const pageContentRef = useRef<HTMLDivElement>(null);
   const bufferCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -139,11 +141,31 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     setShowBuffer(false);
   };
 
+  const handlePageClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!onPageClick || !pageViewport) {
+      return;
+    }
+    const content = pageContentRef.current;
+    if (!content) {
+      return;
+    }
+    const rect = content.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) {
+      return;
+    }
+    const scaleX = pageViewport.width / rect.width;
+    const scaleY = pageViewport.height / rect.height;
+    const h = (e.clientX - rect.left) * scaleX;
+    const v = (e.clientY - rect.top) * scaleY;
+    onPageClick(index, h, v);
+  };
+
   const layoutScale = pdfScale;
 
   return (
     <div
       id={"page-" + index}
+      onClick={handlePageClick}
       style={{
         ...style,
         boxSizing: "border-box",

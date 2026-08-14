@@ -11,4 +11,5 @@ export interface PDFPreviewProps {
   curPdfPage?: number;
   onOutlineLoaded?: (outline: any[]) => void;
   onPdfLoaded?: (pdf: DocumentCallback) => void;
+  onPageClick?: (page: number, h: number, v: number) => void;
 }

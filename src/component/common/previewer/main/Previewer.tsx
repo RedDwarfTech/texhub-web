@@ -495,6 +495,22 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     ],
   );
 
+  const handlePdfPageClick = useCallback(
+    (page: number, h: number, v: number) => {
+      if (!projInfo || !projInfo.main_file) {
+        return;
+      }
+      getSrcPosition({
+        project_id: props.projectId,
+        main_file: projInfo.main_file.name,
+        page,
+        h,
+        v,
+      });
+    },
+    [projInfo, props.projectId],
+  );
+
   React.useEffect(() => {
     if (!outlineNavRequest || outlineNavRequest.id === outlineNavHandledIdRef.current) {
       return;
@@ -669,6 +685,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
       curPdfPage={props.curPage}
       onOutlineLoaded={handleOutlineLoaded}
       onPdfLoaded={setPdfProxy}
+      onPageClick={handlePdfPageClick}
     />
   );
 
