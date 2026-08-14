@@ -122,6 +122,68 @@ export const ProjectTreeFolder = {
     let treeNodes: TexFileModel[] = JSON.parse(legacyTree);
     return ProjectTreeFolder.collapseRecursive(treeNodes, treeNodes);
   },
+  /**
+   * 按文件名在整棵树中查找节点（忽略路径）。
+   * 用于 SyncTeX 只返回文件名（如 "skills.tex"）而文件位于子目录的场景。
+   */
+  findNodeByFileName: (
+    tree: TexFileModel[],
+    fileName: string
+  ): TexFileModel | null => {
+    for (const node of tree) {
+      if (node.name === fileName) {
+        return node;
+      }
+      if (node.children && node.children.length > 0) {
+        const found = ProjectTreeFolder.findNodeByFileName(
+          node.children,
+          fileName
+        );
+        if (found) {
+          return found;
+        }
+      }
+    }
+    return null;
+  },
+  /** 判断节点是否包含目标后代节点（不含自身） */
+  hasChildNode: (node: TexFileModel, targetId: string): boolean => {
+    if (node.children && node.children.length > 0) {
+      for (const child of node.children) {
+        if (child.file_id === targetId) {
+          return true;
+        }
+        if (ProjectTreeFolder.hasChildNode(child, targetId)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  },
+  /**
+   * 展开到目标节点的所有祖先（目标节点自身不动），返回更新后的树。
+   */
+  expandAncestorsToNode: (
+    tree: TexFileModel[],
+    targetId: string
+  ): TexFileModel[] => {
+    const updated: TexFileModel[] = [];
+    for (const node of tree) {
+      if (ProjectTreeFolder.hasChildNode(node, targetId)) {
+        updated.push({
+          ...node,
+          expand: true,
+          children: ProjectTreeFolder.expandAncestorsToNode(
+            node.children ?? [],
+            targetId
+          ),
+        });
+      } else {
+        updated.push(node);
+      }
+    }
+    return updated;
+  },
   handleExpandFolder: (
     name_paths: string[],
     projId: string,
@@ -143,7 +205,27 @@ export const ProjectTreeFolder = {
         fPath
       );
       if (!pathNode) {
-        continue;
+        // 按完整路径未匹配：SyncTeX 可能只返回文件名（如 "skills.tex"），
+        // 而文件位于子目录（文件树 file_path 是父目录路径，不含文件名），
+        // 此时按文件名在整棵树中查找，展开其祖先并打开文件。
+        const targetFileName = name_paths[name_paths.length - 1];
+        const found = ProjectTreeFolder.findNodeByFileName(
+          treeNode,
+          targetFileName
+        );
+        if (found) {
+          const expandedTree = ProjectTreeFolder.expandAncestorsToNode(
+            treeNode,
+            found.file_id
+          );
+          localStorage.setItem(
+            "projTree:" + projId,
+            JSON.stringify(expandedTree)
+          );
+          setCurFileTree(expandedTree);
+          handleFileSelected(found, selectedFile, ydoc);
+        }
+        return;
       }
       if (pathNode.file_type === TreeFileType.Folder) {
         let upatedItems = ProjectTreeFolder.handleAutoExpandFolder(
