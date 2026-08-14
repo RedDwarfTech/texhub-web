@@ -50,7 +50,7 @@
   resize: horizontal;
   flex: 0 0 60%;
   overflow: hidden;
-  height: 96vh;
+  height: 100%;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
