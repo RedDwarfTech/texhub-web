@@ -14,6 +14,7 @@ import {
   isProgrammaticScroll,
   markProgrammaticScroll,
   openPdfUrlLink,
+  scrollToOffset,
   scrollToPage,
 } from "./PDFPreviewHandle";
 import {
@@ -26,10 +27,11 @@ import { AutoSizer, Size } from "react-virtualized-auto-sizer";
 import { PDFPreviewProps } from "@/model/props/proj/pdf/PDFPreviewProps";
 import {
   getCurPdfScale,
-  getCurPdfScrollOffset,
+  getCurPdfScrollOffsetSession,
   setAndDispatchPdfPage,
   setCurPdfScale,
   setCurPdfScrollOffset,
+  setCurPdfScrollOffsetSession,
   setDocLoadTime,
 } from "@/service/project/preview/PreviewService";
 import { setProjAttr } from "@/service/project/ProjectService";
@@ -339,6 +341,9 @@ const MemoizedPDFPreview = React.memo(
         const docLoadTime = localStorage.getItem("docLoadTime");
         if (docLoadTime && isMoreThanFiveSeconds(docLoadTime)) {
           setCurPdfScrollOffset(scrollOffset, projId, "handleWindowPdfScroll");
+          if (viewModel === "fullscreen") {
+            setCurPdfScrollOffsetSession(scrollOffset, projId, viewModel);
+          }
         }
       };
 
@@ -412,6 +417,18 @@ const MemoizedPDFPreview = React.memo(
                   !initialPageNavRef.current
                 ) {
                   initialPageNavRef.current = true;
+                  const restoredOffset =
+                    viewModel === "fullscreen"
+                      ? getCurPdfScrollOffsetSession(projId, viewModel)
+                      : 0;
+                  if (restoredOffset > 0) {
+                    // 刷新全屏：还原标签页内实际的滚动位置，
+                    // 而不是跳回 URL 中固定的 curPage。
+                    requestAnimationFrame(() => {
+                      scrollToOffset(restoredOffset, virtualListRef, projId);
+                    });
+                    return;
+                  }
                   setAndDispatchPdfPage(curPdfPage, projId, "fullscreennav");
                   requestAnimationFrame(() => {
                     scrollToPage(curPdfPage, virtualListRef);

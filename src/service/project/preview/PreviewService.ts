@@ -79,6 +79,36 @@ export function setCurPdfScrollOffset(
   localStorage.setItem(key, scrollOffset.toString());
 }
 
+/**
+ * 全屏刷新恢复：按 viewModel 隔离记录当前标签页的滚动 offset。
+ *
+ * 用 sessionStorage 区分「新开全屏」与「刷新」：
+ *  - sessionStorage 随 window.open 克隆到新标签页，因此必须带上
+ *    viewModel 前缀，避免新开全屏时误用编辑器标签页的 offset；
+ *  - 同一标签页内刷新时，fullscreen 自己的 offset 仍在，可精确还原。
+ */
+export function setCurPdfScrollOffsetSession(
+  scrollOffset: number,
+  projId: string,
+  viewModel: string
+) {
+  const key = viewModel + ":" + readConfig("pdfScrollKey") + projId;
+  sessionStorage.setItem(key, scrollOffset.toString());
+}
+
+export function getCurPdfScrollOffsetSession(
+  projId: string,
+  viewModel: string
+) {
+  const key = viewModel + ":" + readConfig("pdfScrollKey") + projId;
+  let offset = sessionStorage.getItem(key);
+  if (offset) {
+    return Number(offset);
+  } else {
+    return 0;
+  }
+}
+
 export function scaleCurPdfScrollOffset(scale: number, projId: string) {
   const key = readConfig("pdfScrollKey") + projId;
   let offset = localStorage.getItem(key);
