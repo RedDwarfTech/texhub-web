@@ -101,6 +101,11 @@ const MemoizedPDFPreview = React.memo(
       const zoomDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
       const scrollAnchorRef = useRef<ScrollAnchor | null>(null);
       const pendingScrollRestoreRef = useRef(false);
+      const resizeAnchorRef = useRef<{
+        page: number;
+        within: number;
+        width: number;
+      } | null>(null);
       const committedScaleRef = useRef(initialScale);
       const visualScaleRef = useRef(initialScale);
       const listWidthRef = useRef(0);
@@ -232,26 +237,6 @@ const MemoizedPDFPreview = React.memo(
         };
       }, []);
 
-      React.useLayoutEffect(() => {
-        if (!pendingScrollRestoreRef.current || !scrollAnchorRef.current) {
-          return;
-        }
-        pendingScrollRestoreRef.current = false;
-
-        const el = virtualListRef.current?.element;
-        if (!el) {
-          return;
-        }
-
-        const targetOffset = restoreScrollFromAnchor(
-          scrollAnchorRef.current,
-          containerWidth * committedScale,
-          el.clientHeight
-        );
-        scrollAnchorRef.current = null;
-        restoreScrollAfterZoom(targetOffset);
-      }, [committedScale, containerWidth, restoreScrollAfterZoom, virtualListRef]);
-
       React.useEffect(() => {
         setPageViewports(undefined);
 
@@ -358,6 +343,82 @@ const MemoizedPDFPreview = React.memo(
         return actualHeight + 10;
       };
 
+      const findTopPageAt = useCallback(
+        (offset: number, width: number) => {
+          if (!pageViewports) {
+            return null;
+          }
+          let acc = 0;
+          for (let i = 0; i < pageViewports.length; i++) {
+            const h = getPageHeight(i, width);
+            if (offset < acc + h) {
+              return { page: i, within: offset - acc };
+            }
+            acc += h;
+          }
+          const last = pageViewports.length - 1;
+          return {
+            page: last,
+            within: offset - (acc - getPageHeight(last, width)),
+          };
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [pageViewports, committedScale]
+      );
+
+      const resolveResizeScrollTop = useCallback(
+        (
+          anchor: { page: number; within: number; width: number },
+          newWidth: number
+        ) => {
+          if (!pageViewports) {
+            return 0;
+          }
+          let acc = 0;
+          for (let i = 0; i < anchor.page; i++) {
+            acc += getPageHeight(i, newWidth);
+          }
+          const pageHeight = getPageHeight(anchor.page, newWidth);
+          const ratio = newWidth / anchor.width;
+          const scaledWithin = Math.max(0, anchor.within * ratio);
+          return acc + Math.min(scaledWithin, pageHeight - 1);
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [pageViewports, committedScale]
+      );
+
+      React.useLayoutEffect(() => {
+        const widthAnchor = resizeAnchorRef.current;
+        if (widthAnchor && !scrollAnchorRef.current) {
+          resizeAnchorRef.current = null;
+          pendingScrollRestoreRef.current = false;
+          const el = virtualListRef.current?.element;
+          if (!el) {
+            return;
+          }
+          const targetOffset = resolveResizeScrollTop(widthAnchor, containerWidth);
+          restoreScrollAfterZoom(targetOffset);
+          return;
+        }
+        if (!pendingScrollRestoreRef.current || !scrollAnchorRef.current) {
+          return;
+        }
+        pendingScrollRestoreRef.current = false;
+
+        const el = virtualListRef.current?.element;
+        if (!el) {
+          return;
+        }
+
+        const targetOffset = restoreScrollFromAnchor(
+          scrollAnchorRef.current,
+          containerWidth * committedScale,
+          el.clientHeight
+        );
+        scrollAnchorRef.current = null;
+        restoreScrollAfterZoom(targetOffset);
+      }, [committedScale, containerWidth, resolveResizeScrollTop, restoreScrollAfterZoom, virtualListRef]);
+
       const setAreas = (areas: HighlightArea[]) => {
         setHighlightAreas(areas);
       };
@@ -461,13 +522,16 @@ const MemoizedPDFPreview = React.memo(
           Math.abs(nextWidth - prevWidth) > 1
         ) {
           const scrollEl = virtualListRef.current?.element;
-          if (scrollEl && !zoomScrollGuardRef.current) {
-            scrollAnchorRef.current = captureScrollAnchor(
-              scrollEl.scrollTop,
-              scrollEl.clientHeight,
-              prevWidth * committedScaleRef.current
-            );
-            pendingScrollRestoreRef.current = true;
+          if (scrollEl) {
+            const topPage = findTopPageAt(scrollEl.scrollTop, prevWidth);
+            if (topPage) {
+              resizeAnchorRef.current = {
+                page: topPage.page,
+                within: topPage.within,
+                width: prevWidth,
+              };
+              pendingScrollRestoreRef.current = true;
+            }
           }
         }
         setContainerWidth(nextWidth);
