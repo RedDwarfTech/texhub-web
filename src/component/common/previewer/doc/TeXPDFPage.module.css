@@ -32,6 +32,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 2;
+    /* 高于 react-pdf 的 TextLayer(2) 与 AnnotationLayer(3),
+     * 防止新 canvas 重建期间 TextLayer/Annotation 从空重绘时闪出。 */
+    z-index: 10;
     pointer-events: none;
 }

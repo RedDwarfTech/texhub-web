@@ -22,6 +22,7 @@ interface PDFPageProps {
   pdfScale: number;
   visualScale: number;
   onPageClick?: (page: number, h: number, v: number) => void;
+  prerenderCanvas?: HTMLCanvasElement;
 }
 
 const TeXPDFPage: React.FC<PDFPageProps> = ({
@@ -34,6 +35,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   pdfScale,
   visualScale,
   onPageClick,
+  prerenderCanvas,
 }) => {
   const pageContentRef = useRef<HTMLDivElement>(null);
   const bufferCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -56,13 +58,25 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   const prevRenderKeyRef = useRef(renderKey);
 
   useLayoutEffect(() => {
-    if (prevRenderKeyRef.current !== renderKey) {
-      prevRenderKeyRef.current = renderKey;
-      if (bufferReadyRef.current) {
-        setShowBuffer(true);
-      }
+    if (prevRenderKeyRef.current === renderKey) {
+      return;
     }
-  }, [renderKey]);
+    prevRenderKeyRef.current = renderKey;
+    const buffer = bufferCanvasRef.current;
+    if (prerenderCanvas && buffer && prerenderCanvas.width > 0) {
+      // 预渲染位图已是"新宽度/新 scale"的正确布局，
+      // 直接作为 buffer 铺住 react-pdf 重建窗口，视觉无缝。
+      buffer.width = prerenderCanvas.width;
+      buffer.height = prerenderCanvas.height;
+      buffer.getContext("2d")?.drawImage(prerenderCanvas, 0, 0);
+      bufferReadyRef.current = true;
+      setShowBuffer(true);
+      return;
+    }
+    if (bufferReadyRef.current) {
+      setShowBuffer(true);
+    }
+  }, [renderKey, prerenderCanvas]);
 
   useEffect(() => {
     if (!pageViewport || !curPdfPosition || curPdfPosition.length === 0) {
@@ -256,6 +270,7 @@ export default React.memo(TeXPDFPage, (prev, next) => {
     prev.width === next.width &&
     prev.height === next.height &&
     prev.renderWidth === next.renderWidth &&
+    prev.prerenderCanvas === next.prerenderCanvas &&
     prev.style.top === next.style.top &&
     prev.style.height === next.style.height &&
     prev.curPdfPosition === next.curPdfPosition

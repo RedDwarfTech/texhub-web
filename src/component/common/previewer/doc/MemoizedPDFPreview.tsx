@@ -80,6 +80,7 @@ const MemoizedPDFPreview = React.memo(
         pdfScale: number;
         visualScale: number;
         onPageClick?: (page: number, h: number, v: number) => void;
+        prerenderMap?: Map<number, HTMLCanvasElement>;
       };
 
       const initialScale = getCurPdfScale(projId, viewModel);
@@ -124,6 +125,17 @@ const MemoizedPDFPreview = React.memo(
       const committedScaleRef = useRef(initialScale);
       const visualScaleRef = useRef(initialScale);
       const listWidthRef = useRef(0);
+      // 预渲染：防抖到期后先按"新宽度"离屏渲染可见页的正确布局位图，
+      // 再提交 renderWidth。提交时 react-pdf 会重建 canvas + TextLayer + Annotation
+      // （pageKey = pageIndex@scale 变化导致卸载重挂），窗口期页面内容
+      // 不参与位图绘制；用预渲染位图作为 buffer 铺住，视觉无缝。
+      const prerenderMapRef = useRef<Map<number, HTMLCanvasElement>>(new Map());
+      const prerenderGenRef = useRef(0);
+      const prerenderWidthRef = useRef(0);
+      const visibleRangeRef = useRef<{ startIndex: number; endIndex: number }>({
+        startIndex: 0,
+        endIndex: 0,
+      });
 
       committedScaleRef.current = committedScale;
       visualScaleRef.current = visualScale;
@@ -181,6 +193,10 @@ const MemoizedPDFPreview = React.memo(
           setVisualScale(newScale);
           committedScaleRef.current = newScale;
           visualScaleRef.current = newScale;
+
+          // zoom 提交后 scale 已变，旧预渲染位图（按旧 scale 像素）作废，
+          // 防止 renderKey(pdfScale 部分)变化时被错误复用。
+          prerenderMapRef.current = new Map();
 
           setCurPdfScale(newScale, projId, viewModel);
           setProjAttr({
@@ -259,6 +275,11 @@ const MemoizedPDFPreview = React.memo(
       }, []);
 
       React.useEffect(() => {
+        // pdf 更换：预渲染缓存与可见范围全部失效。
+        prerenderGenRef.current++;
+        prerenderMapRef.current = new Map();
+        prerenderWidthRef.current = 0;
+
         setPageViewports(undefined);
 
         if (!pdf) {
@@ -515,6 +536,7 @@ const MemoizedPDFPreview = React.memo(
             curPdfPosition,
             pdfScale,
             visualScale,
+            prerenderMap,
           }: RowComponentProps<PdfRowProps>) => {
             return (
               <TeXPDFPage
@@ -528,6 +550,7 @@ const MemoizedPDFPreview = React.memo(
                 pdfScale={pdfScale}
                 visualScale={visualScale}
                 onPageClick={onPageClick}
+                prerenderCanvas={prerenderMap?.get(index + 1)}
               />
             );
           };
@@ -548,10 +571,15 @@ const MemoizedPDFPreview = React.memo(
                 curPdfPosition,
                 pdfScale: committedScale,
                 visualScale,
+                prerenderMap: prerenderMapRef.current,
               }}
               overscanCount={2}
               onScroll={handleWindowPdfScroll}
               onRowsRendered={(visibleRows) => {
+                visibleRangeRef.current = {
+                  startIndex: visibleRows.startIndex,
+                  endIndex: visibleRows.stopIndex,
+                };
                 if (suppressRowsRenderedRef.current) {
                   return;
                 }
@@ -594,6 +622,75 @@ const MemoizedPDFPreview = React.memo(
             />
           );
         }
+      };
+
+      // 预渲染可见页到"新宽度"的离屏位图（正确布局），
+      // 供 renderWidth 提交后的重建窗口作为 buffer 显示。
+      const prerenderVisiblePages = (
+        targetWidth: number,
+        onReady: (map: Map<number, HTMLCanvasElement>) => void
+      ) => {
+        if (!pdf || !pageViewports) {
+          onReady(new Map());
+          return;
+        }
+        const gen = ++prerenderGenRef.current;
+        const { startIndex, endIndex } = visibleRangeRef.current;
+        const dpr = window.devicePixelRatio || 1;
+        const tasks: Promise<void>[] = [];
+        const map = new Map<number, HTMLCanvasElement>();
+
+        // 与 react-pdf 协同安全：预渲染与现有 canvas 并行渲染同一页
+        // 可能冲突（pdf.js 同一 page 只允许一个 render task），
+        // 因此先渲染空白页面？不需要，直接逐页 await 串行。
+        const renderOne = async (index: number) => {
+          if (!pdf) {
+            return;
+          }
+          const page = await pdf.getPage(index + 1);
+          const baseViewport = page.getViewport({ scale: 1 });
+          const fitScale = targetWidth / baseViewport.width;
+          const effectiveScale =
+            (committedScaleRef.current > 0 ? committedScaleRef.current : 1) *
+            fitScale;
+          const renderViewport = page.getViewport({
+            scale: effectiveScale * dpr,
+          });
+          const canvas = document.createElement("canvas");
+          canvas.width = renderViewport.width;
+          canvas.height = renderViewport.height;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) {
+            return;
+          }
+          try {
+            await page.render({
+              canvasContext: ctx,
+              viewport: renderViewport,
+            } as any).promise;
+          } catch (e) {
+            // 渲染被中断（如 pdf 已更换），丢弃该页。
+            return;
+          }
+          if (gen !== prerenderGenRef.current) {
+            return;
+          }
+          map.set(index + 1, canvas);
+        };
+
+        // 预渲染窗口：可见页 + overscan(2)。
+        const start = Math.max(0, startIndex - 2);
+        const end = Math.min(pageViewports.length - 1, endIndex + 2);
+        for (let i = start; i <= end; i++) {
+          tasks.push(renderOne(i));
+        }
+        Promise.all(tasks).then(() => {
+          if (gen !== prerenderGenRef.current) {
+            onReady(new Map());
+            return;
+          }
+          onReady(map);
+        });
       };
 
       const onResize = (size: Size) => {
@@ -648,7 +745,8 @@ const MemoizedPDFPreview = React.memo(
         setContainerWidth(nextWidth);
 
         // 渲染宽度防抖提交：拖拽期间保持 canvas 不动（CSS 拉伸跟随），
-        // 松手后才触发一次真正的重栅格化，避免每帧重绘闪烁。
+        // 松手后先预渲染"新宽度"正确布局位图，再提交，
+        // react-pdf 重建窗口由预渲染位图铺住，视觉无缝。
         if (renderWidthRef.current === 0) {
           // 首次加载：同步初始化渲染宽度，避免 Page width=0 空白。
           renderWidthRef.current = nextWidth;
@@ -661,7 +759,14 @@ const MemoizedPDFPreview = React.memo(
         }
         renderWidthTimerRef.current = setTimeout(() => {
           renderWidthTimerRef.current = null;
-          setRenderWidth(nextWidth);
+          prerenderWidthRef.current = nextWidth;
+          prerenderVisiblePages(nextWidth, (map) => {
+            if (prerenderWidthRef.current !== nextWidth) {
+              return;
+            }
+            prerenderMapRef.current = map;
+            setRenderWidth(nextWidth);
+          });
         }, 150);
       };
 
