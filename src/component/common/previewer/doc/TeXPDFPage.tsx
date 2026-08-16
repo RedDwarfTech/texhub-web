@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useLayoutEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Page } from "react-pdf";
 import styles from "./TeXPDFPage.module.css";
 import { PageViewport } from "pdfjs-dist";
@@ -16,6 +16,7 @@ interface PDFPageProps {
   style: React.CSSProperties;
   width: number;
   height: number;
+  renderWidth: number;
   viewPort: PageViewport;
   curPdfPosition: PdfPosition[] | undefined;
   pdfScale: number;
@@ -28,6 +29,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   style,
   width,
   height,
+  renderWidth,
   curPdfPosition,
   pdfScale,
   visualScale,
@@ -35,31 +37,31 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
 }) => {
   const pageContentRef = useRef<HTMLDivElement>(null);
   const bufferCanvasRef = useRef<HTMLCanvasElement>(null);
+  const bufferReadyRef = useRef(false);
   const pageRef = useRef<any | null>(null);
-  const prevPdfScaleRef = useRef(pdfScale);
   const [pageViewport, setPageViewport] = useState<PageViewport | null>(null);
   const [showBuffer, setShowBuffer] = useState(false);
 
-  const transformRatio =
-    pdfScale > 0 ? visualScale / pdfScale : 1;
+  // 视觉变换 = 缩放比 × 宽度比。
+  // 交互期（缩放/拖宽）只改 visualScale / width，不动 Page 的 scale/width，
+  // 使 canvas 保持同一 key，避免 react-pdf 重挂载 canvas 导致闪烁。
+  const widthRatio = renderWidth > 0 ? width / renderWidth : 1;
+  const transformRatio = (visualScale / pdfScale) * widthRatio;
   const isVisualZoom = Math.abs(transformRatio - 1) > 0.001;
 
-  useLayoutEffect(() => {
-    if (pdfScale === prevPdfScaleRef.current) {
-      return;
+  // 提交 key（scale 或 renderWidth 变化）→ 显示旧画面快照，
+  // 直到新 canvas 渲染完成，覆盖 react-pdf 重挂载+隐藏绘制导致的空白窗口。
+  const renderKey = `${pdfScale}|${renderWidth}`;
+  const prevRenderKeyRef = useRef(renderKey);
+
+  useEffect(() => {
+    if (prevRenderKeyRef.current !== renderKey) {
+      prevRenderKeyRef.current = renderKey;
+      if (bufferReadyRef.current) {
+        setShowBuffer(true);
+      }
     }
-    const canvas = pageContentRef.current?.querySelector(
-      "canvas"
-    ) as HTMLCanvasElement | null;
-    const buffer = bufferCanvasRef.current;
-    if (canvas && buffer && canvas.width > 0 && canvas.height > 0) {
-      buffer.width = canvas.width;
-      buffer.height = canvas.height;
-      buffer.getContext("2d")?.drawImage(canvas, 0, 0);
-      setShowBuffer(true);
-    }
-    prevPdfScaleRef.current = pdfScale;
-  }, [pdfScale]);
+  }, [renderKey]);
 
   useEffect(() => {
     if (!pageViewport || !curPdfPosition || curPdfPosition.length === 0) {
@@ -137,8 +139,20 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
     }
   };
 
-  const handlePageRenderSuccess = (_page: PageCallback) => {
-    setShowBuffer(false);
+  const handlePageRenderSuccess = (page: PageCallback) => {
+    // 新 canvas 渲染完成：把刚画完的画面抓进常驻快照，
+    // 供下一次提交（scale/renderWidth 变化）期间显示。
+    const canvas = pageContentRef.current?.querySelector(
+      ".react-pdf__Page canvas"
+    ) as HTMLCanvasElement | null;
+    const buffer = bufferCanvasRef.current;
+    if (canvas && buffer && canvas.width > 0 && canvas.height > 0) {
+      buffer.width = canvas.width;
+      buffer.height = canvas.height;
+      buffer.getContext("2d")?.drawImage(canvas, 0, 0);
+      bufferReadyRef.current = true;
+      setShowBuffer(false);
+    }
   };
 
   const handlePageClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -192,9 +206,16 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
             : undefined
         }
       >
-        {showBuffer && (
-          <canvas ref={bufferCanvasRef} className={styles.bufferCanvas} />
-        )}
+        {/* 常驻缓冲 canvas：卸载会丢失已绘制的快照。``通过 visibility 控制显隐 */}
+        <canvas
+          ref={bufferCanvasRef}
+          className={styles.bufferCanvas}
+          style={{
+            visibility: showBuffer ? "visible" : "hidden",
+            transform: `scale(${transformRatio})`,
+            transformOrigin: "top center",
+          }}
+        />
         <Page
           key={`page-${index}`}
           scale={pdfScale}
@@ -203,8 +224,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
           onChange={handlePageChange}
           onRenderSuccess={handlePageRenderSuccess}
           pageNumber={index}
-          width={width}
-          height={height}
+          width={renderWidth}
           renderAnnotationLayer={true}
           renderTextLayer={true}
           onLoadSuccess={(page) => {
@@ -224,6 +244,7 @@ export default React.memo(TeXPDFPage, (prev, next) => {
     prev.visualScale === next.visualScale &&
     prev.width === next.width &&
     prev.height === next.height &&
+    prev.renderWidth === next.renderWidth &&
     prev.style.top === next.style.top &&
     prev.style.height === next.style.height &&
     prev.curPdfPosition === next.curPdfPosition

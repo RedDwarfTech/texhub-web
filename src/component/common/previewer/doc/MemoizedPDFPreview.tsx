@@ -74,6 +74,7 @@ const MemoizedPDFPreview = React.memo(
       type PdfRowProps = {
         width: number;
         height: number;
+        renderWidth: number;
         pageViewports: any;
         curPdfPosition?: PdfPosition[];
         pdfScale: number;
@@ -91,6 +92,14 @@ const MemoizedPDFPreview = React.memo(
       const [visualScale, setVisualScale] = useState(initialScale);
       const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
       const [containerWidth, setContainerWidth] = useState(0);
+      // 渲染宽度：提交后传给 Page 的固定渲染尺寸。
+      // 拖拽期间 containerWidth 实时变化用于滚动数学/CSS 拉伸，
+      // renderWidth 防抖提交后才变化，避免每帧重栅格化 canvas。
+      const [renderWidth, setRenderWidth] = useState(0);
+      const renderWidthRef = useRef(0);
+      const renderWidthTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+        null
+      );
 
       const divRef = useRef<HTMLDivElement>(null);
       const suppressRowsRenderedRef = useRef(false);
@@ -242,6 +251,9 @@ const MemoizedPDFPreview = React.memo(
           }
           if (resizeSessionTimerRef.current) {
             clearTimeout(resizeSessionTimerRef.current);
+          }
+          if (renderWidthTimerRef.current) {
+            clearTimeout(renderWidthTimerRef.current);
           }
         };
       }, []);
@@ -498,6 +510,7 @@ const MemoizedPDFPreview = React.memo(
             style,
             width,
             height,
+            renderWidth,
             pageViewports,
             curPdfPosition,
             pdfScale,
@@ -508,6 +521,7 @@ const MemoizedPDFPreview = React.memo(
                 index={index + 1}
                 width={width}
                 height={height}
+                renderWidth={renderWidth}
                 style={style}
                 viewPort={pageViewports[index]}
                 curPdfPosition={curPdfPosition}
@@ -528,6 +542,8 @@ const MemoizedPDFPreview = React.memo(
               rowProps={{
                 width,
                 height,
+                // 首次 onResize 前 renderWidth 尚未提交，回退到实时宽度。
+                renderWidth: renderWidth || width,
                 pageViewports,
                 curPdfPosition,
                 pdfScale: committedScale,
@@ -630,6 +646,23 @@ const MemoizedPDFPreview = React.memo(
           resizeSessionTimerRef.current = null;
         }, 300);
         setContainerWidth(nextWidth);
+
+        // 渲染宽度防抖提交：拖拽期间保持 canvas 不动（CSS 拉伸跟随），
+        // 松手后才触发一次真正的重栅格化，避免每帧重绘闪烁。
+        if (renderWidthRef.current === 0) {
+          // 首次加载：同步初始化渲染宽度，避免 Page width=0 空白。
+          renderWidthRef.current = nextWidth;
+          setRenderWidth(nextWidth);
+          return;
+        }
+        renderWidthRef.current = nextWidth;
+        if (renderWidthTimerRef.current) {
+          clearTimeout(renderWidthTimerRef.current);
+        }
+        renderWidthTimerRef.current = setTimeout(() => {
+          renderWidthTimerRef.current = null;
+          setRenderWidth(nextWidth);
+        }, 150);
       };
 
       if (
