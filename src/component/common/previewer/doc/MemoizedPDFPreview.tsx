@@ -90,6 +90,7 @@ const MemoizedPDFPreview = React.memo(
       const [committedScale, setCommittedScale] = useState(initialScale);
       const [visualScale, setVisualScale] = useState(initialScale);
       const [curPdfPosition, setCurPdfPosition] = useState<PdfPosition[]>();
+      const [containerWidth, setContainerWidth] = useState(0);
 
       const divRef = useRef<HTMLDivElement>(null);
       const suppressRowsRenderedRef = useRef(false);
@@ -179,7 +180,7 @@ const MemoizedPDFPreview = React.memo(
             scrollAnchorRef.current = captureScrollAnchor(
               scrollEl.scrollTop,
               scrollEl.clientHeight,
-              committedScaleRef.current
+              listWidthRef.current * committedScaleRef.current
             );
             setCurPdfScrollOffset(scrollEl.scrollTop, projId, "handleZoom");
           }
@@ -244,12 +245,12 @@ const MemoizedPDFPreview = React.memo(
 
         const targetOffset = restoreScrollFromAnchor(
           scrollAnchorRef.current,
-          committedScale,
+          containerWidth * committedScale,
           el.clientHeight
         );
         scrollAnchorRef.current = null;
         restoreScrollAfterZoom(targetOffset);
-      }, [committedScale, restoreScrollAfterZoom, virtualListRef]);
+      }, [committedScale, containerWidth, restoreScrollAfterZoom, virtualListRef]);
 
       React.useEffect(() => {
         setPageViewports(undefined);
@@ -451,7 +452,26 @@ const MemoizedPDFPreview = React.memo(
         }
       };
 
-      const onResize = (_size: Size) => {};
+      const onResize = (size: Size) => {
+        const nextWidth = size.width ?? 0;
+        const prevWidth = listWidthRef.current;
+        if (
+          prevWidth > 0 &&
+          nextWidth > 0 &&
+          Math.abs(nextWidth - prevWidth) > 1
+        ) {
+          const scrollEl = virtualListRef.current?.element;
+          if (scrollEl && !zoomScrollGuardRef.current) {
+            scrollAnchorRef.current = captureScrollAnchor(
+              scrollEl.scrollTop,
+              scrollEl.clientHeight,
+              prevWidth * committedScaleRef.current
+            );
+            pendingScrollRestoreRef.current = true;
+          }
+        }
+        setContainerWidth(nextWidth);
+      };
 
       if (
         pdfOptions &&
