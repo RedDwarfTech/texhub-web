@@ -101,11 +101,17 @@ const MemoizedPDFPreview = React.memo(
       const zoomDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
       const scrollAnchorRef = useRef<ScrollAnchor | null>(null);
       const pendingScrollRestoreRef = useRef(false);
+      // 宽度拖拽期间复用的会话锚点：只在拖拽的开始捕获一次，
+      // 拖拽过程中复用，避免把被浏览器 clamp 过的 scrollTop 吸收进数学。
       const resizeAnchorRef = useRef<{
         page: number;
         within: number;
         width: number;
       } | null>(null);
+      const lastResizeTsRef = useRef(0);
+      const resizeSessionTimerRef = useRef<
+        ReturnType<typeof setTimeout> | null
+      >(null);
       const committedScaleRef = useRef(initialScale);
       const visualScaleRef = useRef(initialScale);
       const listWidthRef = useRef(0);
@@ -233,6 +239,9 @@ const MemoizedPDFPreview = React.memo(
         return () => {
           if (zoomDebounceRef.current) {
             clearTimeout(zoomDebounceRef.current);
+          }
+          if (resizeSessionTimerRef.current) {
+            clearTimeout(resizeSessionTimerRef.current);
           }
         };
       }, []);
@@ -390,7 +399,6 @@ const MemoizedPDFPreview = React.memo(
       React.useLayoutEffect(() => {
         const widthAnchor = resizeAnchorRef.current;
         if (widthAnchor && !scrollAnchorRef.current) {
-          resizeAnchorRef.current = null;
           pendingScrollRestoreRef.current = false;
           const el = virtualListRef.current?.element;
           if (!el) {
@@ -575,7 +583,11 @@ const MemoizedPDFPreview = React.memo(
       const onResize = (size: Size) => {
         const nextWidth = size.width ?? 0;
         const prevWidth = listWidthRef.current;
+        const now = Date.now();
+        const isNewSession =
+          !resizeAnchorRef.current || now - lastResizeTsRef.current > 300;
         if (
+          isNewSession &&
           prevWidth > 0 &&
           nextWidth > 0 &&
           Math.abs(nextWidth - prevWidth) > 1
@@ -608,6 +620,15 @@ const MemoizedPDFPreview = React.memo(
             }
           }
         }
+        lastResizeTsRef.current = now;
+        if (resizeSessionTimerRef.current) {
+          clearTimeout(resizeSessionTimerRef.current);
+        }
+        resizeSessionTimerRef.current = setTimeout(() => {
+          // 拖拽结束后清空会话锚点，供下一次拖拽重新捕获。
+          resizeAnchorRef.current = null;
+          resizeSessionTimerRef.current = null;
+        }, 300);
         setContainerWidth(nextWidth);
       };
 
