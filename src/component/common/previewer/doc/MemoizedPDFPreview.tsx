@@ -411,15 +411,18 @@ const MemoizedPDFPreview = React.memo(
           el.scrollTop = targetOffset;
           markProgrammaticScroll();
           setCurPdfScrollOffset(el.scrollTop, projId, "resizeRestore");
-          console.debug("[pdf-resize] restore(width) sync", {
-            anchor: widthAnchor,
-            containerWidth,
-            scrollTopBefore,
-            targetOffset,
-            scrollTopAfter: el.scrollTop,
-            scrollHeightAfter: el.scrollHeight,
-            clientHeight: el.clientHeight,
-          });
+          console.debug(
+            "[pdf-resize] restore(width) sync " +
+              JSON.stringify({
+                anchor: widthAnchor,
+                containerWidth,
+                scrollTopBefore,
+                targetOffset,
+                scrollTopAfter: el.scrollTop,
+                scrollHeightAfter: el.scrollHeight,
+                clientHeight: el.clientHeight,
+              })
+          );
 
           let attempts = 0;
           const maxAttempts = 20;
@@ -434,12 +437,15 @@ const MemoizedPDFPreview = React.memo(
               return;
             }
             const settled = Math.abs(elCur.scrollTop - targetOffset) <= 1;
-            console.debug("[pdf-resize] restoreSettled(width)", {
-              targetOffset,
-              scrollTop: elCur.scrollTop,
-              settled,
-              attempts,
-            });
+            console.debug(
+              "[pdf-resize] restoreSettled(width) " +
+                JSON.stringify({
+                  targetOffset,
+                  scrollTop: elCur.scrollTop,
+                  settled,
+                  attempts,
+                })
+            );
             if (!settled && ++attempts < maxAttempts) {
               elCur.scrollTop = targetOffset;
               markProgrammaticScroll();
@@ -578,17 +584,20 @@ const MemoizedPDFPreview = React.memo(
           if (scrollEl) {
             const capturedScrollTop = scrollEl.scrollTop;
             const topPage = findTopPageAt(capturedScrollTop, prevWidth);
-            console.debug("[pdf-resize] onResize", {
-              prevWidth,
-              nextWidth,
-              capturedScrollTop,
-              topPage,
-              clientHeight: scrollEl.clientHeight,
-              scrollHeight: scrollEl.scrollHeight,
-              // DOM 容器实际宽度：用于核对 listWidthRef(prevWidth) 是否与
-              // 真实已渲染布局一致（判断捕获时机是否已落后于渲染）。
-              elOffsetWidth: scrollEl.offsetWidth,
-            });
+            console.debug(
+              "[pdf-resize] onResize " +
+                JSON.stringify({
+                  prevWidth,
+                  nextWidth,
+                  capturedScrollTop,
+                  topPage,
+                  clientHeight: scrollEl.clientHeight,
+                  scrollHeight: scrollEl.scrollHeight,
+                  // DOM 容器实际宽度：用于核对 listWidthRef(prevWidth) 是否与
+                  // 真实已渲染布局一致（判断捕获时机是否已落后于渲染）。
+                  elOffsetWidth: scrollEl.offsetWidth,
+                })
+            );
             if (topPage) {
               resizeAnchorRef.current = {
                 page: topPage.page,
