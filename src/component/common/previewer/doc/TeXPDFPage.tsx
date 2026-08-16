@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useLayoutEffect } from "react";
 import { Page } from "react-pdf";
 import styles from "./TeXPDFPage.module.css";
 import { PageViewport } from "pdfjs-dist";
@@ -46,15 +46,16 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
   // 交互期（缩放/拖宽）只改 visualScale / width，不动 Page 的 scale/width，
   // 使 canvas 保持同一 key，避免 react-pdf 重挂载 canvas 导致闪烁。
   const widthRatio = renderWidth > 0 ? width / renderWidth : 1;
-  const transformRatio = (visualScale / pdfScale) * widthRatio;
-  const isVisualZoom = Math.abs(transformRatio - 1) > 0.001;
+  const zoomRatio = pdfScale > 0 ? visualScale / pdfScale : 1;
+  const transformRatio = zoomRatio * widthRatio;
+  const isVisualZoom = Math.abs(zoomRatio - 1) > 0.001;
 
   // 提交 key（scale 或 renderWidth 变化）→ 显示旧画面快照，
   // 直到新 canvas 渲染完成，覆盖 react-pdf 重挂载+隐藏绘制导致的空白窗口。
   const renderKey = `${pdfScale}|${renderWidth}`;
   const prevRenderKeyRef = useRef(renderKey);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (prevRenderKeyRef.current !== renderKey) {
       prevRenderKeyRef.current = renderKey;
       if (bufferReadyRef.current) {
@@ -197,14 +198,24 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
       <div
         ref={pageContentRef}
         className={styles.pageContent}
-        style={
-          isVisualZoom
+        style={{
+          ...(isVisualZoom
             ? {
                 transform: `scale(${transformRatio})`,
                 transformOrigin: "top center",
               }
-            : undefined
-        }
+            : {}),
+          // buffer 显示期间 canvas 正在重建，内容可能塌陷；
+          // 显式撑出行高（除以 transformRatio 抵消 scale 后视觉高度一致）。
+          ...(showBuffer
+            ? {
+                minHeight:
+                  transformRatio > 0.01
+                    ? `${height / transformRatio}px`
+                    : `${height}px`,
+              }
+            : {}),
+        }}
       >
         {/* 常驻缓冲 canvas：卸载会丢失已绘制的快照。``通过 visibility 控制显隐 */}
         <canvas
