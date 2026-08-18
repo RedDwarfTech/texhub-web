@@ -8,8 +8,8 @@
     * https://stackoverflow.com/questions/77550806/is-it-possible-to-make-the-html-children-div-element-width-not-greater-than-than
     **/
     /*justify-content: center;*/
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
     flex-direction: column;
     flex: 1;
 }

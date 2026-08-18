@@ -812,8 +812,8 @@ const MemoizedPDFPreview = React.memo(
                   ref={divRef}
                   className={getDynStyles(viewModel)}
                   style={{
-                    height: viewModel === "fullscreen" ? "100%" : "100vh",
-                    width: viewModel === "fullscreen" ? "100%" : "100vw",
+                    height: "100%",
+                    width: "100%",
                     display: "flex",
                     flexDirection: "column",
                     overflow: "hidden",

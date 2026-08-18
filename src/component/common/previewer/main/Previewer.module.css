@@ -3,12 +3,11 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  height: 96vh;
   overflow: hidden;
 }
 
 .pdfPreviewContainer {
-  height: 100vh;
+  height: 100%;
 }
 
 .fcPdfPreviewContainer {
