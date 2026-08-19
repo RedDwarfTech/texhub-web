@@ -34,6 +34,7 @@ import {
   clearCurSubDoc,
   clearEditorInstance,
   clearSocketIOProvider,
+  forceSetCurSubDoc,
   isWsProviderConnected,
   isWsProviderReady,
   setCurRootYDoc,
@@ -47,6 +48,9 @@ import {
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { recordEditorViewUpdate } from "@/service/editor/EditorUpdateHistory";
 import { toast } from "react-toastify";
+
+// 文件切换时协作连接未就绪：等待窗口内自动切换，超时后恢复原提示。
+const FILE_SWITCH_WAIT_WS_TIMEOUT_MS = 15000;
 
 export type EditorProps = {
   projectId: string;
@@ -103,6 +107,11 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   React.useEffect(() => {
     return () => {
+      if (pendingSwitchTimerRef.current) {
+        clearTimeout(pendingSwitchTimerRef.current);
+        pendingSwitchTimerRef.current = null;
+      }
+      pendingSwitchDocRef.current = null;
       // try to delete the last state project info to avoid websocket connect to previous project through main file id
       delProjInfo();
       clearEditorInstance();
@@ -116,12 +125,35 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const loadedDocGuidRef = useRef<string | null>(null);
   const loadedDocRef = useRef<Y.Doc | null>(null);
   const editorViewRef = useRef<EditorView | undefined>();
+  const pendingSwitchDocRef = useRef<Y.Doc | null>(null);
+  const pendingSwitchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
 
   React.useEffect(() => {
     if (editorView && !BaseMethods.isNull(editorView) && editorView.state) {
       editorViewRef.current = editorView;
     }
   }, [editorView]);
+
+  React.useEffect(() => {
+    if (wsConnState !== "connected") {
+      return;
+    }
+    if (!pendingSwitchDocRef.current) {
+      return;
+    }
+    const pendingDoc = pendingSwitchDocRef.current;
+    pendingSwitchDocRef.current = null;
+    if (pendingSwitchTimerRef.current) {
+      clearTimeout(pendingSwitchTimerRef.current);
+      pendingSwitchTimerRef.current = null;
+    }
+    logger.info("ws ready, apply deferred file switch", {
+      guid: pendingDoc.guid,
+    });
+    forceSetCurSubDoc(pendingDoc);
+  }, [wsConnState]);
 
   React.useEffect(() => {
     if (BaseMethods.isNull(curSubYDoc) || !curSubYDoc.guid) {
@@ -168,8 +200,18 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     }
 
     if (!isWsProviderReady(texEditorSocketIOWs)) {
-      logger.error("texEditorSocketIOWs is not ready");
-      toast.warning(t("tips_file_switch_failed_ws"));
+      logger.warn("texEditorSocketIOWs is not ready, defer file switch", {
+        guid,
+      });
+      pendingSwitchDocRef.current = targetDoc;
+      if (pendingSwitchTimerRef.current) {
+        clearTimeout(pendingSwitchTimerRef.current);
+      }
+      pendingSwitchTimerRef.current = setTimeout(() => {
+        pendingSwitchDocRef.current = null;
+        pendingSwitchTimerRef.current = null;
+        toast.warning(t("tips_file_switch_failed_ws"));
+      }, FILE_SWITCH_WAIT_WS_TIMEOUT_MS);
       return;
     }
 
