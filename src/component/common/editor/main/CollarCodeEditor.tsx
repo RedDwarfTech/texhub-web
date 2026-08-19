@@ -47,6 +47,7 @@ import {
 } from "@/service/editor/CollarEditorSocketIOService";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
 import { recordEditorViewUpdate } from "@/service/editor/EditorUpdateHistory";
+import { reportFileSwitchFailed } from "@/service/log/SystemLogService";
 import { toast } from "react-toastify";
 
 // 文件切换时协作连接未就绪：等待窗口内自动切换，超时后恢复原提示。
@@ -211,6 +212,13 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         pendingSwitchDocRef.current = null;
         pendingSwitchTimerRef.current = null;
         toast.warning(t("tips_file_switch_failed_ws"));
+        reportFileSwitchFailed({
+          projectId: props.projectId,
+          guid,
+          provider: texEditorSocketIOWs,
+          pendingGuid: targetDoc.guid,
+          reason: "ws not ready, file switch wait timeout",
+        });
       }, FILE_SWITCH_WAIT_WS_TIMEOUT_MS);
       return;
     }
@@ -443,6 +451,11 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     const loadFile = resolveLoadFile(info);
     if (!loadFile?.file_id) {
       toast.warning(t("tips_file_switch_failed_ws"));
+      reportFileSwitchFailed({
+        projectId: props.projectId,
+        provider: texEditorSocketIOWs,
+        reason: "manual reconnect, no loadable file",
+      });
       return;
     }
 
@@ -453,6 +466,11 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       logger.error("manual ws reconnect failed", err);
       setWsConnState("disconnected");
       toast.error(t("tips_file_switch_failed_ws"));
+      reportFileSwitchFailed({
+        projectId: props.projectId,
+        provider: texEditorSocketIOWs,
+        reason: "manual reconnect failed",
+      });
     }
   };
 
