@@ -60,29 +60,14 @@ function collectWsInfo(provider: any): Record<string, any> {
 
 /**
  * 探测 texhub-broadcast 服务的健康状态（healthz / ready），带超时。
+ * 已迁移到后端：由 infra-server 保存日志时从内网主动探测，
+ * 服务状态接口不对外暴露，前端不再直接访问。
+ * @deprecated 服务状态探测已移至后端（system_log_service::probe_related_services）
  */
-async function probeBroadcastHealth(): Promise<Record<string, any>> {
-  const socketUrl = readConfig("socketUrl");
-  if (!socketUrl) {
-    return { unavailable: "socketUrl not configured" };
-  }
-  // socketUrl 形如 wss://socket.poemhub.top 或 https://socket.poemhub.top/xxx
-  const httpBase = socketUrl.replace(/^wss?:\/\//, "https://").replace(/\/+$/, "");
-  const probePath = (path: string): Promise<Record<string, unknown>> =>
-    fetch(`${httpBase}${path}`, { signal: AbortSignal.timeout(5000) })
-      .then((res) => ({ status: res.status, ok: res.ok }))
-      .catch((e: any) => ({ error: String(e?.message ?? e) }));
-
-  const [healthz, ready] = await Promise.all([
-    probePath("/health/healthz"),
-    probePath("/health/ready"),
-  ]);
-  return { socketUrl, healthz, ready };
-}
 
 /**
- * 汇总文件切换 / 协作连接失败时的上下文、WebSocket 连接信息与
- * texhub-broadcast 服务状态，并上报到系统日志接口。
+ * 汇总文件切换 / 协作连接失败时的上下文与 WebSocket 连接信息，
+ * 上报到系统日志接口；关联服务（texhub-broadcast）状态由后端探测并合并入库。
  */
 export async function reportFileSwitchFailed(context: {
   projectId: string;
@@ -110,7 +95,6 @@ export async function reportFileSwitchFailed(context: {
     autoReconnectInProgress: isAutoReconnectInProgress(),
     pendingGuid: context.pendingGuid ?? null,
     ws: collectWsInfo(context.provider ?? projEditor.texEditorSocketIOWs),
-    broadcast: await probeBroadcastHealth(),
     editorViewUpdates: getRecentEditorViewUpdates(10),
   };
 
