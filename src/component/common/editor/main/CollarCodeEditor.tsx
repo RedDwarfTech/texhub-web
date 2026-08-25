@@ -43,6 +43,7 @@ import {
 } from "@/service/project/editor/EditorService";
 import {
   COLLABORATION_RECONNECT_EXHAUSTED_EVENT,
+  COLLABORATION_WS_READY_EVENT,
   reconnectCollaboration,
 } from "@/service/editor/CollarEditorSocketIOService";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
@@ -50,8 +51,11 @@ import { recordEditorViewUpdate } from "@/service/editor/EditorUpdateHistory";
 import { reportFileSwitchFailed } from "@/service/log/SystemLogService";
 import { toast } from "react-toastify";
 
-// 文件切换时协作连接未就绪：等待窗口内自动切换，超时后恢复原提示。
+// 文件切换时协作连接未就绪：等待窗口内自动切换；超时仅提示，
+// pending 保留，由 connect 事件/轮询在连接恢复后自动补切。
 const FILE_SWITCH_WAIT_WS_TIMEOUT_MS = 15000;
+// 轮询兜底间隔：即使就绪事件丢失，也能在该周期内完成延迟切换
+const FILE_SWITCH_PENDING_POLL_INTERVAL_MS = 2000;
 
 export type EditorProps = {
   projectId: string;
@@ -137,14 +141,19 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     }
   }, [editorView]);
 
-  React.useEffect(() => {
-    if (wsConnState !== "connected") {
-      return;
-    }
-    if (!pendingSwitchDocRef.current) {
-      return;
-    }
+  /**
+   * 电平触发的延迟切换应用：只要连接就绪且存在 pending 文档就立即执行，
+   * 不依赖 Redux 状态"迁移"这一一次性边沿（迁移丢失会导致永远无法恢复）。
+   * 返回是否执行了切换。
+   */
+  const applyPendingSwitch = (): boolean => {
     const pendingDoc = pendingSwitchDocRef.current;
+    if (!pendingDoc) {
+      return false;
+    }
+    if (!isWsProviderReady(texEditorSocketIOWs)) {
+      return false;
+    }
     pendingSwitchDocRef.current = null;
     if (pendingSwitchTimerRef.current) {
       clearTimeout(pendingSwitchTimerRef.current);
@@ -154,7 +163,38 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
       guid: pendingDoc.guid,
     });
     forceSetCurSubDoc(pendingDoc);
+    return true;
+  };
+
+  React.useEffect(() => {
+    if (wsConnState !== "connected") {
+      return;
+    }
+    applyPendingSwitch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wsConnState]);
+
+  // 引擎级 connect 建链就绪事件：比 status 链路可靠，立即补切
+  React.useEffect(() => {
+    const onWsReady = () => {
+      applyPendingSwitch();
+    };
+    window.addEventListener(COLLABORATION_WS_READY_EVENT, onWsReady);
+    return () => {
+      window.removeEventListener(COLLABORATION_WS_READY_EVENT, onWsReady);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [texEditorSocketIOWs]);
+
+  // 轮询兜底：即使就绪事件因任何原因丢失，周期内也能完成延迟切换；
+  // 无 pending 时仅做一次引用判空，开销可忽略。
+  React.useEffect(() => {
+    const intervalId = setInterval(() => {
+      applyPendingSwitch();
+    }, FILE_SWITCH_PENDING_POLL_INTERVAL_MS);
+    return () => clearInterval(intervalId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [texEditorSocketIOWs]);
 
   React.useEffect(() => {
     if (BaseMethods.isNull(curSubYDoc) || !curSubYDoc.guid) {
@@ -209,8 +249,9 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         clearTimeout(pendingSwitchTimerRef.current);
       }
       pendingSwitchTimerRef.current = setTimeout(() => {
-        pendingSwitchDocRef.current = null;
         pendingSwitchTimerRef.current = null;
+        // 保留 pendingSwitchDocRef：连接恢复后由 WS_READY 事件/轮询自动补切，
+        // 此处仅提示用户网络曾中断过。
         toast.warning(t("tips_file_switch_failed_ws"));
         reportFileSwitchFailed({
           projectId: props.projectId,
@@ -221,6 +262,14 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
         });
       }, FILE_SWITCH_WAIT_WS_TIMEOUT_MS);
       return;
+    }
+
+    // gate 已通过：本次切换立即执行，撤销遗留的 defer 状态与兜底定时器，
+    // 防止稍后幽灵弹窗/重复补切。
+    pendingSwitchDocRef.current = null;
+    if (pendingSwitchTimerRef.current) {
+      clearTimeout(pendingSwitchTimerRef.current);
+      pendingSwitchTimerRef.current = null;
     }
 
     let ytext = targetDoc.getText(targetDoc.guid);

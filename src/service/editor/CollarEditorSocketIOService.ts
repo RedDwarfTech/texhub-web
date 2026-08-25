@@ -60,6 +60,13 @@ let manualReconnectRequired = false;
 export const COLLABORATION_RECONNECT_EXHAUSTED_EVENT =
   "texhub:collaboration-reconnect-exhausted";
 
+/**
+ * 协作 WebSocket 每次真实建链（含重连成功）时广播的就绪事件。
+ * 库内仅在新建 socket 时 emit 一次 status:"connected"，重连场景可能丢失；
+ * 引擎级 "connect" 事件每次建链都会触发，以此为准驱动依赖方恢复。
+ */
+export const COLLABORATION_WS_READY_EVENT = "texhub:collaboration-ws-ready";
+
 export function isManualReconnectRequired(): boolean {
   return manualReconnectRequired;
 }
@@ -117,6 +124,14 @@ function attachProviderReconnectHooks(provider: SocketIOClientProvider) {
   hookedSockets.add(socket);
   socket.on("disconnect", () => {
     onCollaborationDisconnected(provider);
+  });
+  // socket.io v4 的 Socket 每次真实建链（含重连成功）都会 emit "connect"。
+  // 这里直接以它为准纠正 Redux 连接状态（不再单纯依赖库的 status 链路，
+  // 该链路在断线场景已知不可靠），并广播就绪事件供延迟任务恢复。
+  socket.on("connect", () => {
+    resetAutoReconnectState();
+    setWsConnState("connected");
+    window.dispatchEvent(new CustomEvent(COLLABORATION_WS_READY_EVENT));
   });
 }
 
