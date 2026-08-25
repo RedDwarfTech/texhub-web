@@ -277,28 +277,6 @@ const MemoizedPDFPreview = React.memo(
         };
       }, []);
 
-      // PDF 重载恢复：viewports + containerWidth 都就绪后，拉回编译前的滚动位置。
-      React.useEffect(() => {
-        if (
-          pendingReloadRestoreRef.current === null ||
-          !pageViewports ||
-          containerWidth <= 0
-        ) {
-          return;
-        }
-        const targetOffset = pendingReloadRestoreRef.current;
-        pendingReloadRestoreRef.current = null;
-        requestAnimationFrame(() => {
-          const el = virtualListRef.current?.element;
-          if (!el) {
-            return;
-          }
-          const max = el.scrollHeight - el.clientHeight;
-          const clamped = Math.min(targetOffset, Math.max(0, max));
-          scrollToOffset(clamped, virtualListRef, projId);
-        });
-      }, [pageViewports, containerWidth, virtualListRef, projId]);
-
       React.useEffect(() => {
         // pdf 更换：在 List 卸载（pageViewports→undefined）前捕获滚动位置，
         // 待新 viewports 就绪后恢复到原处，避免编译重载后跳回第一页。
@@ -775,6 +753,22 @@ const MemoizedPDFPreview = React.memo(
           resizeSessionTimerRef.current = null;
         }, 300);
         setContainerWidth(nextWidth);
+
+        // PDF 重载恢复：AutoSizer 已测量、List 即将以正确行高重绘，
+        // 此时 rAF 等待下一帧（DOM commit + paint）后恢复滚动位置。
+        if (pendingReloadRestoreRef.current !== null && nextWidth > 0) {
+          const targetOffset = pendingReloadRestoreRef.current;
+          pendingReloadRestoreRef.current = null;
+          requestAnimationFrame(() => {
+            const el = virtualListRef.current?.element;
+            if (!el) {
+              return;
+            }
+            const max = el.scrollHeight - el.clientHeight;
+            const clamped = Math.min(targetOffset, Math.max(0, max));
+            scrollToOffset(clamped, virtualListRef, projId);
+          });
+        }
 
         // 渲染宽度防抖提交：拖拽期间保持 canvas 不动（CSS 拉伸跟随），
         // 松手后先预渲染"新宽度"正确布局位图，再提交，
