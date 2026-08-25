@@ -125,6 +125,8 @@ const MemoizedPDFPreview = React.memo(
       const committedScaleRef = useRef(initialScale);
       const visualScaleRef = useRef(initialScale);
       const listWidthRef = useRef(0);
+      // PDF 重载（编译后）时，在 List 卸载前捕获滚动偏移，待新 viewports 就绪后拉回。
+      const pendingReloadRestoreRef = useRef<number | null>(null);
       // 预渲染：防抖到期后先按"新宽度"离屏渲染可见页的正确布局位图，
       // 再提交 renderWidth。提交时 react-pdf 会重建 canvas + TextLayer + Annotation
       // （pageKey = pageIndex@scale 变化导致卸载重挂），窗口期页面内容
@@ -262,6 +264,7 @@ const MemoizedPDFPreview = React.memo(
 
       React.useEffect(() => {
         return () => {
+          pendingReloadRestoreRef.current = null;
           if (zoomDebounceRef.current) {
             clearTimeout(zoomDebounceRef.current);
           }
@@ -274,8 +277,37 @@ const MemoizedPDFPreview = React.memo(
         };
       }, []);
 
+      // PDF 重载恢复：viewports + containerWidth 都就绪后，拉回编译前的滚动位置。
       React.useEffect(() => {
-        // pdf 更换：预渲染缓存与可见范围全部失效。
+        if (
+          pendingReloadRestoreRef.current === null ||
+          !pageViewports ||
+          containerWidth <= 0
+        ) {
+          return;
+        }
+        const targetOffset = pendingReloadRestoreRef.current;
+        pendingReloadRestoreRef.current = null;
+        requestAnimationFrame(() => {
+          const el = virtualListRef.current?.element;
+          if (!el) {
+            return;
+          }
+          const max = el.scrollHeight - el.clientHeight;
+          const clamped = Math.min(targetOffset, Math.max(0, max));
+          scrollToOffset(clamped, virtualListRef, projId);
+        });
+      }, [pageViewports, containerWidth, virtualListRef, projId]);
+
+      React.useEffect(() => {
+        // pdf 更换：在 List 卸载（pageViewports→undefined）前捕获滚动位置，
+        // 待新 viewports 就绪后恢复到原处，避免编译重载后跳回第一页。
+        const scrollEl = virtualListRef.current?.element;
+        if (scrollEl && pdf) {
+          pendingReloadRestoreRef.current = scrollEl.scrollTop;
+        }
+
+        // 预渲染缓存与可见范围全部失效。
         prerenderGenRef.current++;
         prerenderMapRef.current = new Map();
         prerenderWidthRef.current = 0;
