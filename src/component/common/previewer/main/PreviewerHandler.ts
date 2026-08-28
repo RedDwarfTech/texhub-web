@@ -8,13 +8,13 @@ import {
 } from "@/service/project/ProjectService";
 import { toast } from "react-toastify";
 import i18n from "i18next";
-import { getAccessToken } from "../../cache/Cache";
 import { getPreviewUrl } from "@/service/file/FileService";
 import { ResponseHandler } from "rdjs-wheel";
 import { scrollToOffset } from "../doc/PDFPreviewHandle";
 import { ListImperativeAPI } from "react-window";
 import { readConfig } from "@/config/app/config-reader";
 import { SocketIOClientProvider } from "texhub-broadcast";
+import { buildPdfHttpHeaders } from "@/config/pdf/PdfJsConfig";
 
 /**
  * get the source location by pdf file position
@@ -70,13 +70,12 @@ export const debugApp = (
 
 export const handleOpenInBrowser = (projectId: string) => {
   if (projectId) {
-    let accessToken = getAccessToken();
     let url = "/tex/file/pdf/full?proj_id=" + projectId;
     fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + accessToken,
+        ...buildPdfHttpHeaders(),
       },
     })
       .then((response) => response.blob())
@@ -96,12 +95,9 @@ export const handleDownloadPdf = async (pdfUrl: string) => {
     return;
   }
   try {
-    let accessToken = getAccessToken();
     const response = await fetch(pdfUrl, {
       method: "GET",
-      headers: {
-        Authorization: "Bearer " + accessToken,
-      },
+      headers: buildPdfHttpHeaders(),
     });
     const blob = await response.blob();
     const downloadUrl = window.URL.createObjectURL(new Blob([blob]));

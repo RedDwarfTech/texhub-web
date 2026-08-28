@@ -1,12 +1,16 @@
 import { pdfjs } from "react-pdf";
+import { v4 as uuid } from "uuid";
 import { getAccessToken } from "@/component/common/cache/Cache";
 import { Options } from "react-pdf/dist/shared/types.js";
 
+export const buildPdfHttpHeaders = (): Record<string, string> => ({
+  Authorization: "Bearer " + getAccessToken(),
+  "x-request-id": uuid(),
+});
+
 export const pdfJsOptions: Options = {
   cMapUrl: `/pdfjs-dist/${pdfjs.version}/cmaps/`,
-  httpHeaders: {
-    Authorization: "Bearer " + getAccessToken(),
-  },
+  httpHeaders: buildPdfHttpHeaders(),
   // open the range request
   // the default value was false
   // if want to load the whole pdf by default
@@ -26,9 +30,7 @@ export const pdfJsOptions: Options = {
 export const getPdfjsOptionsLegacy = (): Options => {
   return {
     cMapUrl: `/pdfjs-dist/${pdfjs.version}/cmaps/`,
-    httpHeaders: {
-      Authorization: "Bearer " + getAccessToken(),
-    },
+    httpHeaders: buildPdfHttpHeaders(),
     // open the range request
     // the default value was false
     // if want to load the whole pdf by default
@@ -58,9 +60,7 @@ export const getPdfjsOptions = (): Options => {
   cachedOptions = {
     cMapUrl: `/pdfjs-dist/${pdfjs.version}/web/cmaps/`,
     standardFontDataUrl: "/standard_fonts/",
-    httpHeaders: {
-      Authorization: "Bearer " + getAccessToken(),
-    },
+    httpHeaders: buildPdfHttpHeaders(),
     disableRange: false,
     disableAutoFetch: true,
     rangeChunkSize: 65536 * 5,

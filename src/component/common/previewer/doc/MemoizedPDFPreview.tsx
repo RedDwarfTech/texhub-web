@@ -38,7 +38,11 @@ import { setProjAttr } from "@/service/project/ProjectService";
 import TeXPDFPage from "./TeXPDFPage";
 import { PdfPosition } from "@/model/proj/pdf/PdfPosition";
 import { getAccessToken } from "../../cache/Cache";
-import { authTokenEquals, getAuthorization } from "@/config/pdf/PdfJsConfig";
+import {
+  authTokenEquals,
+  buildPdfHttpHeaders,
+  getAuthorization,
+} from "@/config/pdf/PdfJsConfig";
 import {
   captureScrollAnchor,
   restoreScrollFromAnchor,
@@ -802,9 +806,7 @@ const MemoizedPDFPreview = React.memo(
         getAuthorization(pdfOptions.httpHeaders) !==
           "Bearer " + getAccessToken()
       ) {
-        pdfOptions.httpHeaders = {
-          Authorization: "Bearer " + getAccessToken(),
-        };
+        pdfOptions.httpHeaders = buildPdfHttpHeaders();
       }
 
       return (

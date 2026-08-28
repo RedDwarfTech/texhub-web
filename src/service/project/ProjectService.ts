@@ -35,6 +35,7 @@ import { CompileResultType } from "@/model/proj/compile/CompileResultType";
 import { PreviewActionType } from "@/redux/action/project/preview/PreviewAction";
 import { getSSEBatchProcessor } from "@/redux/store/middleware/SSEMiddleware";
 import { SSEMessage } from "rdjs-wheel";
+import { v4 as uuid } from "uuid";
 import { COMPILE_CLEAR_MARKER } from "@/model/proj/compile/CompileLogMarkers";
 
 export function getProjectList(req: QueryProjReq) {
@@ -348,6 +349,8 @@ export function doCompile(params: CompileProjLog) {
   var queryString = Object.keys(params)
     .map((key) => key + "=" + params[key as keyof CompileProjLog])
     .join("&");
+  // EventSource cannot set custom headers; pass x-request-id in query like access_token.
+  queryString += "&x-request-id=" + uuid();
   let eventNative = new EventSource(
     "/tex/project/compile/log/stream?" + queryString
   );
