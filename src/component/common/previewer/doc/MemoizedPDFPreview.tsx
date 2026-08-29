@@ -26,7 +26,9 @@ import { asyncMap } from "@wojtekmaj/async-array-utils";
 import { AutoSizer, Size } from "react-virtualized-auto-sizer";
 import { PDFPreviewProps } from "@/model/props/proj/pdf/PDFPreviewProps";
 import {
+  getCurPdfPage,
   getCurPdfScale,
+  getCurPdfScrollOffset,
   getCurPdfScrollOffsetSession,
   setAndDispatchPdfPage,
   setCurPdfScale,
@@ -129,8 +131,24 @@ const MemoizedPDFPreview = React.memo(
       const committedScaleRef = useRef(initialScale);
       const visualScaleRef = useRef(initialScale);
       const listWidthRef = useRef(0);
-      // PDF 重载（编译后）时，在 List 卸载前捕获滚动偏移，待新 viewports 就绪后拉回。
-      const pendingReloadRestoreRef = useRef<number | null>(null);
+      // PDF 重载（编译后）时，在 List 卸载前捕获页内位置，待新 viewports 就绪后拉回。
+      // 用页码 + 页内比例而不是像素 offset：编译后页面高度可能变化，像素会错位；
+      // 若在 scrollHeight 未就绪时按 max 做 clamp，还会被压回第一页。
+      type PdfScrollSnapshot = {
+        offset: number;
+        page: number;
+        ratio: number;
+      };
+      const pendingReloadRestoreRef = useRef<PdfScrollSnapshot | null>(null);
+      const liveScrollRef = useRef<PdfScrollSnapshot>({
+        offset: 0,
+        page: 0,
+        ratio: 0,
+      });
+      const prevPdfUrlRef = useRef(curPdfUrl);
+      const isReloadingPdfRef = useRef(false);
+      const reloadGenRef = useRef(0);
+      const restoredGenRef = useRef(0);
       // 预渲染：防抖到期后先按"新宽度"离屏渲染可见页的正确布局位图，
       // 再提交 renderWidth。提交时 react-pdf 会重建 canvas + TextLayer + Annotation
       // （pageKey = pageIndex@scale 变化导致卸载重挂），窗口期页面内容
@@ -146,16 +164,23 @@ const MemoizedPDFPreview = React.memo(
       committedScaleRef.current = committedScale;
       visualScaleRef.current = visualScale;
 
-      const restoreScrollAfterZoom = useCallback(
-        (targetOffset: number) => {
+      const restoreScrollWithRetry = useCallback(
+        (targetOffset: number, source: string) => {
           zoomScrollGuardRef.current = {
             target: targetOffset,
-            until: Date.now() + 2000,
+            until: Date.now() + 2500,
           };
           suppressRowsRenderedRef.current = true;
 
           let attempts = 0;
-          const maxAttempts = 20;
+          const maxAttempts = 40;
+
+          const finish = () => {
+            isReloadingPdfRef.current = false;
+            setTimeout(() => {
+              suppressRowsRenderedRef.current = false;
+            }, 300);
+          };
 
           const tryRestore = () => {
             const el = virtualListRef.current?.element;
@@ -163,11 +188,13 @@ const MemoizedPDFPreview = React.memo(
               if (++attempts < maxAttempts) {
                 requestAnimationFrame(tryRestore);
               } else {
-                suppressRowsRenderedRef.current = false;
+                finish();
               }
               return;
             }
 
+            // 不要用当前 max scroll 去 clamp：List 刚挂载时 scrollHeight 往往
+            // 仍约等于 clientHeight，clamp 会把目标偏移压成 0，看起来像回到第一页。
             el.scrollTop = targetOffset;
             markProgrammaticScroll();
             const settled = Math.abs(el.scrollTop - targetOffset) <= 1;
@@ -175,10 +202,8 @@ const MemoizedPDFPreview = React.memo(
             if (!settled && ++attempts < maxAttempts) {
               requestAnimationFrame(tryRestore);
             } else {
-              setCurPdfScrollOffset(el.scrollTop, projId, "zoomRestore");
-              setTimeout(() => {
-                suppressRowsRenderedRef.current = false;
-              }, 300);
+              setCurPdfScrollOffset(el.scrollTop, projId, source);
+              finish();
             }
           };
 
@@ -269,6 +294,7 @@ const MemoizedPDFPreview = React.memo(
       React.useEffect(() => {
         return () => {
           pendingReloadRestoreRef.current = null;
+          isReloadingPdfRef.current = false;
           if (zoomDebounceRef.current) {
             clearTimeout(zoomDebounceRef.current);
           }
@@ -281,40 +307,90 @@ const MemoizedPDFPreview = React.memo(
         };
       }, []);
 
-      // PDF 重载入口捕获滚动偏移：curPdfUrl 一变，react-pdf 的
+      // PDF 重载入口捕获滚动位置：curPdfUrl 一变，react-pdf 的
       // resetDocument 会在 passive effect 里把 pdf 置 undefined，导致
       // children（List）卸载、滚动位置从 DOM 上丢失。因此在同一提交的
-      // layout effect 阶段（此时旧 List 仍挂载）抢先捕获，
-      // 待新 viewports 就绪后拉回，避免编译重载后跳回第一页。
+      // layout effect 阶段（此时旧 List 仍挂载）抢先捕获页码+页内比例，
+      // 待新 viewports 就绪后拉回。
       React.useLayoutEffect(() => {
-        const scrollEl = virtualListRef.current?.element;
-        if (scrollEl) {
-          pendingReloadRestoreRef.current = scrollEl.scrollTop;
-        }
-      }, [curPdfUrl, virtualListRef]);
-
-      // PDF 重载恢复：viewports + 已测量的容器宽度都就绪后，把滚动位置
-      // 拉回捕获值（clamp 到最大可滚范围），避免行高未就绪时被压到 0。
-      React.useEffect(() => {
-        if (
-          pendingReloadRestoreRef.current === null ||
-          !pageViewports ||
-          containerWidth <= 0
-        ) {
+        const prevUrl = prevPdfUrlRef.current;
+        prevPdfUrlRef.current = curPdfUrl;
+        if (!prevUrl || prevUrl === curPdfUrl) {
           return;
         }
-        const targetOffset = pendingReloadRestoreRef.current;
-        pendingReloadRestoreRef.current = null;
-        requestAnimationFrame(() => {
-          const el = virtualListRef.current?.element;
-          if (!el) {
-            return;
+
+        const width = listWidthRef.current;
+        const scrollEl = virtualListRef.current?.element;
+        const live = liveScrollRef.current;
+        let snapshot: PdfScrollSnapshot | null = null;
+
+        if (scrollEl && pageViewports && width > 0) {
+          const offset = scrollEl.scrollTop;
+          let acc = 0;
+          let captured = false;
+          for (let i = 0; i < pageViewports.length; i++) {
+            const pageViewport = pageViewports[i];
+            const fitScale = width / pageViewport.width;
+            const pageHeight = pageViewport.height * fitScale * committedScale + 10;
+            if (offset < acc + pageHeight) {
+              snapshot = {
+                offset,
+                page: i,
+                ratio: pageHeight > 0 ? (offset - acc) / pageHeight : 0,
+              };
+              captured = true;
+              break;
+            }
+            acc += pageHeight;
           }
-          const max = el.scrollHeight - el.clientHeight;
-          const clamped = Math.min(targetOffset, Math.max(0, max));
-          scrollToOffset(clamped, virtualListRef, projId);
-        });
-      }, [pageViewports, containerWidth, virtualListRef, projId]);
+          if (!captured && pageViewports.length > 0) {
+            const last = pageViewports.length - 1;
+            const pageViewport = pageViewports[last];
+            const fitScale = width / pageViewport.width;
+            const pageHeight = pageViewport.height * fitScale * committedScale + 10;
+            snapshot = {
+              offset,
+              page: last,
+              ratio: pageHeight > 0 ? Math.min((offset - acc + pageHeight) / pageHeight, 1) : 0,
+            };
+          }
+        }
+
+        if (
+          (!snapshot || snapshot.offset <= 0) &&
+          (live.offset > 0 || live.page > 0)
+        ) {
+          snapshot = { ...live };
+        }
+
+        if (!snapshot || (snapshot.offset <= 0 && snapshot.page <= 0)) {
+          const savedPage = getCurPdfPage(projId);
+          if (savedPage > 1) {
+            snapshot = {
+              offset: getCurPdfScrollOffset(projId),
+              page: savedPage - 1,
+              ratio: 0,
+            };
+          }
+        }
+
+        if (!snapshot) {
+          return;
+        }
+
+        pendingReloadRestoreRef.current = snapshot;
+        isReloadingPdfRef.current = true;
+        suppressRowsRenderedRef.current = true;
+        reloadGenRef.current += 1;
+        // 立刻丢掉旧 viewports，避免新 pdf 对象到达时仍带着旧 viewports
+        // 触发一次“假恢复”并把 pending 消费掉，随后 List 再以 scrollTop=0 重挂。
+        setPageViewports(undefined);
+        if (snapshot.offset > 0) {
+          setCurPdfScrollOffset(snapshot.offset, projId, "reloadCapture");
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps --
+        // 只在 URL 变化时捕获当时的旧 viewports/滚动，不能把 pageViewports 放进 deps。
+      }, [curPdfUrl, projId, virtualListRef]);
 
       React.useEffect(() => {
         // pdf 更换：预渲染缓存与可见范围全部失效。
@@ -390,33 +466,6 @@ const MemoizedPDFPreview = React.memo(
         }
       };
 
-      const handleWindowPdfScroll = (e: React.UIEvent<HTMLDivElement>) => {
-        const scrollEl = e.currentTarget;
-        let scrollOffset = scrollEl.scrollTop;
-
-        const guard = zoomScrollGuardRef.current;
-        if (
-          guard &&
-          Date.now() < guard.until &&
-          scrollOffset < 10 &&
-          guard.target > 50
-        ) {
-          scrollEl.scrollTop = guard.target;
-          markProgrammaticScroll();
-          scrollOffset = guard.target;
-        } else if (guard && Date.now() >= guard.until) {
-          zoomScrollGuardRef.current = null;
-        }
-
-        const docLoadTime = localStorage.getItem("docLoadTime");
-        if (docLoadTime && isMoreThanFiveSeconds(docLoadTime)) {
-          setCurPdfScrollOffset(scrollOffset, projId, "handleWindowPdfScroll");
-          if (viewModel === "fullscreen") {
-            setCurPdfScrollOffsetSession(scrollOffset, projId, viewModel);
-          }
-        }
-      };
-
       const getPageHeight = (pageIndex: number, width: number) => {
         if (!pageViewports) {
           throw new Error("getPageHeight() called too early");
@@ -449,6 +498,98 @@ const MemoizedPDFPreview = React.memo(
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [pageViewports, committedScale]
       );
+
+      const handleWindowPdfScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        const scrollEl = e.currentTarget;
+        let scrollOffset = scrollEl.scrollTop;
+
+        const guard = zoomScrollGuardRef.current;
+        if (
+          guard &&
+          Date.now() < guard.until &&
+          scrollOffset < 10 &&
+          guard.target > 50
+        ) {
+          scrollEl.scrollTop = guard.target;
+          markProgrammaticScroll();
+          scrollOffset = guard.target;
+        } else if (guard && Date.now() >= guard.until) {
+          zoomScrollGuardRef.current = null;
+        }
+
+        // 重载过程中 List 会先以 scrollTop=0 挂载，不能把这次 0 写进 live 快照，
+        // 否则捕获的编译前位置会被覆盖。
+        if (isReloadingPdfRef.current && scrollOffset < 10) {
+          return;
+        }
+
+        const width = listWidthRef.current;
+        const topPage = width > 0 ? findTopPageAt(scrollOffset, width) : null;
+        if (topPage) {
+          const pageHeight = getPageHeight(topPage.page, width);
+          liveScrollRef.current = {
+            offset: scrollOffset,
+            page: topPage.page,
+            ratio: pageHeight > 0 ? topPage.within / pageHeight : 0,
+          };
+        } else if (scrollOffset > 0) {
+          liveScrollRef.current = {
+            ...liveScrollRef.current,
+            offset: scrollOffset,
+          };
+        }
+
+        const docLoadTime = localStorage.getItem("docLoadTime");
+        if (docLoadTime && isMoreThanFiveSeconds(docLoadTime)) {
+          setCurPdfScrollOffset(scrollOffset, projId, "handleWindowPdfScroll");
+          if (viewModel === "fullscreen") {
+            setCurPdfScrollOffsetSession(scrollOffset, projId, viewModel);
+          }
+        }
+      };
+
+      // 新 PDF 的 viewports 就绪后再按页内比例恢复。
+      // 用 reloadGen 保证一次编译只恢复一次，且不会在旧 viewports 上提前消费 pending。
+      React.useEffect(() => {
+        const pending = pendingReloadRestoreRef.current;
+        if (
+          !pending ||
+          !pageViewports ||
+          containerWidth <= 0 ||
+          restoredGenRef.current === reloadGenRef.current
+        ) {
+          return;
+        }
+
+        restoredGenRef.current = reloadGenRef.current;
+        pendingReloadRestoreRef.current = null;
+
+        const maxPage = pageViewports.length - 1;
+        if (maxPage < 0) {
+          isReloadingPdfRef.current = false;
+          suppressRowsRenderedRef.current = false;
+          return;
+        }
+
+        const pageIndex = Math.min(Math.max(pending.page, 0), maxPage);
+        let acc = 0;
+        for (let i = 0; i < pageIndex; i++) {
+          acc += getPageHeight(i, containerWidth);
+        }
+        const pageHeight = getPageHeight(pageIndex, containerWidth);
+        const targetOffset =
+          acc + Math.min(Math.max(pending.ratio, 0), 1) * Math.max(pageHeight - 1, 0);
+
+        if (targetOffset < 1 && pageIndex <= 0) {
+          isReloadingPdfRef.current = false;
+          suppressRowsRenderedRef.current = false;
+          return;
+        }
+
+        restoreScrollWithRetry(targetOffset, "reloadRestore");
+        // eslint-disable-next-line react-hooks/exhaustive-deps --
+        // getPageHeight 随 render 变化；以 pageViewports/containerWidth 作为就绪信号即可。
+      }, [pageViewports, containerWidth, restoreScrollWithRetry]);
 
       const resolveResizeScrollTop = useCallback(
         (
@@ -558,8 +699,8 @@ const MemoizedPDFPreview = React.memo(
           el.clientHeight
         );
         scrollAnchorRef.current = null;
-        restoreScrollAfterZoom(targetOffset);
-      }, [committedScale, containerWidth, resolveResizeScrollTop, restoreScrollAfterZoom, virtualListRef]);
+        restoreScrollWithRetry(targetOffset, "zoomRestore");
+      }, [committedScale, containerWidth, resolveResizeScrollTop, restoreScrollWithRetry, virtualListRef]);
 
       const setAreas = (areas: HighlightArea[]) => {
         setHighlightAreas(areas);
