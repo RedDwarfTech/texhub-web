@@ -89,7 +89,7 @@ export const handleOpenInBrowser = (projectId: string) => {
   }
 };
 
-export const handleDownloadPdf = async (pdfUrl: string) => {
+export const handleDownloadPdf = async (pdfUrl: string, projName?: string) => {
   if (!pdfUrl) {
     toast.error(i18n.t("err_pdf_url_empty"));
     return;
@@ -103,7 +103,10 @@ export const handleDownloadPdf = async (pdfUrl: string) => {
     const downloadUrl = window.URL.createObjectURL(new Blob([blob]));
     const link = document.createElement("a");
     link.href = downloadUrl;
-    link.setAttribute("download", new Date().getTime() + ".pdf");
+    const fileName = projName
+      ? projName.replace(/[\\/:*?"<>|]/g, "_")
+      : new Date().getTime();
+    link.setAttribute("download", fileName + ".pdf");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

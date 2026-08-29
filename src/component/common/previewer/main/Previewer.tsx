@@ -854,7 +854,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
             data-bs-toggle="tooltip"
             title={t("btn_download_pdf")}
             onClick={() => {
-              handleDownloadPdf(curPdfUrl);
+              handleDownloadPdf(curPdfUrl, curProjInfo?.main.proj_name as string);
             }}
           >
             <i className="fa-solid fa-download"></i>
