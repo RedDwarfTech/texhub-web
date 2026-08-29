@@ -1,7 +1,9 @@
 import { ProjInfo } from "@/model/proj/ProjInfo";
 import { QuerySrcPos } from "@/model/request/proj/query/QuerySrcPos";
+import { QueryProjInfo } from "@/model/request/proj/query/QueryProjInfo";
 import { getCurPdfPage } from "@/service/project/preview/PreviewService";
 import {
+  getProjectInfo,
   getSrcPosition,
   getTempAuthCode,
   sendQueueCompileRequest,
@@ -89,10 +91,29 @@ export const handleOpenInBrowser = (projectId: string) => {
   }
 };
 
-export const handleDownloadPdf = async (pdfUrl: string, projName?: string) => {
+export const handleDownloadPdf = async (
+  pdfUrl: string,
+  projName?: string,
+  projectId?: string,
+) => {
   if (!pdfUrl) {
     toast.error(i18n.t("err_pdf_url_empty"));
     return;
+  }
+  let fileName = projName;
+  if (!fileName && projectId) {
+    const req: QueryProjInfo = { project_id: projectId };
+    try {
+      const resp = await getProjectInfo(req);
+      if (ResponseHandler.responseSuccess(resp)) {
+        fileName = resp.result?.main?.proj_name;
+      }
+    } catch (err) {
+      console.error("Error fetching project name for download:", err);
+    }
+  }
+  if (!fileName) {
+    fileName = "project_" + (projectId || new Date().getTime());
   }
   try {
     const response = await fetch(pdfUrl, {
@@ -103,10 +124,10 @@ export const handleDownloadPdf = async (pdfUrl: string, projName?: string) => {
     const downloadUrl = window.URL.createObjectURL(new Blob([blob]));
     const link = document.createElement("a");
     link.href = downloadUrl;
-    const fileName = projName
-      ? projName.replace(/[\\/:*?"<>|]/g, "_")
-      : new Date().getTime();
-    link.setAttribute("download", fileName + ".pdf");
+    link.setAttribute(
+      "download",
+      fileName.replace(/[\\/:*?"<>|]/g, "_") + ".pdf",
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
