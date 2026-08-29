@@ -281,15 +281,43 @@ const MemoizedPDFPreview = React.memo(
         };
       }, []);
 
-      React.useEffect(() => {
-        // pdf 更换：在 List 卸载（pageViewports→undefined）前捕获滚动位置，
-        // 待新 viewports 就绪后恢复到原处，避免编译重载后跳回第一页。
+      // PDF 重载入口捕获滚动偏移：curPdfUrl 一变，react-pdf 的
+      // resetDocument 会在 passive effect 里把 pdf 置 undefined，导致
+      // children（List）卸载、滚动位置从 DOM 上丢失。因此在同一提交的
+      // layout effect 阶段（此时旧 List 仍挂载）抢先捕获，
+      // 待新 viewports 就绪后拉回，避免编译重载后跳回第一页。
+      React.useLayoutEffect(() => {
         const scrollEl = virtualListRef.current?.element;
-        if (scrollEl && pdf) {
+        if (scrollEl) {
           pendingReloadRestoreRef.current = scrollEl.scrollTop;
         }
+      }, [curPdfUrl, virtualListRef]);
 
-        // 预渲染缓存与可见范围全部失效。
+      // PDF 重载恢复：viewports + 已测量的容器宽度都就绪后，把滚动位置
+      // 拉回捕获值（clamp 到最大可滚范围），避免行高未就绪时被压到 0。
+      React.useEffect(() => {
+        if (
+          pendingReloadRestoreRef.current === null ||
+          !pageViewports ||
+          containerWidth <= 0
+        ) {
+          return;
+        }
+        const targetOffset = pendingReloadRestoreRef.current;
+        pendingReloadRestoreRef.current = null;
+        requestAnimationFrame(() => {
+          const el = virtualListRef.current?.element;
+          if (!el) {
+            return;
+          }
+          const max = el.scrollHeight - el.clientHeight;
+          const clamped = Math.min(targetOffset, Math.max(0, max));
+          scrollToOffset(clamped, virtualListRef, projId);
+        });
+      }, [pageViewports, containerWidth, virtualListRef, projId]);
+
+      React.useEffect(() => {
+        // pdf 更换：预渲染缓存与可见范围全部失效。
         prerenderGenRef.current++;
         prerenderMapRef.current = new Map();
         prerenderWidthRef.current = 0;
@@ -757,22 +785,6 @@ const MemoizedPDFPreview = React.memo(
           resizeSessionTimerRef.current = null;
         }, 300);
         setContainerWidth(nextWidth);
-
-        // PDF 重载恢复：AutoSizer 已测量、List 即将以正确行高重绘，
-        // 此时 rAF 等待下一帧（DOM commit + paint）后恢复滚动位置。
-        if (pendingReloadRestoreRef.current !== null && nextWidth > 0) {
-          const targetOffset = pendingReloadRestoreRef.current;
-          pendingReloadRestoreRef.current = null;
-          requestAnimationFrame(() => {
-            const el = virtualListRef.current?.element;
-            if (!el) {
-              return;
-            }
-            const max = el.scrollHeight - el.clientHeight;
-            const clamped = Math.min(targetOffset, Math.max(0, max));
-            scrollToOffset(clamped, virtualListRef, projId);
-          });
-        }
 
         // 渲染宽度防抖提交：拖拽期间保持 canvas 不动（CSS 拉伸跟随），
         // 松手后先预渲染"新宽度"正确布局位图，再提交，
