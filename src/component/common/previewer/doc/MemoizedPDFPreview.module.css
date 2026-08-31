@@ -2,13 +2,14 @@
     flex-grow: 1;
     /*background-color: rgb(233, 233, 233);*/
     display: flex;
-    overflow: scroll;
+    overflow: hidden;
     /**
     * why need to remove the justify content? 
     * https://stackoverflow.com/questions/77550806/is-it-possible-to-make-the-html-children-div-element-width-not-greater-than-than
     **/
     /*justify-content: center;*/
     height: 100%;
+    min-height: 0;
     width: 100%;
     flex-direction: column;
     flex: 1;
@@ -16,10 +17,11 @@
 
 .previewFsBody {
     display: flex;
-    overflow: scroll;
+    overflow: hidden;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100%;
+    min-height: 0;
     /* width: 70vw; */ /* Removed to allow dynamic width setting */
     flex-direction: column;
     flex: 1;

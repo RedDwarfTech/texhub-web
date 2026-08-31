@@ -45,9 +45,9 @@ const AppBody: React.FC<AppBodyProps> = (props: AppBodyProps) => {
   return (
     <div className={styles.editorBody}>
       <Split visible={[2, 3]}
-        style={{ width: "100%", border: "0px solid #d5d5d5", borderRadius: 3 }}
+        style={{ width: "100%", height: "100%", minHeight: 0, border: "0px solid #d5d5d5", borderRadius: 3 }}
       >
-        <div style={{ width: "20%", minWidth: 30 }}>
+        <div className={styles.splitPane} style={{ width: "20%", minWidth: 30 }}>
           {pid ? (
             <ProjectTree
               projectId={pid as string}
@@ -57,7 +57,7 @@ const AppBody: React.FC<AppBodyProps> = (props: AppBodyProps) => {
             <div>{t("tips_loading")}</div>
           )}
         </div>
-        <div style={{ width: "60%", minWidth: 100 }}>
+        <div className={styles.splitPane} style={{ width: "60%", minWidth: 100 }}>
           <div id="editor" className={styles.editor}>
             <React.Suspense fallback={<div>{t("tips_loading")}</div>}>
               <ErrorBoundary fallbackRender={fallbackRender}>
@@ -66,7 +66,7 @@ const AppBody: React.FC<AppBodyProps> = (props: AppBodyProps) => {
             </React.Suspense>
           </div>
         </div>
-        <div style={{ width: "20%", minWidth: 100 }}>
+        <div className={styles.splitPane} style={{ width: "20%", minWidth: 100 }}>
           {pid ? (
             <Previewer
               projectId={pid as string}

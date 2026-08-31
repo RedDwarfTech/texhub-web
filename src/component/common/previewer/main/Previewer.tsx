@@ -632,23 +632,14 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
     return (
       <>
         <div
-          style={{
-            display: isPdf ? "flex" : "none",
-            flexDirection: "column",
-            flex: 1,
-            height: "100%",
-            overflow: "hidden",
-          }}
+          className={styles.previewTabPane}
+          style={{ display: isPdf ? "flex" : "none" }}
         >
           {renderPdfView()}
         </div>
         <div
-          style={{
-            display: isLog ? "block" : "none",
-            flex: 1,
-            height: "100%",
-            overflow: "hidden",
-          }}
+          className={styles.previewTabPane}
+          style={{ display: isLog ? "block" : "none" }}
         >
           {renderLogView()}
         </div>
@@ -700,12 +691,14 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
       return (
         <div
           id="pdf-fullscreen-preview-container"
-          style={{ display: "flex", height: "100%" }}
+          className={styles.fullscreenPreviewLayout}
         >
           <Split
             visible={[2, 3]}
             style={{
               width: "100%",
+              height: "100%",
+              minHeight: 0,
               border: "0px solid #d5d5d5",
               borderRadius: 3,
             }}
@@ -988,7 +981,9 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
   return (
     <div
       id="preview"
-      className={props.viewModel ? styles.fspreview : styles.preview}
+      className={
+        props.viewModel === "fullscreen" ? styles.fspreview : styles.preview
+      }
     >
       <div id="previewHeader" className={styles.previewHader}>
         {renderLeftTab()}
