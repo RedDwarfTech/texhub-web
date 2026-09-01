@@ -5,7 +5,6 @@ import { getCurPdfPage } from "@/service/project/preview/PreviewService";
 import {
   getProjectInfo,
   getSrcPosition,
-  getTempAuthCode,
   sendQueueCompileRequest,
 } from "@/service/project/ProjectService";
 import { toast } from "react-toastify";
@@ -137,17 +136,11 @@ export const handleDownloadPdf = async (
 };
 
 export const compile = (prj_id: string) => {
-  getTempAuthCode().then((resp) => {
+  let params = {
+    project_id: prj_id,
+  };
+  sendQueueCompileRequest(params).then((resp) => {
     if (ResponseHandler.responseSuccess(resp)) {
-      let params = {
-        project_id: prj_id,
-      };
-      sendQueueCompileRequest(params).then((resp) => {
-        if (ResponseHandler.responseSuccess(resp)) {
-        }
-      });
-    } else {
-      toast.error(resp.msg);
     }
   });
 };

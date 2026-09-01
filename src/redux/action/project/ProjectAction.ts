@@ -22,7 +22,6 @@ export enum ProjectActionType {
     JOIN_PROJ,
     COMPILE_PROJ_STREAM,
     RENDER_PDF,
-    GET_TEMP_AUTH_CODE,
     APPEND_LOG,
     CLEAR_COMP_LOG,
     TEX_COMP_END,

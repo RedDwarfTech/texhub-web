@@ -274,16 +274,6 @@ export function getLatestCompile(project_id: string) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function getTempAuthCode() {
-  const config: AxiosRequestConfig = {
-    method: "get",
-    url: "/tex/project/temp/code",
-  };
-  const actionTypeString: string =
-    ProjectActionType[ProjectActionType.GET_TEMP_AUTH_CODE];
-  return XHRClient.requestWithActionType(config, actionTypeString, store);
-}
-
 export function getCompQueueStatus(id: number) {
   const config: AxiosRequestConfig = {
     method: "get",
