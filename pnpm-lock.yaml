@@ -13,7 +13,6 @@ overrides:
   react-dom: 18.2.0
   react-redux: 9.2.0
   redux: 5.0.1
-  rd-component: link:../rd-component
   tar: 7.5.19
 
 importers:
@@ -165,11 +164,11 @@ importers:
         specifier: 7.55.1
         version: 7.55.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       rd-component:
-        specifier: link:../rd-component
-        version: link:../rd-component
+        specifier: ^0.2.1
+        version: 0.2.1(@fingerprintjs/fingerprintjs@5.2.0)(@jest/transform@30.5.0(supports-color@8.1.1))(@jest/types@30.5.0)(@reduxjs/toolkit@2.12.0(react-redux@9.2.0(@types/react@18.3.31)(react@18.2.0)(redux@5.0.1))(react@18.2.0))(@types/node@25.9.5)(esbuild-register@3.6.0(esbuild@0.18.20)(supports-color@8.1.1))(esbuild@0.18.20)(i18next@26.4.1(typescript@5.9.3))(jest-util@30.5.0)(prettier@2.8.8)(react-dom@18.2.0(react@18.2.0))(react-i18next@17.0.13(i18next@26.4.1(typescript@5.9.3))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.9.3))(react-redux@9.2.0(@types/react@18.3.31)(react@18.2.0)(redux@5.0.1))(react-router-dom@7.18.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(redux@5.0.1)(supports-color@8.1.1)(ts-node@10.9.2(@types/node@25.9.5)(typescript@5.9.3))(typescript@5.9.3)(uuid@14.0.2)(vite@7.3.6(@types/node@25.9.5)(sass@1.103.1)(terser@5.51.2))
       rdjs-wheel:
         specifier: 0.0.39
-        version: 0.0.39(@microsoft/api-extractor@7.59.0(@types/node@25.9.5))(esbuild@0.18.20)(prettier@2.8.8)(react@18.2.0)(rollup@4.63.1)(supports-color@8.1.1)(ts-node@10.9.2(@types/node@25.9.5)(typescript@5.9.3))(typescript@5.9.3)(vite@7.3.6(@types/node@25.9.5)(sass@1.103.1)(terser@5.51.2))(webpack@5.110.2(esbuild@0.18.20)(postcss@8.5.26)(uglify-js@3.19.3))
+        version: 0.0.39(@microsoft/api-extractor@7.59.0(@types/node@25.9.5))(esbuild@0.18.20)(prettier@2.8.8)(react@18.2.0)(rolldown@1.0.1)(rollup@4.63.1)(supports-color@8.1.1)(ts-node@10.9.2(@types/node@25.9.5)(typescript@5.9.3))(typescript@5.9.3)(vite@7.3.6(@types/node@25.9.5)(sass@1.103.1)(terser@5.51.2))(webpack@5.110.2(esbuild@0.18.20)(postcss@8.5.26)(uglify-js@3.19.3))
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -217,7 +216,7 @@ importers:
         version: 5.0.1
       rollup-plugin-visualizer:
         specifier: ^7.0.1
-        version: 7.1.1(rollup@4.63.1)
+        version: 7.1.1(rolldown@1.0.1)(rollup@4.63.1)
       sass:
         specifier: ^1.103.1
         version: 1.103.1
@@ -1788,6 +1787,9 @@ packages:
   '@oxc-project/types@0.127.0':
     resolution: {integrity: sha512-aIYXQBo4lCbO4z0R3FHeucQHpF46l2LbMdxRvqvuRuW2OxdnSkcng5B8+K12spgLDj93rtN3+J2Vac/TIO+ciQ==}
 
+  '@oxc-project/types@0.130.0':
+    resolution: {integrity: sha512-ibD2usx9JRu7f5pu2tMKMI4cpA4NgXJQoYRP4pQ7Pxmn1l6k/53qWtQWZayhYy3X4QZkt90Ot+mJEaeXouio6Q==}
+
   '@oxc-resolver/binding-android-arm-eabi@11.21.2':
     resolution: {integrity: sha512-xQoCRv+gKax9KTdwdaQNnAFOai8neay7g3jExDIORzhbrejwGSJaZNTdOJHR5ziLg2joMxOCMOFMo4zuxza2uQ==}
     cpu: [arm]
@@ -2327,6 +2329,101 @@ packages:
         optional: true
       react-redux:
         optional: true
+
+  '@rolldown/binding-android-arm64@1.0.1':
+    resolution: {integrity: sha512-fJI3I0r3C3Oj/zdBCpaCmBRZYf07xpaq4yCfDDoSFm+beWNzbIl26puW8RraUdugoJw/95zerNOn6jasAhzSmg==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
+    os: [android]
+
+  '@rolldown/binding-darwin-arm64@1.0.1':
+    resolution: {integrity: sha512-cKnAhWEsV7TPcA/5EAteDp6KcJZBQ2G+BqE7zayMMi7kMvwRsbv7WT9aOnn0WNl4SKEIf43vjS31iUPu80nzXg==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@rolldown/binding-darwin-x64@1.0.1':
+    resolution: {integrity: sha512-YKrVwQjIRBPo+5G/u03wGjbdy4q7pyzCe93DK9VJ7zkVmeg8LJ7GbgsiHWdR4xSoe4CAXRD7Bcjgbtr64bkXNg==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [x64]
+    os: [darwin]
+
+  '@rolldown/binding-freebsd-x64@1.0.1':
+    resolution: {integrity: sha512-z/oBsREo46SsFqBwYtFe0kpJeBijAT48O/WXLI4suiCLBkr03RTtTJMCzSdDd2znlh8VJizL09XVkQgk8IZonw==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [x64]
+    os: [freebsd]
+
+  '@rolldown/binding-linux-arm-gnueabihf@1.0.1':
+    resolution: {integrity: sha512-ik8q7GM11zxvYxFc2PeDcT6TBvhCQMaUxfph/M5l9sKuTs/Sjg3L+Byw0F7w0ZVLBZmx30P+gG0ECzzN+MFcmQ==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm]
+    os: [linux]
+
+  '@rolldown/binding-linux-arm64-gnu@1.0.1':
+    resolution: {integrity: sha512-QoSx2EkyrrdZ6kcyE8stqZ62t0Yra8Fs5ia9lOxJrh6TMQJK7gQKmscdTHf7pOXKREKrVwOtJcQG3qVSfc866A==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@rolldown/binding-linux-arm64-musl@1.0.1':
+    resolution: {integrity: sha512-uwNwFpwKeNiZawfAWBgg0VIztPTV3ihhh1vV334h9ivnNLorxnQMU6Fz8wG1Zb4Qh9LC1/MkcyT3YlDXG3Rsgg==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@rolldown/binding-linux-ppc64-gnu@1.0.1':
+    resolution: {integrity: sha512-zY1bul7OWr7DFBiJ++wofXvnr8B45ce3QsQUhKrIhXsygAh7bTkwyeM1bi1a2g5C/yC/N8TZyGDEoMfm/l9mpg==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [ppc64]
+    os: [linux]
+    libc: [glibc]
+
+  '@rolldown/binding-linux-s390x-gnu@1.0.1':
+    resolution: {integrity: sha512-0frlsT/f4Ft6I7SMESTKnF3cZsdicQn1dCMkF/jT9wDLE+gGoiQfv1nmT9e+s7s/fekvvy6tZM2jHvI2tkbJDQ==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [s390x]
+    os: [linux]
+    libc: [glibc]
+
+  '@rolldown/binding-linux-x64-gnu@1.0.1':
+    resolution: {integrity: sha512-XABVmGp9Tg0WspTVvwduTc4fpqy6JnAUrSQe6OuyqD/03nI7r0O9OWUkMIwFrjKAIqolvqoA4ZrJppgwE0Gxmw==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@rolldown/binding-linux-x64-musl@1.0.1':
+    resolution: {integrity: sha512-bV4fzswuzVcKD90o/VM6QqKxnxlDq0g2BISDLNVmxrnhpv1DDbyPhCIjYfvzYLV+MvkKKnQt2Q6AO86SEBULUQ==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@rolldown/binding-openharmony-arm64@1.0.1':
+    resolution: {integrity: sha512-/Mh0Zhq3OP7fVs0kcQHZP6lZEthMGTaSf8UBQYSFEZDWGXXlEC+nJ6EqenaK2t4LBXMe3A+K/G2BVXXdtOr4PQ==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
+    os: [openharmony]
+
+  '@rolldown/binding-wasm32-wasi@1.0.1':
+    resolution: {integrity: sha512-+1xc9X45l8ufsBAm6Gjvx2qDRIY9lTVt0cgWNcJ+1gdhXvkbxePA60yRTwSTuXL09CMhyJmjpV7E3NoyxbqFQQ==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [wasm32]
+
+  '@rolldown/binding-win32-arm64-msvc@1.0.1':
+    resolution: {integrity: sha512-1D+UqZdfnuR+Jy1GgMJwi85bD40H21uNmOPRWQhw4oRSuolZ/B5rixZ45DK2KXOTCvmVCecauWgEhbw8bI7tOw==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
+    os: [win32]
+
+  '@rolldown/binding-win32-x64-msvc@1.0.1':
+    resolution: {integrity: sha512-INAycaWuhlOK3wk4mRHGsdgwYWmd9cChdPdE9bwWmy6rn9VqVNYNFGhOdXrofXUxwHIncSiPNb8tNm8knDVIeQ==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [x64]
+    os: [win32]
 
   '@rolldown/pluginutils@1.0.0-beta.27':
     resolution: {integrity: sha512-+d0F4MKMCbeVUJwG96uQ4SgAznZNSq93I3V+9NHA4OpvqG8mRCpGdKmK8l/dl02h2CCDHwW2FqilnTyDcAnqjA==}
@@ -3621,6 +3718,10 @@ packages:
     resolution: {integrity: sha512-V2NpofLblG64mfOtSgDhOJESZEGogzDMBv/q+W6oc4LXWP/q75eOXoOaaOu1EOadB9U4Bwx/e0yzbvwKH8zalA==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
+
+  bs-logger@0.2.6:
+    resolution: {integrity: sha512-pd8DCoxmbgc7hyPKOvxtqNcjYoOsABPQdcCUjGp3d42VR2CX1ORhk2A87oqqu5R1kk+76nsxZupkmyd+MVtCog==}
+    engines: {node: '>= 6'}
 
   bser@2.1.1:
     resolution: {integrity: sha512-gQxTNE/GAfIIrmHLUE3oJyp5FO6HRBfhjnw4/wMmA63ZGDJnWBmgY/lyQBpnDUkGmAhbSe39tx2d/iTOAfglwQ==}
@@ -5473,6 +5574,9 @@ packages:
   lodash.isstring@4.0.1:
     resolution: {integrity: sha512-0wJxfxH1wgO3GrbuP+dTTk7op+6L41QCXbGINEmD+ny/G/eCqGzxyCsh7159S+mgDDcoarnBw6PC1PS5+wUGgw==}
 
+  lodash.memoize@4.1.2:
+    resolution: {integrity: sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==}
+
   lodash.once@4.1.1:
     resolution: {integrity: sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==}
 
@@ -6544,6 +6648,20 @@ packages:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==}
     hasBin: true
 
+  rd-component@0.2.1:
+    resolution: {integrity: sha512-o22+KZmi5X5zT9IwFShFh///k9iFdM/cRPOdAnI1WP25B3ACbLjSV41zMfhrE0mendY8jqQiGJQhcOlamojgLQ==}
+    peerDependencies:
+      '@fingerprintjs/fingerprintjs': ^5.2.0
+      '@reduxjs/toolkit': ^2.2.1
+      i18next: ^26.2.0
+      react: 18.2.0
+      react-dom: 18.2.0
+      react-i18next: ^17.0.0
+      react-redux: 9.2.0
+      react-router-dom: ^7.0.2
+      redux: 5.0.1
+      uuid: ^14.0.0
+
   rdjs-wheel@0.0.32:
     resolution: {integrity: sha512-oY/xWocyZb5iEggosf29bdcmpuB77l/bswDA8BuVzOcV6SclwUcvPYOWqm59XhQth5O7bK4HxQH3YjMI0HifqQ==}
 
@@ -6838,6 +6956,11 @@ packages:
   ripemd160@2.0.3:
     resolution: {integrity: sha512-5Di9UC0+8h1L6ZD2d7awM7E/T4uA1fJRlx6zk/NvdCCVEoAnFqvHmCuNeIKoCeIixBX/q8uM+6ycDvF8woqosA==}
     engines: {node: '>= 0.8'}
+
+  rolldown@1.0.1:
+    resolution: {integrity: sha512-X0KQHljNnEkWNqqiz9zJrGunh1B0HgOxLXvnFpCOcadzcy5qohZ3tqMEUg00vncoRovXuK3ZqCT9KnnKzoInFQ==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    hasBin: true
 
   rollup-plugin-typescript2@0.31.2:
     resolution: {integrity: sha512-hRwEYR1C8xDGVVMFJQdEVnNAeWRvpaY97g5mp3IeLnzhNXzSVq78Ye/BJ9PAaUfN4DXa/uDnqerifMOaMFY54Q==}
@@ -7385,6 +7508,33 @@ packages:
     resolution: {integrity: sha512-JfJeIHke7y2egdGGgRAvpCwYFUsHlM2gPcrVOxFkznt/4uzQ7HFmvE63iFHVLBJNDuyDOQgijDK/tXH/f6Msjg==}
     engines: {node: '>=6.10'}
 
+  ts-jest@29.4.12:
+    resolution: {integrity: sha512-Ov6ClY53Fflh6BGAnY2DlTq1hYDrTycz2PVTXBWFW2CU+9zrEqAp9fWdGXl42EXO5RLSFAcAZ2JFKbP+zBTFfw==}
+    engines: {node: ^14.15.0 || ^16.10.0 || ^18.0.0 || >=20.0.0}
+    hasBin: true
+    peerDependencies:
+      '@babel/core': '>=7.0.0-beta.0 <8'
+      '@jest/transform': ^29.0.0 || ^30.0.0
+      '@jest/types': ^29.0.0 || ^30.0.0
+      babel-jest: ^29.0.0 || ^30.0.0
+      esbuild: '*'
+      jest: ^29.0.0 || ^30.0.0
+      jest-util: ^29.0.0 || ^30.0.0
+      typescript: '>=4.3 <7'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@jest/transform':
+        optional: true
+      '@jest/types':
+        optional: true
+      babel-jest:
+        optional: true
+      esbuild:
+        optional: true
+      jest-util:
+        optional: true
+
   ts-loader@9.6.2:
     resolution: {integrity: sha512-R4iuczmtgxvtuI556s+hTZ6/7Ee03VCAk/l/M8LY1OAsUgB7YydsCxkgq9D9pKRaD7GJqUi2u8fp9zZP/ufjKA==}
     engines: {node: '>=12.0.0'}
@@ -7478,6 +7628,10 @@ packages:
   type-fest@2.19.0:
     resolution: {integrity: sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==}
     engines: {node: '>=12.20'}
+
+  type-fest@4.41.0:
+    resolution: {integrity: sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==}
+    engines: {node: '>=16'}
 
   type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
@@ -9602,6 +9756,8 @@ snapshots:
 
   '@oxc-project/types@0.127.0': {}
 
+  '@oxc-project/types@0.130.0': {}
+
   '@oxc-resolver/binding-android-arm-eabi@11.21.2':
     optional: true
 
@@ -10145,6 +10301,55 @@ snapshots:
     optionalDependencies:
       react: 18.2.0
       react-redux: 9.2.0(@types/react@18.3.31)(react@18.2.0)(redux@5.0.1)
+
+  '@rolldown/binding-android-arm64@1.0.1':
+    optional: true
+
+  '@rolldown/binding-darwin-arm64@1.0.1':
+    optional: true
+
+  '@rolldown/binding-darwin-x64@1.0.1':
+    optional: true
+
+  '@rolldown/binding-freebsd-x64@1.0.1':
+    optional: true
+
+  '@rolldown/binding-linux-arm-gnueabihf@1.0.1':
+    optional: true
+
+  '@rolldown/binding-linux-arm64-gnu@1.0.1':
+    optional: true
+
+  '@rolldown/binding-linux-arm64-musl@1.0.1':
+    optional: true
+
+  '@rolldown/binding-linux-ppc64-gnu@1.0.1':
+    optional: true
+
+  '@rolldown/binding-linux-s390x-gnu@1.0.1':
+    optional: true
+
+  '@rolldown/binding-linux-x64-gnu@1.0.1':
+    optional: true
+
+  '@rolldown/binding-linux-x64-musl@1.0.1':
+    optional: true
+
+  '@rolldown/binding-openharmony-arm64@1.0.1':
+    optional: true
+
+  '@rolldown/binding-wasm32-wasi@1.0.1':
+    dependencies:
+      '@emnapi/core': 1.10.0
+      '@emnapi/runtime': 1.10.0
+      '@napi-rs/wasm-runtime': 1.2.3(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)
+    optional: true
+
+  '@rolldown/binding-win32-arm64-msvc@1.0.1':
+    optional: true
+
+  '@rolldown/binding-win32-x64-msvc@1.0.1':
+    optional: true
 
   '@rolldown/pluginutils@1.0.0-beta.27': {}
 
@@ -11738,6 +11943,10 @@ snapshots:
       electron-to-chromium: 1.5.417
       node-releases: 2.0.54
       update-browserslist-db: 1.3.2(browserslist@4.28.8)
+
+  bs-logger@0.2.6:
+    dependencies:
+      fast-json-stable-stringify: 2.1.0
 
   bser@2.1.1:
     dependencies:
@@ -13944,6 +14153,8 @@ snapshots:
 
   lodash.isstring@4.0.1: {}
 
+  lodash.memoize@4.1.2: {}
+
   lodash.once@4.1.1: {}
 
   lodash@4.18.1: {}
@@ -14940,6 +15151,54 @@ snapshots:
       minimist: 1.2.8
       strip-json-comments: 2.0.1
 
+  rd-component@0.2.1(@fingerprintjs/fingerprintjs@5.2.0)(@jest/transform@30.5.0(supports-color@8.1.1))(@jest/types@30.5.0)(@reduxjs/toolkit@2.12.0(react-redux@9.2.0(@types/react@18.3.31)(react@18.2.0)(redux@5.0.1))(react@18.2.0))(@types/node@25.9.5)(esbuild-register@3.6.0(esbuild@0.18.20)(supports-color@8.1.1))(esbuild@0.18.20)(i18next@26.4.1(typescript@5.9.3))(jest-util@30.5.0)(prettier@2.8.8)(react-dom@18.2.0(react@18.2.0))(react-i18next@17.0.13(i18next@26.4.1(typescript@5.9.3))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.9.3))(react-redux@9.2.0(@types/react@18.3.31)(react@18.2.0)(redux@5.0.1))(react-router-dom@7.18.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(redux@5.0.1)(supports-color@8.1.1)(ts-node@10.9.2(@types/node@25.9.5)(typescript@5.9.3))(typescript@5.9.3)(uuid@14.0.2)(vite@7.3.6(@types/node@25.9.5)(sass@1.103.1)(terser@5.51.2)):
+    dependencies:
+      '@babel/core': 7.29.7(supports-color@8.1.1)
+      '@babel/preset-env': 7.29.7(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1)
+      '@babel/preset-typescript': 7.29.7(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1)
+      '@fingerprintjs/fingerprintjs': 5.2.0
+      '@reduxjs/toolkit': 2.12.0(react-redux@9.2.0(@types/react@18.3.31)(react@18.2.0)(redux@5.0.1))(react@18.2.0)
+      '@types/react': 19.2.18
+      '@types/redux-logger': 3.0.13
+      '@types/uuid': 11.0.0
+      '@vitejs/plugin-react': 6.1.1(vite@7.3.6(@types/node@25.9.5)(sass@1.103.1)(terser@5.51.2))
+      babel-jest: 30.5.0(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1)
+      i18next: 26.4.1(typescript@5.9.3)
+      jest: 30.5.0(@types/node@25.9.5)(esbuild-register@3.6.0(esbuild@0.18.20)(supports-color@8.1.1))(supports-color@8.1.1)(ts-node@10.9.2(@types/node@25.9.5)(typescript@5.9.3))
+      query-string: 9.5.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      react-i18next: 17.0.13(i18next@26.4.1(typescript@5.9.3))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.9.3)
+      react-redux: 9.2.0(@types/react@18.3.31)(react@18.2.0)(redux@5.0.1)
+      react-router-dom: 7.18.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      react-toastify: 11.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      react-turnstile: 1.1.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      redux: 5.0.1
+      rolldown: 1.0.1
+      storybook: 10.5.10(@types/react@19.2.18)(prettier@2.8.8)(react@18.2.0)
+      ts-jest: 29.4.12(@babel/core@7.29.7(supports-color@8.1.1))(@jest/transform@30.5.0(supports-color@8.1.1))(@jest/types@30.5.0)(babel-jest@30.5.0(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(esbuild@0.18.20)(jest-util@30.5.0)(jest@30.5.0(@types/node@25.9.5)(esbuild-register@3.6.0(esbuild@0.18.20)(supports-color@8.1.1))(supports-color@8.1.1)(ts-node@10.9.2(@types/node@25.9.5)(typescript@5.9.3)))(typescript@5.9.3)
+      uuid: 14.0.2
+    transitivePeerDependencies:
+      - '@jest/transform'
+      - '@jest/types'
+      - '@rolldown/plugin-babel'
+      - '@types/node'
+      - babel-plugin-macros
+      - babel-plugin-react-compiler
+      - bufferutil
+      - esbuild
+      - esbuild-register
+      - jest-util
+      - node-notifier
+      - oxc-transform-react
+      - prettier
+      - supports-color
+      - ts-node
+      - typescript
+      - utf-8-validate
+      - vite
+      - vite-plus
+
   rdjs-wheel@0.0.32(@types/node@25.9.5)(rollup@4.63.1)(supports-color@8.1.1)(ts-node@10.9.2(@types/node@25.9.5)(typescript@5.9.3))(ts-toolbelt@9.6.0)(typescript@5.9.3)(vite@7.3.6(@types/node@25.9.5)(sass@1.103.1)(terser@5.51.2))(webpack@5.110.2(esbuild@0.18.20)(postcss@8.5.26)(uglify-js@3.19.3)):
     dependencies:
       '@babel/core': 7.29.7(supports-color@8.1.1)
@@ -14979,7 +15238,7 @@ snapshots:
       - vite
       - webpack
 
-  rdjs-wheel@0.0.39(@microsoft/api-extractor@7.59.0(@types/node@25.9.5))(esbuild@0.18.20)(prettier@2.8.8)(react@18.2.0)(rollup@4.63.1)(supports-color@8.1.1)(ts-node@10.9.2(@types/node@25.9.5)(typescript@5.9.3))(typescript@5.9.3)(vite@7.3.6(@types/node@25.9.5)(sass@1.103.1)(terser@5.51.2))(webpack@5.110.2(esbuild@0.18.20)(postcss@8.5.26)(uglify-js@3.19.3)):
+  rdjs-wheel@0.0.39(@microsoft/api-extractor@7.59.0(@types/node@25.9.5))(esbuild@0.18.20)(prettier@2.8.8)(react@18.2.0)(rolldown@1.0.1)(rollup@4.63.1)(supports-color@8.1.1)(ts-node@10.9.2(@types/node@25.9.5)(typescript@5.9.3))(typescript@5.9.3)(vite@7.3.6(@types/node@25.9.5)(sass@1.103.1)(terser@5.51.2))(webpack@5.110.2(esbuild@0.18.20)(postcss@8.5.26)(uglify-js@3.19.3)):
     dependencies:
       '@fingerprintjs/fingerprintjs': 5.2.0
       '@types/chrome': 0.1.43
@@ -15000,7 +15259,7 @@ snapshots:
       tsc-alias: 1.9.2
       ttypescript: 1.5.15(ts-node@10.9.2(@types/node@25.9.5)(typescript@5.9.3))(typescript@5.9.3)
       uuid: 14.0.2
-      vite-plugin-dts: 5.0.3(@microsoft/api-extractor@7.59.0(@types/node@25.9.5))(esbuild@0.18.20)(rollup@4.63.1)(supports-color@8.1.1)(typescript@5.9.3)(vite@7.3.6(@types/node@25.9.5)(sass@1.103.1)(terser@5.51.2))(webpack@5.110.2(esbuild@0.18.20)(postcss@8.5.26)(uglify-js@3.19.3))
+      vite-plugin-dts: 5.0.3(@microsoft/api-extractor@7.59.0(@types/node@25.9.5))(esbuild@0.18.20)(rolldown@1.0.1)(rollup@4.63.1)(supports-color@8.1.1)(typescript@5.9.3)(vite@7.3.6(@types/node@25.9.5)(sass@1.103.1)(terser@5.51.2))(webpack@5.110.2(esbuild@0.18.20)(postcss@8.5.26)(uglify-js@3.19.3))
     transitivePeerDependencies:
       - '@microsoft/api-extractor'
       - '@rolldown/plugin-babel'
@@ -15311,6 +15570,27 @@ snapshots:
       hash-base: 3.1.2
       inherits: 2.0.4
 
+  rolldown@1.0.1:
+    dependencies:
+      '@oxc-project/types': 0.130.0
+      '@rolldown/pluginutils': 1.0.1
+    optionalDependencies:
+      '@rolldown/binding-android-arm64': 1.0.1
+      '@rolldown/binding-darwin-arm64': 1.0.1
+      '@rolldown/binding-darwin-x64': 1.0.1
+      '@rolldown/binding-freebsd-x64': 1.0.1
+      '@rolldown/binding-linux-arm-gnueabihf': 1.0.1
+      '@rolldown/binding-linux-arm64-gnu': 1.0.1
+      '@rolldown/binding-linux-arm64-musl': 1.0.1
+      '@rolldown/binding-linux-ppc64-gnu': 1.0.1
+      '@rolldown/binding-linux-s390x-gnu': 1.0.1
+      '@rolldown/binding-linux-x64-gnu': 1.0.1
+      '@rolldown/binding-linux-x64-musl': 1.0.1
+      '@rolldown/binding-openharmony-arm64': 1.0.1
+      '@rolldown/binding-wasm32-wasi': 1.0.1
+      '@rolldown/binding-win32-arm64-msvc': 1.0.1
+      '@rolldown/binding-win32-x64-msvc': 1.0.1
+
   rollup-plugin-typescript2@0.31.2(rollup@4.63.1)(ts-toolbelt@9.6.0)(typescript@5.9.3):
     dependencies:
       '@rollup/pluginutils': 4.2.1
@@ -15334,13 +15614,14 @@ snapshots:
       tslib: 2.8.1
       typescript: 5.9.3
 
-  rollup-plugin-visualizer@7.1.1(rollup@4.63.1):
+  rollup-plugin-visualizer@7.1.1(rolldown@1.0.1)(rollup@4.63.1):
     dependencies:
       open: 11.0.2
       picomatch: 4.0.7
       source-map: 0.8.0
       yargs: 18.1.0
     optionalDependencies:
+      rolldown: 1.0.1
       rollup: 4.63.1
 
   rollup@4.63.1:
@@ -15976,6 +16257,27 @@ snapshots:
 
   ts-dedent@2.3.0: {}
 
+  ts-jest@29.4.12(@babel/core@7.29.7(supports-color@8.1.1))(@jest/transform@30.5.0(supports-color@8.1.1))(@jest/types@30.5.0)(babel-jest@30.5.0(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(esbuild@0.18.20)(jest-util@30.5.0)(jest@30.5.0(@types/node@25.9.5)(esbuild-register@3.6.0(esbuild@0.18.20)(supports-color@8.1.1))(supports-color@8.1.1)(ts-node@10.9.2(@types/node@25.9.5)(typescript@5.9.3)))(typescript@5.9.3):
+    dependencies:
+      bs-logger: 0.2.6
+      fast-json-stable-stringify: 2.1.0
+      handlebars: 4.7.9
+      jest: 30.5.0(@types/node@25.9.5)(esbuild-register@3.6.0(esbuild@0.18.20)(supports-color@8.1.1))(supports-color@8.1.1)(ts-node@10.9.2(@types/node@25.9.5)(typescript@5.9.3))
+      json5: 2.2.3
+      lodash.memoize: 4.1.2
+      make-error: 1.3.6
+      semver: 7.8.5
+      type-fest: 4.41.0
+      typescript: 5.9.3
+      yargs-parser: 21.1.1
+    optionalDependencies:
+      '@babel/core': 7.29.7(supports-color@8.1.1)
+      '@jest/transform': 30.5.0(supports-color@8.1.1)
+      '@jest/types': 30.5.0
+      babel-jest: 30.5.0(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1)
+      esbuild: 0.18.20
+      jest-util: 30.5.0
+
   ts-loader@9.6.2(typescript@5.9.3)(webpack@5.110.2(esbuild@0.18.20)(postcss@8.5.26)(uglify-js@3.19.3)):
     dependencies:
       chalk: 4.1.2
@@ -16058,6 +16360,8 @@ snapshots:
 
   type-fest@2.19.0: {}
 
+  type-fest@4.41.0: {}
+
   type-is@1.6.18:
     dependencies:
       media-typer: 0.3.0
@@ -16121,7 +16425,7 @@ snapshots:
 
   unpipe@1.0.0: {}
 
-  unplugin-dts@1.0.3(@microsoft/api-extractor@7.59.0(@types/node@25.9.5))(esbuild@0.18.20)(rollup@4.63.1)(supports-color@8.1.1)(typescript@5.9.3)(vite@7.3.6(@types/node@25.9.5)(sass@1.103.1)(terser@5.51.2))(webpack@5.110.2(esbuild@0.18.20)(postcss@8.5.26)(uglify-js@3.19.3)):
+  unplugin-dts@1.0.3(@microsoft/api-extractor@7.59.0(@types/node@25.9.5))(esbuild@0.18.20)(rolldown@1.0.1)(rollup@4.63.1)(supports-color@8.1.1)(typescript@5.9.3)(vite@7.3.6(@types/node@25.9.5)(sass@1.103.1)(terser@5.51.2))(webpack@5.110.2(esbuild@0.18.20)(postcss@8.5.26)(uglify-js@3.19.3)):
     dependencies:
       '@rollup/pluginutils': 5.4.0(rollup@4.63.1)
       '@volar/typescript': 2.4.28
@@ -16135,6 +16439,7 @@ snapshots:
     optionalDependencies:
       '@microsoft/api-extractor': 7.59.0(@types/node@25.9.5)
       esbuild: 0.18.20
+      rolldown: 1.0.1
       rollup: 4.63.1
       vite: 7.3.6(@types/node@25.9.5)(sass@1.103.1)(terser@5.51.2)
       webpack: 5.110.2(esbuild@0.18.20)(postcss@8.5.26)(uglify-js@3.19.3)
@@ -16276,9 +16581,9 @@ snapshots:
       - rollup
       - supports-color
 
-  vite-plugin-dts@5.0.3(@microsoft/api-extractor@7.59.0(@types/node@25.9.5))(esbuild@0.18.20)(rollup@4.63.1)(supports-color@8.1.1)(typescript@5.9.3)(vite@7.3.6(@types/node@25.9.5)(sass@1.103.1)(terser@5.51.2))(webpack@5.110.2(esbuild@0.18.20)(postcss@8.5.26)(uglify-js@3.19.3)):
+  vite-plugin-dts@5.0.3(@microsoft/api-extractor@7.59.0(@types/node@25.9.5))(esbuild@0.18.20)(rolldown@1.0.1)(rollup@4.63.1)(supports-color@8.1.1)(typescript@5.9.3)(vite@7.3.6(@types/node@25.9.5)(sass@1.103.1)(terser@5.51.2))(webpack@5.110.2(esbuild@0.18.20)(postcss@8.5.26)(uglify-js@3.19.3)):
     dependencies:
-      unplugin-dts: 1.0.3(@microsoft/api-extractor@7.59.0(@types/node@25.9.5))(esbuild@0.18.20)(rollup@4.63.1)(supports-color@8.1.1)(typescript@5.9.3)(vite@7.3.6(@types/node@25.9.5)(sass@1.103.1)(terser@5.51.2))(webpack@5.110.2(esbuild@0.18.20)(postcss@8.5.26)(uglify-js@3.19.3))
+      unplugin-dts: 1.0.3(@microsoft/api-extractor@7.59.0(@types/node@25.9.5))(esbuild@0.18.20)(rolldown@1.0.1)(rollup@4.63.1)(supports-color@8.1.1)(typescript@5.9.3)(vite@7.3.6(@types/node@25.9.5)(sass@1.103.1)(terser@5.51.2))(webpack@5.110.2(esbuild@0.18.20)(postcss@8.5.26)(uglify-js@3.19.3))
     optionalDependencies:
       '@microsoft/api-extractor': 7.59.0(@types/node@25.9.5)
       rollup: 4.63.1
