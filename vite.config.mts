@@ -5,7 +5,6 @@ import { visualizer } from "rollup-plugin-visualizer";
 import svgr from "vite-plugin-svgr";
 import wasm from "vite-plugin-wasm";
 import { viteStaticCopy } from 'vite-plugin-static-copy';
-import commonjs from "@rollup/plugin-commonjs";
 import { normalizePath } from 'vite';
 import { createRequire } from 'node:module';
 
@@ -35,7 +34,6 @@ export default defineConfig({
         },
       ],
     }),
-    commonjs(),
     react(),
     svgr({
       svgrOptions: {
@@ -57,23 +55,26 @@ export default defineConfig({
   },
   build: {
     cssMinify: 'esbuild',
-    commonjsOptions: { include: [] },
     outDir: "build",
     sourcemap: true,
     rollupOptions: {
       external: ["react/jsx-runtime"],
       output: {
-        manualChunks: {
-          react: ["react-router-dom"],
-          reddwarf: ["rd-component", "rdjs-wheel"],
-        },
+manualChunks(id) {
+        if (id.includes("react-router-dom") || id.includes("react-dom")) {
+          return "react";
+        }
+        if (id.includes("rd-component") || id.includes("rdjs-wheel")) {
+          return "reddwarf";
+        }
+      },
       },
     },
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src"),
-      "~bootstrap": path.resolve(__dirname, "node_modules/bootstrap"),
+      "@": path.resolve(import.meta.dirname, "src"),
+      "~bootstrap": path.resolve(import.meta.dirname, "node_modules/bootstrap"),
     },
   },
   server: {
