@@ -254,6 +254,8 @@
     "err_pdf_url_empty": "PDF file URL is empty",
     "err_file_null": "File is null",
     "err_something_wrong": "Something went wrong:",
+    "err_chunk_load_failed": "Page assets expired or were discarded by the browser. Please refresh and try again.",
+    "btn_reload_page": "Reload page",
     "title_edit_proj": "Edit project",
     "title_download_proj": "Download project",
     "title_archive_proj": "Archive project",

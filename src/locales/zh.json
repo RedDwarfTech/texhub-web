@@ -253,6 +253,8 @@
     "err_pdf_url_empty": "PDF文件Url为空",
     "err_file_null": "文件为空",
     "err_something_wrong": "出现错误：",
+    "err_chunk_load_failed": "页面资源已过期或被浏览器回收，请刷新后重试",
+    "btn_reload_page": "刷新页面",
     "title_edit_proj": "编辑项目",
     "title_download_proj": "下载项目",
     "title_archive_proj": "归档项目",

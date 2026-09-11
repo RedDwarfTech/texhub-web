@@ -11,6 +11,7 @@ import translationZH from '@/locales/zh.json';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { UserService, rdComponentResources } from 'rd-component';
+import { reloadOnChunkLoadError } from '@/common/lazyWithReload';
 
 const normalizeLang = (lang: string): string =>
   lang.startsWith('en') ? 'en-US' : 'zh-CN';
@@ -36,6 +37,12 @@ i18n.use(initReactI18next).init({
   fallbackLng: 'zh-CN',
   interpolation: {
     escapeValue: false
+  }
+});
+
+window.addEventListener('unhandledrejection', (event) => {
+  if (reloadOnChunkLoadError(event.reason)) {
+    event.preventDefault();
   }
 });
 
