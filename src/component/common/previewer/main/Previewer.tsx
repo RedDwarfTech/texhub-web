@@ -639,7 +639,7 @@ const Previewer: React.FC<PreviwerProps> = (props: PreviwerProps) => {
         </div>
         <div
           className={styles.previewTabPane}
-          style={{ display: isLog ? "block" : "none" }}
+          style={{ display: isLog ? "flex" : "none" }}
         >
           {renderLogView()}
         </div>
