@@ -53,11 +53,13 @@ const FullScreenIndependent: React.FC = () => {
         file={pdfUrl}
         onLoadSuccess={onDocumentLoadSuccess}
         options={options}
+        suspense={false}
       >
         {Array.from(new Array(numPages), (_el, index) => (
           <Page
             key={`page_${index + 1}`}
             pageNumber={index + 1}
+            suspense={false}
             width={
               containerWidth ? Math.min(containerWidth, maxWidth) : maxWidth
             }

@@ -245,6 +245,7 @@ const TeXPDFPage: React.FC<PDFPageProps> = ({
           key={`page-${index}`}
           scale={pdfScale}
           className={styles.pdfPage}
+          suspense={false}
           onLoad={handlePageChange}
           onChange={handlePageChange}
           onRenderSuccess={handlePageRenderSuccess}

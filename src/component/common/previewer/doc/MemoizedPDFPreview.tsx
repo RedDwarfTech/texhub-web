@@ -987,6 +987,7 @@ const MemoizedPDFPreview = React.memo(
                 options={pdfOptions}
                 file={curPdfUrl!}
                 onLoadSuccess={onDocumentLoadSuccess}
+                suspense={false}
               >
                 <div
                   id="pdfContainer"
