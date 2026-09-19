@@ -38,9 +38,9 @@ const FullScreenIndependent: React.FC = () => {
   }
 
   const options = {
-    cMapUrl: "/cmaps/",
-    standardFontDataUrl: "/standard_fonts/",
-    wasmUrl: "/wasm/",
+    cMapUrl: `/pdfjs-dist/${pdfjs.version}/cmaps/`,
+    standardFontDataUrl: `/pdfjs-dist/${pdfjs.version}/standard_fonts/`,
+    wasmUrl: `/pdfjs-dist/${pdfjs.version}/wasm/`,
   };
 
   const onDocumentLoadSuccess = (pdf: DocumentCallback) => {

@@ -4,13 +4,6 @@ import path from "node:path";
 import { visualizer } from "rollup-plugin-visualizer";
 import svgr from "vite-plugin-svgr";
 import wasm from "vite-plugin-wasm";
-import { viteStaticCopy } from 'vite-plugin-static-copy';
-import { normalizePath } from 'vite';
-import { createRequire } from 'node:module';
-
-const require = createRequire(import.meta.url);
-const pdfjsDistPath = path.dirname(require.resolve('pdfjs-dist/package.json'));
-const cMapsDir = normalizePath(path.join(pdfjsDistPath, 'cmaps'));
 
 export default defineConfig({
   css: {
@@ -26,14 +19,6 @@ export default defineConfig({
     }),
   },
   plugins: [
-    viteStaticCopy({
-      targets: [
-        {
-          src: cMapsDir,
-          dest: "",
-        },
-      ],
-    }),
     react(),
     svgr({
       svgrOptions: {

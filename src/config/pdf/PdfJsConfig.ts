@@ -58,8 +58,9 @@ export const getPdfjsOptions = (): Options => {
 
   // 生成新的 pdfjsOptions
   cachedOptions = {
-    cMapUrl: `/pdfjs-dist/${pdfjs.version}/web/cmaps/`,
-    standardFontDataUrl: "/standard_fonts/",
+    cMapUrl: `/pdfjs-dist/${pdfjs.version}/cmaps/`,
+    standardFontDataUrl: `/pdfjs-dist/${pdfjs.version}/standard_fonts/`,
+    wasmUrl: `/pdfjs-dist/${pdfjs.version}/wasm/`,
     httpHeaders: buildPdfHttpHeaders(),
     disableRange: false,
     disableAutoFetch: true,

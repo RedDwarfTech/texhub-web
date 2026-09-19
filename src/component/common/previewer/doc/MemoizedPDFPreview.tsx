@@ -103,6 +103,8 @@ const MemoizedPDFPreview = React.memo(
       // 拖拽期间 containerWidth 实时变化用于滚动数学/CSS 拉伸，
       // renderWidth 防抖提交后才变化，避免每帧重栅格化 canvas。
       const [renderWidth, setRenderWidth] = useState(0);
+      const [loadError, setLoadError] = useState<Error | null>(null);
+      const [pdfReloadKey, setPdfReloadKey] = useState(0);
       const renderWidthRef = useRef(0);
       const renderWidthTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
         null
@@ -436,6 +438,7 @@ const MemoizedPDFPreview = React.memo(
         setPageNum(numPages);
         setPageLocalNum(numPages);
         setPdf(loadedPdf);
+        setLoadError(null);
         if (onPdfLoaded) {
           onPdfLoaded(loadedPdf);
         }
@@ -454,6 +457,69 @@ const MemoizedPDFPreview = React.memo(
             }
           });
       };
+
+      const describePdfLoadError = (error: Error): string => {
+        const raw =
+          error instanceof Error ? error.message : String(error);
+        const lower = raw.toLowerCase();
+        const lines: string[] = [];
+        const statusMatch = raw.match(/\((\d{3})\)/);
+        let status = statusMatch ? statusMatch[1] : "";
+        if (!status && (error as any)?.status) {
+          status = String((error as any).status);
+        }
+        if (status) {
+          if (status === "401") {
+            lines.push("认证令牌（access token）无效或已过期，请刷新页面后重试。");
+          } else if (status === "403") {
+            lines.push("没有权限访问该 PDF 文件，请检查项目权限与协作关系。");
+          } else if (status === "404") {
+            lines.push("服务端没有找到该 PDF 文件，请先重新编译项目。");
+          } else if (status.startsWith("5")) {
+            lines.push("服务端异常（HTTP " + status + "），请稍后重试或查看服务端日志。");
+          }
+        }
+        if (lower.includes("password")) {
+          lines.push("该 PDF 文件受密码保护，当前不支持读取。");
+        }
+        if (
+          lower.includes("worker") ||
+          lower.includes("dynamically imported module") ||
+          lower.includes("protocol")
+        ) {
+          lines.push("pdf.js worker 资源加载失败，可能是 pdfjs-dist 静态资源缺失或版本不匹配。");
+        }
+        if (lower.includes("invalid") && lower.includes("pdf")) {
+          lines.push("服务端返回的内容不是有效的 PDF 文件。");
+        }
+        if (lines.length === 0) {
+          lines.push(
+            status
+              ? "PDF 加载请求失败（HTTP " + status + "）。"
+              : "PDF 加载失败，详见下方原始错误信息。"
+          );
+        }
+        lines.push("原始错误：" + raw);
+        return lines.join("\n");
+      };
+
+      const onDocumentLoadError = (error: Error) => {
+        console.error("Failed to load PDF:", curPdfUrl, error);
+        setLoadError(error);
+      };
+
+      const reloadPdf = () => {
+        setLoadError(null);
+        setPdfReloadKey((k) => k + 1);
+      };
+
+      React.useEffect(() => {
+        setLoadError(null);
+        setPdfReloadKey((k) => k + 1);
+        setPageNum(0);
+        setPageLocalNum(0);
+        setPdf(undefined);
+      }, [curPdfUrl]);
 
       const getDynStyles = (vm: string) => {
         switch (vm) {
@@ -984,10 +1050,31 @@ const MemoizedPDFPreview = React.memo(
               }}
             >
               <Document
+                key={pdfReloadKey}
                 options={pdfOptions}
                 file={curPdfUrl!}
                 onLoadSuccess={onDocumentLoadSuccess}
+                onLoadError={onDocumentLoadError}
                 suspense={false}
+                error={() => (
+                  <div className={styles.pdfLoadError}>
+                    <div className={styles.pdfLoadErrorTitle}>
+                      PDF 加载失败
+                    </div>
+                    <pre className={styles.pdfLoadErrorDetail}>
+                      {loadError
+                        ? describePdfLoadError(loadError)
+                        : "加载 PDF 时发生未知错误。"}
+                    </pre>
+                    <button
+                      type="button"
+                      className={styles.pdfLoadErrorRetry}
+                      onClick={reloadPdf}
+                    >
+                      重试
+                    </button>
+                  </div>
+                )}
               >
                 <div
                   id="pdfContainer"

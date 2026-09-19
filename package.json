@@ -80,6 +80,8 @@
     "start": "react-scripts start",
     "test": "jest",
     "eject": "react-scripts eject",
+    "predev": "node scripts/copy-pdfjs-assets.mjs",
+    "prebuild": "node scripts/copy-pdfjs-assets.mjs",
     "build": "tsc && vite build",
     "dev": "vite --host=0.0.0.0 --port=3003"
   },
