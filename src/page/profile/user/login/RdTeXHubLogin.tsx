@@ -6,7 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { BaseMethods, ResponseHandler } from "rdjs-wheel";
 import { AnyAction, Store } from "redux";
-import Turnstile, { useTurnstile } from "react-turnstile";
+import { Turnstile, useTurnstile } from "react-turnstile";
 import { UserService } from "rd-component";
 import TeXHubLogo from "@/assets/icon/texhub-logo.png";
 import { useTranslation } from "react-i18next";
