@@ -405,7 +405,7 @@ const ProjectTab: React.FC = () => {
     navigate("/editor?pid=" + docItem.project_id);
   };
 
-  const renderFolderProj = (folderId: number): JSX.Element[] => {
+  const renderFolderProj = (folderId: number): React.JSX.Element[] => {
     let curProjMap: FolderModel | undefined = projMap.get(folderId);
     if (!curProjMap || curProjMap.projects.length === 0) {
       return [];
@@ -449,7 +449,7 @@ const ProjectTab: React.FC = () => {
     if (!projFolders || projFolders.length === 0) {
       return <div></div>;
     }
-    const tagList: JSX.Element[] = [];
+    const tagList: React.JSX.Element[] = [];
     projFolders.forEach((folderItem: TexProjectFolder) => {
       if (folderItem.default_folder !== 1) {
         const formattedTime = dayjs(folderItem.updated_time).format(
@@ -503,7 +503,7 @@ const ProjectTab: React.FC = () => {
     return tagList;
   };
 
-  const renderProj = (userDocList: TexProjectModel[]): JSX.Element[] => {
+  const renderProj = (userDocList: TexProjectModel[]): React.JSX.Element[] => {
     if (projLoading) {
       return [
         <div key="projloading" className={styles.loadingA}>
@@ -516,7 +516,7 @@ const ProjectTab: React.FC = () => {
     if (!userDocList || userDocList.length === 0) {
       return [];
     }
-    const tagList: JSX.Element[] = [];
+    const tagList: React.JSX.Element[] = [];
     userDocList.forEach((docItem: TexProjectModel) => {
       const formattedTime = dayjs(docItem.updated_time).format(
         "YYYY-MM-DD HH:mm:ss"

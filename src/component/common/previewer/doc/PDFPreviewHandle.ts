@@ -35,7 +35,7 @@ export const goPage = (i: number) => {
 
 export const scrollToPage = (
   pageIndex: number,
-  virtualListRef: React.RefObject<ListImperativeAPI>,
+  virtualListRef: React.RefObject<ListImperativeAPI | null>,
   align: "auto" | "smart" | "center" | "end" | "start" = "center"
 ) => {
   if (virtualListRef.current) {
@@ -47,7 +47,7 @@ export const scrollToPage = (
 
 export const scrollToOffset = (
   offset: number,
-  virtualListRef: React.RefObject<ListImperativeAPI>,
+  virtualListRef: React.RefObject<ListImperativeAPI | null>,
   projId: string
 ) => {
   if (virtualListRef.current) {
@@ -78,7 +78,7 @@ export const openPdfUrlLink = (e: React.MouseEvent<HTMLDivElement>) => {
 export const restorePdfOffset = (
   projId: string,
   viewModel: string,
-  virtualListRef: React.RefObject<ListImperativeAPI>
+  virtualListRef: React.RefObject<ListImperativeAPI | null>
 ) => {
   if (virtualListRef.current) {
     let fullScreenOffset = getCurPdfScrollOffset(projId);

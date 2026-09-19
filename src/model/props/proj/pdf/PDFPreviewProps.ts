@@ -6,7 +6,7 @@ export interface PDFPreviewProps {
   projId: string;
   viewModel: string;
   setPageNum: (page: number) => void;
-  virtualListRef: React.RefObject<ListImperativeAPI>;
+  virtualListRef: React.RefObject<ListImperativeAPI | null>;
   pdfOptions: Options;
   curPdfPage?: number;
   onOutlineLoaded?: (outline: any[]) => void;

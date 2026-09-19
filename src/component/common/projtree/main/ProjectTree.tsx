@@ -277,7 +277,7 @@ const ProjectTree: React.FC<TreeProps> = (props: TreeProps) => {
     if (!fileTree) {
       return <div></div>;
     }
-    const tagList: JSX.Element[] = [];
+    const tagList: React.JSX.Element[] = [];
     const sortedData = fileTree.sort((a, b) => {
       if (a.file_type === 0 && b.file_type !== 0) {
         return -1;

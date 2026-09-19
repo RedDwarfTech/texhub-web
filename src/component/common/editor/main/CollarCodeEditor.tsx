@@ -129,7 +129,7 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
 
   const loadedDocGuidRef = useRef<string | null>(null);
   const loadedDocRef = useRef<Y.Doc | null>(null);
-  const editorViewRef = useRef<EditorView | undefined>();
+  const editorViewRef = useRef<EditorView | undefined>(undefined);
   const pendingSwitchDocRef = useRef<Y.Doc | null>(null);
   const pendingSwitchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null

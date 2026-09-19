@@ -14,7 +14,7 @@ export const usePreviewHandler = (
   const { t } = useTranslation();
 
   const handleScrollTop = (
-    listRef: React.RefObject<ListImperativeAPI>,
+    listRef: React.RefObject<ListImperativeAPI | null>,
     projId: string
   ) => {
     if (listRef && listRef.current) {

@@ -15,7 +15,7 @@ const TeXSymbol: React.FC<ProjSymbolProps> = (props: ProjSymbolProps) => {
     }
 
     const renderBaseSymbol = () => {
-        const symList: JSX.Element[] = [];
+        const symList: React.JSX.Element[] = [];
         symbolMap.forEach((value, key) => {
             symList.push(
                 <div className={styles.symbol} onClick={(e) => handleSymbolClick(e, value)}>{key}</div>

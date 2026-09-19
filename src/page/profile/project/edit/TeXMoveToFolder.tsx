@@ -57,7 +57,7 @@ const TeXMoveToFolder: React.FC<MoveProps> = (props: MoveProps) => {
         if (!props.folders || props.folders.length === 0) {
             return;
         }
-        const tagList: JSX.Element[] = [];
+        const tagList: React.JSX.Element[] = [];
         let folders = props.folders;
         for (let i = 0; i < folders.length; i++) {
             if (i === 0) {

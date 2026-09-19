@@ -34,7 +34,7 @@ const Template: React.FC = () => {
     if (!userTplList || userTplList.length === 0) {
       return <div></div>;
     }
-    const tagList: JSX.Element[] = [];
+    const tagList: React.JSX.Element[] = [];
     userTplList.forEach((docItem: TemplateModel) => {
       tagList.push(
         <div key={docItem.id} className={`${styles.tplCard} card`}>

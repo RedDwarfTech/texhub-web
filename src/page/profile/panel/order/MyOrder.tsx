@@ -37,7 +37,7 @@ const MyOrder: React.FC = () => {
                 </tr>
             );
         }
-        const orderList: JSX.Element[] = [];
+        const orderList: React.JSX.Element[] = [];
         for (let i = 0; i <= curOrders.length - 1; i++) {
             let ord = curOrders[i];
             orderList.push(
@@ -88,7 +88,7 @@ const MyOrder: React.FC = () => {
         }
         
         let pages = Math.ceil(curPagination.total/curPagination.pageSize);
-        const pageItems: JSX.Element[] = [];
+        const pageItems: React.JSX.Element[] = [];
         
         // 显示当前页附近的页码
         const maxVisiblePages = 5;

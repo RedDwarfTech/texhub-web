@@ -26,12 +26,14 @@ export const pdfPositionToViewportRect = (
   const pageHeight = viewport.viewBox[3];
   const syncTop = pos.v - pos.height;
 
-  const [x1, y1, x2, y2] = viewport.convertToViewportRectangle([
+  const [x1, y1] = viewport.convertToViewportPoint(
     pos.h,
-    pageHeight - pos.v,
+    pageHeight - pos.v
+  );
+  const [x2, y2] = viewport.convertToViewportPoint(
     pos.h + pos.width,
-    pageHeight - syncTop,
-  ]);
+    pageHeight - syncTop
+  );
 
   return {
     left: Math.min(x1, x2),

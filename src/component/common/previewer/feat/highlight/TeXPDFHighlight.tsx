@@ -15,7 +15,7 @@ const TeXPDFHighlight: React.FC<HighlightProps> = ({ position, pageNumber, viewp
     }
 
     const renderArea = (position: PdfPosition[]) => {
-        const highlightList: JSX.Element[] = [];
+        const highlightList: React.JSX.Element[] = [];
         const pagePositions = position.filter((item) => item.page === pageNumber);
 
         pagePositions.forEach((item) => {

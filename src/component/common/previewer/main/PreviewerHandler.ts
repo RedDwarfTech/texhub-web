@@ -53,7 +53,7 @@ export const handleOpenInBrowserDirect = (projectId: string) => {
 };
 
 export const debugApp = (
-  virtualListRef: React.RefObject<ListImperativeAPI>,
+  virtualListRef: React.RefObject<ListImperativeAPI | null>,
   projectId: string
 ) => {
   let offset = localStorage.getItem("pdfScrollOffset");

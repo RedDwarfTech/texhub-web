@@ -47,7 +47,7 @@ const ProjFileSearch: React.FC<ProjSearchProps> = (props: ProjSearchProps) => {
     if (!hitItem || hitItem.length === 0) {
       return <div>{t("tips_no_data")}</div>;
     }
-    const tagList: JSX.Element[] = [];
+    const tagList: React.JSX.Element[] = [];
     for (let i = 0; i < hitItem.length; i++) {
       tagList.push(
         <div>
