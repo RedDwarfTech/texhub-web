@@ -6,6 +6,7 @@ allowBuilds:
 
 minimumReleaseAgeExclude:
   - texhub-broadcast@1.0.135
+  - texhub-broadcast@1.0.136
   - i18next@26.4.1
   - query-string@9.5.1
   - react-i18next@17.0.13
