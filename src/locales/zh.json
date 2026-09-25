@@ -219,6 +219,8 @@
     "tips_ws_reconnect_exhausted": "协同连接已断开，自动重连失败 3 次，请点击 Wi-Fi 图标手动重连",
     "tips_ws_auto_reconnecting": "协同连接断开，正在自动重连…",
     "tips_file_switch_resync": "编辑器状态不同步，正在重新加载文件",
+    "tips_ws_sync_failed": "编辑内容尚未得到服务端确认，请检查网络并保持页面打开",
+    "tips_ws_sync_exhausted": "编辑内容仍未得到服务端确认，请手动重连后再试",
     "tips_input_old_pwd": "请输入旧密码",
     "tips_input_new_pwd": "请输入新密码",
     "tips_input_repeat_new_pwd": "请输入重复的新密码",

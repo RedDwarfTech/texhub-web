@@ -220,6 +220,8 @@
     "tips_ws_reconnect_exhausted": "Collaboration disconnected. Automatic reconnect failed after 3 attempts. Click the Wi-Fi icon to reconnect manually",
     "tips_ws_auto_reconnecting": "Collaboration disconnected. Reconnecting automatically…",
     "tips_file_switch_resync": "Editor out of sync, reloading the file",
+    "tips_ws_sync_failed": "Your edit has not been confirmed by the server. Check the network and keep this page open",
+    "tips_ws_sync_exhausted": "Your edit is still not confirmed by the server. Reconnect manually and try again",
     "tips_input_old_pwd": "Please enter old password",
     "tips_input_new_pwd": "Please enter new password",
     "tips_input_repeat_new_pwd": "Please enter new password again",

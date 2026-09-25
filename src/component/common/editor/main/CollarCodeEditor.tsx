@@ -43,6 +43,7 @@ import {
 } from "@/service/project/editor/EditorService";
 import {
   COLLABORATION_RECONNECT_EXHAUSTED_EVENT,
+  COLLABORATION_SYNC_STATUS_EVENT,
   COLLABORATION_WS_READY_EVENT,
   reconnectCollaboration,
 } from "@/service/editor/CollarEditorSocketIOService";
@@ -83,12 +84,26 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     const onExhausted = () => {
       toast.warning(t("tips_ws_reconnect_exhausted"));
     };
+    const onSyncStatus = (event: Event) => {
+      const status = (event as CustomEvent).detail;
+      if (status && status.state === "failed") {
+        toast.warning(
+          t(
+            status.reason === "retry_exhausted"
+              ? "tips_ws_sync_exhausted"
+              : "tips_ws_sync_failed"
+          )
+        );
+      }
+    };
     window.addEventListener(COLLABORATION_RECONNECT_EXHAUSTED_EVENT, onExhausted);
+    window.addEventListener(COLLABORATION_SYNC_STATUS_EVENT, onSyncStatus);
     return () => {
       window.removeEventListener(
         COLLABORATION_RECONNECT_EXHAUSTED_EVENT,
         onExhausted
       );
+      window.removeEventListener(COLLABORATION_SYNC_STATUS_EVENT, onSyncStatus);
     };
   }, [t]);
 

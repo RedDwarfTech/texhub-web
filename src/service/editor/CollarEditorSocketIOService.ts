@@ -66,6 +66,8 @@ export const COLLABORATION_RECONNECT_EXHAUSTED_EVENT =
  * 引擎级 "connect" 事件每次建链都会触发，以此为准驱动依赖方恢复。
  */
 export const COLLABORATION_WS_READY_EVENT = "texhub:collaboration-ws-ready";
+export const COLLABORATION_SYNC_STATUS_EVENT =
+  "texhub:collaboration-sync-status";
 
 export function isManualReconnectRequired(): boolean {
   return manualReconnectRequired;
@@ -115,6 +117,7 @@ function attemptProviderConnect(provider: SocketIOClientProvider) {
 // 所以库内与前端 status:"disconnected" 链路实际从未触发。
 // 这里直接监听 Socket 真实存在的 "disconnect" 事件来驱动重连循环。
 const hookedSockets = new WeakSet<Socket>();
+const hookedProviders = new WeakSet<object>();
 
 function attachProviderReconnectHooks(provider: SocketIOClientProvider) {
   const socket = provider.ws;
@@ -314,6 +317,10 @@ export const doSocketIOConn = (
   const permanentUserData = new Y.PermanentUserData(rootYDoc);
   permanentUserData.setUserMapping(rootYDoc, rootYDoc.clientID, ydocUser.name);
   wsProvider.awareness.setLocalStateField("user", ydocUser);
+  if (hookedProviders.has(wsProvider)) {
+    return wsProvider;
+  }
+  hookedProviders.add(wsProvider);
   // @ts-ignore
   wsProvider.on("auth", (event: any) => {
     // https://discuss.yjs.dev/t/how-to-refresh-the-wsprovider-params-when-token-expire/2131
@@ -347,6 +354,13 @@ export const doSocketIOConn = (
     }
   });
   attachProviderReconnectHooks(wsProvider);
+  wsProvider.on("sync:status", (status: any) => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent(COLLABORATION_SYNC_STATUS_EVENT, { detail: status })
+      );
+    }
+  });
   return wsProvider;
 };
 
