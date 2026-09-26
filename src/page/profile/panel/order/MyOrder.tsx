@@ -1,8 +1,9 @@
 import store from "@/redux/store/store";
-import { OrderService, Order, orderStatus } from "rd-component";
+import { getOrderStatusLabel, OrderService, Order } from "rd-component";
 import { TimeUtils, Pagination } from "rdjs-wheel";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import styles from "./MyOrder.module.css";
 import { useTranslation } from "react-i18next";
 
@@ -12,6 +13,7 @@ const MyOrder: React.FC = () => {
     const [curPagination, setCurPagination] = useState<Pagination>();
     const [currentPage, setCurrentPage] = useState<number>(1);
     const { t } = useTranslation();
+    const navigate = useNavigate();
 
     React.useEffect(() => {
         let params = {
@@ -41,14 +43,20 @@ const MyOrder: React.FC = () => {
         for (let i = 0; i <= curOrders.length - 1; i++) {
             let ord = curOrders[i];
             orderList.push(
-                <tr key={ord.orderId} className={styles.orderRow}>
+                <tr
+                    key={ord.orderId}
+                    className={`${styles.orderRow} ${styles.orderRowLink}`}
+                    onClick={() => {
+                        navigate("/order/detail?orderId=" + ord.orderId);
+                    }}
+                >
                     <th scope="row" className={styles.orderId}>{ord.orderId}</th>
                     <td className={styles.subject}>{ord.subject}</td>
                     <td className={styles.price}>¥{ord.totalPrice}</td>
                     <td className={styles.time}>{TimeUtils.getFormattedTime(Number(ord.createdTime))}</td>
                     <td className={styles.status}>
                         <span className={`${styles.statusBadge} ${styles[`status${ord.orderStatus}`]}`}>
-                            {orderStatus[ord.orderStatus]}
+                            {getOrderStatusLabel(ord.orderStatus, t)}
                         </span>
                     </td>
                 </tr>

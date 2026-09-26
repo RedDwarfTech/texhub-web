@@ -167,8 +167,13 @@ const Checkout: React.FC<CheckoutProps> = ({ open, product, store, refreshUrl = 
   };
 
   const handleViewOrder = () => {
+    if (!createdOrder || !createdOrder.orderId) {
+      handleClose();
+      navigate("/user/panel?tab=order");
+      return;
+    }
     handleClose();
-    navigate("/product/pay/success");
+    navigate("/order/detail?orderId=" + createdOrder.orderId);
   };
 
   const renderConfirm = () => {

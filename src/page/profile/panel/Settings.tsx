@@ -1,6 +1,7 @@
 import TexHeader from "@/component/header/TexHeader";
 import styles from "./Settings.module.css";
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { ResponseHandler, UserModel } from "rdjs-wheel";
 import { useSelector } from "react-redux";
 import { UserProfile, UserService } from "rd-component";
@@ -15,7 +16,10 @@ import { useTranslation } from "react-i18next";
 import AppConfig from "./config/AppConfig";
 
 const Settings: React.FC = () => {
-  const [currentPanel, setCurrentPanel] = useState("userinfo");
+  const [searchParams] = useSearchParams();
+  const [currentPanel, setCurrentPanel] = useState(
+    searchParams.get("tab") || "userinfo"
+  );
   const [userInfo, setUserInfo] = useState<UserModel>();
   const [curNickname, setCurNickname] = useState("");
   const { user } = useSelector((state: any) => state.rdRootReducer.user);

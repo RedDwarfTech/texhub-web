@@ -1,0 +1,158 @@
+.orderDetailContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.orderDetailCard {
+    width: 60%;
+    min-width: 320px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.orderDetailTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.infoCard {
+    padding: 16px;
+    background-color: #fafafa;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+}
+
+.infoRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 8px 0;
+}
+
+.infoLabel {
+    flex-grow: 0;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.infoValue {
+    font-size: 15px;
+    color: #212529;
+    text-align: right;
+    word-break: break-all;
+}
+
+.mono {
+    font-family: monospace;
+    color: #495057;
+}
+
+.amount {
+    font-weight: 600;
+    color: #28a745;
+}
+
+.tip {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #6c757d;
+    text-align: center;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    padding: 30px 0;
+}
+
+.statusBadge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.status0 {
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+.status1 {
+    background-color: #cff4fc;
+    color: #055160;
+}
+
+.status2 {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.status3 {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.status4 {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+.status5 {
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+.actionRow {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.actionRow button {
+    height: 36px;
+    padding: 0 18px;
+    font-size: 14px;
+    border-radius: 18px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.ghostBtn {
+    color: rgb(57, 70, 109);
+    background-color: #fff;
+    border: 1px solid rgb(57, 70, 109);
+}
+
+.ghostBtn:hover:not(:disabled) {
+    color: #fff;
+    background-color: rgb(57, 70, 109);
+}
+
+.ghostBtn:disabled {
+    color: #adb5bd;
+    border-color: #dee2e6;
+    cursor: not-allowed;
+}
+
+.primaryBtn {
+    color: #fff;
+    background-color: rgb(57, 70, 109);
+    border: 1px solid rgb(57, 70, 109);
+}
+
+.primaryBtn:hover {
+    background-color: rgb(44, 56, 91);
+}

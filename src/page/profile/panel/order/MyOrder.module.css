@@ -49,6 +49,10 @@
   background-color: #f8f9fa;
 }
 
+.orderRowLink {
+  cursor: pointer;
+}
+
 .orderRow td, .orderRow th {
   padding: 15px;
   vertical-align: middle;
