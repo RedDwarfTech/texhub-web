@@ -182,8 +182,7 @@ const ProjectTab: React.FC = () => {
   const handleProjSearch = async () => {
     const keyword = searchInput.trim();
     if (!keyword) {
-      resetSearch();
-      getProjectList(getProjFilter({}));
+      handleClearSearch();
       return;
     }
     searchingRef.current = true;
@@ -218,6 +217,11 @@ const ProjectTab: React.FC = () => {
 
   const handleSearchInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value);
+  };
+
+  const handleClearSearch = () => {
+    resetSearch();
+    getProjectList(getProjFilter({}));
   };
 
   const handleSearchInputKeyDown = (
@@ -909,32 +913,38 @@ const ProjectTab: React.FC = () => {
             <div className={styles.docList}>
               <div className={styles.docListHeader}>
                 <div className={styles.projSearch}>
+                  <i
+                    className={
+                      "fa-solid fa-magnifying-glass " + styles.projSearchIcon
+                    }
+                  ></i>
                   <input
                     type="text"
                     value={searchInput}
                     placeholder={t("tips_enter_keyword")}
+                    aria-label={t("tips_enter_keyword")}
+                    autoComplete="off"
                     onChange={handleSearchInputChange}
                     onKeyDown={handleSearchInputKeyDown}
                   ></input>
-                  <button
-                    type="button"
-                    title={t("btn_search")}
-                    onClick={handleProjSearch}
-                  >
-                    <i className="fa-solid fa-magnifying-glass"></i>
-                  </button>
-                  {searchWord ? (
+                  {searchInput || searchWord ? (
                     <button
                       type="button"
+                      className={styles.projSearchClear}
                       title={t("tips_clear_search")}
-                      onClick={() => {
-                        resetSearch();
-                        getProjectList(getProjFilter({}));
-                      }}
+                      onClick={handleClearSearch}
                     >
                       <i className="fa-solid fa-xmark"></i>
                     </button>
                   ) : null}
+                  <button
+                    type="button"
+                    className={styles.projSearchBtn}
+                    title={t("btn_search")}
+                    onClick={handleProjSearch}
+                  >
+                    {t("btn_search")}
+                  </button>
                 </div>
                 {renderNewEntry()}
               </div>
