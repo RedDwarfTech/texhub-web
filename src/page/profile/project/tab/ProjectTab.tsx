@@ -45,6 +45,12 @@ const ProjectTab: React.FC = () => {
   const [currFolder, setCurrFolder] = useState<TexProjectFolder>();
   const [projName, setProjName] = useState<string>("");
   const [projLoading, setProjLoading] = useState<boolean>(true);
+  const [searchInput, setSearchInput] = useState<string>("");
+  const [searchWord, setSearchWord] = useState<string>("");
+  const [searching, setSearching] = useState<boolean>(false);
+  const [searchFolderMap, setSearchFolderMap] = useState<
+    Map<number, TexProjectModel[]>
+  >(new Map<number, TexProjectModel[]>());
   const cachedTab = localStorage.getItem("activeTab");
   const cachedTabVal = cachedTab ? parseInt(cachedTab) : ProjTabType.All;
   const [activeTab, setActiveTab] = useState<ProjTabType>(cachedTabVal);
@@ -55,6 +61,12 @@ const ProjectTab: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const firstUpdate = useRef(true);
+  /**
+   * mirrors searchWord so the folder cache effect can tell whether the last
+   * /tex/project/perfolder response belongs to an active search
+   */
+  const searchingRef = useRef<boolean>(false);
+  const searchTokenRef = useRef<number>(0);
 
   React.useEffect(() => {
     let req : QueryProjReq = getProjFilter({});
@@ -62,6 +74,13 @@ const ProjectTab: React.FC = () => {
   }, []);
 
   React.useEffect(() => {
+    /**
+     * while searching, the per folder responses are collected by the search
+     * handler itself, so they must not pollute the folder expand cache
+     */
+    if (searchingRef.current) {
+      return;
+    }
     if (folderProjList && folderProjList.length > 0) {
       if (currFolder) {
         // https://stackoverflow.com/questions/77779484/the-react-setstate-did-not-trigger-the-map-rerender
@@ -141,6 +160,72 @@ const ProjectTab: React.FC = () => {
     }
     query.proj_status = activeTab;
     return query;
+  };
+
+  const resetSearch = () => {
+    searchingRef.current = false;
+    searchTokenRef.current = searchTokenRef.current + 1;
+    setSearchInput("");
+    setSearchWord("");
+    setSearching(false);
+    setSearchFolderMap(new Map<number, TexProjectModel[]>());
+  };
+
+  /**
+   * Search the projects of the active tab by name keyword.
+   *
+   * The default folder projects come from /tex/project/list, the projects of the
+   * custom folders are only fetched on folder expand, so they have to be queried
+   * one folder by one folder. A token guards against a slow response of an
+   * outdated keyword overwriting the results of the current one.
+   */
+  const handleProjSearch = async () => {
+    const keyword = searchInput.trim();
+    if (!keyword) {
+      resetSearch();
+      getProjectList(getProjFilter({}));
+      return;
+    }
+    searchingRef.current = true;
+    searchTokenRef.current = searchTokenRef.current + 1;
+    const token = searchTokenRef.current;
+    setSearchWord(keyword);
+    setSearching(true);
+    setSearchFolderMap(new Map<number, TexProjectModel[]>());
+    let req: QueryProjReq = getProjFilter({});
+    req.keyword = keyword;
+    getProjectList(req);
+    const folders = projFolders.filter(
+      (folderItem: TexProjectFolder) => folderItem.default_folder !== 1
+    );
+    const collected = new Map<number, TexProjectModel[]>();
+    for (const folderItem of folders) {
+      const resp: any = await getFolderProject(
+        folderItem.id,
+        activeTab,
+        keyword
+      );
+      if (searchTokenRef.current !== token) {
+        return;
+      }
+      if (resp && ResponseHandler.responseSuccess(resp) && resp.result) {
+        collected.set(folderItem.id, resp.result as TexProjectModel[]);
+      }
+    }
+    setSearchFolderMap(collected);
+    setSearching(false);
+  };
+
+  const handleSearchInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(event.target.value);
+  };
+
+  const handleSearchInputKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === "Enter") {
+      handleProjSearch();
+    }
   };
 
   const handleOperClick = (
@@ -570,6 +655,65 @@ const ProjectTab: React.FC = () => {
     return tagList;
   };
 
+  /**
+   * Render the keyword hits, grouped by the folder the project lives in.
+   * The default folder projects already sit in userDocList because they come
+   * from the same /tex/project/list response.
+   */
+  const renderSearchResult = (): React.JSX.Element => {
+    if (searching) {
+      return (
+        <div className={styles.loadingA}>
+          <div className="spinner-border text-primary" role="status">
+            <span className="sr-only">{t("tips_loading")}</span>
+          </div>
+        </div>
+      );
+    }
+    const defaultHit = userDocList || [];
+    const folderGroups: React.JSX.Element[] = [];
+    let folderHitCount = 0;
+    projFolders.forEach((folderItem: TexProjectFolder) => {
+      if (folderItem.default_folder === 1) {
+        return;
+      }
+      const hits = searchFolderMap.get(folderItem.id);
+      if (!hits || hits.length === 0) {
+        return;
+      }
+      folderHitCount = folderHitCount + hits.length;
+      folderGroups.push(
+        <div key={"search-folder-" + folderItem.id}>
+          <div className={styles.searchGroupTitle}>
+            <i className="fa-solid fa-folder"></i> {folderItem.folder_name}（
+            {hits.length}）
+          </div>
+          {renderProj(hits)}
+        </div>
+      );
+    });
+    const total = defaultHit.length + folderHitCount;
+    if (total === 0) {
+      return <div className={styles.searchSummary}>{t("tips_search_proj_empty")}</div>;
+    }
+    return (
+      <div>
+        <div className={styles.searchSummary}>
+          {t("label_search_result")}：{searchWord}（{total}）
+        </div>
+        {defaultHit.length > 0 ? (
+          <div>
+            <div className={styles.searchGroupTitle}>
+              {t("label_default_folder")}（{defaultHit.length}）
+            </div>
+            {renderProj(defaultHit)}
+          </div>
+        ) : null}
+        {folderGroups}
+      </div>
+    );
+  };
+
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setProjName(event.target.value);
   };
@@ -595,6 +739,8 @@ const ProjectTab: React.FC = () => {
   };
 
   const handleTabClick = (clickTab: number) => {
+    // the keyword is scoped to the previous tab, drop it before switching
+    resetSearch();
     setActiveTab(clickTab);
     localStorage.setItem("activeTab", clickTab.toString());
     if (clickTab === ProjTabType.All) {
@@ -761,11 +907,47 @@ const ProjectTab: React.FC = () => {
           </ul>
           <div className={styles.docContainer}>
             <div className={styles.docList}>
-              <div className={styles.docListHeader}>{renderNewEntry()}</div>
+              <div className={styles.docListHeader}>
+                <div className={styles.projSearch}>
+                  <input
+                    type="text"
+                    value={searchInput}
+                    placeholder={t("tips_enter_keyword")}
+                    onChange={handleSearchInputChange}
+                    onKeyDown={handleSearchInputKeyDown}
+                  ></input>
+                  <button
+                    type="button"
+                    title={t("btn_search")}
+                    onClick={handleProjSearch}
+                  >
+                    <i className="fa-solid fa-magnifying-glass"></i>
+                  </button>
+                  {searchWord ? (
+                    <button
+                      type="button"
+                      title={t("tips_clear_search")}
+                      onClick={() => {
+                        resetSearch();
+                        getProjectList(getProjFilter({}));
+                      }}
+                    >
+                      <i className="fa-solid fa-xmark"></i>
+                    </button>
+                  ) : null}
+                </div>
+                {renderNewEntry()}
+              </div>
               <div className="list-group">
-                {renderFolder()}
-                <hr />
-                {renderProj(userDocList)}
+                {searchWord ? (
+                  renderSearchResult()
+                ) : (
+                  <>
+                    {renderFolder()}
+                    <hr />
+                    {renderProj(userDocList)}
+                  </>
+                )}
               </div>
             </div>
             <div className={styles.helpTip}>

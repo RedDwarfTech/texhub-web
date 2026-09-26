@@ -18,6 +18,47 @@
 
 .docListHeader {
     margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.projSearch {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    flex-grow: 1;
+    max-width: 420px;
+    min-width: 0;
+}
+
+.projSearch input {
+    flex-grow: 1;
+    min-width: 0;
+    font-size: 14px;
+    border-radius: 2px;
+}
+
+.projSearch button {
+    background-color: rgb(57, 70, 109);
+    border: none;
+    color: white;
+    border-radius: 2px;
+    flex-grow: 0;
+}
+
+.searchSummary {
+    font-size: 14px;
+    color: #696969;
+    margin-bottom: 10px;
+}
+
+.searchGroupTitle {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 15px 0 5px 0;
 }
 
 .docHeader> :last-child {

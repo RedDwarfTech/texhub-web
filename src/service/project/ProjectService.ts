@@ -215,14 +215,21 @@ export function moveProject(proj: MoveProjReq) {
   return XHRClient.requestWithActionType(config, actionTypeString, store);
 }
 
-export function getFolderProject(folder_id: number, proj_type: number) {
+export function getFolderProject(
+  folder_id: number,
+  proj_type: number,
+  keyword?: string
+) {
+  const params = new URLSearchParams();
+  params.append("folder_id", folder_id.toString());
+  params.append("proj_type", proj_type.toString());
+  if (keyword) {
+    params.append("keyword", keyword);
+  }
   const config: AxiosRequestConfig = {
     method: "get",
-    url:
-      "/tex/project/perfolder?folder_id=" +
-      folder_id +
-      "&proj_type=" +
-      proj_type,
+    url: "/tex/project/perfolder",
+    params: params,
   };
   const actionTypeString: string =
     ProjectActionType[ProjectActionType.GET_FOLDER_PROJ];

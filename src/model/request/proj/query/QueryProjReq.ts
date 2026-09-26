@@ -3,4 +3,5 @@ export interface QueryProjReq {
     archive_status?: number;
     trash?: number;
     proj_status?: number;
+    keyword?: string;
 }
