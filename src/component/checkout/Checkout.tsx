@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { AnyAction, Store } from "redux";
 import { OrderService, UserService } from "rd-component";
-import { RequestHandler, ResponseHandler } from "rdjs-wheel";
+import { ResponseHandler } from "rdjs-wheel";
 import PayService from "@/service/pay/PayService";
 import { IapProduct } from "@/models/product/IapProduct";
 import { IOrder } from "@/models/pay/IOrder";
@@ -134,21 +134,6 @@ const Checkout: React.FC<CheckoutProps> = ({ open, product, store, refreshUrl = 
     });
   };
 
-  /**
-   * The subscription expiry lives in the access token as the `et` claim, and
-   * texhub-server checks the VIP quota straight from it, so a token signed
-   * before the payment still reports a non-VIP user. Re-login fixed that only
-   * because signing in re-signs the token; refreshing it right after the order
-   * is paid makes the plan take effect without signing in again.
-   */
-  const refreshAuthToken = () => {
-    return RequestHandler.handleWebAccessTokenExpire().catch(() => {
-      // A rejected refresh token already redirects to the login page inside
-      // handleWebAccessTokenExpire, so swallow the rejection here to keep it
-      // from surfacing as an unhandled promise rejection.
-    });
-  };
-
   const handleCheckOrderStatus = () => {
     if (!createdOrder || !createdOrder.orderId) {
       toast.error(t("order_not_found"));
@@ -162,7 +147,7 @@ const Checkout: React.FC<CheckoutProps> = ({ open, product, store, refreshUrl = 
         return;
       }
       if (Number(resp.result.orderStatus) === 1) {
-        refreshAuthToken();
+        PayService.refreshAuthToken();
         resolveMemberExpire();
         setStep("result");
       } else {
