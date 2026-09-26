@@ -19,9 +19,13 @@
 .docListHeader {
     margin-bottom: 20px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.docListHeader> :empty {
+    display: none;
 }
 
 .projSearch {
@@ -29,7 +33,7 @@
     flex-direction: row;
     align-items: center;
     gap: 8px;
-    flex-grow: 1;
+    width: 100%;
     max-width: 440px;
     min-width: 0;
     height: 38px;
