@@ -12,13 +12,14 @@ overrides:
   '@types/react-dom': ^19.3.0
   '@vitejs/plugin-react': ^6.1.1
   axios: 1.20.0
-  yjs: 13.6.32
+  yjs: 13.6.33
   y-protocols: 1.0.7
   lib0: 0.2.117
   react: 19.3.0
   react-dom: 19.3.0
   react-redux: 9.3.0
   redux: 5.0.1
+  socket.io-client: 4.8.4
   tar: 7.5.19
 
 importers:
@@ -206,8 +207,8 @@ importers:
         specifier: ^1.104.1
         version: 1.104.1
       socket.io-client:
-        specifier: ^4.8.3
-        version: 4.8.3(supports-color@8.1.1)
+        specifier: 4.8.4
+        version: 4.8.4(supports-color@8.1.1)
       texhub-broadcast:
         specifier: 1.0.140
         version: 1.0.140(@types/node@26.6.1)(rollup@4.63.1)(socket.io-adapter@2.5.8(supports-color@8.1.1))(supports-color@8.1.1)(ts-node@10.9.2(@types/node@26.6.1)(typescript@7.0.2))(ts-toolbelt@9.6.0)(typescript@7.0.2)(vite@8.3.0(@types/node@26.6.1)(esbuild@0.18.20)(sass@1.104.1)(terser@5.51.2))(webpack@5.110.2(esbuild@0.18.20)(lightningcss@1.33.0)(postcss@8.5.28)(uglify-js@3.19.3))
@@ -225,10 +226,10 @@ importers:
         version: 6.2.2
       y-codemirror.next:
         specifier: ^0.3.5
-        version: 0.3.6(@codemirror/state@6.7.5)(@codemirror/view@6.43.12)(yjs@13.6.32)
+        version: 0.3.6(@codemirror/state@6.7.5)(@codemirror/view@6.43.12)(yjs@13.6.33)
       yjs:
-        specifier: 13.6.32
-        version: 13.6.32
+        specifier: 13.6.33
+        version: 13.6.33
     devDependencies:
       '@react-pdf/types':
         specifier: ^2.11.1
@@ -7454,8 +7455,8 @@ packages:
   socket.io-adapter@2.5.8:
     resolution: {integrity: sha512-6Oy52pbg+kvdCVvjcN+FnY7BvxZ7cIHNScbvztT/It5d0vbwoJoVZmF2gjJmnV0/4WlXRfG15zc45ySk9Ah8bw==}
 
-  socket.io-client@4.8.3:
-    resolution: {integrity: sha512-uP0bpjWrjQmUt5DTHq9RuoCBdFJF10cdX9X+a368j/Ft0wmaVgxlrjvK3kjvgCODOMMOz9lcaRzxmso0bTWZ/g==}
+  socket.io-client@4.8.4:
+    resolution: {integrity: sha512-7wjKAvVXYOJsbmUgkWbnhPD4bFpkqrUR0++XOjpGFmqDqsqV1CI93VTraeExLxpjxEqrWgFoSRZu1ihjLWfkAA==}
     engines: {node: '>=10.0.0'}
 
   socket.io-parser@4.2.7:
@@ -8336,13 +8337,13 @@ packages:
     peerDependencies:
       '@codemirror/state': 6.7.5
       '@codemirror/view': 6.43.12
-      yjs: 13.6.32
+      yjs: 13.6.33
 
   y-protocols@1.0.7:
     resolution: {integrity: sha512-YSVsLoXxO67J6eE/nV4AtFtT3QEotZf5sK5BHxFBXso7VDUT3Tx07IfA6hsu5Q5OmBdMkQVmFZ9QOA7fikWvnw==}
     engines: {node: '>=16.0.0', npm: '>=8.0.0'}
     peerDependencies:
-      yjs: 13.6.32
+      yjs: 13.6.33
 
   y18n@5.0.8:
     resolution: {integrity: sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==}
@@ -8389,8 +8390,8 @@ packages:
   yauzl@2.10.0:
     resolution: {integrity: sha512-p4a9I6X6nu6IhoGmBqAcbJy1mlC4j27vEPZX9F4L4/vZT3Lyq1VkFHw/V/PUcB9Buo+DG3iHkT0x3Qya58zc3g==}
 
-  yjs@13.6.32:
-    resolution: {integrity: sha512-lfiJIIC4Xayt5ItynE407ehlE03pCjeOc4hkR4yxxvvNJ4kuiN25B0g+Qp8XagYz361LLL7DCzR5bvFJ81QKtQ==}
+  yjs@13.6.33:
+    resolution: {integrity: sha512-q/UYvr1gOk4XII+Cu1CW2dINjYqJJFifTzogEaIARznrvX7uOlHsdTEXcnOBMuIsrCGEEKdNxi74kyMLZlKVfw==}
     engines: {node: '>=16.0.0', npm: '>=8.0.0'}
 
   yn@3.1.1:
@@ -16370,7 +16371,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  socket.io-client@4.8.3(supports-color@8.1.1):
+  socket.io-client@4.8.4(supports-color@8.1.1):
     dependencies:
       '@socket.io/component-emitter': 3.1.2
       debug: 4.4.3(supports-color@8.1.1)
@@ -16681,10 +16682,10 @@ snapshots:
       rdjs-wheel: 0.0.32(@types/node@26.6.1)(rollup@4.63.1)(supports-color@8.1.1)(ts-node@10.9.2(@types/node@26.6.1)(typescript@7.0.2))(ts-toolbelt@9.6.0)(typescript@7.0.2)(vite@8.3.0(@types/node@26.6.1)(esbuild@0.18.20)(sass@1.104.1)(terser@5.51.2))(webpack@5.110.2(esbuild@0.18.20)(lightningcss@1.33.0)(postcss@8.5.28)(uglify-js@3.19.3))
       sequelize: 6.37.8(pg-hstore@2.3.4)(pg@8.23.0)(supports-color@8.1.1)
       socket.io: 4.8.3(supports-color@8.1.1)
-      socket.io-client: 4.8.3(supports-color@8.1.1)
+      socket.io-client: 4.8.4(supports-color@8.1.1)
       uuid: 11.1.1
-      y-protocols: 1.0.7(yjs@13.6.32)
-      yjs: 13.6.32
+      y-protocols: 1.0.7(yjs@13.6.33)
+      yjs: 13.6.33
     transitivePeerDependencies:
       - '@rolldown/plugin-babel'
       - '@types/node'
@@ -17342,17 +17343,17 @@ snapshots:
 
   xtend@4.0.2: {}
 
-  y-codemirror.next@0.3.6(@codemirror/state@6.7.5)(@codemirror/view@6.43.12)(yjs@13.6.32):
+  y-codemirror.next@0.3.6(@codemirror/state@6.7.5)(@codemirror/view@6.43.12)(yjs@13.6.33):
     dependencies:
       '@codemirror/state': 6.7.5
       '@codemirror/view': 6.43.12
       lib0: 0.2.117
-      yjs: 13.6.32
+      yjs: 13.6.33
 
-  y-protocols@1.0.7(yjs@13.6.32):
+  y-protocols@1.0.7(yjs@13.6.33):
     dependencies:
       lib0: 0.2.117
-      yjs: 13.6.32
+      yjs: 13.6.33
 
   y18n@5.0.8: {}
 
@@ -17404,7 +17405,7 @@ snapshots:
       buffer-crc32: 0.2.13
       fd-slicer: 1.1.0
 
-  yjs@13.6.32:
+  yjs@13.6.33:
     dependencies:
       lib0: 0.2.117
 

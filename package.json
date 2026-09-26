@@ -64,14 +64,14 @@
     "react-window-infinite-loader": "^2.0.1",
     "redux": "^5.0.1",
     "sass": "^1.104.1",
-    "socket.io-client": "^4.8.3",
+    "socket.io-client": "^4.8.4",
     "texhub-broadcast": "1.0.140",
     "uuid": "^14.0.2",
     "vite-plugin-svgr": "^5.2.0",
     "vite-plugin-wasm": "^3.6.0",
     "web-vitals": "^6.2.2",
     "y-codemirror.next": "^0.3.5",
-    "yjs": "13.6.31"
+    "yjs": "13.6.33"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "4.63.3"
@@ -144,7 +144,7 @@
     "react-dom": "19.3.0",
     "lib0": "^0.2.117",
     "y-protocols": "^1.0.7",
-    "yjs": "13.6.31",
+    "yjs": "13.6.33",
     "react-redux": "9.2.0",
     "redux": "^5.0.1",
     "tar": "^7.5.19"
