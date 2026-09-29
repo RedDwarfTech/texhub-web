@@ -13,7 +13,6 @@ import {
   RequestHandler,
   ResponseHandler,
   UserModel,
-  WheelGlobal,
 } from "rdjs-wheel";
 import { BaseMethods } from "rdjs-wheel";
 import { EditorAttr } from "@/model/proj/config/EditorAttr";
@@ -68,6 +67,13 @@ export const COLLABORATION_RECONNECT_EXHAUSTED_EVENT =
 export const COLLABORATION_WS_READY_EVENT = "texhub:collaboration-ws-ready";
 export const COLLABORATION_SYNC_STATUS_EVENT =
   "texhub:collaboration-sync-status";
+
+/**
+ * 服务端判定当前用户不是该项目的协作者时广播的事件。
+ * 订阅方应据此提示用户「已被移出协作」或「无访问权限」，而不是重试。
+ */
+export const COLLABORATION_ACCESS_DENIED_EVENT =
+  "texhub:collaboration-access-denied";
 
 export function isManualReconnectRequired(): boolean {
   return manualReconnectRequired;
@@ -125,7 +131,19 @@ function attachProviderReconnectHooks(provider: SocketIOClientProvider) {
     return;
   }
   hookedSockets.add(socket);
-  socket.on("disconnect", () => {
+  socket.on("disconnect", (reason: string) => {
+    // 服务端主动断开（"io server disconnect"）说明是它把这个连接判死的：
+    // 鉴权/协作者校验没过之类。socket.io-client 自己不会重连，但本地退避
+    // 循环会，若不拦下就会变成对着一个必然失败的鉴权无限重试，
+    // 既刷爆权限接口，又让用户看到"网络好像坏了"而不是"你没有权限"。
+    if (reason === "io server disconnect") {
+      stopAutoReconnect();
+      logger.warn(
+        "collaboration server rejected the connection, not retrying",
+        { reason }
+      );
+      return;
+    }
     onCollaborationDisconnected(provider);
   });
   // socket.io v4 的 Socket 每次真实建链（含重连成功）都会 emit "connect"。
@@ -173,8 +191,19 @@ function scheduleAutoReconnectAttempt(provider: SocketIOClientProvider) {
   }, getReconnectDelayMs(autoReconnectAttempts + 1));
 }
 
-function onCollaborationDisconnected(provider: SocketIOClientProvider) {
-  if (manualReconnectRequired) {
+/**
+ * 停止所有自动重连并把连接态落成 disconnected。
+ *
+ * 供「重试注定失败」的场景使用（凭据失效、被移出协作者）：此时继续退避重试
+ * 只会徒增服务端压力，且重连多少次结果都一样。
+ */
+function stopAutoReconnect() {
+  manualReconnectRequired = true;
+  clearAutoReconnectTimer();
+  setWsConnState("disconnected");
+}
+
+function onCollaborationDisconnected(provider: SocketIOClientProvider) {  if (manualReconnectRequired) {
     setWsConnState("disconnected");
     return;
   }
@@ -291,8 +320,8 @@ export const doSocketIOConn = (
     {
       maxBackoffTime: 1000000,
       params: {
-        // https://self-issued.info/docs/draft-ietf-oauth-v2-bearer.html#query-param
-        access_token: localStorage.getItem(WheelGlobal.ACCESS_TOKEN_NAME) ?? "",
+        // 凭据只走 Socket.IO CONNECT 包（options.auth.token），不再放进 query：
+        // query 会落进网关 access log、CDN 日志与 Referer。
         docId: enableSubDoc ? editorAttr.projectId : editorAttr.docId,
         docIntId: editorAttr.docIntId,
         docShowName: editorAttr.docShowName,
@@ -332,6 +361,33 @@ export const doSocketIOConn = (
     console.error(err.message);
     console.error(err.description);
     console.error(err.context);
+    // 服务端鉴权为 fail-closed，握手被拒时通过 connect_error 的 data.code 回传：
+    // 4001 = token 过期，4000 = 缺失/非法。必须区分处理，否则无效 token 会被
+    // 退避重连循环无限重试。
+    const authCode = err?.data?.code;
+    if (authCode === 4001) {
+      RequestHandler.handleWebAccessTokenExpire().then((res) => {
+        if (ResponseHandler.responseSuccess(res)) {
+          attemptProviderConnect(wsProvider);
+        } else {
+          manualReconnectRequired = true;
+          wsProvider.shouldConnect = false;
+          wsProvider.ws?.close();
+          clearAutoReconnectTimer();
+          setWsConnState("disconnected");
+        }
+      });
+      return;
+    }
+    if (authCode === 4000) {
+      // 凭据本身不可用，重连无意义，需重新登录
+      manualReconnectRequired = true;
+      wsProvider.shouldConnect = false;
+      wsProvider.ws?.close();
+      clearAutoReconnectTimer();
+      setWsConnState("disconnected");
+      return;
+    }
     if (!manualReconnectRequired) {
       setWsConnState("connecting");
       // 连接尝试失败不会触发 Socket 的 "disconnect"，需要在此驱动下一次退避重试
@@ -354,6 +410,24 @@ export const doSocketIOConn = (
     }
   });
   attachProviderReconnectHooks(wsProvider);
+  // 服务端在断开前会先发这个事件，说明拒绝原因是「没有该项目的协作权限」
+  // 而不是网络问题。必须停下重连并把真实原因透出，否则编辑器会一直空转在
+  // 退避重连里，用户看到的只是"连不上"。
+  // @ts-ignore
+  wsProvider.on("ws:access_denied", (payload: any) => {
+    const reason = payload?.reason;
+    logger.error("collaboration access denied", { reason, docId: editorAttr.docId });
+    stopAutoReconnect();
+    // @ts-ignore
+    wsProvider.shouldConnect = false;
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent(COLLABORATION_ACCESS_DENIED_EVENT, {
+          detail: { reason, docId: editorAttr.docId },
+        })
+      );
+    }
+  });
   wsProvider.on("sync:status", (status: any) => {
     if (typeof window !== "undefined") {
       window.dispatchEvent(
