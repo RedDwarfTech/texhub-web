@@ -15,29 +15,78 @@ import { ProjCollarModel } from "@/model/proj/share/ProjCollarModel";
 import { CollarType } from "@/model/enum/CollarType";
 import dayjs from "dayjs";
 import { BaseMethods } from "rdjs-wheel";
+import {
+  createInvite,
+  getInvite,
+  InviteToken,
+  revokeInvite,
+} from "@/service/project/share/ProjectInviteService";
 
 export type ShareProps = {
   projectId: string;
 };
 
 const TeXShare: React.FC<ShareProps> = (props: ShareProps) => {
-  const [projShareLink, setProjShareLink] = useState<string>();
+  // 邀请凭证。null 表示"还没生成过"（与"已生成但被撤销"区分开）。
+  const [invite, setInvite] = useState<InviteToken | null>(null);
+  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<ProjShareTabType>(1);
   const [curCollar, setCurCollar] = useState<ProjCollarModel[]>([]);
   const { collar } = useSelector((state: AppState) => state.projShare);
   const { t } = useTranslation();
 
-  React.useEffect(() => {
-    let shareLink =
-      readConfig("shareBaseUrl") + "?projectId=" + props.projectId;
-    setProjShareLink(shareLink);
-  }, [props.projectId]);
+  // 完整邀请链接 = 前端配置的固定落地页 + 后端签发的 token。
+  // 落地页地址固定不变（可收藏、可复用），凭证由后端管理、可随时撤销。
+  const projShareLink: string | undefined = invite?.token
+    ? readConfig("shareBaseUrl") + "?token=" + invite.token
+    : undefined;
 
   React.useEffect(() => {
     if (collar) {
       setCurCollar(collar);
     }
   }, [collar]);
+
+  const handleGenerateInvite = () => {
+    if (!props.projectId || props.projectId.length === 0) {
+      toast.error(t("err_proj_id_failed"));
+      return;
+    }
+    setLoading(true);
+    createInvite(props.projectId)
+      .then((res) => {
+        setInvite(res);
+        toast.success(t("tips_copy_success"));
+      })
+      .catch((e) => {
+        toast.error(t("err_invite_create_failed"), e?.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const handleRevokeInvite = () => {
+    if (!props.projectId || props.projectId.length === 0) {
+      toast.error(t("err_proj_id_failed"));
+      return;
+    }
+    if (!window.confirm(t("tips_revoke_invite_confirm"))) {
+      return;
+    }
+    setLoading(true);
+    revokeInvite(props.projectId)
+      .then(() => {
+        setInvite(null);
+        toast.success(t("tips_copy_success"));
+      })
+      .catch((e) => {
+        toast.error(t("err_invite_revoke_failed"), e?.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   const handleShareLinkCopy = () => {
     if (!props.projectId || props.projectId.length === 0) {
@@ -60,6 +109,19 @@ const TeXShare: React.FC<ShareProps> = (props: ShareProps) => {
   const handleTabClick = (clickTab: number) => {
     setActiveTab(clickTab);
     if (clickTab === ProjShareTabType.Link) {
+      // 只读取当前凭证，不签发：Owner 打开弹窗就应看到已存在的链接，
+      // 但"没有链接"必须保持为"没有"，直到他显式点生成。
+      if (props.projectId && props.projectId.length > 0) {
+        getInvite(props.projectId)
+          .then((res) => {
+            setInvite(res ?? null);
+          })
+          .catch(() => {
+            // 读取失败（非 Owner / 网络问题）就退回"未生成"状态，
+            // 引导用户点生成，由后端再判定一次权限。
+            setInvite(null);
+          });
+      }
     }
     if (clickTab === ProjShareTabType.Mail) {
       let req: QueryProjCollar = {
@@ -152,31 +214,64 @@ const TeXShare: React.FC<ShareProps> = (props: ShareProps) => {
               </option>
             </select>
           </div>
-          <div className={styles.sharedSection}>
-            <span>{t("label_share_method")}</span>
-            <input
-              className="form-check-input"
-              type="checkbox"
-              value=""
-              id="checkboxLink"
-            ></input>
-            <label className="form-check-label">{t("label_link_share")}</label>
-          </div>
-          <div className={styles.sharedSection}>
-            <div>{t("label_share_link")}</div>
-            <div>{projShareLink}</div>
-          </div>
-          <div className={styles.sharedSection}>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={() => {
-                handleShareLinkCopy();
-              }}
-            >
-              {t("btn_copy")}
-            </button>
-          </div>
+          {invite ? (
+            <>
+              <div className={styles.sharedSection}>
+                <div>{t("label_invite_link")}</div>
+                <div>{projShareLink}</div>
+              </div>
+              <div className={styles.sharedSection}>
+                <span>{t("label_invite_expires_at")}: </span>
+                <span>
+                  {invite.expire_at > 0
+                    ? dayjs(invite.expire_at).format("YYYY-MM-DD HH:mm:ss")
+                    : t("label_invite_expire_never")}
+                </span>
+              </div>
+              {invite.max_uses > 0 && (
+                <div className={styles.sharedSection}>
+                  <span>{t("label_invite_uses")}: </span>
+                  <span>
+                    {invite.used_count} / {invite.max_uses}
+                  </span>
+                </div>
+              )}
+              <div className={styles.sharedSection}>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  disabled={loading}
+                  onClick={handleShareLinkCopy}
+                >
+                  {t("btn_copy")}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  disabled={loading}
+                  onClick={handleRevokeInvite}
+                >
+                  {t("btn_revoke_invite")}
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className={styles.sharedSection}>
+                <div>{t("label_invite_none")}</div>
+              </div>
+              <div className={styles.sharedSection}>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  disabled={loading}
+                  onClick={handleGenerateInvite}
+                >
+                  {t("btn_generate_invite")}
+                </button>
+              </div>
+            </>
+          )}
         </div>
       );
     }
