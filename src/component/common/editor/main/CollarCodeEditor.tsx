@@ -367,7 +367,16 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     }
     // addSubdoc 幂等：复用 map 既有实例时也显式注册，保证编辑能立即同步
     if (texEditorSocketIOWs && typeof texEditorSocketIOWs.addSubdoc === "function") {
-      texEditorSocketIOWs.addSubdoc(targetDoc);
+      try {
+        texEditorSocketIOWs.addSubdoc(targetDoc);
+      } catch (err) {
+        // 协作层帧解析异常不能冒泡到 React effect，否则会被 ErrorBoundary
+        // 捕获并把原始错误（如 "Unexpected end of array"）显示在编辑器区域。
+        logger.error("register subdoc failed", {
+          guid: targetDoc.guid,
+          error: err instanceof Error ? err.message : String(err),
+        });
+      }
     }
     setCurRootYDoc(rootYDoc);
   }, [curSubYDoc, texEditorSocketIOWs]);

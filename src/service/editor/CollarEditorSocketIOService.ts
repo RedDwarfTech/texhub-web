@@ -556,7 +556,16 @@ const handleSubDocChanged = (
       console.log("add sub doc:" + subdoc.guid);
       // addSubdoc 是幂等的：内部会先解绑旧 handler 再绑定新 handler，
       // 并把 doc 放进 provider.docs、发送 sync_step_1 拉取内容。
-      wsProvider.addSubdoc(subdoc);
+      try {
+        wsProvider.addSubdoc(subdoc);
+      } catch (err) {
+        // 该回调由 Yjs subdocs 事件同步触发（常发生在 targetDoc.load() 内），
+        // 异常会一路冒泡到 React effect 并被 ErrorBoundary 显示为红字。
+        logger.error("register subdoc failed", {
+          guid: subdoc.guid,
+          error: err instanceof Error ? err.message : String(err),
+        });
+      }
     }
   });
   if (props && props.removed && props.removed.size > 0) {
