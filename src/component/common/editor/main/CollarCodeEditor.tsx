@@ -52,6 +52,21 @@ import { recordEditorViewUpdate } from "@/service/editor/EditorUpdateHistory";
 import { reportFileSwitchFailed } from "@/service/log/SystemLogService";
 import { toast } from "react-toastify";
 
+const SYNC_FAILURE_REASON_I18N: Record<string, string> = {
+  ack_timeout: "tips_ws_sync_reason_ack_timeout",
+  server_nack: "tips_ws_sync_reason_server_nack",
+  outbox_ack_error: "tips_ws_sync_reason_outbox_ack_error",
+  outbox_error: "tips_ws_sync_reason_outbox_error",
+  frame_error: "tips_ws_sync_reason_frame_error",
+  retry_exhausted: "tips_ws_sync_reason_retry_exhausted",
+};
+
+const SYNC_FAILURE_STAGE_I18N: Record<string, string> = {
+  ack: "tips_ws_sync_reason_ack_exhausted",
+  enqueue: "tips_ws_sync_reason_enqueue_exhausted",
+  refresh: "tips_ws_sync_reason_refresh_exhausted",
+};
+
 // 文件切换时协作连接未就绪：等待窗口内自动切换；超时仅提示，
 // pending 保留，由 connect 事件/轮询在连接恢复后自动补切。
 const FILE_SWITCH_WAIT_WS_TIMEOUT_MS = 15000;
@@ -86,15 +101,33 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
     };
     const onSyncStatus = (event: Event) => {
       const status = (event as CustomEvent).detail;
-      if (status && status.state === "failed") {
-        toast.warning(
-          t(
-            status.reason === "retry_exhausted"
-              ? "tips_ws_sync_exhausted"
-              : "tips_ws_sync_failed"
-          )
-        );
-      }
+      if (!status || status.state !== "failed") return;
+      const reasonKey =
+        status.reason === "retry_exhausted"
+          ? SYNC_FAILURE_STAGE_I18N[status.stage] ||
+            SYNC_FAILURE_REASON_I18N.retry_exhausted
+          : SYNC_FAILURE_REASON_I18N[status.reason];
+      const reason = reasonKey
+        ? t(reasonKey)
+        : t("tips_ws_sync_reason_unknown", {
+            reason: status.reason || "unknown",
+          });
+      const pending = status.pending ?? 0;
+      toast.warning(
+        t(
+          status.reason === "retry_exhausted"
+            ? "tips_ws_sync_exhausted_reason"
+            : "tips_ws_sync_failed_reason",
+          { reason, pending }
+        )
+      );
+      logger.warn("collaboration sync failed", {
+        doc: status.doc,
+        seq: status.seq,
+        reason: status.reason,
+        stage: status.stage,
+        pending,
+      });
     };
     window.addEventListener(COLLABORATION_RECONNECT_EXHAUSTED_EVENT, onExhausted);
     window.addEventListener(COLLABORATION_SYNC_STATUS_EVENT, onSyncStatus);
