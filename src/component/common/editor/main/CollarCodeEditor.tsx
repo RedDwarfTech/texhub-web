@@ -67,6 +67,12 @@ const SYNC_FAILURE_STAGE_I18N: Record<string, string> = {
   refresh: "tips_ws_sync_reason_refresh_exhausted",
 };
 
+// 同一条 update 的失败往往会被 ACK 超时、重试、连接恢复各触发一次；
+// 短时间内按 doc 去重，避免 toast 刷屏掩盖真正原因。retry_exhausted
+// 是最终结论，必须展示。
+const SYNC_FAILURE_TOAST_INTERVAL_MS = 15000;
+const lastSyncFailureToastAt = new Map<string, number>();
+
 // 文件切换时协作连接未就绪：等待窗口内自动切换；超时仅提示，
 // pending 保留，由 connect 事件/轮询在连接恢复后自动补切。
 const FILE_SWITCH_WAIT_WS_TIMEOUT_MS = 15000;
@@ -113,6 +119,21 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
             reason: status.reason || "unknown",
           });
       const pending = status.pending ?? 0;
+      logger.warn("collaboration sync failed", {
+        doc: status.doc,
+        seq: status.seq,
+        reason: status.reason,
+        stage: status.stage,
+        pending,
+      });
+      const docKey = status.doc || "__unknown__";
+      const now = Date.now();
+      const lastShownAt = lastSyncFailureToastAt.get(docKey) || 0;
+      const exhausted = status.reason === "retry_exhausted";
+      if (!exhausted && now - lastShownAt < SYNC_FAILURE_TOAST_INTERVAL_MS) {
+        return;
+      }
+      lastSyncFailureToastAt.set(docKey, now);
       toast.warning(
         t(
           status.reason === "retry_exhausted"
@@ -121,13 +142,6 @@ const CollarCodeEditor: React.FC<EditorProps> = (props: EditorProps) => {
           { reason, pending }
         )
       );
-      logger.warn("collaboration sync failed", {
-        doc: status.doc,
-        seq: status.seq,
-        reason: status.reason,
-        stage: status.stage,
-        pending,
-      });
     };
     window.addEventListener(COLLABORATION_RECONNECT_EXHAUSTED_EVENT, onExhausted);
     window.addEventListener(COLLABORATION_SYNC_STATUS_EVENT, onSyncStatus);
